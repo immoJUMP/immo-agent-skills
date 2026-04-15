@@ -55,6 +55,16 @@ Starte eine neue Claude-Code-Session -- alle Skills sind sofort verfuegbar:
 
 Oder stell einfach eine Frage -- Claude erkennt automatisch, welcher Skill passt.
 
+### Wie die Skills funktionieren
+
+**Du redest ganz normal mit Claude.** Kein JSON, keine technische Sprache, keine Formulare. Sag einfach was du brauchst:
+
+> *"Ich habe ein MFH in Koeln-Ehrenfeld, 8 Einheiten, Kaufpreis 850.000. Kannst du mir eine Bankenpraesentation bauen?"*
+
+Claude fragt dann im Gespraech alles ab, was er braucht -- Schritt fuer Schritt, auf Deutsch. Du kannst auch Dokumente hochladen (Mietliste, Expose, Objektunterlagen) und Claude extrahiert die Daten selbst.
+
+Die JSON-Schemas in den Skill-Dateien sind die technische Referenz fuer Entwickler und Automatisierungen (z.B. wenn du Skills ueber eine API oder n8n ansteuerst). Als normaler Nutzer brauchst du die nie zu sehen.
+
 > **Tipp:** Du brauchst nicht alle Skills. Kopiere nur die Ordner, die du brauchst (z.B. nur `skills/ankauf/` und `knowledge/`).
 
 <details>
