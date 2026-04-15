@@ -24,30 +24,55 @@ Jeder Skill wurde fuer den **deutschen Markt** entwickelt -- mit deutschen Recht
 
 ## Schnellstart
 
-### Option 1: Claude Code (empfohlen)
+### Die einfachste Methode: Claude fragen
+
+Oeffne Claude Code und tippe:
+
+> **Installiere die Immobilien-Skills von https://github.com/immoJUMP/immo-agent-skills**
+
+Das war's. Claude laedt alles herunter und richtet die Skills ein. Kein Git, kein Terminal-Wissen noetig.
+
+---
+
+### Alternative: Ein Befehl im Terminal
 
 ```bash
-# Skills in dein Claude-Code-Verzeichnis kopieren
-cp -r skills/ ~/.claude/skills/immo-agent-skills/
-cp -r knowledge/ ~/.claude/skills/immo-agent-skills/knowledge/
+git clone https://github.com/immoJUMP/immo-agent-skills.git ~/.claude/skills/immo-agent-skills
 ```
 
-### Option 2: Claude Projects / Cowork
+---
 
+### Danach: Skills nutzen
+
+Starte eine neue Claude-Code-Session -- alle Skills sind sofort verfuegbar:
+
+```
+/deal-screener Kaufpreis 850.000, 8 Einheiten, Baujahr 1962, Koeln-Ehrenfeld
+/mieterhoehung [Mietliste hochladen]
+/unterlagen-analyst [100 Seiten Objektunterlagen hochladen]
+/bierdeckel-kalkulation 650.000 EUR, 420 qm, 6 WE, 5.80 EUR/qm Ist-Miete
+```
+
+Oder stell einfach eine Frage -- Claude erkennt automatisch, welcher Skill passt.
+
+> **Tipp:** Du brauchst nicht alle Skills. Kopiere nur die Ordner, die du brauchst (z.B. nur `skills/ankauf/` und `knowledge/`).
+
+<details>
+<summary><strong>Weitere Optionen: Claude Projects, ChatGPT, andere LLMs</strong></summary>
+
+**Claude Projects / Cowork:**
 1. Neues Project erstellen
 2. Relevante Skill-Dateien als Knowledge hochladen
 3. Knowledge-Dateien aus `knowledge/` dazu laden
-4. Loslegen
 
-### Option 3: ChatGPT Custom GPT
-
+**ChatGPT Custom GPT:**
 1. Custom GPT erstellen
 2. Skill-Inhalt in die Instructions kopieren
 3. Knowledge-Dateien hochladen
 
-### Option 4: Direkt im Chat
-
+**Direkt im Chat (jedes LLM):**
 Skill-Datei oeffnen, Inhalt kopieren, in den Chat einfuegen, Daten dazu geben -- fertig.
+</details>
 
 ---
 
