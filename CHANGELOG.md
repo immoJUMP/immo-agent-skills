@@ -6,6 +6,23 @@ Das Format basiert auf [Keep a Changelog](https://keepachangelog.com/de/1.1.0/).
 
 ---
 
+## [1.1.0] - 2026-04-16
+
+### Hinzugefuegt
+
+- **Ankauf-Skill**: Akquise-Agent -- Parametrisierter Deal-Such-Agent mit Scoring-Formel und Auto-E-Mails
+- **Objektpruefung-Skill**: Kaufvertrag-Pruefung -- 13-Punkte-Checkliste fuer ETW und MFH mit BGB-Referenzen
+- **Vermietung-Skill**: Mietnomaden-Praevention -- 5-Saeulen-Schutzframework mit Reaktionsplan
+- **Finanzierung-Skill**: Selbstauskunft -- Bonitaetsunterlagen-Generator (Angestellte vs. Selbstaendige)
+- **HTML-Template**: Interaktive Bankenpraesentation mit Cashflow-Slider und DSCR-Matrix
+- **README**: Gespraechsmodus-Erklaerung (kein JSON noetig fuer normale Nutzer)
+
+### Geaendert
+
+- **Bankenpitch-Skill**: Komplett neu geschrieben mit 13-Sektionen-Struktur (aus 4 realen Bankenpraesentation abgeleitet)
+
+---
+
 ## [1.0.0] - 2026-04-15
 
 ### Hinzugefuegt
