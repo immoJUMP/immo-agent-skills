@@ -6,6 +6,7 @@ Alle wesentlichen Aenderungen an diesem Projekt.
 ### Dokumentation
 
 - Changelog aktualisiert
+- Akquise-Netzwerk-Skill auf v2 ueberarbeitet: klare Kanal-Taxonomie, Compliance-Guardrails, Score-Logik, KPI-/CRM-Layer und realistischere Vorlagen
 
 ### Hinzugefuegt
 
@@ -15,4 +16,3 @@ Alle wesentlichen Aenderungen an diesem Projekt.
 - Neues banken pitch template
 - Bankenpitch-Skill komplett neu mit allen 13 Sektionen, Eigenleistungen-Konzept und vollständigem JSON-Schema.
 - Make it easy
-
