@@ -2,7 +2,7 @@
 
 **25+ KI-Skills fuer den deutschen Immobilienmarkt** -- von der Objektpruefung bis zur Anlage V.
 
-Jeder Skill ist eine eigenstaendige Markdown-Datei. Kein Code, keine API-Keys, keine Abhaengigkeiten. Einfach in Claude, ChatGPT oder jedes andere LLM laden und loslegen.
+Jeder Skill ist eine eigenstaendige Markdown-Datei mit YAML-Frontmatter. Kein Code, keine API-Keys, keine Abhaengigkeiten. Als **Claude Code Plugin** installieren -- alle Skills werden automatisch als Slash-Commands erkannt und auto-triggered.
 
 ---
 
@@ -65,7 +65,7 @@ Claude fragt dann im Gespraech alles ab, was er braucht -- Schritt fuer Schritt,
 
 Die JSON-Schemas in den Skill-Dateien sind die technische Referenz fuer Entwickler und Automatisierungen (z.B. wenn du Skills ueber eine API oder n8n ansteuerst). Als normaler Nutzer brauchst du die nie zu sehen.
 
-> **Tipp:** Du brauchst nicht alle Skills. Kopiere nur die Ordner, die du brauchst (z.B. nur `skills/ankauf/` und `knowledge/`).
+> **Tipp:** Als Plugin werden alle Skills automatisch unter dem Namespace `immo-agent-skills` erkannt, z.B. `/immo-agent-skills:deal-screener`.
 
 <details>
 <summary><strong>Weitere Optionen: Claude Projects, ChatGPT, andere LLMs</strong></summary>
@@ -90,43 +90,41 @@ Skill-Datei oeffnen, Inhalt kopieren, in den Chat einfuegen, Daten dazu geben --
 
 ```
 immo-agent-skills/
-├── skills/
-│   ├── ankauf/                    # Deal-Screening & Akquise
-│   │   ├── deal-screener.md       # Schnellbewertung nach Ankaufskriterien
-│   │   ├── marktanalyse.md        # Standort- und Marktbewertung
-│   │   └── bierdeckel-kalkulation.md  # Sofort-Ampel: Deal oder kein Deal
-│   │
-│   ├── objektpruefung/            # Due Diligence & Unterlagenanalyse
-│   │   ├── unterlagen-analyst.md  # 100-Seiten-Objektunterlagen analysieren
-│   │   ├── risiko-scanner.md      # Hoch/Mittel/Niedrig Risikobewertung
-│   │   ├── besichtigung-prep.md   # Besichtigungsfragen generieren
-│   │   ├── energieausweis-check.md # Energieausweis auswerten
-│   │   └── mietlisten-analyse.md  # Mietliste validieren & Potenzial erkennen
-│   │
-│   ├── finanzierung/              # Bankenkommunikation & Konzepte
-│   │   ├── bankenkonzept.md       # Finanzierungskonzept erstellen
-│   │   ├── cashflow-modell.md     # Cashflow-Projektion & Szenarien
-│   │   └── bankenpitch.md         # Praesentation fuer den Banker
-│   │
-│   ├── verwaltung/                # Laufende Bestandsverwaltung
-│   │   ├── wochen-jourfixe.md     # Woechentlicher Report aus E-Mail-Postfach
-│   │   ├── mahn-assistent.md      # Mahnwesen & Zahlungsverfolgung
-│   │   └── nebenkosten-pruefer.md # Nebenkostenabrechnung pruefen
-│   │
-│   ├── vermietung/                # Mietmanagement & Optimierung
-│   │   ├── mieterhoehung.md       # Mieterhoehungsstrategie & Potenzialanalyse
-│   │   ├── inserat-generator.md   # Vermietungsinserat erstellen
-│   │   └── vermieterbescheinigung.md # Vermieterbescheinigung generieren
-│   │
-│   ├── buchhaltung/               # Belege, DATEV & Steuer
-│   │   ├── beleg-sortierer.md     # Belege klassifizieren & zuordnen
-│   │   ├── datev-vorbereitung.md  # DATEV-Export vorbereiten
-│   │   └── anlage-v-assistent.md  # Anlage V fuer den Steuerberater
-│   │
-│   └── dokumente/                 # Dokumentenverarbeitung
-│       ├── dokument-klassifizierer.md  # Dokumenttyp erkennen
-│       ├── mietlisten-parser.md       # Mietlisten aus PDF extrahieren
-│       └── expose-parser.md           # Expose-Daten strukturiert extrahieren
+├── .claude-plugin/
+│   └── plugin.json                # Plugin-Manifest (Name, Version, Beschreibung)
+│
+├── skills/                        # Jeder Skill = ein Ordner mit SKILL.md
+│   ├── deal-screener/SKILL.md     # Schnellbewertung nach Ankaufskriterien
+│   ├── marktanalyse/SKILL.md      # Standort- und Marktbewertung
+│   ├── bierdeckel-kalkulation/SKILL.md  # Sofort-Ampel: Deal oder kein Deal
+│   ├── akquise-agent/SKILL.md     # Parametrisierter Deal-Such-Agent
+│   ├── unterlagen-analyst/SKILL.md # 100-Seiten-Objektunterlagen analysieren
+│   ├── risiko-scanner/SKILL.md    # Hoch/Mittel/Niedrig Risikobewertung
+│   ├── besichtigung-prep/SKILL.md # Besichtigungsfragen generieren
+│   ├── energieausweis-check/SKILL.md # Energieausweis auswerten
+│   ├── mietlisten-analyse/SKILL.md # Mietliste validieren & Potenzial
+│   ├── kaufvertrag-pruefung/SKILL.md # 13-Punkte Kaufvertragspruefung
+│   ├── bankenkonzept/SKILL.md     # Finanzierungskonzept erstellen
+│   ├── cashflow-modell/SKILL.md   # 5-Jahres-Cashflow mit Szenarien
+│   ├── bankenpitch/SKILL.md       # 13-Sektionen-Bankenpraesentation
+│   ├── selbstauskunft/SKILL.md    # Bonitaetsunterlagen fuer die Bank
+│   ├── wochen-jourfixe/SKILL.md   # Automatischer Wochenreport
+│   ├── mahn-assistent/SKILL.md    # Mahnwesen & Zahlungsverfolgung
+│   ├── nebenkosten-pruefer/SKILL.md # Nebenkostenabrechnung pruefen
+│   ├── mieterhoehung/SKILL.md     # Potenzialanalyse & Schreiben
+│   ├── inserat-generator/SKILL.md # Vermietungsinserat erstellen
+│   ├── vermieterbescheinigung/SKILL.md # §19 BMG Bescheinigung
+│   ├── mietnomaden-praevention/SKILL.md # 5-Saeulen Bewerber-Check
+│   ├── beleg-sortierer/SKILL.md   # Belege klassifizieren & zuordnen
+│   ├── datev-vorbereitung/SKILL.md # DATEV-Export vorbereiten
+│   ├── anlage-v-assistent/SKILL.md # Anlage V fuer Steuerberater
+│   ├── dokument-klassifizierer/SKILL.md # Dokumenttyp erkennen
+│   ├── mietlisten-parser/SKILL.md # Mietlisten aus PDF extrahieren
+│   ├── expose-parser/SKILL.md     # Expose-Daten strukturiert extrahieren
+│   ├── akquise-netzwerk/SKILL.md  # Off-Market Akquiseplan
+│   ├── bankgespraech-coach/SKILL.md # Banktermin-Vorbereitung
+│   ├── makler-coach/SKILL.md      # Maklerbeziehungen aufbauen
+│   └── verhandlungs-assistent/SKILL.md # Preisverhandlung & Strategie
 │
 ├── knowledge/                     # Wissensdatenbanken (Kontext fuer Skills)
 │   ├── kalkulationsformeln.md     # Renditekennzahlen, Faktoren, Formeln
@@ -135,16 +133,8 @@ immo-agent-skills/
 │   ├── rechtsgrundlagen.md        # BGB-Mietrecht, WEG, Mietspiegel
 │   └── checklisten.md             # Ankauf, Verwaltung, Vermietung
 │
-├── claude-code-plugins/           # Fertige Plugins fuer Claude Code
-│   ├── ankauf-plugin/
-│   ├── objektpruefung-plugin/
-│   ├── verwaltung-plugin/
-│   └── vermietung-plugin/
-│
-├── templates/                     # Beispiel-Eingabedaten
-│   └── beispiel-inputs/
-│       ├── beispiel-mietliste.csv
-│       └── beispiel-objektdaten.json
+├── templates/                     # Beispiel-Eingabedaten & HTML-Templates
+│   └── bankenpitch-template.html  # Interaktives Bankenpitch-Template
 │
 ├── LICENSE                        # Apache 2.0
 ├── DISCLAIMER.md                  # Haftungsausschluss
