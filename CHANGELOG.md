@@ -7,9 +7,11 @@ Alle wesentlichen Aenderungen an diesem Projekt.
 
 - Changelog aktualisiert
 - Changelog aktualisiert
+- Changelog aktualisiert
 
 ### Hinzugefuegt
 
+- 31/31 Skills mit Frontmatter, keine alten Kategorie-Ordner, Plugin-Manifest vorhanden
 - Refactor code structure for improved readability and maintainability
 - Add Akquise-Netzwerk skill with 12 strategies for profitable off-market deals
 - Add changelog generation workflow with cliff configuration
