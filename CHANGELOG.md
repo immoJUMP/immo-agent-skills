@@ -3,8 +3,13 @@
 Alle wesentlichen Aenderungen an diesem Projekt.
 ## [Unreleased]
 
+### Behoben
+
+- README-Installationsanleitung korrigiert -- Plugin-Installation statt fehlerhaftem git clone
+
 ### Dokumentation
 
+- Changelog aktualisiert
 - Changelog aktualisiert
 - Changelog aktualisiert
 - Changelog aktualisiert
