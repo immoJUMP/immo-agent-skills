@@ -11,6 +11,7 @@ Alle wesentlichen Aenderungen an diesem Projekt.
 
 ### Hinzugefuegt
 
+- Neuer Skill: prozess-designer -- Immobilienprozesse entwerfen und delegierbar machen mit immoJUMP MCP-Integration (Pipeline, Phasen, Aktivitaeten-Templates), basierend auf dem 5-Rollenkategorien-Modell (Zuarbeiter/Verantwortlicher) mit rollengerechter Aufgabenformulierung
 - 31/31 Skills mit Frontmatter, keine alten Kategorie-Ordner, Plugin-Manifest vorhanden
 - Refactor code structure for improved readability and maintainability
 - Add Akquise-Netzwerk skill with 12 strategies for profitable off-market deals
