@@ -9,9 +9,11 @@ Alle wesentlichen Aenderungen an diesem Projekt.
 - Changelog aktualisiert
 - Changelog aktualisiert
 - Changelog aktualisiert
+- Changelog aktualisiert
 
 ### Hinzugefuegt
 
+- Prozess-designer v2 mit echtem immoJUMP Aktivitaeten-System
 - Neuer Skill prozess-designer fuer Immobilienprozesse und Aufgabendelegation
 - 31/31 Skills mit Frontmatter, keine alten Kategorie-Ordner, Plugin-Manifest vorhanden
 - Refactor code structure for improved readability and maintainability
