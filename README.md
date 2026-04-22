@@ -24,33 +24,84 @@ Jeder Skill wurde fuer den **deutschen Markt** entwickelt -- mit deutschen Recht
 
 ## Schnellstart
 
-### Die einfachste Methode: Claude fragen
+### Option 1: Plugin aus GitHub installieren (empfohlen)
 
-Oeffne Claude Code und tippe:
+Oeffne Claude Code (CLI, Desktop-App oder Web) und fuehre diese zwei Befehle aus:
 
-> **Installiere die Immobilien-Skills von https://github.com/immoJUMP/immo-agent-skills**
+```
+/plugin marketplace add immoJUMP/immo-agent-skills
+/plugin install immo-agent-skills@immoJUMP-immo-agent-skills
+```
 
-Das war's. Claude laedt alles herunter und richtet die Skills ein. Kein Git, kein Terminal-Wissen noetig.
+Fertig. Alle Skills sind sofort als Slash-Commands verfuegbar. Kein Git, kein Terminal noetig.
+
+> **Wichtig:** Nach der Installation Claude Code einmal neu starten oder `/reload-plugins` ausfuehren.
 
 ---
 
-### Alternative: Ein Befehl im Terminal
+### Option 2: Manuell klonen und als Plugin laden
 
 ```bash
+# 1. Repo klonen (wohin ist egal -- z.B. ins Home-Verzeichnis)
+git clone https://github.com/immoJUMP/immo-agent-skills.git ~/immo-agent-skills
+
+# 2. Claude Code mit dem Plugin starten
+claude --plugin-dir ~/immo-agent-skills
+```
+
+Wenn du das Plugin **dauerhaft** verfuegbar haben willst (ohne jedes Mal `--plugin-dir` anzugeben), trage es in deine Claude-Code-Settings ein:
+
+**Datei:** `~/.claude/settings.json`
+```json
+{
+  "plugins": [
+    {
+      "path": "~/immo-agent-skills"
+    }
+  ]
+}
+```
+
+---
+
+### Option 3: Einzelne Skills ohne Plugin kopieren
+
+Falls du nur bestimmte Skills brauchst und kein Plugin installieren willst:
+
+```bash
+# Repo klonen
+git clone https://github.com/immoJUMP/immo-agent-skills.git /tmp/immo-agent-skills
+
+# Einzelne Skills in den Skills-Ordner kopieren
+cp -r /tmp/immo-agent-skills/skills/deal-screener ~/.claude/skills/deal-screener
+cp -r /tmp/immo-agent-skills/skills/bierdeckel-kalkulation ~/.claude/skills/bierdeckel-kalkulation
+# ... weitere Skills nach Bedarf
+```
+
+> **Achtung:** Bei dieser Methode fehlt der Plugin-Namespace. Die Skills sind dann als `/deal-screener` statt `/immo-agent-skills:deal-screener` verfuegbar.
+
+---
+
+### Haeufiger Fehler: Ganzes Repo nach `~/.claude/skills/` klonen
+
+```bash
+# FALSCH -- so funktioniert es NICHT:
 git clone https://github.com/immoJUMP/immo-agent-skills.git ~/.claude/skills/immo-agent-skills
 ```
 
+Das fuehrt dazu, dass die SKILL.md-Dateien unter `~/.claude/skills/immo-agent-skills/skills/deal-screener/SKILL.md` landen -- eine Ebene zu tief. Claude Code findet nur `~/.claude/skills/*/SKILL.md` (eine Verzeichnisebene). Nutze stattdessen die Plugin-Installation (Option 1 oder 2).
+
 ---
 
-### Danach: Skills nutzen
+### Skills nutzen
 
-Starte eine neue Claude-Code-Session -- alle Skills sind sofort verfuegbar:
+Nach der Installation sind alle Skills als Slash-Commands verfuegbar:
 
 ```
-/deal-screener Kaufpreis 850.000, 8 Einheiten, Baujahr 1962, Koeln-Ehrenfeld
-/mieterhoehung [Mietliste hochladen]
-/unterlagen-analyst [100 Seiten Objektunterlagen hochladen]
-/bierdeckel-kalkulation 650.000 EUR, 420 qm, 6 WE, 5.80 EUR/qm Ist-Miete
+/immo-agent-skills:deal-screener Kaufpreis 850.000, 8 Einheiten, Baujahr 1962, Koeln-Ehrenfeld
+/immo-agent-skills:mieterhoehung [Mietliste hochladen]
+/immo-agent-skills:unterlagen-analyst [100 Seiten Objektunterlagen hochladen]
+/immo-agent-skills:bierdeckel-kalkulation 650.000 EUR, 420 qm, 6 WE, 5.80 EUR/qm Ist-Miete
 ```
 
 Oder stell einfach eine Frage -- Claude erkennt automatisch, welcher Skill passt.
@@ -64,8 +115,6 @@ Oder stell einfach eine Frage -- Claude erkennt automatisch, welcher Skill passt
 Claude fragt dann im Gespraech alles ab, was er braucht -- Schritt fuer Schritt, auf Deutsch. Du kannst auch Dokumente hochladen (Mietliste, Expose, Objektunterlagen) und Claude extrahiert die Daten selbst.
 
 Die JSON-Schemas in den Skill-Dateien sind die technische Referenz fuer Entwickler und Automatisierungen (z.B. wenn du Skills ueber eine API oder n8n ansteuerst). Als normaler Nutzer brauchst du die nie zu sehen.
-
-> **Tipp:** Als Plugin werden alle Skills automatisch unter dem Namespace `immo-agent-skills` erkannt, z.B. `/immo-agent-skills:deal-screener`.
 
 <details>
 <summary><strong>Weitere Optionen: Claude Projects, ChatGPT, andere LLMs</strong></summary>
