@@ -15,6 +15,11 @@ Alle wesentlichen Aenderungen an diesem Projekt.
 - Changelog aktualisiert
 - Changelog aktualisiert
 - Changelog aktualisiert
+- Changelog aktualisiert
+
+### Geaendert
+
+- Bankenkonzept + bankenpitch zusammengefuehrt, anlage-v-assistent entfernt
 
 ### Hinzugefuegt
 
