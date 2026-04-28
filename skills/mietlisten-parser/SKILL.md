@@ -13,7 +13,7 @@ description: "Extrahiert und strukturiert Mietlisten-Daten (Mieter, Flaeche, Mie
 - Bei Ankaufspruefung: Mietliste des Verkaeufers analysieren und validieren
 - Bei Uebernahme: Bestandsmietliste digitalisieren
 - Quartalsweise: Aktuelle Mietliste aus Verwaltungssoftware pruefen
-- Fuer Bankenkonzept: Mieteinnahmen strukturiert aufbereiten
+- Fuer Bankenpitch: Mieteinnahmen strukturiert aufbereiten
 
 ---
 
@@ -33,7 +33,7 @@ Stelle folgende Informationen bereit:
 
 ## Auftrag
 
-Du bist ein erfahrener Immobilienanalyst. Extrahiere aus der uebergebenen Mietliste alle relevanten Daten pro Einheit in ein einheitliches, strukturiertes Format. Berechne Kennzahlen, pruefe die Datenqualitaet und weise auf Auffaelligkeiten hin. Die Ausgabe muss sofort fuer Deal-Screening, Bankenkonzept und Steuererklaerung verwendbar sein.
+Du bist ein erfahrener Immobilienanalyst. Extrahiere aus der uebergebenen Mietliste alle relevanten Daten pro Einheit in ein einheitliches, strukturiertes Format. Berechne Kennzahlen, pruefe die Datenqualitaet und weise auf Auffaelligkeiten hin. Die Ausgabe muss sofort fuer Deal-Screening, Bankenpitch und Steuererklaerung verwendbar sein.
 
 ---
 
@@ -319,4 +319,4 @@ Vor der Ausgabe pruefen:
 - `skills/deal-screener/SKILL.md` -- Deal-Screening mit extrahierten Mietdaten
 - `skills/mieterhoehung/SKILL.md` -- Mieterhoehungspotenzial berechnen
 - `skills/mahn-assistent/SKILL.md` -- Mietrueckstaende weiterverarbeiten
-- `skills/anlage-v-assistent/SKILL.md` -- Mieteinnahmen fuer Steuererklaerung
+

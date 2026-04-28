@@ -21,7 +21,7 @@ Du nutzt aktiv Websuche, um aktuelle Marktdaten, Mietspiegel und Bevoelkerungspr
 - Du willst den Standort eines Objekts systematisch bewerten
 - Du brauchst Vergleichsdaten fuer Mieten und Kaufpreise in der Region
 - Du willst die Zukunftsfaehigkeit eines Standorts einschaetzen
-- Du bereitest eine Standortanalyse fuer dein Bankenkonzept vor
+- Du bereitest eine Standortanalyse fuer deinen Bankenpitch vor
 - Du vergleichst mehrere Standorte miteinander
 
 ---
@@ -478,4 +478,4 @@ Vor Abgabe der Analyse pruefe:
 - `skills/deal-screener/SKILL.md` -- Vorgelagertes Schnell-Screening des Deals
 - `skills/bierdeckel-kalkulation/SKILL.md` -- Rendite-Kalkulation nach der Marktanalyse
 - `skills/mieterhoehung/SKILL.md` -- Vertiefte Mieterhoehungsstrategie basierend auf Mietspiegel-Daten
-- `skills/bankenkonzept/SKILL.md` -- Standortanalyse als Teil des Bankenkonzepts
+- `skills/bankenpitch/SKILL.md` -- Standortanalyse als Teil der Bankenpraesentation

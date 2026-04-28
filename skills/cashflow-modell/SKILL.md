@@ -14,7 +14,7 @@ Erstellt eine detaillierte 5-Jahres-Cashflow-Projektion fuer eine Wohnimmobilie 
 
 - Du hast ein konkretes Objekt und willst den Cashflow ueber 5 Jahre modellieren
 - Du willst pruefen, ob ein Deal cashflow-positiv wird (und wann)
-- Du brauchst eine Cashflow-Projektion fuer das Bankenkonzept oder den Bankenpitch
+- Du brauchst eine Cashflow-Projektion fuer den Bankenpitch
 - Du willst Szenarien durchspielen: Was wenn Zinsen steigen? Was wenn Leerstand steigt?
 - Du planst Mieterhoehungsrunden und willst den ROI jeder Runde sehen
 - Du ueberlegst, ob sich Auszugsgeld (Mieterabfindung) fuer eine Neuvermietung lohnt
@@ -413,5 +413,4 @@ Pruefe das Modell gegen diese Kriterien:
 - `knowledge/kalkulationsformeln.md` -- Renditekennzahlen, Cashflow-Formeln, AfA-Saetze
 - `knowledge/rechtsgrundlagen.md` -- §558 BGB (Mieterhoehung), §559 BGB (Modernisierungsumlage), Kappungsgrenze, anschaffungsnahe Herstellungskosten
 - `knowledge/marktbenchmarks.md` -- Instandhaltungskosten nach Baujahr, Verwaltungskosten-Benchmarks
-- `skills/bankenkonzept/SKILL.md` -- Finanzierungskonzept, das die Cashflow-Projektion einbettet
-- `skills/bankenpitch/SKILL.md` -- Praesentationsdokument mit integrierter Cashflow-Darstellung
+- `skills/bankenpitch/SKILL.md` -- Finanzierungskonzept & Bankenpraesentation mit integrierter Cashflow-Darstellung

@@ -287,5 +287,5 @@ Vor der Ausgabe pruefen:
 - `knowledge/rechtsgrundlagen.md` -- BGB-Mietrecht, steuerliche Grundlagen
 - `knowledge/checklisten.md` -- Belegpruefung, Jahresabschluss
 - `skills/datev-vorbereitung/SKILL.md` -- Naechster Schritt: Buchungssaetze erstellen
-- `skills/anlage-v-assistent/SKILL.md` -- Naechster Schritt: Anlage V vorausfuellen
+
 - `skills/dokument-klassifizierer/SKILL.md` -- Dokumenttyp-Erkennung fuer unbekannte Belege

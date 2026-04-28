@@ -373,8 +373,7 @@ Vor Abgabe der Bewertung pruefe:
 
 ### Verwandte Skills
 
-- `skills/bankenkonzept/SKILL.md` -- Finanzierungsstruktur und -vergleich
-- `skills/bankenpitch/SKILL.md` -- Praesentation fuer das Bankgespraech
+- `skills/bankenpitch/SKILL.md` -- Finanzierungskonzept & Bankenpraesentation fuer das Bankgespraech
 - `skills/cashflow-modell/SKILL.md` -- Detailliertes Cashflow-Modell fuer das Objekt
 - `skills/kaufvertrag-pruefung/SKILL.md` -- Kaufvertragspruefung nach Finanzierungszusage
 - `skills/bierdeckel-kalkulation/SKILL.md` -- Schnelle Rendite-Kalkulation fuer die Erstbewertung

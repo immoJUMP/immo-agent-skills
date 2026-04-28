@@ -552,5 +552,5 @@ Vor Abgabe der Kalkulation pruefe:
 - `skills/deal-screener/SKILL.md` -- Vorgelagertes Screening vor der Kalkulation
 - `skills/marktanalyse/SKILL.md` -- Standortdaten fuer die Marktmiete-Schaetzung
 - `skills/cashflow-modell/SKILL.md` -- Detaillierte 5-Jahres-Cashflow-Projektion nach positivem Bierdeckel
-- `skills/bankenkonzept/SKILL.md` -- Finanzierungskonzept fuer die Bank
+- `skills/bankenpitch/SKILL.md` -- Finanzierungskonzept & Bankenpraesentation
 - `skills/mietlisten-analyse/SKILL.md` -- Detaillierte Mietlisten-Validierung

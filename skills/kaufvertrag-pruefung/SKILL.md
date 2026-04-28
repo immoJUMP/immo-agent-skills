@@ -350,5 +350,5 @@ Vor Abgabe der Bewertung pruefe:
 - `skills/deal-screener/SKILL.md` -- Schnellbewertung vor Kaufvertragsphase
 - `skills/risiko-scanner/SKILL.md` -- Detaillierte Risikobewertung
 - `skills/unterlagen-analyst/SKILL.md` -- Analyse aller Objektunterlagen
-- `skills/bankenkonzept/SKILL.md` -- Finanzierungsstruktur und Bankenpitch
+- `skills/bankenpitch/SKILL.md` -- Finanzierungskonzept & Bankenpraesentation
 - `skills/selbstauskunft/SKILL.md` -- Bonitaetsunterlagen fuer die Bank

@@ -276,4 +276,4 @@ Vor der Ausgabe pruefen:
 - `knowledge/rechtsgrundlagen.md` -- Steuerliche Grundlagen, AfA-Regelungen, UStG
 - `knowledge/kalkulationsformeln.md` -- Berechnungsformeln fuer AfA und Rendite
 - `skills/beleg-sortierer/SKILL.md` -- Vorheriger Schritt: Belege klassifizieren
-- `skills/anlage-v-assistent/SKILL.md` -- Naechster Schritt: Anlage V vorausfuellen
+

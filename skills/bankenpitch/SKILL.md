@@ -1,12 +1,18 @@
 ---
-description: "Erstellt eine vollstaendige 13-Sektionen-Bankenpraesentation als interaktives HTML mit Slidern, DSCR-Matrix und Phasen-Cashflow. Nutze diesen Skill wenn Bankkonzept und Cashflow-Modell fertig sind und du ein bankenfertiges Dokument fuer Firmenkundenberater, Marktfolge und Kreditausschuss brauchst."
+description: "Analysiert ein Kaufobjekt und erstellt eine bankenfertige 13-Sektionen-Praesentation mit Finanzierungskonzept, interaktivem HTML-Cashflow-Rechner, DSCR-Sensitivitaetsmatrix und Phasen-Cashflow. Nutze diesen Skill wenn du ein konkretes Objekt finanzieren willst -- von der Analyse bis zum fertigen Bankendokument in einem Schritt."
 ---
 
-# Bankenpitch -- Vollstaendige 13-Sektionen-Bankenpraesentation fuer Wohnimmobilien-Investoren
+# Bankenpitch -- Finanzierungskonzept & Bankenpraesentation
 
-Erstellt eine vollstaendige, professionelle Bankenpraesentation in 13 Sektionen, die auf der Analyse von 4 realen Praesentationsformaten basiert (Gamma PDF, 2 interaktive HTML-Praesentationen, 2 PDF-Projektvorstellungen). Das Ergebnis ist ein bankenfertiges Dokument, das der Firmenkundenberater ohne Rueckfragen intern an Marktfolge und Kreditausschuss weiterreichen kann.
+Analysiert ein konkretes Kaufobjekt, rechnet das vollstaendige Finanzierungskonzept durch und verpackt alles in eine professionelle 13-Sektionen-Bankenpraesentation. Das Ergebnis ist ein bankenfertiges Dokument, das der Firmenkundenberater ohne Rueckfragen intern an Marktfolge und Kreditausschuss weiterreichen kann.
 
-> **Praxis-Insight:** Ein Investor hat mit einer strukturierten Bankenpraesentation zwei 1-Mio-Euro-Deals mit NULL Eigenkapital finanziert bekommen. Der Banker sagte: "Er hat sich wirklich Gedanken gemacht." Die Praesentation zeigte klar den Pfad: Ist-Mieten -> organische Mieterhoehung -> Modernisierung -> tilgungsfrei Jahr 1 -> Cashflow-positiv ab Jahr 2. Die Bank konnte das Konzept intern ohne Rueckfragen vorlegen. Der Schluessel: Die Eigenleistungen des Investors (Neuvermietung, Mietverhandlungen, Projektmanagement Sanierung, Foerderkoordination) wurden marktueblich bewertet und als EK-Ersatz dargestellt -- Block 1 (Barmittel fuer KNK) plus Block 2 (bewertete Eigenleistungen) ergaben eine EK-Quote von ueber 15%, obwohl kein einziger Euro in Cash eingebracht wurde.
+Dieser Skill vereint Analyse und Praesentation -- du gibst die Basisdaten ein, die KI rechnet alles durch (Kapitaldienstfaehigkeit, Szenarien, Sensitivitaet, Phasen-Cashflow) und liefert die fertige Praesentation.
+
+> **Kategorie:** Finanzierung
+> **Zielgruppe:** Wohnimmobilieninvestoren (MFH, 10-500+ Einheiten)
+> **Zeitaufwand:** 10-20 Minuten
+
+> **Praxis-Insight:** Ein Investor hat mit exakt dieser Struktur zwei 1-Mio-Euro-Deals mit NULL Eigenkapital finanziert bekommen. Die Bank sagte: "Er hat sich wirklich Gedanken gemacht." Der Schluessel: Ist-Mieten -> organische Mieterhoehung -> Modernisierung -> tilgungsfrei Jahr 1 -> Cashflow-positiv ab Jahr 2. Die Eigenleistungen des Investors (Neuvermietung, Mietverhandlungen, Projektmanagement Sanierung, Foerderkoordination) wurden marktueblich bewertet und als EK-Ersatz dargestellt -- Block 1 (Barmittel) plus Block 2 (bewertete Eigenleistungen) ergaben eine EK-Quote von ueber 15%, obwohl kein einziger Euro in Cash eingebracht wurde.
 
 > **Ausgabeformate:** Das Ergebnis kann verwendet werden als: (a) Markdown-Dokument zur direkten Nutzung, (b) Input fuer Gamma.app zur Erzeugung einer designten PDF-Praesentation, (c) Input fuer Claude Code zur Erzeugung einer interaktiven HTML-Praesentation mit Slidern und DSCR-Matrix.
 
@@ -14,16 +20,20 @@ Erstellt eine vollstaendige, professionelle Bankenpraesentation in 13 Sektionen,
 
 ## Wann diesen Skill nutzen
 
-- Du hast das Bankenkonzept und Cashflow-Modell bereits erstellt und willst ein vollstaendiges Praesentationsdokument fuer den Banktermin
+- Du hast ein konkretes Ankaufsobjekt und brauchst eine Bankfinanzierung
+- Du willst der Bank zeigen, dass du einen durchdachten Plan hast
 - Du bereitest einen Ersttermin oder Zweitgespraech mit dem Firmenkundenberater vor
+- Du willst eine 100%-Finanzierung oder 110%-Finanzierung (inkl. Nebenkosten) argumentieren
+- Du musst die Kapitaldienstfaehigkeit nachweisen
 - Du willst dem Banker ein Dokument geben, das er intern (Marktfolge, Kreditausschuss) ohne Rueckfragen weiterreichen kann
-- Du willst dich mit einer professionellen 13-Sektionen-Praesentation von anderen Finanzierungsanfragen abheben
-- Du argumentierst eine 100%-Finanzierung oder ueberdurchschnittlichen Beleihungsauslauf mit Eigenleistungen als EK-Ersatz
+- Du willst dich mit einer professionellen Praesentation von anderen Finanzierungsanfragen abheben
 - Du brauchst eine Praesentation, die DSCR-Bedienbarkeit in JEDER Phase nachweist
 
 ---
 
 ## Was du bereitstellen musst
+
+### Pflichtangaben
 
 ```json
 {
@@ -31,12 +41,52 @@ Erstellt eine vollstaendige, professionelle Bankenpraesentation in 13 Sektionen,
     "name": "Max Mustermann",
     "company": "Mustermann Immobilien GmbH",
     "role": "Geschaeftsfuehrer",
-    "description": "Bestandshalter mit Fokus auf Value-Add-Wohnimmobilien in Ostdeutschland",
+    "description": "Bestandshalter mit Fokus auf Value-Add-Wohnimmobilien",
     "contact": {
       "phone": "+49 170 1234567",
       "email": "max@mustermann-immo.de",
       "address": "Musterstrasse 1, 03046 Cottbus"
-    },
+    }
+  },
+  "property": {
+    "address": "Beispielstrasse 10-12, 03046 Cottbus",
+    "type": "MFH | ZFH | ETW-Paket | Wohn-/Geschaeftshaus",
+    "units_residential": 10,
+    "units_commercial": 2,
+    "total_sqm": 904,
+    "year_built": 1936,
+    "condition": "teilsaniert | unsaniert | vollsaniert | Neubau",
+    "plot_size_sqm": 1250,
+    "heating_type": "Gas-Zentralheizung"
+  },
+  "purchase": {
+    "asking_price_eur": 550000,
+    "offered_price_eur": 520000,
+    "buyer_commission_pct": 3.57,
+    "grunderwerbsteuer_pct": 6.5,
+    "notar_grundbuch_pct": 2.0
+  },
+  "current_rents": {
+    "cold_rent_monthly_eur": 4000,
+    "vacancy_units": 3,
+    "vacancy_since": "2024-06-01",
+    "rent_roll_available": true
+  },
+  "financing_preferences": {
+    "equity_available_eur": 47764,
+    "target_loan_to_value_pct": 100,
+    "desired_fixed_rate_years": 10,
+    "tilgungsfrei_months": 24,
+    "sondertilgung_pct": 5
+  }
+}
+```
+
+### Optionale Angaben (erhoehen die Qualitaet)
+
+```json
+{
+  "investor_detail": {
     "portfolio_kpis": {
       "units_total": 42,
       "experience_years": 6,
@@ -45,10 +95,6 @@ Erstellt eine vollstaendige, professionelle Bankenpraesentation in 13 Sektionen,
     },
     "werdegang_timeline": [
       { "year": 2019, "milestone": "Erste ETW als Kapitalanlage erworben" },
-      { "year": 2020, "milestone": "Erstes MFH (6 WE) -- Cottbus" },
-      { "year": 2021, "milestone": "Gruendung Mustermann Immobilien GmbH" },
-      { "year": 2022, "milestone": "Zwei MFH-Paketkaeufe (18 WE) -- 100% finanziert" },
-      { "year": 2023, "milestone": "Portfolio auf 35 WE ausgebaut" },
       { "year": 2024, "milestone": "42 WE, erste KfW-Sanierung abgeschlossen" }
     ],
     "trackrecord_highlight": {
@@ -60,26 +106,8 @@ Erstellt eine vollstaendige, professionelle Bankenpraesentation in 13 Sektionen,
     },
     "stille_reserven": {
       "freie_grundschulden_eur": 120000,
-      "description": "Freie Grundschulden aus getilgten Bestandsdarlehen, nachrangig beleihbar"
+      "description": "Freie Grundschulden aus getilgten Bestandsdarlehen"
     }
-  },
-  "property": {
-    "address": "Beispielstrasse 10-12, 03046 Cottbus",
-    "city": "Cottbus",
-    "bundesland": "Brandenburg",
-    "type": "Mehrfamilienhaus / Wohn- und Geschaeftshaus",
-    "year_built": 1936,
-    "energy_class": "H",
-    "units_residential": 10,
-    "units_commercial": 2,
-    "total_sqm": 904,
-    "plot_size_sqm": 1250,
-    "parking_spaces": 6,
-    "heating_type": "Gas-Zentralheizung",
-    "basement": true,
-    "grundbuch_clean": true,
-    "photos": ["front_view.jpg", "rear_view.jpg"],
-    "strategy": "Value-Add: Leerstandsabbau + Mieterhoehung + selektive Modernisierung"
   },
   "darlehensnehmer": {
     "gesellschaft": "Mustermann Immobilien GmbH",
@@ -87,534 +115,277 @@ Erstellt eine vollstaendige, professionelle Bankenpraesentation in 13 Sektionen,
     "geschaeftsfuehrer": "Max Mustermann",
     "sitz": "Cottbus"
   },
-  "rent_roll": {
-    "market_rent_per_sqm": 7.50,
-    "units": [
-      {
-        "unit_id": "WE 01",
-        "type": "Wohnung",
-        "sqm": 65.0,
-        "rent_ist_monthly": 325.00,
-        "rent_soll_monthly": 455.00,
-        "tenant": "Mueller, A.",
-        "lease_start": "2018-03-01"
-      },
-      {
-        "unit_id": "WE 02",
-        "type": "Wohnung",
-        "sqm": 78.0,
-        "rent_ist_monthly": 390.00,
-        "rent_soll_monthly": 546.00,
-        "tenant": "Schmidt, B.",
-        "lease_start": "2020-07-01"
-      },
-      {
-        "unit_id": "GE 01",
-        "type": "Gewerbe",
-        "sqm": 120.0,
-        "rent_ist_monthly": 600.00,
-        "rent_soll_monthly": 840.00,
-        "tenant": "Leer",
-        "lease_start": null
-      }
-    ],
-    "buildings": [
-      {
-        "name": "Haus 10",
-        "units_residential": 5,
-        "units_commercial": 1,
-        "rent_ist_monthly": 2100,
-        "rent_sofort_monthly": 2520,
-        "rent_soll1_monthly": 3150,
-        "rent_soll2_monthly": 3400,
-        "rent_soll3_monthly": 3600
-      },
-      {
-        "name": "Haus 12",
-        "units_residential": 5,
-        "units_commercial": 1,
-        "rent_ist_monthly": 1900,
-        "rent_sofort_monthly": 2280,
-        "rent_soll1_monthly": 2850,
-        "rent_soll2_monthly": 3100,
-        "rent_soll3_monthly": 3300
-      }
-    ],
-    "summary": {
-      "jnkm_ist": 48000,
-      "jnkm_sofort": 57600,
-      "jnkm_soll1": 72000,
-      "jnkm_soll2": 78000,
-      "jnkm_soll3": 82800,
-      "avg_ist_per_sqm": 4.42,
-      "avg_soll1_per_sqm": 6.64
+  "rent_roll": [
+    {
+      "unit_id": "WE 01",
+      "type": "Wohnung",
+      "sqm": 65.0,
+      "rent_ist_monthly": 325.00,
+      "tenant": "Mueller, A.",
+      "lease_start": "2018-03-01"
     }
-  },
-  "investment_strategy": {
-    "development_path": [
-      {
-        "stage": "IST",
-        "jnkm": 48000,
-        "delta": null,
-        "rendite_pct": 5.8,
-        "dscr": 1.15,
-        "description": "Aktuelle Situation bei Uebernahme"
-      },
-      {
-        "stage": "SOFORT",
-        "jnkm": 57600,
-        "delta": "+9.600",
-        "rendite_pct": 7.0,
-        "dscr": 1.38,
-        "description": "Leerstand beseitigen, Neuvermietung zu Marktniveau"
-      },
-      {
-        "stage": "SOLL 1",
-        "jnkm": 72000,
-        "delta": "+14.400",
-        "rendite_pct": 8.7,
-        "dscr": 1.50,
-        "description": "Mieterhoehung Bestand (Sec. 558 + Sec. 559 BGB)"
-      },
-      {
-        "stage": "SOLL 2",
-        "jnkm": 78000,
-        "delta": "+6.000",
-        "rendite_pct": 9.5,
-        "dscr": 1.63,
-        "description": "Gewerbe-Neuvermietung + weitere Mietanpassung"
-      },
-      {
-        "stage": "SOLL 3",
-        "jnkm": 82800,
-        "delta": "+4.800",
-        "rendite_pct": 10.0,
-        "dscr": 1.72,
-        "description": "Vollstabilisierung nach Sanierung"
-      }
-    ],
-    "sanierungsaufstellung": [
+  ],
+  "planned_measures": {
+    "organic_rent_increase": true,
+    "modernization_planned": true,
+    "modernization_budget_eur": 100000,
+    "re_letting_target_rent_eur_sqm": 7.50,
+    "measures": [
       { "massnahme": "Fenstertausch (10 WE)", "kosten": 35000, "programm": "KfW 261/262" },
-      { "massnahme": "Heizungsoptimierung", "kosten": 12000, "programm": "BAFA BEG EM" },
-      { "massnahme": "Treppenhaussanierung", "kosten": 8000, "programm": null },
-      { "massnahme": "Badsanierung (3 WE bei MW)", "kosten": 15000, "programm": null },
-      { "massnahme": "Elektrik-Ertuechtigung", "kosten": 10000, "programm": null },
-      { "massnahme": "Fassade (Teilbereich)", "kosten": 20000, "programm": "KfW 261" }
-    ],
-    "sanierung_total": 100000,
-    "kfw_tilgungszuschuss": 15000,
-    "zeitstrahl": [
-      { "zeitpunkt": "Sofort (Monat 1-3)", "meilenstein": "Leerstandsabbau + Neuvermietung", "wirkung": "JNKM +9.600 EUR, DSCR steigt auf 1,38" },
-      { "zeitpunkt": "Monat 4-12", "meilenstein": "Organische Mieterhoehung (Sec. 558 BGB)", "wirkung": "Bestandsmieten +15-20% bei Mietspiegelberechtigung" },
-      { "zeitpunkt": "Jahr 2", "meilenstein": "Modernisierung + Sec. 559 Umlage", "wirkung": "JNKM auf 72.000 EUR, DSCR 1,50" },
-      { "zeitpunkt": "Jahr 3-4", "meilenstein": "Gewerbe-Neuvermietung + Stabilisierung", "wirkung": "JNKM auf 78.000 EUR" },
-      { "zeitpunkt": "Jahr 5+", "meilenstein": "Vollstabilisierung", "wirkung": "JNKM 82.800 EUR, DSCR 1,72, Option Nachbeleihung" },
-      { "zeitpunkt": "Jahr 6+", "meilenstein": "Exit-Optionen pruefen", "wirkung": "WEG-Aufteilung oder Portfolioverkauf moeglich" }
-    ],
-    "investitionslogik": "Erwerb eines unterbewerteten Wohn- und Geschaeftshauses mit 20% Leerstand und 35% Mietanpassungspotenzial. Die Strategie kombiniert sofortige Leerstandsbeseitigung (DSCR-Sprung auf 1,38), organische Mieterhoehung im Bestand und selektive KfW-foerderfaehige Modernisierung. Der Kapitaldienst wird in JEDER Phase aus dem Objekt bedient. Die tilgungsfreie Anlaufphase von 24 Monaten ermoeglicht die Umsetzung ohne zusaetzlichen Liquiditaetsbedarf."
-  },
-  "financing": {
-    "purchase_price": 520000,
-    "knk": {
-      "grest_pct": 6.5,
-      "grest_eur": 33800,
-      "notar_gericht_pct": 2.0,
-      "notar_gericht_eur": 10400,
-      "makler_pct": 3.57,
-      "makler_eur": 18564
-    },
-    "knk_total": 62764,
-    "sanierung_total": 100000,
-    "eigenleistungen_value": 45000,
-    "gik_total": 727764,
-    "bank_loan": {
-      "amount": 620000,
-      "interest_rate_pct": 3.90,
-      "repayment_rate_pct": 2.00,
-      "tilgungsfrei_months": 24,
-      "fixed_rate_years": 10,
-      "sondertilgung_pct": 5
-    },
-    "kfw": {
-      "program": "KfW 261",
-      "amount": 60000,
-      "interest_rate_pct": 1.25,
-      "repayment_start_month": 36,
-      "tilgungszuschuss_eur": 15000
-    },
-    "eigenkapital": {
-      "barmittel_knk": 47764,
-      "eigenleistungen_block2": 45000,
-      "eigenleistungen_detail": [
-        { "leistung": "Neuvermietung Leerstand (3 WE)", "marktpreis_eur": 8000 },
-        { "leistung": "Mieterhoehungsgespraeche + Durchsetzung", "marktpreis_eur": 6000 },
-        { "leistung": "Gewerbe-Akquise + Verhandlung", "marktpreis_eur": 5000 },
-        { "leistung": "Projektmanagement Sanierung", "marktpreis_eur": 12000 },
-        { "leistung": "Objektueberwachung + Baubegleitung", "marktpreis_eur": 6000 },
-        { "leistung": "KfW-/BAFA-Foerderkoordination", "marktpreis_eur": 4000 },
-        { "leistung": "WEG-Aufteilungsvorbereitung", "marktpreis_eur": 4000 }
-      ],
-      "ek_quote_pct": 12.7
-    }
-  },
-  "ertragswert_ltv": {
-    "jnkm_soll_basis": 72000,
-    "factors": [15, 16, 17, 18],
-    "beleihungswert_pct": 70,
-    "results": [
-      { "factor": 15, "ertragswert": 1080000, "bw_70pct": 756000, "ltv_bank_pct": 82.0 },
-      { "factor": 16, "ertragswert": 1152000, "bw_70pct": 806400, "ltv_bank_pct": 76.9 },
-      { "factor": 17, "ertragswert": 1224000, "bw_70pct": 856800, "ltv_bank_pct": 72.4 },
-      { "factor": 18, "ertragswert": 1296000, "bw_70pct": 907200, "ltv_bank_pct": 68.3 }
+      { "massnahme": "Heizungsoptimierung", "kosten": 12000, "programm": "BAFA BEG EM" }
     ]
   },
-  "cashflow_interactive": {
-    "slider_defaults": {
-      "avg_rent_per_sqm": { "default": 6.64, "min": 4.00, "max": 9.00 },
-      "leerstand_pct": { "default": 5, "min": 0, "max": 20 },
-      "bewirtschaftung_pct": { "default": 25, "min": 15, "max": 35 },
-      "zinssatz_pct": { "default": 3.90, "min": 2.00, "max": 8.00 },
-      "tilgung_pct": { "default": 2.00, "min": 0, "max": 5.00 }
-    }
+  "existing_portfolio": {
+    "total_units": 35,
+    "total_value_eur": 3500000,
+    "annual_rental_income_eur": 280000,
+    "existing_loans_eur": 2800000,
+    "monthly_surplus_eur": 8500
   },
-  "phasen_cashflow": [
+  "comparable_properties": [
     {
-      "phase": 1,
-      "name": "IST (tilgungsfrei)",
-      "zeitraum": "Monat 1-24",
-      "jnkm": 57600,
-      "kd_monthly": 2015,
-      "dscr": 2.38,
-      "cf_monthly": 795
-    },
-    {
-      "phase": 2,
-      "name": "Sec. 559 + Bank tilgt",
-      "zeitraum": "Monat 25-36",
-      "jnkm": 72000,
-      "kd_monthly": 4664,
-      "dscr": 1.29,
-      "cf_monthly": 1336
-    },
-    {
-      "phase": 3,
-      "name": "Sec. 558 + KfW tilgt",
-      "zeitraum": "Monat 37-48",
-      "jnkm": 72000,
-      "kd_monthly": 4726,
-      "dscr": 1.27,
-      "cf_monthly": 1274
-    },
-    {
-      "phase": 4,
-      "name": "SOLL 2",
-      "zeitraum": "Monat 49-72",
-      "jnkm": 78000,
-      "kd_monthly": 4726,
-      "dscr": 1.38,
-      "cf_monthly": 1774
-    },
-    {
-      "phase": 5,
-      "name": "SOLL 3 (stabilisiert)",
-      "zeitraum": "Ab Monat 73",
-      "jnkm": 82800,
-      "kd_monthly": 4726,
-      "dscr": 1.46,
-      "cf_monthly": 2174
+      "address": "Beispielstr. 5, gleiche Stadt",
+      "purchase_price_eur": 900000,
+      "units": 7,
+      "price_per_sqm": 1650,
+      "factor": 18.5
     }
   ],
-  "sensitivity": {
-    "rent_steps_per_sqm": [4.00, 4.50, 5.00, 5.50, 6.00, 6.50, 7.00, 7.50],
-    "interest_rate_steps_pct": [3.0, 3.5, 4.0, 4.5, 5.0, 5.5, 6.0],
-    "ist_rent_per_sqm": 4.42,
-    "dscr_matrix_note": "Gruen >= 1,20 (komfortabel) | Gelb 1,00-1,20 (bedienbar) | Rot < 1,00 (unterdeckt)"
-  },
-  "scenarios": {
-    "conservative": {
-      "label": "Konservativ",
-      "avg_rent_per_sqm": 5.50,
-      "leerstand_pct": 10,
-      "bewirtschaftung_pct": 30,
-      "brutto_pa": 59664,
-      "netto_pa": 37688,
-      "kd_pa": 55968,
-      "cf_vst": -18280,
-      "dscr": 0.67,
-      "rendite_gk_pct": 5.54
-    },
-    "basis": {
-      "label": "Basis (empfohlen)",
-      "avg_rent_per_sqm": 6.64,
-      "leerstand_pct": 5,
-      "bewirtschaftung_pct": 25,
-      "brutto_pa": 72000,
-      "netto_pa": 51300,
-      "kd_pa": 55968,
-      "cf_vst": -4668,
-      "dscr": 0.92,
-      "rendite_gk_pct": 7.55
-    },
-    "optimistic": {
-      "label": "Optimistisch",
-      "avg_rent_per_sqm": 7.50,
-      "leerstand_pct": 3,
-      "bewirtschaftung_pct": 22,
-      "brutto_pa": 81360,
-      "netto_pa": 60869,
-      "kd_pa": 55968,
-      "cf_vst": 4901,
-      "dscr": 1.09,
-      "rendite_gk_pct": 8.96
-    }
-  },
-  "risks_and_exit": {
-    "risk_matrix": [
-      {
-        "risk": "Mieterhoehungen nicht durchsetzbar",
-        "probability": "Niedrig",
-        "mitigation": "Mietspiegel-gestuetzte Begruendung, konservatives Szenario zeigt Bedienbarkeit auch bei 60% der geplanten Erhoehungen"
-      },
-      {
-        "risk": "Leerstand steigt dauerhaft ueber 10%",
-        "probability": "Niedrig",
-        "mitigation": "Marktleerstand unter 4%, attraktive Mikrolage, Mietausfallversicherung vorhanden"
-      },
-      {
-        "risk": "Sanierungskosten uebersteigen Budget",
-        "probability": "Mittel",
-        "mitigation": "20% Puffer eingeplant, Handwerkerangebote fuer Hauptpositionen vorliegend, KfW-Foerderung als zusaetzlicher Puffer"
-      },
-      {
-        "risk": "Zinsanstieg nach Zinsbindung",
-        "probability": "Mittel",
-        "mitigation": "10 Jahre Zinsbindung, Sondertilgungen reduzieren Restschuld, DSCR-Matrix zeigt Bedienbarkeit bis 6% Zins"
-      },
-      {
-        "risk": "Regulatorische Aenderungen",
-        "probability": "Niedrig",
-        "mitigation": "Konservative Kalkulation ohne Ausreizung der Mietgrenzen, energetische Massnahmen im Sanierungsplan"
-      }
-    ],
-    "exit_options": [
-      {
-        "option": "Bestandshaltung",
-        "zeitpunkt": "Dauerhaft",
-        "wirkung": "DSCR 1,72 bei SOLL 3, CF +2.174 EUR/Mo, kontinuierlicher Vermoegensaufbau durch Tilgung"
-      },
-      {
-        "option": "Nachbeleihung / Kapitalrotation",
-        "zeitpunkt": "Ab Jahr 5",
-        "wirkung": "Ertragswert 1,3 Mio EUR -> freier Beleihungsraum ca. 200.000 EUR fuer naechsten Deal"
-      },
-      {
-        "option": "Grundstuecksentwicklung (Hinterland)",
-        "zeitpunkt": "Ab Jahr 3",
-        "wirkung": "1.250 qm Grundstueck, 800 qm bebaut -> 450 qm Bauerwartungsland, Potenzial fuer 4-6 Stellplaetze oder Tiny-Houses"
-      },
-      {
-        "option": "WEG-Aufteilung + Einzelverkauf",
-        "zeitpunkt": "Ab Jahr 5",
-        "wirkung": "12 Einheiten x Ø 85.000 EUR = 1.020.000 EUR Erloes vs. 520.000 EUR Kaufpreis -> Potenzial ca. 500.000 EUR stille Reserve"
-      },
-      {
-        "option": "Portfolioverkauf (en bloc)",
-        "zeitpunkt": "Ab Jahr 5",
-        "wirkung": "Faktor 17-18 auf JNKM SOLL 3 (82.800 EUR) = 1,4 - 1,5 Mio EUR Verkaufserloes"
-      }
-    ],
-    "stille_reserven_text": "Neben den freien Grundschulden aus dem Bestandsportfolio (120.000 EUR) bietet das Grundstueck mit 450 qm unbebautem Hinterland zusaetzliches Entwicklungspotenzial. Bei konservativer Bewertung (Faktor 17 auf JNKM SOLL 1) ergibt sich ein Ertragswert von 1,22 Mio EUR -- der Kaufpreis inklusive Sanierung liegt bei 620.000 EUR. Die stille Reserve betraegt somit ca. 600.000 EUR."
-  },
-  "bank_decision": {
-    "wir_bieten": [
-      "EK-Quote 12,7% (Barmittel + bewertete Eigenleistungen)",
-      "Grundschuld 1. Rang auf das Objekt",
-      "DSCR >= 1,27 in ALLEN Phasen (kein kritisches Fenster)",
-      "LTV Bank unter 80% ab Faktor 16",
-      "Voll vermietetes Objekt nach Leerstandsabbau (Monat 3)",
-      "Nachgewiesener Trackrecord mit vergleichbarem Objekt (JNKM +95%)"
-    ],
-    "wir_wuenschen": {
-      "darlehensart": "Annuitaetendarlehen mit tilgungsfreier Anlaufphase",
-      "bankdarlehen": {
-        "betrag": 620000,
-        "zins_pct": 3.90,
-        "tilgung_pct": 2.00,
-        "laufzeit_jahre": 10,
-        "tilgungsfrei_monate": 24
-      },
-      "kfw": {
-        "programm": "KfW 261",
-        "betrag": 60000,
-        "zins_pct": 1.25,
-        "tilgungszuschuss": 15000
-      },
-      "sondertilgung": "Bis 5% p.a. ohne Vorfaelligkeitsentschaedigung",
-      "sicherheit": "Grundschuld 1. Rang auf Kaufobjekt, ggf. nachrangige Grundschuld auf Bestandsobjekt",
-      "auszahlungsvoraussetzung": "Kaufvertrag, Grundschuldbestellung, Eigentumsumschreibung",
-      "anschlussfinanzierung": "Praeferred Partner bei gleicher Bank nach Zinsbindungsende"
-    },
-    "zusammenfassung": "Wir bieten der Bank ein durchgerechnetes Value-Add-Projekt mit nachgewiesenem Trackrecord, Cashflow-Bedienbarkeit in jeder Phase und konservativer LTV-Abdeckung. Der Investor bringt Eigenleistungen im Wert von 45.000 EUR ein, die marktueblich bewertet sind und den Projekterfolg sicherstellen. Die Kombination aus sofortiger Leerstandsbeseitigung, organischer Mieterhoehung und KfW-gefoerderter Modernisierung schafft einen klaren, nachvollziehbaren Pfad zur Vollstabilisierung."
-  },
-  "reference_properties": [
-    {
-      "address": "KM 59/60, Cottbus",
-      "type": "MFH",
-      "units": 8,
-      "purchase_price_eur": 380000,
-      "current_jnkm": 45600,
-      "jnkm_increase_pct": 95,
-      "dscr": 3.20,
-      "ltv_pct": 51.7,
-      "leerstand_pct": 0,
-      "note": "Vergleichsobjekt im Eigenbestand -- Strategie identisch, bereits erfolgreich umgesetzt"
-    }
-  ],
-  "documents_available": [
-    "Maklerexpose",
-    "Mieterliste (aktuell)",
-    "Lageplan / Katasterauszug",
-    "Bestandsuebersicht Portfolio",
-    "Trackrecord Vergleichsobjekt",
-    "Selbstauskunft Investor",
-    "Grundbuchauszug"
-  ]
+  "mietspiegel_data": {
+    "average_rent_per_sqm": 7.50,
+    "upper_range_per_sqm": 9.50,
+    "applicable_category": "Baujahr 1930-1950, mittlere Lage, Standardausstattung"
+  }
 }
 ```
+
+> **Hinweis:** Je mehr optionale Daten du lieferst, desto praeziser wird die Praesentation. Fehlende Daten werden von der KI konservativ geschaetzt oder als "wird nachgereicht" gekennzeichnet.
 
 ---
 
 ## Auftrag
 
-Erstelle eine vollstaendige Bankenpraesentation in 13 Sektionen, die:
+Analysiere das Kaufobjekt vollstaendig und erstelle eine professionelle 13-Sektionen-Bankenpraesentation, die:
 
 1. **In der Executive Summary das Projekt auf einen Blick zusammenfasst** -- mit 5 KPI-Boxen, Kern-Argumenten und Investitionslogik
 2. **Den Investor als erfahrenen, systematischen Bestandshalter positioniert** -- mit Portfolio-KPIs, Trackrecord und stillen Reserven
 3. **Das Objekt mit allen technischen und wirtschaftlichen Parametern vorstellt** -- inkl. Darlehensnehmer-Struktur
 4. **Die Investmentstrategie als 5-Stufen-Entwicklungspfad visualisiert** -- IST -> SOFORT -> SOLL 1 -> SOLL 2 -> SOLL 3 mit DSCR-Trajektorie
-5. **Den Wohnungsmix und die Mietentwicklung pro Einheit und Gebaeude detailliert** -- mit Marktvergleich
-6. **Die Finanzierungsstruktur mit Eigenleistungen als EK-Ersatz darstellt** -- Block 1 + Block 2 Konzept
-7. **Einen interaktiven Cashflow-Rechner mit 5 Stellschrauben bietet** -- mit Live-Berechnung
-8. **Die Phasen-Cashflows mit DSCR pro Phase nachweist** -- "Kein kritisches Fenster"
-9. **Eine DSCR-Sensitivitaetsmatrix mit Farbcodierung liefert** -- Gruen/Gelb/Rot
-10. **Drei Szenarien nebeneinander vergleicht** -- Konservativ, Basis, Optimistisch
-11. **Risiken proaktiv adressiert und Exit-Optionen mit Zahlen belegt** -- inkl. stille Reserven
-12. **Eine klare Bankenentscheidungsvorlage formuliert** -- "Wir bieten / Wir wuenschen"
-13. **Alle Anlagen und Download-Optionen auflistet** -- mit PDF-Export-Hinweis
+5. **Die Finanzierungsstruktur mit Eigenleistungen als EK-Ersatz darstellt** -- Block 1 + Block 2 Konzept
+6. **Einen interaktiven Cashflow-Rechner mit 5 Stellschrauben bietet** -- mit Live-Berechnung
+7. **Die Phasen-Cashflows mit DSCR pro Phase nachweist** -- "Kein kritisches Fenster"
+8. **Eine DSCR-Sensitivitaetsmatrix mit Farbcodierung liefert** -- Gruen/Gelb/Rot
+9. **Drei Szenarien nebeneinander vergleicht** -- Konservativ, Basis, Optimistisch
+10. **Risiken proaktiv adressiert und Exit-Optionen mit Zahlen belegt** -- inkl. stille Reserven
+11. **Eine klare Bankenentscheidungsvorlage formuliert** -- "Wir bieten / Wir wuenschen"
 
 ---
 
-## Strategie
+## Analysemethodik
 
-### Schritt 1: Executive Summary (Sektion 1)
+Bevor du die Praesentation erstellst, fuehre diese Analyse durch. Die Ergebnisse fliessen in die 13 Sektionen ein.
+
+### Schritt 1: Ist-Situation analysieren
+
+- Aktuelle Mieteinnahmen (Ist-Miete kalt) auflisten, pro Einheit wenn moeglich
+- Leerstand identifizieren und bewerten (seit wann, warum, behebbar?)
+- Ist-Miete vs. Mietspiegel vergleichen: Wie viel Potenzial steckt in den Bestandsmieten?
+- Zustand des Objekts bewerten: Was muss gemacht werden, was ist Kuer?
+- Aktuelle Bruttomietrendite und Kaufpreisfaktor berechnen
+
+### Schritt 2: 5-Stufen-Entwicklungspfad berechnen
+
+Definiere fuer jede Stufe JNKM, Delta zum Vorgaenger, Rendite und DSCR:
+
+- **IST:** Aktuelle Situation bei Uebernahme
+- **SOFORT (Monat 1-3):** Leerstand beseitigen, Neuvermietung zu Marktniveau
+- **SOLL 1 (Monat 4-24):** Organische Mieterhoehung Bestand (§558 BGB, Kappungsgrenze 15-20%) + Modernisierungsumlage (§559 BGB, max. 8% p.a.)
+- **SOLL 2 (Jahr 2-3):** Weitere Mietanpassungen, Gewerbe-Optimierung, Neuvermietung bei Fluktuation
+- **SOLL 3 (Jahr 4+):** Vollstabilisierung nach Sanierung
+
+### Schritt 3: Massnahmenplan erstellen
+
+- Konkrete Massnahmen mit Zeitrahmen und Kosten
+- Modernisierungsumlage nach §559 BGB berechnen (max. 8% p.a. der Modernisierungskosten, Kappungsgrenze 2-3 EUR/qm beachten)
+- Kappungsgrenze §558 BGB beachten (15% angespannter Markt / 20% in 3 Jahren)
+- KfW/BAFA-Foerderfaehigkeit pruefen, Tilgungszuschuesse einrechnen
+- Fuer jeden Schritt: Kosten, erwartete Mehrmieteinnahmen, Zeitrahmen
+
+### Schritt 4: Finanzierungsstruktur berechnen
+
+- Gesamtinvestitionskosten (GIK): Kaufpreis + GrESt + Notar/Grundbuch + Makler + Sanierung + Eigenleistungen (bewertet)
+- Darlehensbetrag (Bank + KfW) vs. Eigenkapitaleinsatz
+- Beleihungswert schaetzen (konservativ: Ertragswertverfahren, Faktor 15-18 x JNKM SOLL, dann 70% als Beleihungswert)
+- Beleihungsauslauf (BLA) berechnen: Bankdarlehen / Beleihungswert
+- Eigenleistungen als EK-Ersatz: Block 1 (Barmittel) + Block 2 (marktueblich bewertete Eigenleistungen) = EK-Quote
+- Annuitaet berechnen (Zins + Tilgung, ggf. tilgungsfreie Anlaufphase)
+
+### Schritt 5: Phasen-Cashflow berechnen
+
+Fuer jede Phase (typischerweise 5 Phasen):
+
+| Phase | Beschreibung | Was passiert |
+|-------|-------------|-------------|
+| 1 | IST (tilgungsfrei) | Leerstandsabbau, Anlaufphase |
+| 2 | Mieterhoehung + Bank tilgt | §558/§559, Volltilgung beginnt |
+| 3 | Modernisierung + KfW tilgt | Modernisierungsumlage traegt |
+| 4 | SOLL 2 | Gewerbe-Optimierung, Stabilisierung |
+| 5 | SOLL 3 (stabilisiert) | Vollstabilisierung, freier Cashflow |
+
+Fuer jede Phase berechne: JNKM, Kapitaldienst/Monat, DSCR, Cashflow/Monat.
+
+- DSCR = Nettomieteinnahmen (nach nicht umlagefaehigen Kosten) / Annuitaet
+- Zielwert: DSCR >= 1,20 in JEDER Phase (Bank will min. 120% Deckung)
+- Nachweis: Kein kritisches Fenster -- der DSCR darf zu keinem Zeitpunkt unter 1,0 fallen
+
+### Schritt 6: Sensitivitaet und Szenarien
+
+**DSCR-Matrix:**
+- Zeilen = Mietentwicklung (EUR/qm in 0,50er-Schritten, von 4,00 bis 7,50)
+- Spalten = Zinssatz (in 0,50er-Schritten, von 3,0% bis 6,0%)
+- Farbcodierung: Gruen >= 1,20 | Gelb 1,00-1,20 | Rot < 1,00
+- IST-Miete-Zeile hervorheben
+
+**3 Szenarien nebeneinander:**
+- Konservativ: Keine Mieterhoehung durchgesetzt, hoher Leerstand, hohe Bewirtschaftung
+- Basis (empfohlen): Geplante Strategie mit Puffer
+- Optimistisch: Volle Marktmiete, geringer Leerstand
+
+**Stresstest:** DSCR bei +2% Zinsanstieg nach Zinsbindungsende
+
+### Schritt 7: Exit-Szenarien und stille Reserven
+
+- **Bestandshaltung:** Langfristiger Cashflow, Entschuldung ueber 25-30 Jahre
+- **Verkauf nach Wertsteigerung:** Erwarteter Verkaufspreis (Faktor x JNKM SOLL), Erloees nach Tilgung
+- **WEG-Aufteilung:** Abgeschlossenheitserklaerung -> Einzelverkauf (hoehere qm-Preise), Nettoerloees berechnen
+- **Nachbeleihung / Kapitalrotation:** Freier Beleihungsraum fuer naechsten Deal
+- Stille Reserven beziffern: Differenz Kaufpreis zu Ertragswert, freie Grundschulden, Grundstuecksentwicklung
+
+### Schritt 8: Eigenkapital-Rueckfluss
+
+- Eingesetztes Eigenkapital (ggf. 0 bei 100%-Finanzierung)
+- Jaehrlicher Cashflow nach Kapitaldienst
+- Tilgung als Vermoegensaufbau beruecksichtigen
+- Steuerliche Effekte (AfA, Zinsabzug) grob einordnen
+- EK-Rueckfluss p.a. = (Cashflow + Tilgung + Steuerersparnis) / eingesetztes EK
+
+### Schritt 9: Ertragswert und LTV-Herleitung
+
+- Ertragswert bei 4 Faktoren (15, 16, 17, 18) x JNKM SOLL berechnen
+- Beleihungswert = 70% des Ertragswerts
+- LTV Bank = Bankdarlehen / Beleihungswert
+- Zeigen: Ab welchem Faktor liegt LTV unter 80%?
+- Referenzobjekte zum Vergleich: Mind. 2-3 vergleichbare Objekte aus der Region
+
+---
+
+## Praesentationsstruktur (13 Sektionen)
+
+Nutze die Ergebnisse der Analysemethodik und baue daraus die 13 Sektionen. Jede Sektion hat einen klaren Zweck fuer den Bankberater.
+
+### Sektion 1: Executive Summary
 
 - **Hero-Sektion** mit Platzhalter fuer Objektfoto
-- **5 KPI-Boxen** am oberen Rand:
-  - Kreditbetrag (Bankdarlehen + KfW gesamt)
-  - DSCR (SOFORT) -- nach Leerstandsabbau
-  - DSCR (ab Monat X) -- nach Mieterhoehung/Modernisierung
-  - LTV Bankdarlehen (auf Beleihungswert)
-  - EK-Quote (inkl. Eigenleistungen)
+- **5 KPI-Boxen** am oberen Rand: Kreditbetrag | DSCR (SOFORT) | DSCR (ab Monat X) | LTV Bankdarlehen | EK-Quote
 - **"Projekt auf einen Blick"** Tabelle: Objekt, Standort, Typ, Einheiten, Flaeche, Grundstueck, Strategie, Finanzierungswunsch
-- **"Kern-Argumente fuer die Bank"** -- genau 5 Bullet Points mit Checkmarks, die die STAERKSTEN Argumente fuer den Deal zusammenfassen (z.B. "DSCR >= 1,27 in ALLEN Phasen", "Trackrecord: JNKM +95% bei Vergleichsobjekt", "LTV unter 77% ab Faktor 16")
+- **"Kern-Argumente fuer die Bank"** -- genau 5 Bullet Points mit Checkmarks, die die STAERKSTEN Argumente fuer den Deal zusammenfassen
 - **Footer-KPIs:** JNKM IST -> SOFORT -> SOLL 1 mit jeweiliger Rendite in %
 - **Investitionslogik** als praegnanter Absatz (der "Elevator Pitch" fuer den Deal)
 
-### Schritt 2: Unternehmensprofil (Sektion 2)
+### Sektion 2: Unternehmensprofil
 
-- **Investor-Card:** Avatar-Platzhalter, Name, Beschreibung ("Bestandshalter mit Fokus auf..."), Kontaktdaten
+- **Investor-Card:** Avatar-Platzhalter, Name, Beschreibung, Kontaktdaten
 - **4 Portfolio-KPIs** als Boxen: Einheiten gesamt, Erfahrung (Jahre), Bestandsrendite (%), Leerstand (%)
-- **Werdegang als Timeline:** Jahreszahl + Meilenstein (z.B. "2019: Erste ETW | 2020: Erstes MFH | 2021: GmbH-Gruendung | ...")
-- **Trackrecord-Highlight:** Das beste Vergleichsobjekt als Beweis hervorheben -- mit JNKM-Steigerung, DSCR, LTV und Leerstand (z.B. "KM 59/60 Cottbus -- JNKM +95%, DSCR 3,20, LTV 51,7%, Leerstand 0")
-- **Stille Reserven & Sicherheiten:** Freie Grundschulden aus dem Bestandsportfolio, nachrangig beleihbar
+- **Werdegang als Timeline:** Jahreszahl + Meilenstein
+- **Trackrecord-Highlight:** Bestes Vergleichsobjekt mit JNKM-Steigerung, DSCR, LTV, Leerstand
+- **Stille Reserven & Sicherheiten:** Freie Grundschulden, nachrangig beleihbar
 
-### Schritt 3: Projektuebersicht (Sektion 3)
+### Sektion 3: Projektuebersicht
 
 - **Darlehensnehmer-Tabelle:** Gesellschaft, Gesellschafter (mit Anteil), Geschaeftsfuehrer, Sitz
-- **Objektfotos:** 2 Fotos nebeneinander (Platzhalter mit Hinweis "Foto 1: Frontansicht | Foto 2: Rueckansicht/Hofseite")
-- **Objektparameter-Tabelle** mit mindestens 15 Zeilen: Adresse, Objektart, Baujahr, Energieeffizienz, Wohneinheiten, Gewerbeeinheiten, Stellplaetze, Wohnflaeche gesamt, Grundstueck, Heizungsart, Keller, Kaufpreis, Kaufpreis/qm, IST-Miete/qm, Verhaeltnis zu Marktniveau
-- **Kompakte KPI-Badges** am unteren Rand (z.B. "10 WE | 2 GE | Bj. 1936 | 904 m2 | Effizienz H")
+- **Objektfotos:** 2 Fotos nebeneinander (Platzhalter)
+- **Objektparameter-Tabelle** mit mindestens 15 Zeilen: Adresse, Objektart, Baujahr, Energieeffizienz, WE, GE, Stellplaetze, Flaeche, Grundstueck, Heizung, Keller, Kaufpreis, KP/qm, IST-Miete/qm, Marktniveau
+- **KPI-Badges** am unteren Rand
 
-### Schritt 4: Investmentstrategie (Sektion 4)
+### Sektion 4: Investmentstrategie
 
-- **Entwicklungspfad IST -> SOLL** als visuelles Flussdiagramm mit 5 Stufen: IST -> SOFORT -> SOLL 1 -> SOLL 2 -> SOLL 3, jeweils mit JNKM-Betrag, Delta zum Vorgaenger und Rendite in %
-- **DSCR-Trajektorie** unterhalb des Flussdiagramms (zeigt Anstieg ueber die Phasen)
-- **Sanierungsaufstellung** als Tabelle: Massnahme | Kosten (EUR) | Programm/Hinweis -- mit Gesamtsumme und KfW-Tilgungszuschuss
-- **Zeitstrahl Meilensteine** als Tabelle: Zeitpunkt | Meilenstein | Bedeutung/Wirkung -- von "Sofort" bis "Jahr 6+"
-- **Investitionslogik** als erklaerenden Absatz: Warum funktioniert diese Strategie?
+- **Entwicklungspfad IST -> SOLL** als visuelles Flussdiagramm mit 5 Stufen (JNKM, Delta, Rendite, DSCR)
+- **DSCR-Trajektorie** unterhalb des Flussdiagramms
+- **Sanierungsaufstellung** als Tabelle: Massnahme | Kosten | Programm -- mit Gesamtsumme und KfW-Tilgungszuschuss
+- **Zeitstrahl Meilensteine** als Tabelle: Zeitpunkt | Meilenstein | Wirkung
+- **Investitionslogik** als erklaerenden Absatz
 
-### Schritt 5: Wohnungsmix & Miete (Sektion 5)
+### Sektion 5: Wohnungsmix & Miete
 
-- **3 Header-KPIs:** durchschnittliche IST-Miete (EUR/qm), durchschnittliche SOLL 1 (EUR/qm), Marktniveau (EUR/qm)
-- **Vollstaendige Mieterliste** pro Einheit: Einheit | Typ | Flaeche (qm) | IST/Mo (EUR) | SOLL/Mo (EUR) | Mieter | Mietbeginn
-- **Bei mehreren Gebaeuden:** Aufschluesselung nach Gebaeude: Gebaeude | WE | GE | IST/Mo | SOFORT/Mo | SOLL 1/Mo | SOLL 2/Mo | SOLL 3/Mo
-- **Summenzeile** mit Totals ueber alle Einheiten/Gebaeude
+- **3 Header-KPIs:** Ø IST-Miete, Ø SOLL 1, Marktniveau (je EUR/qm)
+- **Vollstaendige Mieterliste** pro Einheit: Einheit | Typ | Flaeche | IST/Mo | SOLL/Mo | Mieter | Mietbeginn
+- **Bei mehreren Gebaeuden:** Aufschluesselung nach Gebaeude mit IST/SOFORT/SOLL 1-3 pro Monat
+- **Summenzeile** mit Totals
 
-### Schritt 6: Finanzierung (Sektion 6)
+### Sektion 6: Finanzierung
 
 - **Split-Layout:** Gesamtinvestitionskosten (links) | Finanzierungsstruktur (rechts)
-- **GIK-Aufstellung:** Kaufpreis + KNK-Breakdown (GrESt nach Bundesland-Satz + Notar/Gericht + Makler) + Sanierung + Eigenleistungen (bewertet)
-- **Finanzierungsstruktur:** Bankdarlehen + KfW (falls vorhanden) + EK (aufgeteilt in Barmittel + Eigenleistungen)
-- **Konditionen-Detail:** Zinsen, Tilgung (mit tilgungsfreier Phase in Monaten), KfW-Details (Programm, Zins, Tilgungszuschuss), Sondertilgung
-- **Eigenleistungen als EK-Ersatz** -- das kritische Konzept:
-  - **Block 1 (Barmittel):** Cash fuer Kaufnebenkosten (oder Teilfinanzierung)
-  - **Block 2 (marktueblich bewertete Eigenleistungen):** Jede Leistung einzeln mit Marktpreis: Neuvermietung (X EUR), Mieterhoehungsgespraeche (X EUR), Gewerbeoptimierung (X EUR), PM Sanierung (X EUR), Objektueberwachung (X EUR), Foerderkoordination (X EUR), WEG-Vorbereitung (X EUR)
-  - **Ergebnis:** Block 1 + Block 2 = EK-Quote Y%, obwohl kein oder wenig Cash eingebracht wird
-- **Footer-KPIs:** GIK gesamt, Gesamtkredit (Bank + KfW), KfW-Tilgungszuschuss, EK-Quote
-- **Ertragswert & LTV-Herleitung** als Tabelle: Faktor (15/16/17/18) x JNKM SOLL = Ertragswert -> Beleihungswert (70%) -> LTV Bank (%). Diese Tabelle zeigt der Bank, dass ihr Sicherheitenwert (Beleihungswert bei 70% des Ertragswerts) solide Abdeckung bietet.
+- **GIK-Aufstellung:** Kaufpreis + KNK-Breakdown (GrESt nach Bundesland + Notar + Makler) + Sanierung + Eigenleistungen
+- **Finanzierungsstruktur:** Bankdarlehen + KfW + EK (Block 1 + Block 2)
+- **Konditionen-Detail:** Zinsen, Tilgung (mit tilgungsfreier Phase), KfW-Details, Sondertilgung
+- **Eigenleistungen als EK-Ersatz:**
+  - Block 1 (Barmittel): Cash fuer Kaufnebenkosten
+  - Block 2 (marktueblich bewertete Eigenleistungen): Jede Leistung einzeln mit Marktpreis
+  - Ergebnis: Block 1 + Block 2 = EK-Quote Y%
+- **Footer-KPIs:** GIK gesamt, Gesamtkredit, KfW-TZ, EK-Quote
+- **Ertragswert & LTV-Herleitung** als Tabelle: Faktor (15/16/17/18) x JNKM -> Ertragswert -> BW (70%) -> LTV Bank
 
-### Schritt 7: Cashflow-Rechner -- Interaktiv (Sektion 7)
+### Sektion 7: Cashflow-Rechner (Interaktiv)
 
 - **5 Eingabeparameter mit Slider-Bereichen:**
-  - durchschnittliche Miete EUR/qm (min-max)
+  - Ø Miete EUR/qm (min-max)
   - Leerstand % (0-20)
   - Bewirtschaftung % (15-35)
   - Zinssatz % (2-8)
   - Tilgung % (0-5)
-- **3 live-berechnete Ausgabe-KPIs:** CF v.St. p.a. (EUR), DSCR, Rendite auf Gesamtkredit (%)
-- **Berechnungsdetail-Breakdown:** Mieteinnahmen brutto -> Abzug Leerstand -> Abzug Bewirtschaftung -> Netto -> Abzug Zinsen Bank -> Abzug Zinsen KfW -> Abzug Tilgung -> CF v.St.
+- **3 live-berechnete Ausgabe-KPIs:** CF v.St. p.a. | DSCR | Rendite auf GK
+- **Berechnungsdetail-Breakdown:** Mieteinnahmen brutto -> Abzug Leerstand -> Abzug Bewirtschaftung -> Netto -> Abzug Zinsen -> Abzug Tilgung -> CF v.St.
 - **Farbcodierung:** Positiver CF = gruen, Negativer CF = rot
 
-### Schritt 8: Phasen-Cashflow (Sektion 8)
+### Sektion 8: Phasen-Cashflow
 
-- **Phase-Cards am oberen Rand:** Je Phase eine Karte mit CF/Monat (z.B. "Phase 1: +795 EUR/Mo | Phase 2: +1.336 EUR/Mo | ...")
-- **Phasen-Uebersicht als Tabelle:** Phase | Zeitraum | JNKM (EUR) | KD/Mo (EUR) | DSCR | CF/Mo (EUR)
-- **Typischerweise 5 Phasen:** IST (tilgungsfrei) -> Sec.559 + Bank tilgt -> Sec.558 + KfW tilgt -> SOLL 2 -> SOLL 3
-- **Erlaeuterungstext:** "Kein kritisches Fenster. In jeder Phase uebersteigen die Mieteinnahmen den Kapitaldienst. Der DSCR faellt zu keinem Zeitpunkt unter 1,27."
-- Der Phasen-Cashflow ist das Herzstück der Praesentation -- er beweist, dass der Deal in JEDER Phase bedienbar ist, nicht nur im Endzustand.
+- **Phase-Cards am oberen Rand:** Je Phase eine Karte mit CF/Monat
+- **Phasen-Uebersicht als Tabelle:** Phase | Zeitraum | JNKM | KD/Mo | DSCR | CF/Mo
+- **Typischerweise 5 Phasen:** IST (tilgungsfrei) -> Mieterhoehung + Bank tilgt -> Modernisierung + KfW tilgt -> SOLL 2 -> SOLL 3
+- **Erlaeuterungstext:** "Kein kritisches Fenster. In jeder Phase uebersteigen die Mieteinnahmen den Kapitaldienst."
+- Der Phasen-Cashflow ist das Herzstueck -- er beweist, dass der Deal in JEDER Phase bedienbar ist
 
-### Schritt 9: Sensitivitaetsanalyse (Sektion 9)
+### Sektion 9: Sensitivitaetsanalyse
 
-- **DSCR-Matrix** als Tabelle: Zeilen = Mietentwicklung (EUR/qm in Stufen), Spalten = Zinssatz (in Stufen)
-- **Farbcodierung:** Gruen >= 1,20 (komfortabel), Gelb 1,00-1,20 (bedienbar), Rot < 1,00 (unterdeckt)
-- **IST-Miete-Zeile hervorgehoben** (z.B. fett oder mit Markierung)
-- **Lesehinweis:** Erlaeuterung der Matrix fuer den Bankberater ("Bei der aktuellen IST-Miete von X EUR/qm und einem Zinssatz von Y% betraegt der DSCR Z. Selbst bei einem Zinsanstieg auf W% bleibt der DSCR ueber 1,0.")
+- **DSCR-Matrix** als Tabelle: Zeilen = Mietentwicklung (EUR/qm), Spalten = Zinssatz
+- **Farbcodierung:** Gruen >= 1,20 | Gelb 1,00-1,20 | Rot < 1,00
+- **IST-Miete-Zeile hervorgehoben**
+- **Lesehinweis** fuer den Bankberater
 
-### Schritt 10: Szenarienvergleich (Sektion 10)
+### Sektion 10: Szenarienvergleich
 
 - **3 Spalten nebeneinander:** Konservativ | Basis (empfohlen) | Optimistisch
-- **Jedes Szenario enthaelt:** Kurzbeschreibung, durchschnittliche Miete (EUR/qm), Leerstand (%), Bewirtschaftung (%), dann berechnet: Brutto p.a., Netto p.a., KD p.a., CF v.St. (EUR), DSCR, Rendite auf GK (%)
-- **Basis-Szenario visuell hervorgehoben** (empfohlen)
-- **Erlaeuterungstext** mit Kontext: Warum ist das Basis-Szenario konservativ genug? Welche Annahmen stecken im Worst Case?
+- **Jedes Szenario:** Beschreibung, Ø Miete, Leerstand, Bewirtschaftung, Brutto/Netto/KD/CF, DSCR, Rendite
+- **Basis-Szenario visuell hervorgehoben**
+- **Erlaeuterungstext** mit Kontext
 
-### Schritt 11: Risiken & Exit (Sektion 11)
+### Sektion 11: Risiken & Exit
 
-- **Risikomatrix als Tabelle:** Risiko | Eintrittswahrscheinlichkeit | Absicherung/Mitigation
-- **Exit-Optionen & stille Reserven als Tabelle:** Option | Zeitpunkt | Wirkung (mit konkreten Zahlen: Ertragswert, Faktor, Erloespot enzial)
-- **Optionen umfassen:** Bestandshaltung, Nachbeleihung/Kapitalrotation, Grundstuecksentwicklung (falls zutreffend), WEG-Aufteilung + Einzelverkauf, Portfolioverkauf (en bloc)
-- **Stille Reserven als Absatz:** Beschreibung der stillen Reserven (z.B. Bauerwartungsland, freie Grundschulden, Differenz Kaufpreis zu Ertragswert)
+- **Risikomatrix:** Risiko | Eintrittswahrscheinlichkeit | Absicherung/Mitigation
+- **Exit-Optionen & stille Reserven:** Option | Zeitpunkt | Wirkung (mit konkreten Zahlen)
+- **Stille Reserven als Absatz:** Differenz Kaufpreis zu Ertragswert, freie Grundschulden, Grundstuecksentwicklung
 
-### Schritt 12: Bankenentscheidung (Sektion 12)
+### Sektion 12: Bankenentscheidung
 
-- **"Wir bieten"-Box** mit 5-6 Checkmark-Items: EK-Quote, Grundschuld 1. Rang, DSCR >= X in allen Phasen, LTV unter Y%, voll vermietetes Objekt, Trackrecord
-- **"Wir wuenschen"-Tabelle:** Art des Darlehens, Bankdarlehen (Betrag/Zins/Tilgung/Laufzeit/tilgungsfrei), KfW (falls zutreffend, mit Programm/Betrag/Zins/TZ), Sondertilgung, Sicherheit, Auszahlungsvoraussetzung, Anschlussfinanzierung
-- **4 Footer-KPIs:** DSCR (Minimum ueber alle Phasen), LTV (Bank), JNKM SOLL (Zielwert), EK-Quote
+- **"Wir bieten"-Box** mit 5-6 Checkmark-Items
+- **"Wir wuenschen"-Tabelle:** Darlehensart, Betrag/Zins/Tilgung/Laufzeit, KfW, Sondertilgung, Sicherheit
+- **4 Footer-KPIs:** DSCR (min), LTV, JNKM SOLL, EK-Quote
 - **Zusammenfassung** als abschliessendes Argument (der "Closing Pitch")
 
-### Schritt 13: Downloads / Anlagen (Sektion 13)
+### Sektion 13: Downloads / Anlagen
 
-- **PDF-Export-Hinweis:** "Diese Praesentation kann als PDF exportiert oder in Gamma.app als designte Praesentation aufbereitet werden."
-- **Anlagen-Liste** mit allen beigefuegten/nachzureichenden Dokumenten: Maklerexpose, Mieterliste, Lageplan, Bestandsuebersicht Portfolio, Trackrecord Vergleichsobjekt, Selbstauskunft, Grundbuchauszug
+- **PDF-Export-Hinweis**
+- **Anlagen-Liste** mit allen beigefuegten/nachzureichenden Dokumenten
 
 ---
 
@@ -788,8 +559,8 @@ DSCR 1,15       DSCR 1,38       DSCR 1,50       DSCR 1,63       DSCR 1,72
 | Zeitpunkt | Meilenstein | Bedeutung / Wirkung |
 |-----------|------------|---------------------|
 | Sofort (Monat 1-3) | Leerstandsabbau + Neuvermietung | JNKM +9.600 EUR, DSCR steigt auf 1,38 |
-| Monat 4-12 | Organische Mieterhoehung (Sec. 558 BGB) | Bestandsmieten +15-20% bei Mietspiegelberechtigung |
-| Jahr 2 | Modernisierung + Sec. 559 Umlage | JNKM auf 72.000 EUR, DSCR 1,50 |
+| Monat 4-12 | Organische Mieterhoehung (§558 BGB) | Bestandsmieten +15-20% bei Mietspiegelberechtigung |
+| Jahr 2 | Modernisierung + §559 Umlage | JNKM auf 72.000 EUR, DSCR 1,50 |
 | Jahr 3-4 | Gewerbe-Neuvermietung + Stabilisierung | JNKM auf 78.000 EUR |
 | Jahr 5+ | Vollstabilisierung | JNKM 82.800 EUR, DSCR 1,72, Option Nachbeleihung |
 | Jahr 6+ | Exit-Optionen pruefen | WEG-Aufteilung oder Portfolioverkauf moeglich |
@@ -959,21 +730,21 @@ Erwerb eines unterbewerteten Wohn- und Geschaeftshauses mit 20% Leerstand und 35
 | Phase 1 | Phase 2 | Phase 3 | Phase 4 | Phase 5 |
 |:---:|:---:|:---:|:---:|:---:|
 | +795 EUR/Mo | +1.336 EUR/Mo | +1.274 EUR/Mo | +1.774 EUR/Mo | +2.174 EUR/Mo |
-| IST (tilgungsfrei) | Sec.559+Bank tilgt | Sec.558+KfW tilgt | SOLL 2 | SOLL 3 |
+| IST (tilgungsfrei) | §559+Bank tilgt | §558+KfW tilgt | SOLL 2 | SOLL 3 |
 
 ### Phasen-Uebersicht
 
 | Phase | Zeitraum | JNKM (EUR) | KD/Mo (EUR) | DSCR | CF/Mo (EUR) |
 |:---:|---------|:---:|:---:|:---:|:---:|
 | 1 | Mo 1-24 (tilgungsfrei) | 57.600 | 2.015 | **2,38** | +795 |
-| 2 | Mo 25-36 (Sec.559 + Bank tilgt) | 72.000 | 4.664 | **1,29** | +1.336 |
-| 3 | Mo 37-48 (Sec.558 + KfW tilgt) | 72.000 | 4.726 | **1,27** | +1.274 |
+| 2 | Mo 25-36 (§559 + Bank tilgt) | 72.000 | 4.664 | **1,29** | +1.336 |
+| 3 | Mo 37-48 (§558 + KfW tilgt) | 72.000 | 4.726 | **1,27** | +1.274 |
 | 4 | Mo 49-72 (SOLL 2) | 78.000 | 4.726 | **1,38** | +1.774 |
 | 5 | Ab Mo 73 (SOLL 3 stabilisiert) | 82.800 | 4.726 | **1,46** | +2.174 |
 
 ### Erlaeuterung
 
-**Kein kritisches Fenster.** In jeder Phase uebersteigen die Mieteinnahmen den Kapitaldienst. Der DSCR faellt zu keinem Zeitpunkt unter 1,27 -- auch nicht beim Uebergang von der tilgungsfreien Phase zur Volltilgung. Die tilgungsfreie Anlaufphase (Phase 1) wird gezielt genutzt, um den Leerstand abzubauen und die Mietbasis auf 57.600 EUR JNKM zu heben, bevor die Tilgung einsetzt. Ab Phase 2 traegt die Modernisierungsumlage (Sec. 559 BGB) die hoehere Annuitaet. In Phase 5 (Vollstabilisierung) betraegt der freie Cashflow +2.174 EUR/Monat bei einem DSCR von 1,46.
+**Kein kritisches Fenster.** In jeder Phase uebersteigen die Mieteinnahmen den Kapitaldienst. Der DSCR faellt zu keinem Zeitpunkt unter 1,27 -- auch nicht beim Uebergang von der tilgungsfreien Phase zur Volltilgung. Die tilgungsfreie Anlaufphase (Phase 1) wird gezielt genutzt, um den Leerstand abzubauen und die Mietbasis auf 57.600 EUR JNKM zu heben, bevor die Tilgung einsetzt. Ab Phase 2 traegt die Modernisierungsumlage (§559 BGB) die hoehere Annuitaet. In Phase 5 (Vollstabilisierung) betraegt der freie Cashflow +2.174 EUR/Monat bei einem DSCR von 1,46.
 
 ---
 
@@ -997,7 +768,7 @@ Erwerb eines unterbewerteten Wohn- und Geschaeftshauses mit 20% Leerstand und 35
 
 ### Lesehinweis
 
-Bei der aktuellen IST-Miete von 4,42 EUR/m2 und einem Zinssatz von 4,0% betraegt der DSCR 0,98 -- knapp unter 1,0. **Deshalb ist die sofortige Leerstandsbeseitigung und Mieterhoehung essenziell.** Bereits bei 5,50 EUR/m2 (realistisch nach Sec. 558 BGB) liegt der DSCR bei 1,22 auch bei 4,0% Zins -- komfortabel. Bei der SOLL 1-Miete von 6,64 EUR/m2 bleibt der DSCR selbst bei einem Zinsanstieg auf 5,5% ueber 1,19 (bedienbar). Erst bei einem extremen Szenario (IST-Miete + 6% Zins) wuerde der DSCR kritisch -- ein Szenario, das durch die Mieterhoehungsstrategie ausgeschlossen wird.
+Bei der aktuellen IST-Miete von 4,42 EUR/m2 und einem Zinssatz von 4,0% betraegt der DSCR 0,98 -- knapp unter 1,0. **Deshalb ist die sofortige Leerstandsbeseitigung und Mieterhoehung essenziell.** Bereits bei 5,50 EUR/m2 (realistisch nach §558 BGB) liegt der DSCR bei 1,22 auch bei 4,0% Zins -- komfortabel. Bei der SOLL 1-Miete von 6,64 EUR/m2 bleibt der DSCR selbst bei einem Zinsanstieg auf 5,5% ueber 1,19 (bedienbar). Erst bei einem extremen Szenario (IST-Miete + 6% Zins) wuerde der DSCR kritisch -- ein Szenario, das durch die Mieterhoehungsstrategie ausgeschlossen wird.
 
 ---
 
@@ -1113,15 +884,22 @@ Pruefe die Praesentation gegen diese Kriterien:
 - [ ] **13 Sektionen vollstaendig:** Alle 13 Sektionen sind vorhanden und in der richtigen Reihenfolge
 - [ ] **Executive Summary mit 5 KPI-Boxen:** Kreditbetrag, DSCR (SOFORT), DSCR (ab Mo X), LTV, EK-Quote
 - [ ] **Kern-Argumente sind die STAERKSTEN 5 Punkte:** Nicht generisch, sondern deal-spezifisch
-- [ ] **Entwicklungspfad hat 5 Stufen:** IST -> SOFORT -> SOLL 1 -> SOLL 2 -> SOLL 3 mit JNKM + Delta + Rendite
+- [ ] **Entwicklungspfad hat 5 Stufen:** IST -> SOFORT -> SOLL 1 -> SOLL 2 -> SOLL 3 mit JNKM + Delta + Rendite + DSCR
 - [ ] **Phasen-Cashflow beweist Bedienbarkeit in JEDER Phase:** DSCR nie unter 1,0 (idealerweise nie unter 1,20)
 - [ ] **Eigenleistungen korrekt aufgeschluesselt:** Block 1 (Barmittel) + Block 2 (bewertete Eigenleistungen) = EK-Quote
 - [ ] **Ertragswert-Tabelle mit 4 Faktoren:** Zeigt der Bank, dass LTV unter 80% liegt
 - [ ] **DSCR-Matrix mit Farbcodierung:** Gruen/Gelb/Rot klar erkennbar
 - [ ] **Szenarienvergleich hat 3 Spalten:** Konservativ | Basis | Optimistisch
-- [ ] **Exit-Optionen mit konkreten Zahlen:** Ertragswert, Erloesp., stille Reserven
+- [ ] **Exit-Optionen mit konkreten Zahlen:** Ertragswert, Erloespot., stille Reserven
 - [ ] **"Wir bieten / Wir wuenschen" ist klar formuliert:** Bank kann direkt entscheiden
+- [ ] **Rechnerische Konsistenz:** KPF und Bruttomietrendite stimmen (KPF = 1 / Rendite * 100)
 - [ ] **Zahlen konsistent ueber alle 13 Sektionen:** JNKM, DSCR, LTV, EK-Quote stimmen ueberall ueberein
+- [ ] **Plausibilitaet der Mieterhoehungen:** Zielmieten realistisch und durch Mietspiegel gedeckt
+- [ ] **Kappungsgrenze beachtet:** Max. 15% (angespannter Markt) oder 20% in 3 Jahren (§558 Abs. 3 BGB)
+- [ ] **Modernisierungsumlage korrekt:** Max. 8% p.a. der umlagefaehigen Kosten, Kappungsgrenze 2-3 EUR/qm (§559 BGB)
+- [ ] **Stresstest bestanden:** Haelt das Konzept +2% Zinsanstieg aus?
+- [ ] **Nicht umlagefaehige Kosten vollstaendig:** Instandhaltung, Verwaltung, Leerstandsrisiko beruecksichtigt
+- [ ] **Sanierungskosten marktgerecht:** Kostenansaetze realistisch (nicht zu niedrig geschaetzt)
 - [ ] **Sprache professionell:** Sachlich, praezise, keine Uebertreibungen
 - [ ] **Trackrecord als Beweis:** Vergleichsobjekt mit konkreten Zahlen (nicht nur "Erfahrung vorhanden")
 
@@ -1132,15 +910,20 @@ Pruefe die Praesentation gegen diese Kriterien:
 | Warnsignal | Bewertung | Handlungsempfehlung |
 |------------|:---------:|---------------------|
 | DSCR < 1,0 in einer Phase des Phasen-Cashflows | KRITISCH | Tilgungsfreie Phase verlaengern, Sanierungsreihenfolge anpassen, oder Deal ueberarbeiten |
-| Kein Trackrecord und kein Vergleichsobjekt | HOCH | Erfahrung anders belegen: Co-Investor, Ausbildungen, Hausverwaltungserfahrung |
-| Eigenleistungen nicht plausibel bewertet | HOCH | Marktpreise fuer jede Leistung mit Vergleichsangeboten belegen |
+| DSCR < 1,0 im Ist-Zustand ohne klaren Pfad zu > 1,0 | KRITISCH | Finanzierung wird schwierig, Konzept ueberarbeiten |
+| Beleihungsauslauf > 130% ohne Zusatzsicherheiten | HOCH | Weitere Sicherheiten einbringen oder Kaufpreis verhandeln |
 | LTV > 100% auch bei hohem Faktor | KRITISCH | Zusatzsicherheiten einbringen oder Eigenkapitalanteil erhoehen |
+| Zielmieten > 20% ueber Mietspiegel | KRITISCH | Unglaubwuerdig fuer die Bank, Zielmieten korrigieren |
+| Kein Trackrecord und kein Vergleichsobjekt | HOCH | Erfahrung anders belegen: Co-Investor, Ausbildungen, Hausverwaltungserfahrung |
+| Eigenleistungen nicht plausibel bewertet | HOCH | Marktpreise mit Vergleichsangeboten belegen |
+| Sanierungskosten nicht durch Angebote belegt | MITTEL | Handwerkerangebote oder Kostenschaetzungen einholen |
+| Sanierungskosten > 30% des Kaufpreises ohne KfW | HOCH | KfW-Foerderfaehigkeit pruefen, Sanierung in Phasen aufteilen |
 | Keine Liquiditaetsreserve und kein laufendes Einkommen | KRITISCH | Bank wird ohne Sicherheitsnetz nicht finanzieren |
 | Grundbuch belastet (Vormerkungen, Wegerechte, Altlasten) | HOCH | Klaeren vor Banktermin, ggf. im Kaufvertrag regeln |
+| Negative Cashflow-Prognose ueber > 3 Jahre | KRITISCH | Finanzierungsstruktur ueberarbeiten (mehr tilgungsfrei, weniger Tilgung) |
+| Leerstand > 30% ohne klare Ursache | HOCH | Leerstandsgruende analysieren, Vermietbarkeit pruefen |
 | DSCR-Matrix zeigt grosse rote Flaeche | MITTEL | Mieterhoehungsstrategie ueberpruefen, Zinsbindung verlaengern |
-| Sanierungskosten > 30% des Kaufpreises ohne KfW-Foerderung | HOCH | KfW-Foerderfaehigkeit pruefen, Sanierung in Phasen aufteilen |
-| Mietzins ueber ortsueblicher Vergleichsmiete geplant | HOCH | Keine Mieten ueber Mietspiegel-Obergrenze planen, Glaubwuerdigkeit bewahren |
-| Praesentation enthaelt Widersprueche oder Rechenfehler | KRITISCH | Alle Zahlen gegenprufen, insbesondere JNKM/DSCR/LTV-Konsistenz ueber alle 13 Sektionen |
+| Praesentation enthaelt Widersprueche oder Rechenfehler | KRITISCH | Alle Zahlen gegenprufen, JNKM/DSCR/LTV-Konsistenz ueber alle 13 Sektionen |
 
 ---
 
@@ -1148,18 +931,23 @@ Pruefe die Praesentation gegen diese Kriterien:
 
 | Fehlende Information | Vorgehen |
 |---------------------|----------|
-| Investor-Trackrecord (erster Deal) | Berufliche Qualifikation hervorheben, Netzwerk benennen (Hausverwaltung, Steuerberater, Handwerker), Weiterbildungen erwaehnen, ggf. Co-Investor mit Trackrecord einbinden |
+| Investor-Trackrecord (erster Deal) | Berufliche Qualifikation hervorheben, Netzwerk benennen (HV, Steuerberater, Handwerker), Weiterbildungen erwaehnen, ggf. Co-Investor mit Trackrecord einbinden |
 | Detaillierte Mieterliste | Mindestens Summen pro Gebaeude und Gesamt-JNKM. Hinweis "Vollstaendige Mieterliste als Anlage" |
-| Eigenleistungen-Bewertung | Marktpreise aus Vergleichsangeboten (Hausverwaltung, Makler, Bauleiter) ableiten. Transparent als "marktueblich bewertet" kennzeichnen |
+| Eigenleistungen-Bewertung | Marktpreise aus Vergleichsangeboten (HV, Makler, Bauleiter) ableiten. Transparent als "marktueblich bewertet" kennzeichnen |
+| Mietspiegel | Lokalen Mietspiegel recherchieren oder konservativ mit Durchschnitt der Region arbeiten |
+| Sanierungskosten | Markt-Benchmarks verwenden: Vollsanierung 800-1.200 EUR/qm, Teilsanierung 300-600 EUR/qm. Als "Schaetzung ohne Handwerkerangebot" kennzeichnen |
 | KfW-Konditionen | Aktuelle Konditionen von kfw.de uebernehmen, als "Stand [Datum], vorbehaltlich Zusage" kennzeichnen |
-| Fotos | Darauf hinweisen, dass Fotos nachgeliefert werden. Alternativ: Google Street View fuer Aussenansicht |
+| Sollzins | Aktuellen Markt einschaetzen, Szenario mit Bandbreite rechnen |
+| Beleihungswert | Konservativ mit 70% des Ertragswerts oder 80-90% des Kaufpreises ansetzen |
+| Energieausweis | Auf Basis des Baujahrs und Zustands schaetzen, aber als Luecke markieren |
+| Bestandsportfolio | Konzept auch ohne Portfolio erstellbar, aber Bonitaet-Einschaetzung wird schwieriger |
+| Fotos | Darauf hinweisen, dass Fotos nachgeliefert werden. Alternativ: Google Street View |
 | Grundbuchauszug | Als "wird nachgereicht" markieren, aber keine Finanzierung ohne Grundbucheinsicht moeglich |
-| Standortdaten / Mietspiegel | Statistisches Landesamt, kommunale Statistik, ImmoScout24-Mietpreisspiegel nutzen |
-| Sanierungskosten | Markt-Benchmarks verwenden (siehe `knowledge/marktbenchmarks.md`), transparent als "Schaetzung ohne Handwerkerangebot" kennzeichnen |
+| Standortdaten | Statistisches Landesamt, kommunale Statistik, ImmoScout24-Mietpreisspiegel nutzen |
 | Referenzobjekte | ImmoScout24, Immowelt, lokale Makler fuer Vergleichspreise nutzen |
-| Ertragswert-Faktor fuer Standort | Konservativen Faktor (15-16) fuer B-/C-Standorte, hoeheren Faktor (17-20) fuer A-Standorte ansetzen |
+| Ertragswert-Faktor | Konservativen Faktor (15-16) fuer B-/C-Standorte, hoeheren Faktor (17-20) fuer A-Standorte |
 
-> **Tipp:** Lieber eine Luecke transparent benennen als mit unsicheren Daten die Glaubwuerdigkeit des gesamten Dokuments zu gefaehrden. Eine ehrliche Praesentation mit "wird nachgereicht" ist besser als eine vollstaendige Praesentation mit falschen Zahlen.
+> **Wichtig:** Fehlende Daten immer transparent kennzeichnen. Banken schaetzen Ehrlichkeit mehr als Luecken zu kaschieren. Eine ehrliche Praesentation mit "wird nachgereicht" ist besser als eine vollstaendige Praesentation mit falschen Zahlen.
 
 ---
 
@@ -1167,7 +955,7 @@ Pruefe die Praesentation gegen diese Kriterien:
 
 | Konfidenz | Kriterien |
 |-----------|-----------|
-| **HOCH** (90%+) | Alle 13 Sektionen mit vollstaendigen Daten befuellt. Trackrecord mit Vergleichsobjekt vorhanden. Mieterliste pro Einheit vollstaendig. DSCR > 1,20 in allen Phasen. Ertragswert-Tabelle zeigt LTV < 80%. Eigenleistungen marktueblich bewertet und belegt. Handwerkerangebote fuer Sanierung vorliegend. Grundbuchauszug eingesehen. |
+| **HOCH** (90%+) | Alle 13 Sektionen mit vollstaendigen Daten befuellt. Trackrecord mit Vergleichsobjekt vorhanden. Mieterliste pro Einheit vollstaendig. DSCR > 1,20 in allen Phasen. Ertragswert-Tabelle zeigt LTV < 80%. Eigenleistungen marktueblich bewertet und belegt. Handwerkerangebote vorliegend. Grundbuchauszug eingesehen. |
 | **MITTEL** (70-89%) | Kern-Sektionen (1, 4, 6, 8, 12) vollstaendig, aber Trackrecord duenn oder Mieterliste nur summarisch. Sanierungskosten geschaetzt. Eigenleistungen plausibel aber nicht mit Vergleichsangeboten belegt. DSCR > 1,0 in allen Phasen. |
 | **NIEDRIG** (< 70%) | Wesentliche Sektionen unvollstaendig. Kein Trackrecord. DSCR in mindestens einer Phase < 1,0. Eigenleistungen nicht bewertet. Keine Ertragswert-Herleitung. Finanzierungskonditionen nicht abgestimmt. |
 
@@ -1175,8 +963,7 @@ Pruefe die Praesentation gegen diese Kriterien:
 
 ## Verwandte Wissensdatenbanken
 
-- `skills/bankenkonzept/SKILL.md` -- Erstellt das zugrundeliegende Finanzierungskonzept (Basis fuer Sektion 6: Finanzierung)
-- `skills/cashflow-modell/SKILL.md` -- Erstellt die detaillierte Cashflow-Projektion (Basis fuer Sektionen 7, 8, 9, 10)
+- `skills/cashflow-modell/SKILL.md` -- Detaillierte Cashflow-Projektion (Basis fuer Sektionen 7, 8, 9, 10)
 - `skills/marktanalyse/SKILL.md` -- Standortanalyse und Marktdaten (ergaenzend zu Sektion 3)
 - `skills/bierdeckel-kalkulation/SKILL.md` -- Schnellkalkulation fuer erste Einschaetzung vor der vollstaendigen Praesentation
 - `skills/unterlagen-analyst/SKILL.md` -- Analysiert Objektunterlagen fuer Sektion 3 (Projektuebersicht)
@@ -1184,9 +971,11 @@ Pruefe die Praesentation gegen diese Kriterien:
 - `skills/mietlisten-analyse/SKILL.md` -- Analysiert Mieterlisten fuer Sektion 5 (Wohnungsmix & Miete)
 - `skills/expose-parser/SKILL.md` -- Parsed Maklerexposes fuer Objektdaten
 - `skills/mietlisten-parser/SKILL.md` -- Parsed Mieterlisten in strukturiertes Format
-- `skills/mieterhoehung/SKILL.md` -- Berechnet Mieterhoehungspotenzial (Sec. 558/559 BGB) fuer die Investmentstrategie
+- `skills/mieterhoehung/SKILL.md` -- Berechnet Mieterhoehungspotenzial (§558/§559 BGB)
+- `skills/bankgespraech-coach/SKILL.md` -- Vorbereitung auf das Bankgespraech mit Formulierungen und erwartbaren Fragen
+- `skills/selbstauskunft/SKILL.md` -- Strukturierte Bonitaetsunterlagen fuer die Bank
 - `knowledge/kalkulationsformeln.md` -- Renditekennzahlen, DSCR-Berechnung, Ertragswertverfahren
-- `knowledge/rechtsgrundlagen.md` -- BGB-Referenzen fuer Mieterhoehung und Modernisierungsumlage
+- `knowledge/rechtsgrundlagen.md` -- §558 BGB (Mieterhoehung), §559 BGB (Modernisierungsumlage), Kappungsgrenze
 - `knowledge/marktbenchmarks.md` -- Benchmarks fuer Sanierungskosten, Bewirtschaftung, Mietvergleiche
 - `knowledge/risikobewertung.md` -- Risiko-Framework fuer systematische Risikoanalyse
 - `knowledge/checklisten.md` -- Checklisten fuer Banktermin-Vorbereitung und Dokumentenvollstaendigkeit
