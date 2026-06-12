@@ -1,6 +1,18 @@
 # Aenderungsprotokoll
 
 Alle wesentlichen Aenderungen an diesem Projekt.
+## [1.5.1](https://github.com/immoJUMP/immo-agent-skills/compare/v1.5.0...v1.5.1) (2026-06-12)
+
+
+### Behoben
+
+* JSON-Ausgabeformate durch investorenfreundliche Markdown-Berichte ersetzt ([67c5ada](https://github.com/immoJUMP/immo-agent-skills/commit/67c5ada6d4fae68303556db28cef8c49c83073a3))
+
+
+### Dokumentation
+
+* README -- Kein-JSON-Regel dokumentiert + Import-Anleitungen fuer claude.ai und ChatGPT ([b2e117d](https://github.com/immoJUMP/immo-agent-skills/commit/b2e117d2fcbb7a513d61392e0494a7cdff8461b3))
+
 ## [1.5.0](https://github.com/immoJUMP/immo-agent-skills/compare/v1.4.1...v1.5.0) (2026-06-12)
 
 
