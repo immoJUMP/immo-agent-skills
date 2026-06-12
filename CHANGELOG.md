@@ -1,6 +1,13 @@
 # Aenderungsprotokoll
 
 Alle wesentlichen Aenderungen an diesem Projekt.
+## [1.4.1](https://github.com/immoJUMP/immo-agent-skills/compare/v1.4.0...v1.4.1) (2026-06-12)
+
+
+### Behoben
+
+* package-name aus release-please-config entfernt -- Komponenten-Mismatch blockierte das Taggen des gemergten Release-PRs ([0daa9ee](https://github.com/immoJUMP/immo-agent-skills/commit/0daa9eee1c04abcb5b4abbddd4c38a5598c7d82a))
+
 ## [1.4.0](https://github.com/immoJUMP/immo-agent-skills/compare/v1.3.0...v1.4.0) (2026-06-12)
 
 
