@@ -1,4 +1,5 @@
 ---
+name: selbstauskunft
 description: "Erstellt strukturierte Bonitaetsunterlagen fuer die Bank: Selbstauskunft im Zwei-Spalten-Format, Dokumenten-Checkliste und Optimierungshinweise. Nutze diesen Skill wenn du ein Bankgespraech vorbereitest, pruefen willst ob dein Unterlagenpaket vollstaendig ist oder als Selbststaendiger die erweiterte Liste brauchst."
 ---
 

@@ -1,4 +1,5 @@
 ---
+name: datev-vorbereitung
 description: "Erstellt DATEV-konforme Buchungssaetze (SKR03/SKR04) aus klassifizierten Belegen fuer Immobilien-Buchhaltung. Nutze diesen Skill wenn du sortierte Belege in Buchungssaetze umwandeln willst, die Buchhaltung aufsetzt oder dich auf das Steuerberater-Gespraech vorbereitest."
 ---
 

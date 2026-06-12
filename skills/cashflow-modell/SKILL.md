@@ -1,4 +1,5 @@
 ---
+name: cashflow-modell
 description: "Erstellt eine 5-Jahres-Cashflow-Projektion mit drei Szenarien (Best/Base/Worst Case) und Break-even-Analyse. Nutze diesen Skill wenn du wissen willst wann der Deal cashflow-positiv wird, Szenarien durchspielen oder eine Projektion fuers Bankkonzept brauchst."
 ---
 

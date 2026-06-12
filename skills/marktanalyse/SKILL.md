@@ -1,4 +1,5 @@
 ---
+name: marktanalyse
 description: "Standort- und Marktbewertung fuer Wohnimmobilien. Bewertet Makro- und Mikrolage, recherchiert Marktdaten (Mieten, Kaufpreise, Bevoelkerung) und liefert Zukunftseinschaetzung. Nutze diesen Skill wenn du einen Standort systematisch bewerten willst, Vergleichsdaten brauchst oder eine Standortanalyse fuers Bankkonzept erstellst."
 ---
 

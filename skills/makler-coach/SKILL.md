@@ -1,4 +1,5 @@
 ---
+name: makler-coach
 description: "Entwickelt eine Makler-Strategie mit Aktionsplan, Gespraechs-Skripten und Follow-up-Vorlagen um zum bevorzugten Kaeufer in der Region zu werden. Nutze diesen Skill wenn du Off-Market-Deals willst, ein Maklernetzwerk aufbauen oder bestehende Kontakte aktivieren willst."
 ---
 

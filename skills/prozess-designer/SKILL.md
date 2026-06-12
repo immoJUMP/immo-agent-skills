@@ -1,4 +1,5 @@
 ---
+name: prozess-designer
 description: "Entwirft komplette Immobilienprozesse mit sauberer Aufgabendelegation an Mitarbeiter (Akquisiteure, Backoffice, Bauleiter etc.). Baut Pipelines, Phasen und Aktivitaeten-Templates (Ketten, Entscheidungsverzweigungen, wiederkehrende Aufgaben) direkt in immoJUMP ueber MCP. Nutze diesen Skill wenn du Ablaeufe standardisieren, Verantwortung klar vergeben und Prozesse im System verankern willst."
 ---
 

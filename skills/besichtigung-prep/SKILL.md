@@ -1,4 +1,5 @@
 ---
+name: besichtigung-prep
 description: "Erstellt eine massgeschneiderte Besichtigungs-Checkliste basierend auf der Dokumentenanalyse. Nutze diesen Skill wenn du Unterlagen bereits analysiert hast und dich auf die Vor-Ort-Besichtigung vorbereitest, keinen Pruefpunkt vergessen willst oder gezielte Fragen zu Unstimmigkeiten brauchst."
 ---
 

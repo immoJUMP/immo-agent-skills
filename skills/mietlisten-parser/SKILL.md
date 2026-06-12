@@ -1,4 +1,5 @@
 ---
+name: mietlisten-parser
 description: "Extrahiert und strukturiert Mietlisten-Daten (Mieter, Flaeche, Miete, Vertragsdaten) in einheitliches Format. Nutze diesen Skill bei Kaufpruefung, Objektuebernahme, Quartalscheck oder Aufbereitung fuers Bankkonzept."
 ---
 

@@ -1,4 +1,5 @@
 ---
+name: akquise-netzwerk
 description: "Erstellt einen systematischen Off-Market-Akquiseplan mit Kanal-Bewertung, den 3-4 besten Kanaelen fuer 90 Tage und konkretem Wochenplan. Nutze diesen Skill wenn du weniger abhaengig von Portalen werden, ein Deal-Netzwerk aufbauen oder wissen willst welche Kanaele zu deiner Buybox passen."
 ---
 

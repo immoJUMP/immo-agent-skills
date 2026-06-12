@@ -1,4 +1,5 @@
 ---
+name: bankenpitch
 description: "Analysiert ein Kaufobjekt und erstellt eine bankenfertige 13-Sektionen-Praesentation mit Finanzierungskonzept, interaktivem HTML-Cashflow-Rechner, DSCR-Sensitivitaetsmatrix und Phasen-Cashflow. Nutze diesen Skill wenn du ein konkretes Objekt finanzieren willst -- von der Analyse bis zum fertigen Bankendokument in einem Schritt."
 ---
 

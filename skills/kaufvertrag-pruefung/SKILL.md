@@ -1,4 +1,5 @@
 ---
+name: kaufvertrag-pruefung
 description: "Prueft Kaufvertragsentwuerfe systematisch nach 13-Punkte-Checkliste fuer ETW und MFH. Bewertet Klauseln (OK/WARNUNG/KRITISCH), identifiziert fehlende Regelungen und liefert Formulierungsvorschlaege. Nutze diesen Skill wenn du einen Notarentwurf vor Unterzeichnung pruefen willst."
 ---
 

@@ -1,4 +1,5 @@
 ---
+name: verhandlungs-assistent
 description: "Entwickelt Verhandlungsstrategien mit wortwoertlich verwendbaren Formulierungen, Zugestaendnis-Strategie und Fahrplan vom Eroeffnungsangebot bis zum Notartermin. Nutze diesen Skill wenn du in die Preisverhandlung einsteigst, Einwaende vorbereiten oder Kaufvertragsbedingungen verhandeln willst."
 ---
 

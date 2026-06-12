@@ -1,4 +1,5 @@
 ---
+name: mietnomaden-praevention
 description: "Prueft Mietbewerber nach dem 5-Saeulen-Prinzip (Bonitaet, Identitaet, Referenzen, Plausibilitaet, Gesamteindruck) und liefert Risk-Score. Bei Zahlungsausfall: rechtlich korrekte Reaktionskette mit Fristen und Mustertexten. Nutze diesen Skill wenn du Bewerber pruefen oder auf Zahlungsausfall reagieren willst."
 ---
 

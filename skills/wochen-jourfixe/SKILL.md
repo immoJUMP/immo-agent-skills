@@ -1,4 +1,5 @@
 ---
+name: wochen-jourfixe
 description: "Erstellt automatische Wochenreports fuer Immobilien-Portfolios nach dem Pareto-Prinzip: Kritische 20% der Themen oben, priorisiert nach Handlungsbedarf. Nutze diesen Skill wenn du Team-Meetings vorbereitest, einen Portfolio-Ueberblick brauchst oder Fristen im Blick behalten willst."
 ---
 

@@ -1,4 +1,5 @@
 ---
+name: expose-parser
 description: "Extrahiert alle investitionsrelevanten Daten aus Makler-Exposes in ein strukturiertes JSON-Format. Nutze diesen Skill wenn du neue Angebote schnell auf Kennzahlen reduzieren, mehrere Exposes screenen oder Daten fuer die Bierdeckel-Kalkulation aufbereiten willst."
 ---
 

@@ -1,4 +1,5 @@
 ---
+name: bankgespraech-coach
 description: "Vollstaendige Gespraechsvorbereitung fuer Banktermine mit Fahrplan, Formulierungsvorschlaegen, erwartbaren Fragen und Antworten. Nutze diesen Skill wenn du ein Erstgespraech mit einer Bank vorbereitest, eine Finanzierung beantragst, wenig EK hast oder mehrere Banken parallel anfragen willst."
 ---
 

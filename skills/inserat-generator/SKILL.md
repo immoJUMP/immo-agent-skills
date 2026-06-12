@@ -1,4 +1,5 @@
 ---
+name: inserat-generator
 description: "Erstellt professionelle, rechtskonforme Vermietungsinserate fuer ImmoScout24/Immowelt mit allen GEG-Pflichtangaben und AGG-konformen Formulierungen. Nutze diesen Skill wenn du eine leerstehende Wohnung inserieren oder einen Expose-Text erstellen willst."
 ---
 

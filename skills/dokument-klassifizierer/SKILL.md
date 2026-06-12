@@ -1,4 +1,5 @@
 ---
+name: dokument-klassifizierer
 description: "Erkennt Dokumenttypen (Grundbuch, Mietvertrag, Energieausweis etc.), extrahiert Metadaten und schlaegt korrekte Ablage vor. Nutze diesen Skill wenn du unsortierte Dokumente hast, Uebergabe-Unterlagen bekommst oder Scans/Fotos digitalisierst."
 ---
 

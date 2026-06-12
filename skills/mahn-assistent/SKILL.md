@@ -1,4 +1,5 @@
 ---
+name: mahn-assistent
 description: "Zahlungsverfolgung und Mahnwesen: Gleicht Zahlungseingaenge mit Soll-Mieten ab, identifiziert Rueckstaende, bestimmt Mahnstufen und generiert rechtssichere Mahnschreiben (Erinnerung bis Kuendigungsandrohung). Nutze diesen Skill wenn du monatlich Zahlungen abgleichen oder Rueckstaende verfolgen willst."
 ---
 
