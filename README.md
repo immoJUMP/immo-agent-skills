@@ -114,24 +114,42 @@ Oder stell einfach eine Frage -- Claude erkennt automatisch, welcher Skill passt
 
 Claude fragt dann im Gespraech alles ab, was er braucht -- Schritt fuer Schritt, auf Deutsch. Du kannst auch Dokumente hochladen (Mietliste, Expose, Objektunterlagen) und Claude extrahiert die Daten selbst.
 
-Die JSON-Schemas in den Skill-Dateien sind die technische Referenz fuer Entwickler und Automatisierungen (z.B. wenn du Skills ueber eine API oder n8n ansteuerst). Als normaler Nutzer brauchst du die nie zu sehen.
+**Die Antwort ist immer ein lesbarer Bericht** -- Tabellen, Ampeln (🟢🟡🔴), druckfertige Schreiben. Kein JSON, kein technisches Format. Das ist eine feste Design-Regel dieses Repos: Jede Ausgabeformat-Sektion der Skills verbietet rohe Maschinenformate in der Antwort. Wo strukturierte Daten fuer die Weiterverarbeitung gebraucht werden (z.B. Expose-Parser → Deal-Screener, DATEV-Buchungsstapel fuer den Steuerberater), schreibt der Skill sie in eine **Datei** (JSON/CSV) -- im Chat erscheint nur der Bericht. JSON-Bloecke in den Skill-Dateien selbst sind reine *Eingabe*-Spezifikationen fuer Entwickler und Automatisierungen (API, n8n).
 
-<details>
-<summary><strong>Weitere Optionen: Claude Projects, ChatGPT, andere LLMs</strong></summary>
+---
 
-**Claude Projects / Cowork:**
-1. Neues Project erstellen
-2. Relevante Skill-Dateien als Knowledge hochladen
-3. Knowledge-Dateien aus `knowledge/` dazu laden
+## Skills in claude.ai importieren (ohne Claude Code)
 
-**ChatGPT Custom GPT:**
-1. Custom GPT erstellen
-2. Skill-Inhalt in die Instructions kopieren
-3. Knowledge-Dateien hochladen
+Du kannst jeden Skill auch direkt in claude.ai (Web-App) hochladen -- dann steht er dir in jedem Chat zur Verfuegung:
+
+1. **Skill-ZIP besorgen:** Entweder das fertige ZIP aus dem letzten [build-skills-Workflow-Lauf](../../actions/workflows/build-skills.yml) herunterladen (Artifact `skill-zips`), oder selbst zippen -- wichtig: die `SKILL.md` muss in einem Ordner mit dem Skill-Namen liegen (z.B. `deal-screener/SKILL.md`).
+2. **claude.ai oeffnen** → Profil-Menue unten links → **Einstellungen** → **Funktionen** (Capabilities).
+3. Im Abschnitt **Skills** auf **Skill hochladen** klicken und das ZIP auswaehlen.
+4. Fertig -- der Skill wird in neuen Chats automatisch getriggert, wenn deine Frage passt. Du kannst ihn auch direkt ansprechen ("Nutze den Deal-Screener fuer ...").
+
+**Tipp fuer Claude Projects:** Alternativ ein Project anlegen, die SKILL.md als Project-Knowledge hochladen und die passenden Dateien aus `knowledge/` dazu laden -- dann gilt der Skill fuer alle Chats im Project.
+
+> Screenshots der einzelnen Schritte folgen in `docs/screenshots/`.
+
+---
+
+## Skills in ChatGPT importieren (Custom GPT)
+
+ChatGPT kennt kein Skill-Format -- dort wird der Skill-Inhalt zu den Instructions eines Custom GPT:
+
+1. **chatgpt.com** oeffnen → Seitenleiste **GPTs erkunden** → oben rechts **+ Erstellen**.
+2. In den Tab **Konfigurieren** wechseln (nicht den Chat-Assistenten "Erstellen" nutzen -- der verwaessert die Anweisungen).
+3. **Name** und **Beschreibung** vergeben (z.B. "Deal-Screener -- Schnellbewertung MFH").
+4. Den kompletten Inhalt der `SKILL.md` (ohne YAML-Frontmatter) in das Feld **Hinweise** (Instructions) einfuegen.
+5. Unter **Wissen** (Knowledge) die passenden Dateien aus `knowledge/` hochladen (z.B. `kalkulationsformeln.md`, `marktbenchmarks.md`).
+6. Oben rechts **Erstellen** → Sichtbarkeit waehlen ("Nur ich" reicht fuer den Eigenbedarf).
+
+> **Hinweis:** Die Instructions-Felder von Custom GPTs sind auf 8.000 Zeichen begrenzt. Bei langen Skills den Skill-Inhalt stattdessen als Knowledge-Datei hochladen und in die Instructions nur schreiben: "Befolge exakt die Anweisungen aus SKILL.md."
+>
+> Screenshots der einzelnen Schritte folgen in `docs/screenshots/`.
 
 **Direkt im Chat (jedes LLM):**
 Skill-Datei oeffnen, Inhalt kopieren, in den Chat einfuegen, Daten dazu geben -- fertig.
-</details>
 
 ---
 
