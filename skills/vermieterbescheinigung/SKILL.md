@@ -1,4 +1,5 @@
 ---
+name: vermieterbescheinigung
 description: "Generiert rechtskonforme Vermieterbescheinigungen nach Paragraph 19 BMG in 30 Sekunden statt 15 Minuten. Nutze diesen Skill wenn ein Mieter einzieht und die Bescheinigung fuers Einwohnermeldeamt braucht (Pflicht innerhalb 2 Wochen nach Einzug)."
 ---
 

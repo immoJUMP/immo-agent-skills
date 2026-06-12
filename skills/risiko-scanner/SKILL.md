@@ -1,4 +1,5 @@
 ---
+name: risiko-scanner
 description: "Bewertet Objekte systematisch ueber 10 Risikokategorien (Standort, Bausubstanz, Mieter, Recht, Energie etc.) mit Risikostufe und finanzieller Quantifizierung. Nutze diesen Skill wenn du vor der Kaufentscheidung alle Risiken erfassen oder eine strukturierte Risikouebersicht fuer Bank/Partner brauchst."
 ---
 

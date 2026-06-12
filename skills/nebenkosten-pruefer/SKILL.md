@@ -1,4 +1,5 @@
 ---
+name: nebenkosten-pruefer
 description: "Validiert Nebenkostenabrechnungen auf formelle und materielle Fehler, prueft Umlagefaehigkeit nach BetrKV, HeizKV-Konformitaet und berechnet Vorauszahlungsanpassungen. Nutze diesen Skill wenn du eine Abrechnung vor Versand pruefen oder Mietereinwaende bewerten willst."
 ---
 

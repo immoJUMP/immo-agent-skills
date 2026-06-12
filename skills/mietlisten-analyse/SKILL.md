@@ -1,4 +1,5 @@
 ---
+name: mietlisten-analyse
 description: "Analysiert Mietlisten: Ist-Mieten gegen Mietspiegel, Erhoehungspotenzial unter Beruecksichtigung von Kappungsgrenze und Mietpreisbremse, Leerstandsanalyse und Anomalie-Erkennung. Nutze diesen Skill wenn du eine Mietaufstellung eines MFH erhalten hast und das Potenzial quantifizieren willst."
 ---
 

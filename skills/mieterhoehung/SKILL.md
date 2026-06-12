@@ -1,4 +1,5 @@
 ---
+name: mieterhoehung
 description: "Portfolioweite Mieterhoehungsanalyse: Ist-Miete vs. Mietspiegel, Kappungsgrenze, Mietpreisbremse, Modernisierungsumlage nach Paragraph 559 BGB und rechtssichere Mieterhoehungsschreiben. Nutze diesen Skill wenn du systematisch das Mieterhoehungspotenzial ermitteln willst."
 ---
 

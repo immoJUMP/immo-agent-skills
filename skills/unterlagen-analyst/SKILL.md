@@ -1,4 +1,5 @@
 ---
+name: unterlagen-analyst
 description: "Analysiert komplette Objektunterlagen-Pakete (Expose, Grundbuch, Mietliste, Energieausweis etc.) in Minuten statt Tagen. Gleicht Daten dokumentenuebergreifend ab und identifiziert Inkonsistenzen und Risiken. Nutze diesen Skill wenn du ein Unterlagenpaket vom Makler erhalten hast."
 ---
 

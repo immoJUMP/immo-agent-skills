@@ -1,4 +1,5 @@
 ---
+name: bierdeckel-kalkulation
 description: "Sofort-Ampel in 2 Minuten: Deal oder kein Deal. Berechnet mit minimalen Eingaben alle Kennzahlen (Rendite, Cashflow, EK-Rueckfluss, Aufteilungspotenzial) und liefert eine Ampel-Bewertung. Nutze diesen Skill wenn du ein Angebot schnell einschaetzen willst oder im Maklergespraech eine sofortige Bewertung brauchst."
 ---
 

@@ -1,4 +1,5 @@
 ---
+name: beleg-sortierer
 description: "Klassifiziert und sortiert Belege fuer Wohnimmobilien-Portfolios. Unterscheidet Erhaltungsaufwand vs. Herstellungskosten, ordnet Kostenarten zu und erstellt ein sauberes Paket fuer den Steuerberater. Nutze diesen Skill wenn du unsortierte Belege hast oder Handwerkerrechnungen klassifizieren willst."
 ---
 

@@ -1,4 +1,5 @@
 ---
+name: deal-screener
 description: "Schnellbewertung eines Wohnimmobilien-Angebots nach Ankaufskriterien. Prueft systematisch nach Showstopper-Prinzip und liefert Ampel-Bewertung (GRUEN/GELB/ROT) mit Konfidenz-Score. Nutze diesen Skill wenn dir ein neues Objekt angeboten wird und du in unter 5 Minuten wissen willst ob sich eine vertiefte Pruefung lohnt."
 ---
 

@@ -1,4 +1,5 @@
 ---
+name: energieausweis-check
 description: "Analysiert Energieausweise (Bedarfs-/Verbrauchsausweis), bewertet energetischen Zustand, prueft GEG-2024-Konformitaet und berechnet Wirtschaftlichkeit energetischer Massnahmen (Kosten vs. Mieterhoehung vs. Wertsteigerung). Nutze diesen Skill wenn du einen Energieausweis vorliegen hast."
 ---
 

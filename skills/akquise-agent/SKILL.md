@@ -1,4 +1,5 @@
 ---
+name: akquise-agent
 description: "Systematische Deal-Suche nach Buybox-Profil. Durchsucht Inserate, filtert nach Ausschlusskriterien, kalkuliert standardisiert und liefert eine priorisierte Top-10-Shortlist mit E-Mail-Vorlagen. Nutze diesen Skill wenn du Bestandswohnungen in einer Stadt systematisch nach deinem Profil durchsuchen willst."
 ---
 
