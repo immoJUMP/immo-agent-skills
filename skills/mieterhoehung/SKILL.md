@@ -124,111 +124,139 @@ Du bist ein erfahrener Immobilienoekonom und Mietrechtsexperte. Analysiere das g
 
 ## Ausgabeformat
 
-```json
-{
-  "report_type": "mieterhoehung_analyse",
-  "report_date": "2026-04-15",
-  "market_area": "Berlin",
-  "mietpreisbremse_active": true,
-  "kappungsgrenze_percent": 15,
-  "mietspiegel_source": "Berliner Mietspiegel 2025, qualifiziert",
-  "portfolio_summary": {
-    "total_units": 100,
-    "units_with_potential": 72,
-    "units_at_market_rent": 18,
-    "units_above_market_rent": 2,
-    "units_blocked_by_sperrfrist": 8,
-    "units_staffelmiete": 5,
-    "units_indexmiete": 3,
-    "total_potential_monthly_eur": 4820.00,
-    "total_potential_annual_eur": 57840.00,
-    "immediately_actionable_units": 48,
-    "immediately_actionable_annual_eur": 38400.00,
-    "average_delta_per_unit_eur_month": 48.20
-  },
-  "unit_analysis": [
-    {
-      "rank": 1,
-      "property": "Musterstr. 12, 10115 Berlin",
-      "unit": "WE 04",
-      "tenant": "Nachname, Vorname",
-      "area_sqm": 72.50,
-      "rooms": 3,
-      "construction_year": 1965,
-      "condition": "mittel",
-      "location_quality": "gut",
-      "current_rent_sqm_eur": 6.80,
-      "current_rent_total_eur": 493.00,
-      "mietspiegel_range": {
-        "lower_eur_sqm": 7.20,
-        "middle_eur_sqm": 8.50,
-        "upper_eur_sqm": 9.80
-      },
-      "target_rent_sqm_eur": 8.20,
-      "target_rent_total_eur": 594.50,
-      "delta_sqm_eur": 1.40,
-      "delta_monthly_eur": 101.50,
-      "delta_annual_eur": 1218.00,
-      "kappungsgrenze_check": {
-        "rent_3_years_ago_eur": 460.00,
-        "max_increase_eur": 69.00,
-        "max_rent_after_kappung_eur": 529.00,
-        "kappungsgrenze_limits_increase": true,
-        "achievable_increase_eur": 36.00,
-        "remaining_potential_eur": 65.50
-      },
-      "last_increase": {
-        "date": "2024-10-01",
-        "amount_eur": 33.00
-      },
-      "sperrfrist_until": "2026-01-01",
-      "sperrfrist_expired": true,
-      "earliest_effective_date": "2026-07-01",
-      "contract_type": "standard",
-      "actionable": true,
-      "priority": "hoch",
-      "recommendation": "Mieterhoehung auf 529,00 EUR (Kappungsgrenze). Verbleibendes Potenzial von 65,50 EUR in 15 Monaten realisierbar."
-    }
-  ],
-  "modernization_surcharges": [
-    {
-      "property": "Musterstr. 12, 10115 Berlin",
-      "measure": "Fassadendaemmung WDVS",
-      "total_cost_eur": 180000.00,
-      "maintenance_deduction_percent": 35,
-      "modernization_cost_eur": 117000.00,
-      "affected_units": 12,
-      "cost_per_unit_eur": 9750.00,
-      "annual_surcharge_per_unit_eur": 780.00,
-      "monthly_surcharge_per_unit_eur": 65.00,
-      "cap_check": {
-        "current_avg_rent_sqm": 6.80,
-        "max_surcharge_sqm_6_years": 3.00,
-        "surcharge_sqm": 0.90,
-        "within_cap": true
-      }
-    }
-  ],
-  "generated_documents": [
-    {
-      "type": "mieterhoehungsschreiben",
-      "tenant": "Nachname, Vorname",
-      "unit": "WE 04",
-      "content": "--- MIETERHOEHUNGSVERLANGEN ---\n\nSehr geehrte/r Frau/Herr [Name],\n\nwir beziehen uns auf den Mietvertrag vom [Datum] ueber die Wohnung [Adresse], bestehend aus [Zimmer] Zimmern mit einer Wohnflaeche von [qm] qm.\n\nDie derzeitige Nettokaltmiete betraegt [aktuelle Miete] EUR monatlich ([EUR/qm] EUR/qm).\n\nGemaess §558 BGB verlangen wir Ihre Zustimmung zur Erhoehung der Nettokaltmiete auf [neue Miete] EUR monatlich ([neuer EUR/qm] EUR/qm) ab dem [Wirksamkeitsdatum].\n\nBegruendung:\nDie Erhoehung entspricht der ortsueblichen Vergleichsmiete gemaess dem [Mietspiegel-Name] (qualifizierter Mietspiegel). Ihre Wohnung ist einzuordnen in:\n- Baujahrsklasse: [Klasse]\n- Wohnlage: [Lage]\n- Ausstattung: [Ausstattung]\n- Mietspiegel-Spanne: [unterer Wert] bis [oberer Wert] EUR/qm\n\nDie verlangte Miete von [neuer EUR/qm] EUR/qm liegt innerhalb dieser Spanne. Die Kappungsgrenze von [15/20]% in 3 Jahren wird eingehalten.\n\nWir bitten Sie, Ihre Zustimmung bis zum [Fristdatum -- 2 Monate nach Zugang] zu erklaeren.\n\nSollten Sie der Mieterhoehung nicht zustimmen, koennen wir gemaess §558b Abs. 2 BGB innerhalb von 3 Monaten nach Ablauf der Zustimmungsfrist Klage auf Zustimmung erheben.\n\nMit freundlichen Gruessen\n[Vermieter]"
-    }
-  ],
-  "timeline": [
-    {
-      "unit": "WE 04",
-      "send_letter_by": "2026-04-30",
-      "consent_deadline": "2026-06-30",
-      "effective_date": "2026-07-01",
-      "next_increase_possible": "2027-10-01"
-    }
-  ],
-  "confidence_score": 0.90,
-  "data_gaps": []
-}
+**Wichtig:** Der Nutzer ist Immobilieninvestor, kein IT-ler. Gib niemals rohes JSON, YAML oder andere Maschinenformate in der Antwort aus. Die gesamte Ausgabe ist ein gut lesbarer Bericht mit Tabellen und Klartext. Die Mieterhoehungsschreiben sind direkt kopierbare, druckfertige Textbloecke -- nicht in Datenfelder verpackt.
+
+Liefere die Ergebnisse in folgendem Format:
+
+### Ergebnisbericht
+
+```markdown
+# Mieterhoehungs-Analyse: Portfolio Berlin
+
+**Analysedatum:** 15.04.2026 | Konfidenz: 90%
+
+| Rahmenbedingung | Wert |
+|-----------------|------|
+| Marktgebiet | Berlin |
+| Mietpreisbremse | Aktiv |
+| Kappungsgrenze | 15% |
+| Mietspiegel-Quelle | Berliner Mietspiegel 2025, qualifiziert |
+
+## Portfolio-Ueberblick
+
+| Kennzahl | Wert |
+|----------|------|
+| Einheiten gesamt | 100 |
+| Einheiten mit Erhoehungspotenzial | 72 |
+| Einheiten auf Marktniveau | 18 |
+| Einheiten ueber Marktniveau | 2 |
+| Einheiten in Sperrfrist | 8 |
+| Einheiten mit Staffelmiete | 5 |
+| Einheiten mit Indexmiete | 3 |
+| **Gesamtpotenzial monatlich** | **4.820,00 EUR** |
+| **Gesamtpotenzial jaehrlich** | **57.840,00 EUR** |
+| Sofort umsetzbar (Einheiten) | 48 |
+| Sofort umsetzbar (jaehrlich) | 38.400,00 EUR |
+| Durchschnittliches Delta pro Einheit | 48,20 EUR/Monat |
+
+## Prioritaetenliste der Einheiten
+
+| Rang | Objekt / Einheit | Mieter | qm | Ist-Miete | Ziel-Miete | Delta/Monat | Delta/Jahr | Prioritaet |
+|------|------------------|--------|-----|-----------|------------|-------------|------------|------------|
+| 1 | Musterstr. 12, WE 04 | Nachname, Vorname | 72,5 | 493,00 EUR (6,80 EUR/qm) | 594,50 EUR (8,20 EUR/qm) | 101,50 EUR | 1.218,00 EUR | 🔴 hoch |
+| ... | | | | | | | | |
+
+### Detail Rang 1: Musterstr. 12, 10115 Berlin, WE 04
+
+| | |
+|---|---|
+| Mieter | Nachname, Vorname |
+| Wohnflaeche / Zimmer | 72,50 qm / 3 Zimmer |
+| Baujahr / Zustand / Lage | 1965 / mittel / gut |
+| Ist-Miete | 493,00 EUR (6,80 EUR/qm) |
+| Mietspiegel-Spanne | 7,20 - 9,80 EUR/qm (Mittelwert 8,50) |
+| Ziel-Miete | 594,50 EUR (8,20 EUR/qm) |
+| Delta | 1,40 EUR/qm = 101,50 EUR/Monat = 1.218,00 EUR/Jahr |
+| Vertragstyp | Standard |
+| Letzte Erhoehung | 01.10.2024 (+33,00 EUR) |
+| Sperrfrist | abgelaufen (bis 01.01.2026) |
+| Fruehestes Wirksamkeitsdatum | 01.07.2026 |
+| Umsetzbar | Ja |
+
+**Kappungsgrenzen-Pruefung:**
+
+| | |
+|---|---|
+| Miete vor 3 Jahren | 460,00 EUR |
+| Maximale Erhoehung (15%) | 69,00 EUR |
+| Maximale Miete nach Kappung | 529,00 EUR |
+| Kappungsgrenze begrenzt Erhoehung | Ja |
+| Jetzt erreichbare Erhoehung | 36,00 EUR |
+| Verbleibendes Potenzial | 65,50 EUR |
+
+**Empfehlung:** Mieterhoehung auf 529,00 EUR (Kappungsgrenze). Verbleibendes
+Potenzial von 65,50 EUR in 15 Monaten realisierbar.
+
+## Modernisierungsumlagen
+
+| Objekt | Massnahme | Gesamtkosten | Instandhaltungsabzug | Modernisierungskosten | Einheiten | Kosten/Einheit | Umlage/Einheit |
+|--------|-----------|--------------|----------------------|------------------------|-----------|----------------|----------------|
+| Musterstr. 12 | Fassadendaemmung WDVS | 180.000 EUR | 35% | 117.000 EUR | 12 | 9.750 EUR | 65,00 EUR/Monat (780 EUR/Jahr) |
+
+**Kappungs-Check Umlage:** Ist-Miete Durchschnitt 6,80 EUR/qm, Umlage 0,90 EUR/qm,
+zulaessig max. 3,00 EUR/qm in 6 Jahren — 🟢 innerhalb der Kappung.
+
+## Mieterhoehungsschreiben (druckfertig)
+
+### Schreiben fuer WE 04, Nachname, Vorname
+
+---
+
+**MIETERHOEHUNGSVERLANGEN**
+
+Sehr geehrte/r Frau/Herr [Name],
+
+wir beziehen uns auf den Mietvertrag vom [Datum] ueber die Wohnung [Adresse],
+bestehend aus [Zimmer] Zimmern mit einer Wohnflaeche von [qm] qm.
+
+Die derzeitige Nettokaltmiete betraegt [aktuelle Miete] EUR monatlich
+([EUR/qm] EUR/qm).
+
+Gemaess §558 BGB verlangen wir Ihre Zustimmung zur Erhoehung der Nettokaltmiete
+auf [neue Miete] EUR monatlich ([neuer EUR/qm] EUR/qm) ab dem [Wirksamkeitsdatum].
+
+Begruendung:
+Die Erhoehung entspricht der ortsueblichen Vergleichsmiete gemaess dem
+[Mietspiegel-Name] (qualifizierter Mietspiegel). Ihre Wohnung ist einzuordnen in:
+- Baujahrsklasse: [Klasse]
+- Wohnlage: [Lage]
+- Ausstattung: [Ausstattung]
+- Mietspiegel-Spanne: [unterer Wert] bis [oberer Wert] EUR/qm
+
+Die verlangte Miete von [neuer EUR/qm] EUR/qm liegt innerhalb dieser Spanne.
+Die Kappungsgrenze von [15/20]% in 3 Jahren wird eingehalten.
+
+Wir bitten Sie, Ihre Zustimmung bis zum [Fristdatum -- 2 Monate nach Zugang]
+zu erklaeren.
+
+Sollten Sie der Mieterhoehung nicht zustimmen, koennen wir gemaess §558b
+Abs. 2 BGB innerhalb von 3 Monaten nach Ablauf der Zustimmungsfrist Klage
+auf Zustimmung erheben.
+
+Mit freundlichen Gruessen
+[Vermieter]
+
+---
+
+## Timeline
+
+| Einheit | Schreiben versenden bis | Zustimmungsfrist | Wirksam ab | Naechste Erhoehung moeglich |
+|---------|-------------------------|------------------|------------|------------------------------|
+| WE 04 | 30.04.2026 | 30.06.2026 | 01.07.2026 | 01.10.2027 |
+
+## Datenluecken
+
+Keine. (Falls vorhanden: jede Luecke auflisten mit Auswirkung auf die Bewertung.)
 ```
 
 ---
@@ -269,7 +297,7 @@ Du bist ein erfahrener Immobilienoekonom und Mietrechtsexperte. Analysiere das g
 - Wenn Kappungsgrenze-Status (15% vs. 20%) unklar: Die strengere Grenze (15%) annehmen.
 - Wenn Mietpreisbremse-Status unklar: Als aktiv annehmen und darauf hinweisen, dass die Landesverordnung geprueft werden muss.
 - Wenn Baujahr oder Ausstattung unklar: Mietspiegel-Einordnung als "unsicher" kennzeichnen und Spanne angeben.
-- Alle Luecken im Feld `data_gaps` dokumentieren.
+- Alle Luecken im Berichtsabschnitt "Datenluecken" dokumentieren.
 
 ---
 

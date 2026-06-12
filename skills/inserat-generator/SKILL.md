@@ -124,93 +124,124 @@ Du bist ein erfahrener Immobilienvermarkter, der professionelle, rechtskonforme 
 
 ## Ausgabeformat
 
-```json
-{
-  "report_type": "inserat_generator",
-  "report_date": "2026-04-15",
-  "property": "Musterstr. 12, 10115 Berlin",
-  "unit": "3. OG links",
-  "listing_title": "3-Zimmer-Wohnung | 72 qm | Balkon | Berlin-Mitte",
-  "listing_description": {
-    "object_description": "Helle 3-Zimmer-Wohnung im 3. Obergeschoss eines gepflegten Altbaus (Baujahr 1965) in Berlin-Mitte. Die Wohnung verfuegt ueber einen grosszuegigen Grundriss mit separater Kueche, Wohnzimmer mit Zugang zum Suedbalkon, zwei Schlafzimmer und ein modernisiertes Bad mit Dusche und Wanne.\n\nDie Wohnung wurde 2024 umfassend renoviert: neue Bodenbelaege (Echtholzparkett im Wohn- und Schlafbereich), modernes Badezimmer, neue Elektrik und Malerarbeiten in allen Raeumen.",
-    "features_text": "- 3 Zimmer, ca. 72 qm Wohnflaeche\n- Suedbalkon\n- Echtholzparkett (2024 verlegt)\n- Modernes Bad mit Dusche und Wanne (2024 saniert)\n- Separate Kueche\n- Kellerabteil\n- Fahrradstellplatz im Hof\n- Aufzug im Haus\n- Gas-Zentralheizung",
-    "location_text": "Zentrale Lage in Berlin-Mitte mit hervorragender Infrastruktur. U-Bahnhof Rosenthaler Platz (U8) in 3 Gehminuten. Supermrkt, Baeckerei und Apotheke im Erdgeschoss. Volkspark am Weinbergsweg in 5 Minuten erreichbar. Schulen und Kitas in der naeheren Umgebung.",
-    "other_text": "Verfuegbar ab 01.07.2026.\n\nFuer eine Besichtigung bitten wir um Ihre Bewerbung mit folgenden Unterlagen:\n- Einkommensnachweis (letzte 3 Gehaltsabrechnungen)\n- Schufa-Bonitaetsauskunft\n- Kopie des Personalausweises\n- Mieterselbstauskunft\n- Mietschuldenfreiheitsbescheinigung des Vorvermieters"
-  },
-  "portal_data": {
-    "property_type": "wohnung",
-    "apartment_type": "etagenwohnung",
-    "marketing_type": "miete",
-    "area_sqm": 72.50,
-    "rooms": 3,
-    "bedrooms": 2,
-    "bathrooms": 1,
-    "floor": 3,
-    "total_floors": 5,
-    "construction_year": 1965,
-    "condition": "renoviert",
-    "last_renovation_year": 2024,
-    "heating_type": "zentralheizung",
-    "fuel_type": "gas",
-    "available_from": "2026-07-01",
-    "pets_allowed": "nach_absprache"
-  },
-  "costs": {
-    "cold_rent_eur": 620.00,
-    "cold_rent_sqm_eur": 8.55,
-    "utilities_prepayment_eur": 180.00,
-    "heating_costs_included": true,
-    "warm_rent_eur": 800.00,
-    "deposit_eur": 1860.00,
-    "deposit_months": 3,
-    "parking_eur": null,
-    "commission": "provisionsfrei"
-  },
-  "energy_certificate": {
-    "type": "verbrauchsausweis",
-    "value_kwh_sqm_year": 128.5,
-    "energy_class": "D",
-    "primary_fuel": "Erdgas",
-    "construction_year": 1965,
-    "certificate_valid_until": "2032-06-15"
-  },
-  "mietpreisbremse_check": {
-    "active": true,
-    "vergleichsmiete_sqm_eur": 8.50,
-    "max_rent_sqm_eur": 9.35,
-    "requested_rent_sqm_eur": 8.55,
-    "compliant": true,
-    "exemption_applicable": false,
-    "previous_rent_eur": null
-  },
-  "agg_compliance": {
-    "checked": true,
-    "issues": [],
-    "compliant": true
-  },
-  "geg_compliance": {
-    "all_fields_present": true,
-    "issues": [],
-    "compliant": true
-  },
-  "photo_recommendation": {
-    "minimum_photos": 8,
-    "recommended_photos": [
-      "Aussenansicht Gebaeude",
-      "Wohnzimmer (Richtung Balkon)",
-      "Wohnzimmer (Richtung Kueche)",
-      "Kueche",
-      "Schlafzimmer 1",
-      "Schlafzimmer 2",
-      "Bad",
-      "Balkon",
-      "Flur/Eingangsbereich",
-      "Kellerabteil"
-    ]
-  },
-  "confidence_score": 0.92,
-  "data_gaps": []
-}
+**Wichtig:** Der Nutzer ist Immobilieninvestor, kein IT-ler. Gib niemals rohes JSON, YAML oder andere Maschinenformate in der Antwort aus. Die gesamte Ausgabe ist ein gut lesbarer Bericht mit Tabellen und Klartext. Der Inserat-Text muss als direkt kopierbarer Textblock erscheinen, den der Nutzer 1:1 ins Portal einfuegen kann.
+
+### Ergebnisbericht
+
+```markdown
+# Vermietungsinserat: Musterstr. 12, 10115 Berlin -- 3. OG links
+
+**Status: 🟢 Veroeffentlichungsfaehig** | GEG ✅ | AGG ✅ | Mietpreisbremse ✅ | Konfidenz: 92%
+
+## Inserat-Titel (zum Kopieren)
+
+> 3-Zimmer-Wohnung | 72 qm | Balkon | Berlin-Mitte
+
+## Inserat-Text (zum Kopieren)
+
+**Objektbeschreibung:**
+
+> Helle 3-Zimmer-Wohnung im 3. Obergeschoss eines gepflegten Altbaus (Baujahr 1965)
+> in Berlin-Mitte. Die Wohnung verfuegt ueber einen grosszuegigen Grundriss mit
+> separater Kueche, Wohnzimmer mit Zugang zum Suedbalkon, zwei Schlafzimmer und
+> ein modernisiertes Bad mit Dusche und Wanne.
+>
+> Die Wohnung wurde 2024 umfassend renoviert: neue Bodenbelaege (Echtholzparkett
+> im Wohn- und Schlafbereich), modernes Badezimmer, neue Elektrik und
+> Malerarbeiten in allen Raeumen.
+
+**Ausstattung:**
+
+> - 3 Zimmer, ca. 72 qm Wohnflaeche
+> - Suedbalkon
+> - Echtholzparkett (2024 verlegt)
+> - Modernes Bad mit Dusche und Wanne (2024 saniert)
+> - Separate Kueche
+> - Kellerabteil
+> - Fahrradstellplatz im Hof
+> - Aufzug im Haus
+> - Gas-Zentralheizung
+
+**Lage:**
+
+> Zentrale Lage in Berlin-Mitte mit hervorragender Infrastruktur. U-Bahnhof
+> Rosenthaler Platz (U8) in 3 Gehminuten. Supermarkt, Baeckerei und Apotheke im
+> Erdgeschoss. Volkspark am Weinbergsweg in 5 Minuten erreichbar. Schulen und
+> Kitas in der naeheren Umgebung.
+
+**Sonstiges:**
+
+> Verfuegbar ab 01.07.2026.
+>
+> Fuer eine Besichtigung bitten wir um Ihre Bewerbung mit folgenden Unterlagen:
+> - Einkommensnachweis (letzte 3 Gehaltsabrechnungen)
+> - Schufa-Bonitaetsauskunft
+> - Kopie des Personalausweises
+> - Mieterselbstauskunft
+> - Mietschuldenfreiheitsbescheinigung des Vorvermieters
+
+## Portal-Datenfelder (fuer ImmoScout24/Immowelt)
+
+| Feld | Wert |
+|------|------|
+| Objektart | Wohnung (Etagenwohnung), Miete |
+| Wohnflaeche | ca. 72,5 qm |
+| Zimmer | 3 (2 Schlafzimmer, 1 Bad) |
+| Etage | 3 von 5 |
+| Baujahr | 1965 |
+| Zustand | Renoviert (zuletzt 2024) |
+| Heizung | Zentralheizung, Gas |
+| Verfuegbar ab | 01.07.2026 |
+| Haustiere | Nach Absprache |
+
+## Kosten
+
+| Position | Betrag |
+|----------|--------|
+| Nettokaltmiete | 620,00 EUR (8,55 EUR/qm) |
+| Nebenkostenvorauszahlung | 180,00 EUR (inkl. Heizkosten) |
+| **Warmmiete** | **800,00 EUR** |
+| Kaution | 1.860,00 EUR (3 Nettokaltmieten) |
+| Stellplatz | Nicht vorhanden |
+| Provision | Provisionsfrei |
+
+## Energieausweis-Pflichtangaben (GEG)
+
+| | |
+|---|---|
+| Typ | Verbrauchsausweis |
+| Energiekennwert | 128,5 kWh/(qm*a) |
+| Effizienzklasse | D |
+| Energietraeger | Erdgas |
+| Baujahr Gebaeude | 1965 |
+| Gueltig bis | 15.06.2032 |
+
+## Rechtliche Pruefung
+
+| Pruefung | Ergebnis | Details |
+|----------|----------|---------|
+| GEG-Pflichtangaben | 🟢 Vollstaendig | Alle 5 Pflichtfelder im Inserat enthalten |
+| AGG-Konformitaet | 🟢 Konform | Keine diskriminierenden Formulierungen |
+| Mietpreisbremse | 🟢 Eingehalten | Aktiv in Berlin. Vergleichsmiete 8,50 EUR/qm, zulaessig max. 9,35 EUR/qm, verlangt 8,55 EUR/qm. Keine Ausnahme noetig, Vormiete nicht relevant. |
+| Kaution | 🟢 Zulaessig | 3 Nettokaltmieten (gesetzliches Maximum) |
+
+## Foto-Empfehlung
+
+Mindestens 8 Fotos, empfohlene Reihenfolge:
+1. Aussenansicht Gebaeude
+2. Wohnzimmer (Richtung Balkon)
+3. Wohnzimmer (Richtung Kueche)
+4. Kueche
+5. Schlafzimmer 1
+6. Schlafzimmer 2
+7. Bad
+8. Balkon
+9. Flur/Eingangsbereich
+10. Kellerabteil
+
+## Fehlende Daten
+
+Keine -- alle Pflichtangaben vorhanden. (Falls Luecken bestehen: hier auflisten mit Hinweis, was nachgereicht werden muss.)
 ```
 
 ---
@@ -251,7 +282,7 @@ Du bist ein erfahrener Immobilienvermarkter, der professionelle, rechtskonforme 
 - Wenn Mietpreisbremse-Status unklar: Als aktiv annehmen und Mietpreisbremse-Check durchfuehren.
 - Wenn Zustand nicht angegeben: Neutralen Begriff "gepflegt" verwenden, Hinweis dass Zustand vor Ort zu pruefen ist.
 - Wenn keine Fotos vorhanden: Dringend empfehlen. Inserate mit Fotos erhalten 4x mehr Anfragen.
-- Alle Luecken im Feld `data_gaps` dokumentieren.
+- Alle Luecken im Abschnitt "Fehlende Daten" des Berichts dokumentieren.
 
 ---
 

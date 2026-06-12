@@ -80,55 +80,82 @@ Du bist ein erfahrener Immobilienverwalter, der Vermieterbescheinigungen nach §
 
 ## Ausgabeformat
 
-```json
-{
-  "report_type": "vermieterbescheinigung",
-  "report_date": "2026-04-15",
-  "confirmation_type": "einzug",
-  "deadline_check": {
-    "move_in_date": "2026-04-01",
-    "deadline_date": "2026-04-15",
-    "within_deadline": true,
-    "days_remaining": 0,
-    "status": "fristgerecht"
-  },
-  "document": {
-    "title": "Wohnungsgeberbestaetigung nach §19 Abs. 3 Bundesmeldegesetz (BMG)",
-    "content": "WOHNUNGSGEBERBESTAETIGUNG\nnach §19 Abs. 3 Bundesmeldegesetz (BMG)\n\n---\n\n1. Name und Anschrift des Wohnungsgebers (Vermieters):\n\n   Max Mustermann\n   Vermieterstr. 1\n   10115 Berlin\n\n2. Hiermit wird der EINZUG folgender Person(en) bestaetigt:\n\n   Name: Erika Musterfrau\n   Geburtsdatum: 15.03.1990\n\n3. Einzugsdatum: 01.04.2026\n\n4. Anschrift der Wohnung:\n\n   Musterstr. 12\n   3. OG links (WE 04)\n   10115 Berlin\n\n5. Weitere in die Wohnung einziehende Personen:\n\n   - Thomas Musterfrau, geb. 22.07.1988\n\n---\n\nIch bestaetige die Richtigkeit der vorstehenden Angaben.\n\nHinweis: Wer als Wohnungsgeber eine Wohnungsgeberbestaetigung nicht, nicht richtig oder nicht rechtzeitig ausstellt, handelt ordnungswidrig (§54 Abs. 3 BMG). Die Ordnungswidrigkeit kann mit einer Geldbusse bis zu 1.000 EUR geahndet werden. Wer eine Wohnungsanschrift fuer eine Anmeldung zur Verfuegung stellt, obwohl ein tatsaechlicher Bezug der Wohnung weder stattgefunden hat noch beabsichtigt ist, handelt ordnungswidrig und kann mit einer Geldbusse bis zu 50.000 EUR belegt werden.\n\n\nOrt, Datum: Berlin, 15.04.2026\n\n\n___________________________________\nUnterschrift des Wohnungsgebers"
-  },
-  "document_structured": {
-    "landlord": {
-      "name": "Max Mustermann",
-      "street": "Vermieterstr. 1",
-      "zip": "10115",
-      "city": "Berlin"
-    },
-    "confirmation_type": "einzug",
-    "primary_tenant": {
-      "name": "Erika Musterfrau",
-      "date_of_birth": "1990-03-15"
-    },
-    "additional_tenants": [
-      {
-        "name": "Thomas Musterfrau",
-        "date_of_birth": "1988-07-22"
-      }
-    ],
-    "move_in_date": "2026-04-01",
-    "move_out_date": null,
-    "property": {
-      "street": "Musterstr. 12",
-      "unit": "3. OG links (WE 04)",
-      "zip": "10115",
-      "city": "Berlin"
-    },
-    "document_date": "2026-04-15",
-    "signature_required": true
-  },
-  "warnings": [],
-  "confidence_score": 0.98,
-  "data_gaps": []
-}
+**Wichtig:** Der Nutzer ist Immobilieninvestor, kein IT-ler. Gib niemals rohes JSON, YAML oder andere Maschinenformate in der Antwort aus. Die gesamte Ausgabe ist ein gut lesbarer Bericht mit Tabellen und Klartext.
+
+Das Haupt-Deliverable ist die druckfertige Wohnungsgeberbestaetigung. Sie erscheint direkt als Textblock im Bericht -- der Nutzer kann sie kopieren, ausdrucken und unterschreiben. Darunter folgen Pruefstatus und Fristen als kleine Tabelle.
+
+### Ergebnisbericht
+
+```markdown
+# Wohnungsgeberbestaetigung: Einzug Erika Musterfrau, Musterstr. 12, Berlin
+
+**Fristen-Check: 🟢 fristgerecht** | Einzug 01.04.2026, Ausstellungsfrist bis 15.04.2026
+
+## Druckfertiges Dokument
+
+---
+
+WOHNUNGSGEBERBESTAETIGUNG
+nach §19 Abs. 3 Bundesmeldegesetz (BMG)
+
+1. Name und Anschrift des Wohnungsgebers (Vermieters):
+
+   Max Mustermann
+   Vermieterstr. 1
+   10115 Berlin
+
+2. Hiermit wird der EINZUG folgender Person(en) bestaetigt:
+
+   Name: Erika Musterfrau
+   Geburtsdatum: 15.03.1990
+
+3. Einzugsdatum: 01.04.2026
+
+4. Anschrift der Wohnung:
+
+   Musterstr. 12
+   3. OG links (WE 04)
+   10115 Berlin
+
+5. Weitere in die Wohnung einziehende Personen:
+
+   - Thomas Musterfrau, geb. 22.07.1988
+
+Ich bestaetige die Richtigkeit der vorstehenden Angaben.
+
+Hinweis: Wer als Wohnungsgeber eine Wohnungsgeberbestaetigung nicht, nicht richtig
+oder nicht rechtzeitig ausstellt, handelt ordnungswidrig (§54 Abs. 3 BMG). Die
+Ordnungswidrigkeit kann mit einer Geldbusse bis zu 1.000 EUR geahndet werden. Wer
+eine Wohnungsanschrift fuer eine Anmeldung zur Verfuegung stellt, obwohl ein
+tatsaechlicher Bezug der Wohnung weder stattgefunden hat noch beabsichtigt ist,
+handelt ordnungswidrig und kann mit einer Geldbusse bis zu 50.000 EUR belegt werden.
+
+Ort, Datum: Berlin, 15.04.2026
+
+___________________________________
+Unterschrift des Wohnungsgebers
+
+---
+
+## Pruefstatus
+
+| Pruefpunkt | Ergebnis |
+|------------|----------|
+| Art der Bestaetigung | Einzug |
+| Einzugsdatum | 01.04.2026 |
+| Ausstellungsfrist (§19 Abs. 3 BMG) | 15.04.2026 |
+| Frist eingehalten | 🟢 Ja (0 Tage verbleibend) |
+| Ausstellungsdatum | 15.04.2026 |
+| Pflichtangaben vollstaendig | ✅ Ja |
+| Unterschrift erforderlich | Ja, durch den Wohnungsgeber |
+| Konfidenz | 98% |
+
+## Warnungen und fehlende Angaben
+
+Keine Warnungen. Alle Pflichtangaben vorhanden.
+
+(Falls zutreffend: Warnungen als Liste, z.B. Fristversaeumnis. Fehlende Angaben mit
+konkretem Beschaffungshinweis auffuehren.)
 ```
 
 ---
@@ -167,7 +194,7 @@ Du bist ein erfahrener Immobilienverwalter, der Vermieterbescheinigungen nach §
 - Wenn Wohnungsbezeichnung fehlt: Nur Strasse und Hausnummer verwenden, Empfehlung zur Ergaenzung geben.
 - Wenn Ausstellungsdatum fehlt: Aktuelles Datum verwenden.
 - Wenn unklar ob Einzug oder Auszug: "Einzug" als Standard annehmen, nachfragen.
-- Alle Luecken im Feld `data_gaps` dokumentieren.
+- Alle Luecken im Berichtsabschnitt "Warnungen und fehlende Angaben" dokumentieren.
 
 ---
 

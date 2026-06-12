@@ -1,6 +1,6 @@
 ---
 name: expose-parser
-description: "Extrahiert alle investitionsrelevanten Daten aus Makler-Exposes in ein strukturiertes JSON-Format. Nutze diesen Skill wenn du neue Angebote schnell auf Kennzahlen reduzieren, mehrere Exposes screenen oder Daten fuer die Bierdeckel-Kalkulation aufbereiten willst."
+description: "Extrahiert alle investitionsrelevanten Daten aus Makler-Exposes in eine uebersichtliche Eckdaten-Tabelle. Nutze diesen Skill wenn du neue Angebote schnell auf Kennzahlen reduzieren, mehrere Exposes screenen oder Daten fuer die Bierdeckel-Kalkulation aufbereiten willst."
 ---
 
 # Expose-Parser
@@ -104,188 +104,109 @@ Du bist ein erfahrener Immobilienanalyst mit Fokus auf deutsche Wohnimmobilien-I
 
 ## Ausgabeformat
 
-```json
-{
-  "expose_data": {
-    "processing_date": "2025-11-15",
-    "source": "Expose ABC Makler, Objekt-ID 12345",
-    "confidence": 0.88,
-    "core_data": {
-      "asking_price": 580000.00,
-      "address": {
-        "street": "Musterstrasse 12",
-        "zip": "40210",
-        "city": "Duesseldorf",
-        "district": "Stadtmitte",
-        "state": "Nordrhein-Westfalen"
-      },
-      "total_living_area_sqm": 425.00,
-      "total_commercial_area_sqm": 0.00,
-      "total_usable_area_sqm": 425.00,
-      "land_area_sqm": 310.00,
-      "construction_year": 1965,
-      "floors": 3,
-      "roof_type": "satteldach",
-      "units": {
-        "residential": 6,
-        "commercial": 0,
-        "garages": 2,
-        "parking_outdoor": 0,
-        "total": 8
-      }
-    },
-    "rental_data": {
-      "actual_annual_net_cold_rent": 41040.00,
-      "potential_annual_net_cold_rent": 46650.00,
-      "average_rent_per_sqm": 8.05,
-      "vacancy_rate_percent": 12.5,
-      "vacant_units": 1,
-      "rent_roll_available": true,
-      "rent_roll_date": "2025-01-01"
-    },
-    "condition": {
-      "overall_condition": "gepflegt",
-      "last_renovation_year": 2015,
-      "last_renovation_scope": "Dach, Fassadendaemmung WDVS",
-      "heating_type": "gas_zentralheizung",
-      "heating_year": 2010,
-      "energy_certificate": {
-        "type": "bedarfsausweis",
-        "value_kwh": 142.0,
-        "efficiency_class": "E",
-        "valid_until": "2030-05-15"
-      },
-      "windows": {
-        "material": "kunststoff",
-        "glazing": "doppelverglasung",
-        "year": 2005
-      },
-      "roof": {
-        "condition": "gut",
-        "last_renovation": 2015
-      },
-      "facade": {
-        "insulation": true,
-        "type": "wdvs",
-        "year": 2015
-      },
-      "pipes": {
-        "water_renewed": true,
-        "water_year": 2008,
-        "sewage_renewed": false,
-        "electrical_renewed": true,
-        "electrical_year": 2010
-      },
-      "elevator": false
-    },
-    "financial": {
-      "hausgeld_monthly": null,
-      "hausgeld_annual": null,
-      "maintenance_reserve_total": null,
-      "maintenance_reserve_per_sqm": null,
-      "non_allocable_costs_annual": null,
-      "property_tax_annual": 890.00,
-      "broker_commission_percent": 3.57,
-      "broker_commission_amount": 20706.00,
-      "estimated_acquisition_costs": {
-        "property_transfer_tax_rate": 0.065,
-        "property_transfer_tax": 37700.00,
-        "notary_fees": 8700.00,
-        "land_registry_fees": 2900.00,
-        "broker_commission": 20706.00,
-        "total_acquisition_costs": 70006.00,
-        "total_acquisition_costs_percent": 12.07
-      }
-    },
-    "special_features": {
-      "hereditary_building_right": {
-        "applicable": false
-      },
-      "monument_protection": {
-        "applicable": false
-      },
-      "building_encumbrances": {
-        "mentioned": false,
-        "details": null,
-        "note": "Baulastenverzeichnis anfordern"
-      },
-      "social_housing_obligation": {
-        "applicable": false
-      },
-      "usufruct_or_right_of_residence": {
-        "applicable": false
-      },
-      "planned_measures": {
-        "mentioned": false,
-        "details": null
-      },
-      "contamination": {
-        "mentioned": false,
-        "note": "Altlastenkataster pruefen"
-      },
-      "mixed_use": false,
-      "other_notes": []
-    },
-    "calculated_metrics": {
-      "purchase_price_factor": 14.13,
-      "gross_rental_yield_actual_percent": 7.08,
-      "gross_rental_yield_potential_percent": 8.04,
-      "price_per_sqm": 1364.71,
-      "price_per_unit": 96666.67,
-      "price_per_residential_unit": 96666.67
-    },
-    "missing_information": [
-      {
-        "item": "hausgeld",
-        "importance": "hoch",
-        "note": "Hausgeld/Wirtschaftsplan nicht im Expose enthalten -- anfordern"
-      },
-      {
-        "item": "instandhaltungsruecklage",
-        "importance": "hoch",
-        "note": "Hoehe der Instandhaltungsruecklage unbekannt"
-      },
-      {
-        "item": "teilungserklaerung",
-        "importance": "hoch",
-        "note": "Teilungserklaerung fuer Due Diligence erforderlich"
-      },
-      {
-        "item": "grundbuchauszug",
-        "importance": "hoch",
-        "note": "Belastungen in Abt. II und III pruefen"
-      },
-      {
-        "item": "abwasserleitungen",
-        "importance": "mittel",
-        "note": "Zustand der Abwasserleitungen nicht erwaehnt -- ggf. Kamerabefahrung"
-      },
-      {
-        "item": "protokolle_eigentuemerversammlungen",
-        "importance": "mittel",
-        "note": "Letzte 3 Jahre anfordern fuer Beschlusscheck"
-      }
-    ],
-    "deal_screener_ready": true,
-    "deal_screener_input": {
-      "purchase_price": 580000.00,
-      "living_area_sqm": 425.00,
-      "construction_year": 1965,
-      "units_residential": 6,
-      "annual_net_cold_rent_actual": 41040.00,
-      "annual_net_cold_rent_potential": 46650.00,
-      "vacancy_rate": 0.125,
-      "condition": "gepflegt",
-      "heating_type": "gas_zentralheizung",
-      "energy_value_kwh": 142.0,
-      "broker_commission_percent": 3.57,
-      "property_transfer_tax_rate": 0.065,
-      "property_tax_annual": 890.00,
-      "state": "Nordrhein-Westfalen"
-    }
-  }
-}
+**Wichtig:** Der Nutzer ist Immobilieninvestor, kein IT-ler. Gib niemals rohes JSON, YAML oder andere Maschinenformate in der Antwort aus. Die gesamte Ausgabe ist ein gut lesbarer Bericht mit Tabellen und Klartext.
+
+### Extraktionsbericht
+
+```markdown
+# Expose-Auswertung: MFH Musterstrasse 12, 40210 Duesseldorf
+
+**Quelle:** Expose ABC Makler, Objekt-ID 12345 | Konfidenz: Mittel (88%)
+
+## Eckdaten
+
+| | |
+|---|---|
+| Kaufpreis | 580.000 EUR |
+| Adresse | Musterstrasse 12, 40210 Duesseldorf-Stadtmitte (NRW) |
+| Wohnflaeche | 425 qm |
+| Gewerbeflaeche | 0 qm |
+| Grundstueck | 310 qm |
+| Baujahr | 1965 |
+| Geschosse | 3 |
+| Dachform | Satteldach |
+| Einheiten | 6 WE, 0 GE, 2 Garagen (gesamt 8) |
+
+## Mietdaten
+
+| | |
+|---|---|
+| Ist-Miete (JNKM) | 41.040 EUR/Jahr |
+| Soll-Miete bei Vollvermietung | 46.650 EUR/Jahr |
+| Durchschnittsmiete | 8,05 EUR/qm |
+| Leerstand | 12,5% (1 WE) |
+| Mietliste | Vorhanden (Stand 01.01.2025) |
+
+## Zustand und Ausstattung
+
+| | |
+|---|---|
+| Gesamtzustand | Gepflegt |
+| Letzte Sanierung | 2015 (Dach, Fassadendaemmung WDVS) |
+| Heizung | Gas-Zentralheizung, Baujahr 2010 |
+| Energieausweis | Bedarfsausweis, 142 kWh/(qm*a), Klasse E, gueltig bis 15.05.2030 |
+| Fenster | Kunststoff, Doppelverglasung, 2005 |
+| Dach | Guter Zustand, saniert 2015 |
+| Fassade | Gedaemmt (WDVS, 2015) |
+| Leitungen | Wasser erneuert 2008, Elektro erneuert 2010, Abwasser nicht erneuert |
+| Aufzug | Nein |
+
+## Finanzielle Rahmendaten
+
+| | |
+|---|---|
+| Hausgeld | Nicht angegeben |
+| Instandhaltungsruecklage | Nicht angegeben |
+| Nicht umlagefaehige Kosten | Nicht angegeben |
+| Grundsteuer | 890 EUR/Jahr |
+| Maklercourtage | 3,57% (20.706 EUR) |
+
+**Geschaetzte Kaufnebenkosten:**
+
+| Position | Betrag |
+|----------|--------|
+| Grunderwerbsteuer (6,5% NRW) | 37.700 EUR |
+| Notar | 8.700 EUR |
+| Grundbuch | 2.900 EUR |
+| Maklercourtage | 20.706 EUR |
+| **Gesamt** | **70.006 EUR (12,07%)** |
+
+## Berechnete Kennzahlen
+
+| Kennzahl | Wert |
+|----------|------|
+| Kaufpreisfaktor (Ist) | 14,1 |
+| Bruttomietrendite (Ist) | 7,08% |
+| Bruttomietrendite (Soll) | 8,04% |
+| Kaufpreis pro qm | 1.365 EUR |
+| Kaufpreis pro Wohneinheit | 96.667 EUR |
+
+## Besonderheiten
+
+Erbbaurecht: Nein | Denkmalschutz: Nein | Sozialbindung: Nein | Niessbrauch/Wohnrecht: Nein | Mischnutzung: Nein | Geplante Massnahmen: Keine erwaehnt
+
+- Baulasten: Nicht erwaehnt -- **Baulastenverzeichnis anfordern**
+- Altlasten: Nicht erwaehnt -- **Altlastenkataster pruefen**
+
+## Fehlende Informationen
+
+| Wichtigkeit | Was fehlt | Hinweis |
+|-------------|-----------|---------|
+| 🔴 Hoch | Hausgeld | Hausgeld/Wirtschaftsplan nicht im Expose enthalten -- anfordern |
+| 🔴 Hoch | Instandhaltungsruecklage | Hoehe unbekannt |
+| 🔴 Hoch | Teilungserklaerung | Fuer Due Diligence erforderlich |
+| 🔴 Hoch | Grundbuchauszug | Belastungen in Abt. II und III pruefen |
+| 🟡 Mittel | Abwasserleitungen | Zustand nicht erwaehnt -- ggf. Kamerabefahrung |
+| 🟡 Mittel | Protokolle Eigentuemerversammlungen | Letzte 3 Jahre anfordern fuer Beschlusscheck |
+
+## Naechster Schritt
+
+Daten sind vollstaendig genug fuer den Deal-Screener. Empfehlung: Deal-Screening durchfuehren, parallel Hausgeld und Mietliste anfordern.
 ```
+
+### Strukturierte Daten fuer Folge-Skills (nur als Datei)
+
+Falls die extrahierten Daten fuer einen Folge-Skill (insbesondere `deal-screener`, `bierdeckel-kalkulation`) oder eine sonstige Weiterverarbeitung gebraucht werden: Schreibe die strukturierten Daten als Datei neben das Quell-Expose (z.B. JSON-Datei `expose-musterstrasse-12.json` im selben Ordner) -- inklusive aller extrahierten Felder und des fertigen Deal-Screener-Inputs (Kaufpreis, Wohnflaeche, Baujahr, Einheiten, Ist-/Soll-Miete, Leerstand, Zustand, Heizungstyp, Energiekennwert, Maklercourtage, GrESt-Satz, Grundsteuer, Bundesland). Gib diese strukturierten Daten niemals im Chat aus -- im Chat erscheint ausschliesslich der lesbare Bericht. Erwaehne im Bericht kurz, wohin die Datei geschrieben wurde.
 
 ---
 

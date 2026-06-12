@@ -220,59 +220,72 @@ Rechtsgrundlage: §885a ZPO ("Berliner Raeumung")
 
 ## Ausgabeformat
 
+**Wichtig:** Der Nutzer ist Immobilieninvestor, kein IT-ler. Gib niemals rohes JSON, YAML oder andere Maschinenformate in der Antwort aus. Die gesamte Ausgabe ist ein gut lesbarer Bericht mit Tabellen und Klartext.
+
 Liefere die Ergebnisse in folgendem Format:
 
 ### Zusammenfassung (Freitext)
 
 Kurze Zusammenfassung in 3-5 Saetzen: Gesamteinschaetzung des Bewerbers oder Status des Zahlungsausfalls, Risk-Score, wichtigste Handlungsempfehlung.
 
-### Strukturierte Bewertung (JSON)
+### Pruefbericht
 
-```json
-{
-  "mietnomaden_pruefung": {
-    "modus": "BEWERBER_PRUEFUNG",
-    "objekt": {
-      "adresse": "Beispielstr. 42, 44147 Dortmund",
-      "gesamtmiete_eur": 700,
-      "kaution_eur": 1560
-    },
-    "bewerber": {
-      "name": "Max Mustermann",
-      "risk_score": "NIEDRIG",
-      "risk_score_numerisch": 18,
-      "bonitaet": {
-        "schufa_score": 97.5,
-        "schufa_negativmerkmale": false,
-        "einkommen_miete_verhaeltnis": 4.0,
-        "bewertung": "GUT"
-      },
-      "pruefung_checkliste": [
-        {"pruefpunkt": "SCHUFA-Auskunft", "status": "OK", "details": "Score 97.5%, keine Negativmerkmale"},
-        {"pruefpunkt": "Mieterselbstauskunft", "status": "OK", "details": "Vollstaendig ausgefuellt, plausibel"},
-        {"pruefpunkt": "Einkommensnachweise", "status": "OK", "details": "3 Gehaltsabrechnungen, Netto 2.800 EUR, 4x Gesamtmiete"},
-        {"pruefpunkt": "Mietschuldenfreiheit", "status": "OK", "details": "Bescheinigung vom Vorvermieter vorhanden"},
-        {"pruefpunkt": "Personalausweis", "status": "OK", "details": "Original geprueft, Daten stimmen ueberein"},
-        {"pruefpunkt": "Arbeitsvertrag", "status": "OK", "details": "Unbefristet, keine Probezeit"},
-        {"pruefpunkt": "Warnsignale", "status": "OK", "details": "Keine Warnsignale identifiziert"}
-      ],
-      "warnsignale": [],
-      "empfehlung": "ANNEHMEN",
-      "begruendung": "Bewerber erfuellt alle Pruefkriterien. SCHUFA einwandfrei, Einkommen 4x Gesamtmiete, unbefristetes Arbeitsverhaeltnis, Mietschuldenfreiheit bestaetigt."
-    },
-    "generierte_dokumente": {
-      "annahme_schreiben": true,
-      "absage_schreiben": false,
-      "mietvertrag_hinweise": ["Barkaution vereinbaren", "Kaution vor Schluesseluebergabe"]
-    },
-    "metadaten": {
-      "skill_version": "1.0",
-      "analyse_datum": "2026-04-15",
-      "analyst": "Mietnomaden-Praevention-Skill"
-    }
-  }
-}
+```markdown
+# Bewerber-Pruefung: Max Mustermann
+
+**Risk-Score: 🟢 NIEDRIG (18 von 100 Punkten)** | Empfehlung: **ANNEHMEN**
+
+## Objekt
+
+| | |
+|---|---|
+| Adresse | Beispielstr. 42, 44147 Dortmund |
+| Gesamtmiete | 700 EUR |
+| Kaution | 1.560 EUR |
+
+## Bonitaet
+
+| Kriterium | Wert | Bewertung |
+|-----------|------|-----------|
+| SCHUFA-Score | 97,5% | 🟢 |
+| SCHUFA-Negativmerkmale | Keine | 🟢 |
+| Einkommen-Miete-Verhaeltnis | 4,0x | 🟢 |
+| Gesamtbewertung Bonitaet | GUT | 🟢 |
+
+## Pruef-Checkliste
+
+| Pruefpunkt | Status | Details |
+|------------|--------|---------|
+| SCHUFA-Auskunft | 🟢 OK | Score 97,5%, keine Negativmerkmale |
+| Mieterselbstauskunft | 🟢 OK | Vollstaendig ausgefuellt, plausibel |
+| Einkommensnachweise | 🟢 OK | 3 Gehaltsabrechnungen, Netto 2.800 EUR, 4x Gesamtmiete |
+| Mietschuldenfreiheit | 🟢 OK | Bescheinigung vom Vorvermieter vorhanden |
+| Personalausweis | 🟢 OK | Original geprueft, Daten stimmen ueberein |
+| Arbeitsvertrag | 🟢 OK | Unbefristet, keine Probezeit |
+| Warnsignale | 🟢 OK | Keine Warnsignale identifiziert |
+
+## Warnsignale
+
+Keine Warnsignale identifiziert. (Falls vorhanden: jedes Warnsignal mit
+Schweregrad 🟡/🔴 und empfohlener Handlung auflisten.)
+
+## Empfehlung
+
+**ANNEHMEN** -- Bewerber erfuellt alle Pruefkriterien. SCHUFA einwandfrei,
+Einkommen 4x Gesamtmiete, unbefristetes Arbeitsverhaeltnis,
+Mietschuldenfreiheit bestaetigt.
+
+## Generierte Dokumente
+
+- Annahme-Schreiben: erstellt (siehe unten bzw. Anhang)
+- Absage-Schreiben: nicht erforderlich
+
+**Hinweise fuer den Mietvertrag:**
+- Barkaution vereinbaren
+- Kaution vor Schluesseluebergabe
 ```
+
+Im Modus ZAHLUNGSAUSFALL entsprechend: Status des Ausfalls, bisherige Schritte, naechste Schritte der Reaktionskette mit Fristen und Rechtsgrundlagen -- ebenfalls als Tabellen und Klartext, niemals als JSON. Generierte Schreiben (Annahme, Absage, Mahnung, Kuendigung) als direkt kopierbare, druckfertige Textbloecke ausgeben.
 
 ---
 

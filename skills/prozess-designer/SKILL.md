@@ -450,181 +450,157 @@ Ein Verantwortlicher arbeitet so: Er beobachtet den Ist-Zustand, vergleicht ihn 
 
 ## Ausgabeformat
 
+**Wichtig:** Der Nutzer ist Immobilieninvestor, kein IT-ler. Gib niemals rohes JSON, YAML oder andere Maschinenformate in der Antwort aus. Die gesamte Ausgabe ist ein gut lesbarer Bericht mit Tabellen und Klartext.
+
 Liefere die Ergebnisse in folgendem Format:
 
 ### Prozess-Uebersicht (Freitext)
 
 Kompakte Zusammenfassung: Welcher Prozess wurde entworfen, wie viele Phasen, welche Rollen, was ist das Zielbild. Dazu ein Flussdiagramm das Ketten, Entscheidungen und Phasenwechsel zeigt.
 
-### Strukturierte Prozessdefinition (JSON)
+### Prozessbericht
 
-```json
-{
-  "prozess_design": {
-    "prozessname": "Ankauf Bestandswohnungen",
-    "ziel": "Objekt angekauft, finanziert und in Bestand ueberfuehrt",
-    "entity_type": "immobilie",
-    "rollen": [
-      {
-        "rolle": "Akquisiteur",
-        "kategorie": "verantwortlicher",
-        "status": 1,
-        "verantwortungsbereich": "Vom Erstscreening bis zum unterschriebenen Kaufvertrag",
-        "zweck": "Passende Objekte finden, pruefen und ankaufen",
-        "produkt": "Unterschriebener Kaufvertrag fuer renditestarke Objekte"
-      },
-      {
-        "rolle": "Backoffice Ankauf",
-        "kategorie": "zuarbeiter",
-        "status": 0,
-        "verantwortungsbereich": "Unterlagen beschaffen, pruefen und dokumentieren",
-        "zweck": "Akquisiteur von administrativen Aufgaben entlasten",
-        "produkt": "Vollstaendige, geprufte Unterlagenmappe pro Objekt"
-      }
-    ],
-    "pipeline": {
-      "name": "Ankauf Bestandswohnungen",
-      "entity_type": "immobilie",
-      "phasen": [
-        {
-          "name": "Screening",
-          "order": 1,
-          "zweck": "Erstsichtung und Grobfilter",
-          "definition_of_done": "Deal-Score berechnet, Showstopper geprueft, Entscheidung Go/NoGo dokumentiert",
-          "verantwortlich": "Akquisiteur",
-          "typische_dauer_tage": 2,
-          "eskalation": "Kein Screening-Ergebnis nach 3 Tagen",
-          "templates": [
-            {
-              "title": "Inserat auswerten & Deal-Score berechnen",
-              "mode": "task",
-              "type": "NOTIZ",
-              "activity_status": "Geplant",
-              "priority": "Hoch",
-              "start_in_days": 0,
-              "end_in_days": 2,
-              "assigned_role": "Akquisiteur",
-              "next_activity_template": "Unterlagen beim Makler anfordern",
-              "description": "ZWECK: Schnelle Erstbewertung ob das Objekt ins Ankaufsprofil passt.\n\nERGEBNIS: Deal-Score berechnet, Showstopper geprueft, Go/NoGo-Entscheidung dokumentiert im System.\n\nRAHMEN: Ankaufsprofil und Buybox als Referenz, eigenstaendige Entscheidung bis Score 60.\n\nNICHT VERHANDELBAR: Jedes Objekt bekommt einen Score, kein Objekt wird ohne Bewertung uebersprungen.\n\nESKALATION: Score > 78 sofort melden, Showstopper-Zweifel sofort klaeren."
-            },
-            {
-              "title": "Unterlagen beim Makler anfordern",
-              "mode": "task",
-              "type": "E-MAIL",
-              "activity_status": "Geplant",
-              "priority": "Hoch",
-              "start_in_days": 0,
-              "end_in_days": 5,
-              "assigned_role": "Backoffice Ankauf",
-              "next_activity_template": null,
-              "description": "WARUM: Ohne vollstaendige Unterlagen kann der Akquisiteur keine belastbare Kaufentscheidung treffen.\n\nWAS (Done): Alle Unterlagen im System hochgeladen, fehlende Dokumente getaggt, Wiedervorlage gesetzt.\n\nWIE:\n1. E-Mail an Makler mit Standardvorlage senden\n2. Anfordern: Mietvertrag, Hausgeldabrechnung 2J, Wirtschaftsplan, WEG-Protokolle 3J, TE, Grundriss, Energieausweis\n3. Eingehende Dokumente hochladen und benennen: [Objekt]_[Typ]_[Datum]\n4. Fehlende Dokumente als offenen Punkt taggen\n5. Wiedervorlage: 3 Tage nach Erstanfrage\n\nQUALITAET: Keine leeren Felder, jedes Dokument korrekt benannt, Fehlende explizit getaggt.\n\nRUECKFRAGEN: Wenn Makler Unterlagen verweigert: sofort Akquisiteur informieren."
-            }
-          ]
-        },
-        {
-          "name": "Pruefung",
-          "order": 2,
-          "zweck": "Vertiefte Analyse und Kaufentscheidung",
-          "definition_of_done": "Kalkulation erstellt, Entscheidung Go/NoGo gefallen",
-          "verantwortlich": "Akquisiteur",
-          "typische_dauer_tage": 5,
-          "eskalation": "Keine Entscheidung nach 7 Tagen",
-          "templates": [
-            {
-              "title": "Unterlagen pruefen & Kalkulation erstellen",
-              "mode": "task",
-              "type": "NOTIZ",
-              "activity_status": "Geplant",
-              "priority": "Hoch",
-              "start_in_days": 0,
-              "end_in_days": 3,
-              "assigned_role": "Akquisiteur",
-              "next_activity_template": "Ankaufsentscheidung treffen",
-              "description": "ZWECK: Belastbare Kalkulationsgrundlage fuer die Ankaufsentscheidung schaffen.\n\nERGEBNIS: Vollstaendige Kalkulation (Rendite, Cashflow, NK) im System, alle Risiken dokumentiert.\n\nRAHMEN: Alle verfuegbaren Unterlagen nutzen, fehlende Daten konservativ annehmen.\n\nNICHT VERHANDELBAR: Keine Entscheidung ohne dokumentierte Kalkulation."
-            },
-            {
-              "title": "Ankaufsentscheidung treffen",
-              "mode": "decision",
-              "type": "MEETING",
-              "activity_status": "Geplant",
-              "priority": "Hoch",
-              "start_in_days": 3,
-              "end_in_days": 5,
-              "assigned_role": "Akquisiteur",
-              "decision_question": "Soll das Objekt angekauft werden?",
-              "outcomes": [
-                {
-                  "key": "go",
-                  "label": "Ankauf -- weiter zu Verhandlung",
-                  "order": 0,
-                  "actions": [
-                    { "type": "STATUS_CHANGE", "target_status_id": "<<verhandlung_status_id>>" }
-                  ]
-                },
-                {
-                  "key": "nogo",
-                  "label": "Kein Ankauf -- archivieren",
-                  "order": 1,
-                  "actions": [
-                    { "type": "STATUS_CHANGE", "target_status_id": "<<archiv_status_id>>" }
-                  ]
-                },
-                {
-                  "key": "needs_info",
-                  "label": "Weitere Informationen noetig",
-                  "order": 2,
-                  "actions": [
-                    { "type": "CREATE_ACTIVITY", "template_id": "<<nachrecherche_template_id>>" }
-                  ]
-                }
-              ]
-            }
-          ]
-        },
-        {
-          "name": "Verhandlung",
-          "order": 3,
-          "zweck": "Kaufpreis verhandeln und Angebot platzieren",
-          "definition_of_done": "Angebot angenommen oder Absage dokumentiert",
-          "verantwortlich": "Akquisiteur",
-          "typische_dauer_tage": 14,
-          "eskalation": "Keine Rueckmeldung nach 7 Tagen",
-          "templates": []
-        }
-      ],
-      "recurring_templates": [
-        {
-          "title": "Woechentlicher Pipeline-Review",
-          "mode": "recurring",
-          "type": "MEETING",
-          "activity_status": "Geplant",
-          "priority": "Mittel",
-          "recurrence_rule": "FREQ=WEEKLY;BYDAY=MO",
-          "recurrence_timezone": "Europe/Berlin",
-          "assigned_role": "Akquisiteur",
-          "description": "ZWECK: Ueberblick ueber alle laufenden Ankaufsprozesse behalten.\n\nERGEBNIS: Status aller offenen Deals aktualisiert, Engpaesse identifiziert, naechste Schritte definiert."
-        }
-      ]
-    },
-    "prozess_fluss": "Screening → [Kette: Score berechnen → Unterlagen anfordern] → Pruefung → [Kette: Kalkulation → Entscheidung (Go/NoGo/Mehr Info)] → Verhandlung → Kaufvertrag → Uebergabe → Bestand",
-    "qualitaetsprinzipien": [
-      "Jede Aufgabe hat ein messbares Ergebnis -- kein 'kuemmer dich mal drum'",
-      "Zuarbeiter bekommen das Wie, Verantwortliche bekommen den Rahmen",
-      "Jede Phase hat eine Definition of Done -- kein Weiterschieben ohne Ergebnis",
-      "Verantwortungsbereiche sind scharf abgegrenzt -- keine Ueberlappungen",
-      "Feedback-Loops landen beim Verursacher -- wer bestellt wischt auch",
-      "Eskalation ist definiert -- nicht hoffen sondern regeln",
-      "Im System dokumentiert -- nicht im Kopf, nicht in WhatsApp",
-      "Entscheidungspunkte sind explizit -- kein implizites Weiterschieben",
-      "Wiederkehrende Kontrolle verhindert stilles Scheitern"
-    ],
-    "metadaten": {
-      "skill_version": "2.0",
-      "design_datum": "2026-04-22",
-      "designer": "Prozess-Designer-Skill"
-    }
-  }
-}
+```markdown
+# Prozess-Design: Ankauf Bestandswohnungen
+
+**Ziel:** Objekt angekauft, finanziert und in Bestand ueberfuehrt
+**Entitaet:** Immobilie
+
+## Rollen
+
+| Rolle | Kategorie | Status | Verantwortungsbereich | Zweck | Produkt |
+|-------|-----------|--------|------------------------|-------|---------|
+| Akquisiteur | Verantwortlicher | 1 | Vom Erstscreening bis zum unterschriebenen Kaufvertrag | Passende Objekte finden, pruefen und ankaufen | Unterschriebener Kaufvertrag fuer renditestarke Objekte |
+| Backoffice Ankauf | Zuarbeiter | 0 | Unterlagen beschaffen, pruefen und dokumentieren | Akquisiteur von administrativen Aufgaben entlasten | Vollstaendige, gepruefte Unterlagenmappe pro Objekt |
+
+## Pipeline: Ankauf Bestandswohnungen
+
+### Phase 1: Screening
+
+| | |
+|---|---|
+| Zweck | Erstsichtung und Grobfilter |
+| Definition of Done | Deal-Score berechnet, Showstopper geprueft, Entscheidung Go/NoGo dokumentiert |
+| Verantwortlich | Akquisiteur |
+| Typische Dauer | 2 Tage |
+| Eskalation | Kein Screening-Ergebnis nach 3 Tagen |
+
+**Aufgabe: Inserat auswerten & Deal-Score berechnen**
+(Notiz, Prioritaet Hoch, Status Geplant, Start Tag 0, faellig Tag 2,
+Rolle: Akquisiteur, naechste Aufgabe in der Kette: "Unterlagen beim Makler anfordern")
+
+> ZWECK: Schnelle Erstbewertung ob das Objekt ins Ankaufsprofil passt.
+>
+> ERGEBNIS: Deal-Score berechnet, Showstopper geprueft, Go/NoGo-Entscheidung
+> dokumentiert im System.
+>
+> RAHMEN: Ankaufsprofil und Buybox als Referenz, eigenstaendige Entscheidung
+> bis Score 60.
+>
+> NICHT VERHANDELBAR: Jedes Objekt bekommt einen Score, kein Objekt wird ohne
+> Bewertung uebersprungen.
+>
+> ESKALATION: Score > 78 sofort melden, Showstopper-Zweifel sofort klaeren.
+
+**Aufgabe: Unterlagen beim Makler anfordern**
+(E-Mail, Prioritaet Hoch, Status Geplant, Start Tag 0, faellig Tag 5,
+Rolle: Backoffice Ankauf, keine Folgeaufgabe)
+
+> WARUM: Ohne vollstaendige Unterlagen kann der Akquisiteur keine belastbare
+> Kaufentscheidung treffen.
+>
+> WAS (Done): Alle Unterlagen im System hochgeladen, fehlende Dokumente
+> getaggt, Wiedervorlage gesetzt.
+>
+> WIE:
+> 1. E-Mail an Makler mit Standardvorlage senden
+> 2. Anfordern: Mietvertrag, Hausgeldabrechnung 2J, Wirtschaftsplan,
+>    WEG-Protokolle 3J, TE, Grundriss, Energieausweis
+> 3. Eingehende Dokumente hochladen und benennen: [Objekt]_[Typ]_[Datum]
+> 4. Fehlende Dokumente als offenen Punkt taggen
+> 5. Wiedervorlage: 3 Tage nach Erstanfrage
+>
+> QUALITAET: Keine leeren Felder, jedes Dokument korrekt benannt, Fehlende
+> explizit getaggt.
+>
+> RUECKFRAGEN: Wenn Makler Unterlagen verweigert: sofort Akquisiteur informieren.
+
+### Phase 2: Pruefung
+
+| | |
+|---|---|
+| Zweck | Vertiefte Analyse und Kaufentscheidung |
+| Definition of Done | Kalkulation erstellt, Entscheidung Go/NoGo gefallen |
+| Verantwortlich | Akquisiteur |
+| Typische Dauer | 5 Tage |
+| Eskalation | Keine Entscheidung nach 7 Tagen |
+
+**Aufgabe: Unterlagen pruefen & Kalkulation erstellen**
+(Notiz, Prioritaet Hoch, Status Geplant, Start Tag 0, faellig Tag 3,
+Rolle: Akquisiteur, naechste Aufgabe in der Kette: "Ankaufsentscheidung treffen")
+
+> ZWECK: Belastbare Kalkulationsgrundlage fuer die Ankaufsentscheidung schaffen.
+>
+> ERGEBNIS: Vollstaendige Kalkulation (Rendite, Cashflow, NK) im System,
+> alle Risiken dokumentiert.
+>
+> RAHMEN: Alle verfuegbaren Unterlagen nutzen, fehlende Daten konservativ
+> annehmen.
+>
+> NICHT VERHANDELBAR: Keine Entscheidung ohne dokumentierte Kalkulation.
+
+**Entscheidung: Ankaufsentscheidung treffen**
+(Meeting, Prioritaet Hoch, Status Geplant, Start Tag 3, faellig Tag 5,
+Rolle: Akquisiteur)
+
+Entscheidungsfrage: **Soll das Objekt angekauft werden?**
+
+| Ausgang | Was passiert |
+|---------|--------------|
+| Ankauf -- weiter zu Verhandlung | Objekt wechselt in die Phase Verhandlung |
+| Kein Ankauf -- archivieren | Objekt wechselt ins Archiv |
+| Weitere Informationen noetig | Folgeaufgabe "Nachrecherche" wird automatisch erstellt |
+
+### Phase 3: Verhandlung
+
+| | |
+|---|---|
+| Zweck | Kaufpreis verhandeln und Angebot platzieren |
+| Definition of Done | Angebot angenommen oder Absage dokumentiert |
+| Verantwortlich | Akquisiteur |
+| Typische Dauer | 14 Tage |
+| Eskalation | Keine Rueckmeldung nach 7 Tagen |
+
+(Noch keine Aufgaben-Templates definiert.)
+
+## Wiederkehrende Aufgaben
+
+**Woechentlicher Pipeline-Review**
+(Meeting, Prioritaet Mittel, Status Geplant, jeden Montag,
+Zeitzone Europe/Berlin, Rolle: Akquisiteur)
+
+> ZWECK: Ueberblick ueber alle laufenden Ankaufsprozesse behalten.
+>
+> ERGEBNIS: Status aller offenen Deals aktualisiert, Engpaesse identifiziert,
+> naechste Schritte definiert.
+
+## Prozessfluss
+
+Screening → [Kette: Score berechnen → Unterlagen anfordern] → Pruefung →
+[Kette: Kalkulation → Entscheidung (Go/NoGo/Mehr Info)] → Verhandlung →
+Kaufvertrag → Uebergabe → Bestand
+
+## Qualitaetsprinzipien
+
+- Jede Aufgabe hat ein messbares Ergebnis -- kein "kuemmer dich mal drum"
+- Zuarbeiter bekommen das Wie, Verantwortliche bekommen den Rahmen
+- Jede Phase hat eine Definition of Done -- kein Weiterschieben ohne Ergebnis
+- Verantwortungsbereiche sind scharf abgegrenzt -- keine Ueberlappungen
+- Feedback-Loops landen beim Verursacher -- wer bestellt wischt auch
+- Eskalation ist definiert -- nicht hoffen sondern regeln
+- Im System dokumentiert -- nicht im Kopf, nicht in WhatsApp
+- Entscheidungspunkte sind explizit -- kein implizites Weiterschieben
+- Wiederkehrende Kontrolle verhindert stilles Scheitern
 ```
 
 ---

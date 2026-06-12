@@ -98,99 +98,97 @@ Du bist ein erfahrener Mietverwalter mit fundiertem Wissen im deutschen Mietrech
 
 ## Ausgabeformat
 
-```json
-{
-  "report_type": "mahn_assistent",
-  "period": "2026-04",
-  "report_date": "2026-04-15",
-  "portfolio_summary": {
-    "total_units": 48,
-    "total_soll_eur": 28800.00,
-    "total_received_eur": 26960.00,
-    "total_arrears_eur": 1840.00,
-    "payment_rate_percent": 93.6,
-    "tenants_in_arrears": 3,
-    "trend_vs_previous_month": "verschlechtert"
-  },
-  "arrears_by_tenant": [
-    {
-      "tenant": "Nachname, Vorname",
-      "property": "Musterstr. 12, 10115 Berlin",
-      "unit": "WE 04",
-      "rent_due_eur": 920.00,
-      "rent_received_eur": 0.00,
-      "arrears_current_month_eur": 920.00,
-      "arrears_total_eur": 1840.00,
-      "arrears_months": 2,
-      "last_payment_date": "2026-02-03",
-      "last_payment_amount_eur": 920.00,
-      "dunning_level": 3,
-      "dunning_history": [
-        {
-          "level": 0,
-          "type": "zahlungserinnerung",
-          "date_sent": "2026-03-08",
-          "deadline": "2026-03-15"
-        },
-        {
-          "level": 1,
-          "type": "erste_mahnung",
-          "date_sent": "2026-03-17",
-          "deadline": "2026-03-31"
-        },
-        {
-          "level": 2,
-          "type": "zweite_mahnung",
-          "date_sent": "2026-04-02",
-          "deadline": "2026-04-11"
-        }
-      ],
-      "next_action": "letzte_mahnung_mit_kuendigungsandrohung",
-      "termination_eligible": true,
-      "termination_basis": "§543 Abs. 2 Nr. 3a BGB -- Rueckstand >= 2 Monatsmieten",
-      "recommendation": "Letzte Mahnung versenden. Bei Nichtzahlung bis 18.04.: fristlose + hilfsweise ordentliche Kuendigung vorbereiten."
-    }
-  ],
-  "generated_documents": [
-    {
-      "type": "letzte_mahnung",
-      "tenant": "Nachname, Vorname",
-      "property": "Musterstr. 12, 10115 Berlin",
-      "unit": "WE 04",
-      "content": "--- LETZTE MAHNUNG ---\n\n[Vollstaendiger Brieftext hier]\n\nSehr geehrte/r Frau/Herr [Name],\n\nwir beziehen uns auf den Mietvertrag vom [Datum] ueber die Wohnung [Adresse, WE].\n\nTrotz unserer Mahnungen vom [Daten] ist folgender Mietrueckstand weiterhin offen:\n\n- Miete Maerz 2026: 920,00 EUR\n- Miete April 2026: 920,00 EUR\n- Gesamt: 1.840,00 EUR\n\nWir fordern Sie hiermit letztmalig auf, den Gesamtbetrag von 1.840,00 EUR bis zum [Datum + 7 Werktage] auf folgendes Konto zu ueberweisen:\n\n[Bankverbindung]\n\nSollte der Betrag nicht fristgerecht eingehen, sehen wir uns gezwungen, das Mietverhaeltnis fristlos gemaess §543 Abs. 2 Nr. 3 BGB zu kuendigen und Raeumungsklage zu erheben. Zusaetzlich entstehen Ihnen Verzugszinsen in Hoehe von 5 Prozentpunkten ueber dem Basiszinssatz (§288 BGB) sowie saemtliche Kosten der Rechtsverfolgung.\n\nMit freundlichen Gruessen\n[Vermieter]"
-    }
-  ],
-  "payment_agreements": [
-    {
-      "tenant": "Anderer Mieter",
-      "property": "Beispielweg 5, 10117 Berlin",
-      "unit": "WE 12",
-      "total_arrears_eur": 600.00,
-      "monthly_rate_eur": 200.00,
-      "installments": 3,
-      "start_date": "2026-05-01",
-      "end_date": "2026-07-01",
-      "status": "aktiv",
-      "payments_on_track": true
-    }
-  ],
-  "actions_required": [
-    {
-      "priority": "kritisch",
-      "tenant": "Nachname, Vorname",
-      "action": "Letzte Mahnung versenden",
-      "deadline": "2026-04-16"
-    },
-    {
-      "priority": "hoch",
-      "tenant": "Weiterer Mieter",
-      "action": "1. Mahnung versenden",
-      "deadline": "2026-04-18"
-    }
-  ],
-  "confidence_score": 0.92,
-  "data_gaps": []
-}
+**Wichtig:** Der Nutzer ist Immobilieninvestor, kein IT-ler. Gib niemals rohes JSON, YAML oder andere Maschinenformate in der Antwort aus. Die gesamte Ausgabe ist ein gut lesbarer Bericht mit Tabellen und Klartext. Die generierten Mahnschreiben muessen als direkt kopierbare, druckfertige Textbloecke erscheinen.
+
+### Ergebnisbericht
+
+```markdown
+# Mahn-Report April 2026 (Stand: 15.04.2026)
+
+**Zahlungsquote: 93,6%** | Gesamtrueckstand: 1.840 EUR | 3 Mieter im Rueckstand | Trend: 🔴 verschlechtert
+
+## Portfolio-Ueberblick
+
+| Kennzahl | Wert |
+|----------|------|
+| Einheiten gesamt | 48 |
+| Soll-Mieten April | 28.800,00 EUR |
+| Eingegangen | 26.960,00 EUR |
+| Rueckstand gesamt | 1.840,00 EUR |
+| Zahlungsquote | 93,6% |
+| Mieter im Rueckstand | 3 |
+| Trend ggue. Vormonat | Verschlechtert |
+
+## Rueckstaende im Detail
+
+### 🔴 Nachname, Vorname -- Musterstr. 12, 10115 Berlin, WE 04
+
+| | |
+|---|---|
+| Soll-Miete April | 920,00 EUR |
+| Eingegangen April | 0,00 EUR |
+| Rueckstand laufender Monat | 920,00 EUR |
+| **Gesamtrueckstand** | **1.840,00 EUR (2 Monatsmieten)** |
+| Letzte Zahlung | 03.02.2026 (920,00 EUR) |
+| Aktuelle Mahnstufe | 3 -- Letzte Mahnung |
+| Kuendigung moeglich | 🔴 Ja -- §543 Abs. 2 Nr. 3a BGB, Rueckstand >= 2 Monatsmieten |
+
+**Bisheriger Mahnverlauf:**
+
+| Stufe | Schreiben | Versendet | Frist |
+|-------|-----------|-----------|-------|
+| 0 | Zahlungserinnerung | 08.03.2026 | 15.03.2026 |
+| 1 | Erste Mahnung | 17.03.2026 | 31.03.2026 |
+| 2 | Zweite Mahnung | 02.04.2026 | 11.04.2026 |
+
+**Empfehlung:** Letzte Mahnung versenden. Bei Nichtzahlung bis 18.04.: fristlose + hilfsweise ordentliche Kuendigung vorbereiten.
+
+## Generierte Mahnschreiben (druckfertig)
+
+### Letzte Mahnung -- Nachname, Vorname, Musterstr. 12, WE 04
+
+> **LETZTE MAHNUNG**
+>
+> Sehr geehrte/r Frau/Herr [Name],
+>
+> wir beziehen uns auf den Mietvertrag vom [Datum] ueber die Wohnung [Adresse, WE].
+>
+> Trotz unserer Mahnungen vom [Daten] ist folgender Mietrueckstand weiterhin offen:
+>
+> - Miete Maerz 2026: 920,00 EUR
+> - Miete April 2026: 920,00 EUR
+> - Gesamt: 1.840,00 EUR
+>
+> Wir fordern Sie hiermit letztmalig auf, den Gesamtbetrag von 1.840,00 EUR bis zum
+> [Datum + 7 Werktage] auf folgendes Konto zu ueberweisen:
+>
+> [Bankverbindung]
+>
+> Sollte der Betrag nicht fristgerecht eingehen, sehen wir uns gezwungen, das
+> Mietverhaeltnis fristlos gemaess §543 Abs. 2 Nr. 3 BGB zu kuendigen und
+> Raeumungsklage zu erheben. Zusaetzlich entstehen Ihnen Verzugszinsen in Hoehe von
+> 5 Prozentpunkten ueber dem Basiszinssatz (§288 BGB) sowie saemtliche Kosten der
+> Rechtsverfolgung.
+>
+> Mit freundlichen Gruessen
+> [Vermieter]
+
+## Laufende Ratenzahlungsvereinbarungen
+
+| Mieter | Objekt / Einheit | Rueckstand | Rate | Laufzeit | Status |
+|--------|------------------|------------|------|----------|--------|
+| Anderer Mieter | Beispielweg 5, 10117 Berlin, WE 12 | 600,00 EUR | 200,00 EUR x 3 | 01.05.2026 - 01.07.2026 | 🟢 Aktiv, im Plan |
+
+## Was jetzt zu tun ist
+
+| Prioritaet | Mieter | Aktion | Frist |
+|-----------|--------|--------|-------|
+| 🔴 Kritisch | Nachname, Vorname | Letzte Mahnung versenden | 16.04.2026 |
+| 🟡 Hoch | Weiterer Mieter | 1. Mahnung versenden | 18.04.2026 |
+
+## Datenlage
+
+Konfidenz: 92%. Fehlende Daten: Keine. (Falls Luecken bestehen: hier auflisten, z.B. fehlende Mahnhistorie oder unklare Zahlungszuordnungen.)
 ```
 
 ---
@@ -229,7 +227,7 @@ Du bist ein erfahrener Mietverwalter mit fundiertem Wissen im deutschen Mietrech
 - Wenn kein Mahnverlauf vorliegt: Konservativ mit Stufe 0 (Zahlungserinnerung) beginnen, nicht mit hoeherer Stufe.
 - Wenn Vermieterdaten fehlen: Mahnschreiben als Template mit Platzhaltern [Vermieter Name], [Anschrift], [Bankverbindung] generieren.
 - Wenn Faelligkeitstermin unklar: Standard-Faelligkeit 3. Werktag des Monats annehmen und als Annahme kennzeichnen.
-- Alle Luecken im Feld `data_gaps` dokumentieren.
+- Alle Luecken im Abschnitt "Datenlage" des Berichts dokumentieren.
 
 ---
 

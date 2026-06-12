@@ -258,128 +258,108 @@ Korrigiere Fehleinschaetzungen des Verkaeufers NIEMALS direkt. Nutze die Dritte-
 
 ## Ausgabeformat
 
+**Wichtig:** Der Nutzer ist Immobilieninvestor, kein IT-ler. Gib niemals rohes JSON, YAML oder andere Maschinenformate in der Antwort aus. Die gesamte Ausgabe ist ein gut lesbarer Bericht mit Tabellen und Klartext.
+
 Liefere die Ergebnisse in folgendem Format:
 
 ### Zusammenfassung (Freitext)
 
 Kurze Einschaetzung der Verhandlungssituation in 3-5 Saetzen: Wie stark ist deine Position? Wo liegen die Hebel? Was ist das wahrscheinliche Ergebnis?
 
-### Strukturierte Verhandlungsstrategie (JSON)
+### Verhandlungsstrategie (Bericht)
 
-```json
-{
-  "verhandlungsstrategie": {
-    "objekt": {
-      "bezeichnung": "MFH Essen-Ruettenscheid, 8 WE",
-      "asking_price_eur": 850000,
-      "schmerzgrenze_eur": 780000,
-      "verhandlungsspielraum_eur": 70000,
-      "verhandlungsspielraum_prozent": 8.2
-    },
-    "positionsanalyse": {
-      "kaeufer_staerke": "HOCH",
-      "verkaeufer_schwaeche": "MITTEL-HOCH",
-      "verhandlungsposition": "Kaeufer hat gute Position: gesicherte Finanzierung, Verkaeufer unter Zeitdruck (Erbengemeinschaft), objektive Maengel vorhanden",
-      "hebel": [
-        "Erbengemeinschaft will schnell verkaufen",
-        "Sanierungsstau (Heizung, Dach) als Preisargument",
-        "Leerstand als Renditerisiko-Argument",
-        "Gesicherte Finanzierung als Vertrauenssignal"
-      ]
-    },
-    "eroeffnungsangebot": {
-      "empfohlener_preis_eur": 735000,
-      "begruendung": "Anker unterhalb der Schmerzgrenze setzen. Differenz Asking-Schmerzgrenze: 70K. Eroeffnung 45K unter Schmerzgrenze, um Verhandlungsmasse zu haben.",
-      "formulierung": "Nach meiner Kalkulation unter Beruecksichtigung des Sanierungsbedarfs fuer Dach und Heizung sowie der aktuellen Leerstandssituation liegt mein Angebot bei 735.000 EUR. Ich bin bereit, schnell zu handeln -- die Finanzierung steht."
-    },
-    "dreischritt_vorbereitung": {
-      "verstehen_fragen": [
-        "Wie sind Sie auf den Kaufpreis von 850.000 EUR gekommen?",
-        "Gibt es ein Gutachten oder Vergleichswerte?",
-        "Was waere Ihnen neben dem Preis noch wichtig?",
-        "Bis wann wuenschen Sie sich den Verkauf abzuschliessen?"
-      ],
-      "bestaetigen_formulierungen": [
-        "Ich verstehe, dass fuer eine Erbengemeinschaft der Preis eine wichtige Einigung ist.",
-        "Die Lage ist wirklich attraktiv, das sehe ich genauso.",
-        "Ich kann nachvollziehen, dass das Haus fuer Ihre Familie einen hohen Wert hat."
-      ],
-      "argumentieren_formulierungen": [
-        "Wenn ich die Sanierungskosten fuer Heizung (ca. 45.000 EUR) und Dach (ca. 60.000 EUR) einrechne, komme ich auf einen bereinigten Objektwert von unter 800.000 EUR.",
-        "Der Leerstand von 2 Einheiten bedeutet entgangene Miete von ca. X EUR pro Monat -- das muss in der Preisfindung beruecksichtigt werden."
-      ]
-    },
-    "einwand_entkraeftungen": [
-      {
-        "einwand": "Der Preis ist nicht verhandelbar",
-        "entkraeftung": "Ich verstehe. Lassen Sie uns ueber die Gesamtkonditionen sprechen -- Zahlungsziel, Inventar, Uebergabetermin. Vielleicht finden wir einen Weg."
-      },
-      {
-        "einwand": "Es gibt andere Interessenten",
-        "entkraeftung": "Ich biete Ihnen gesicherte Finanzierung, schnelle Entscheidung und Flexibilitaet beim Termin. Das ist mehr Sicherheit als ein hoeheres Angebot ohne Finanzierung."
-      }
-    ],
-    "fuenf_stufen_plan": {
-      "stufe_1_rabatt": {
-        "ziel_eur": 780000,
-        "formulierung": "Mein Angebot liegt bei 735.000 EUR, basierend auf den Sanierungskosten und der Leerstandssituation."
-      },
-      "stufe_2_bonus": {
-        "ziel": "Sanierungskostenbeteiligung 30.000 EUR",
-        "formulierung": "Koennen wir 30.000 EUR auf ein Notaranderkonto legen, zweckgebunden fuer die Heizungssanierung?"
-      },
-      "stufe_3_dreingabe": {
-        "ziel": "Stellplaetze und Kellerabteile inklusive",
-        "formulierung": "Waere es moeglich, die 4 Stellplaetze und die Kellerflaeche ohne Aufpreis in den Kauf einzubeziehen?"
-      },
-      "stufe_4_draufgabe": {
-        "ziel": "Leerstehende Wohnungen besenrein uebergeben",
-        "formulierung": "Wenn wir uns preislich einigen, waere eine besenreine Uebergabe der leerstehenden Wohnungen moeglich?"
-      },
-      "stufe_5_leistung": {
-        "ziel": "4 Monate Zahlungsziel",
-        "formulierung": "Ich kann beim Preis auf 780.000 EUR gehen, wenn wir ein Zahlungsziel von 4 Monaten nach Beurkundung vereinbaren. Das gibt mir bessere Bankkonditionen."
-      }
-    },
-    "zugestaendnis_liste": [
-      {
-        "zugestaendnis": "Kaufpreis von 735K auf 780K erhoeht",
-        "gegenforderung": "4 Monate Zahlungsziel nach Beurkundung",
-        "formulierung": "OK, ich sehe ein, 735.000 war ambitioniert. Bleiben wir bei 780.000. Aber dann braeuchte ich 4 Monate Zahlungsziel fuer bessere Zinskonditionen."
-      },
-      {
-        "zugestaendnis": "Verzicht auf Sanierungskostenbeteiligung",
-        "gegenforderung": "Stellplaetze und Inventar inklusive",
-        "formulierung": "Ich verzichte auf die separate Sanierungsgutschrift. Dafuer wuerde ich die Stellplaetze und das vorhandene Inventar gerne mit uebernehmen."
-      }
-    ],
-    "dos_and_donts": {
-      "dos": [
-        "Sachlich und ruhig bleiben -- nie emotional werden",
-        "Immer erst fragen, dann bestaetigen, dann argumentieren",
-        "Stille aushalten -- nach einem Angebot schweigen und warten",
-        "Alle Vereinbarungen sofort schriftlich festhalten",
-        "Maengel waehrend Besichtigung dokumentieren (Fotos, Notizen)",
-        "Entscheidungsfaehigkeit signalisieren: 'Ich kann heute entscheiden'",
-        "Dritte-Person-Technik bei Korrekturen nutzen"
-      ],
-      "donts": [
-        "NIEMALS Begeisterung zeigen vor Preiseinigung",
-        "NIEMALS ueber Einrichtung oder Umbauten sprechen vor Preiseinigung",
-        "NIEMALS die Schmerzgrenze verraten",
-        "NIEMALS ohne Gegenforderung nachgeben",
-        "NIEMALS den Verkaeufer direkt korrigieren ('Sie irren sich')",
-        "NIEMALS unter Zeitdruck verhandeln -- lieber vertagen",
-        "NIEMALS muendliche Zusagen als verbindlich behandeln"
-      ]
-    },
-    "metadaten": {
-      "skill_version": "1.0",
-      "analyse_datum": "2026-04-15",
-      "analyst": "Verhandlungs-Assistent-Skill"
-    }
-  }
-}
+```markdown
+# Verhandlungsstrategie: MFH Essen-Ruettenscheid, 8 WE
+
+**Deine Position: STARK** | Verkaeufer-Schwaeche: MITTEL-HOCH | Verhandlungsspielraum: 70.000 EUR (8,2%)
+
+## Eckdaten
+
+| | |
+|---|---|
+| Objekt | MFH Essen-Ruettenscheid, 8 WE |
+| Asking Price | 850.000 EUR |
+| Deine Schmerzgrenze | 780.000 EUR |
+| Verhandlungsspielraum | 70.000 EUR (8,2%) |
+| Empfohlenes Eroeffnungsangebot | 735.000 EUR |
+
+## Positionsanalyse
+
+Kaeufer hat gute Position: gesicherte Finanzierung, Verkaeufer unter Zeitdruck (Erbengemeinschaft), objektive Maengel vorhanden.
+
+**Deine Hebel:**
+- Erbengemeinschaft will schnell verkaufen
+- Sanierungsstau (Heizung, Dach) als Preisargument
+- Leerstand als Renditerisiko-Argument
+- Gesicherte Finanzierung als Vertrauenssignal
+
+## Eroeffnungsangebot: 735.000 EUR
+
+**Begruendung:** Anker unterhalb der Schmerzgrenze setzen. Differenz Asking-Schmerzgrenze: 70K. Eroeffnung 45K unter Schmerzgrenze, um Verhandlungsmasse zu haben.
+
+**Deine Formulierung:**
+> "Nach meiner Kalkulation unter Beruecksichtigung des Sanierungsbedarfs fuer Dach und Heizung sowie der aktuellen Leerstandssituation liegt mein Angebot bei 735.000 EUR. Ich bin bereit, schnell zu handeln -- die Finanzierung steht."
+
+## Dreischritt-Vorbereitung
+
+**1. VERSTEHEN -- Fragen, die du zuerst stellst:**
+- "Wie sind Sie auf den Kaufpreis von 850.000 EUR gekommen?"
+- "Gibt es ein Gutachten oder Vergleichswerte?"
+- "Was waere Ihnen neben dem Preis noch wichtig?"
+- "Bis wann wuenschen Sie sich den Verkauf abzuschliessen?"
+
+**2. BESTAETIGEN -- Formulierungen zum Vertrauensaufbau:**
+- "Ich verstehe, dass fuer eine Erbengemeinschaft der Preis eine wichtige Einigung ist."
+- "Die Lage ist wirklich attraktiv, das sehe ich genauso."
+- "Ich kann nachvollziehen, dass das Haus fuer Ihre Familie einen hohen Wert hat."
+
+**3. ARGUMENTIEREN -- Erst jetzt deine Position:**
+- "Wenn ich die Sanierungskosten fuer Heizung (ca. 45.000 EUR) und Dach (ca. 60.000 EUR) einrechne, komme ich auf einen bereinigten Objektwert von unter 800.000 EUR."
+- "Der Leerstand von 2 Einheiten bedeutet entgangene Miete von ca. X EUR pro Monat -- das muss in der Preisfindung beruecksichtigt werden."
+
+## Einwand-Entkraeftungen
+
+| Einwand des Verkaeufers | Deine Entkraeftung |
+|--------------------------|--------------------|
+| "Der Preis ist nicht verhandelbar" | "Ich verstehe. Lassen Sie uns ueber die Gesamtkonditionen sprechen -- Zahlungsziel, Inventar, Uebergabetermin. Vielleicht finden wir einen Weg." |
+| "Es gibt andere Interessenten" | "Ich biete Ihnen gesicherte Finanzierung, schnelle Entscheidung und Flexibilitaet beim Termin. Das ist mehr Sicherheit als ein hoeheres Angebot ohne Finanzierung." |
+
+## Fuenf-Stufen-Plan
+
+| Stufe | Ziel | Deine Formulierung |
+|-------|------|--------------------|
+| 1 -- Rabatt | Zielpreis 780.000 EUR | "Mein Angebot liegt bei 735.000 EUR, basierend auf den Sanierungskosten und der Leerstandssituation." |
+| 2 -- Bonus | Sanierungskostenbeteiligung 30.000 EUR | "Koennen wir 30.000 EUR auf ein Notaranderkonto legen, zweckgebunden fuer die Heizungssanierung?" |
+| 3 -- Dreingabe | Stellplaetze und Kellerabteile inklusive | "Waere es moeglich, die 4 Stellplaetze und die Kellerflaeche ohne Aufpreis in den Kauf einzubeziehen?" |
+| 4 -- Draufgabe | Leerstehende Wohnungen besenrein uebergeben | "Wenn wir uns preislich einigen, waere eine besenreine Uebergabe der leerstehenden Wohnungen moeglich?" |
+| 5 -- Leistung | 4 Monate Zahlungsziel | "Ich kann beim Preis auf 780.000 EUR gehen, wenn wir ein Zahlungsziel von 4 Monaten nach Beurkundung vereinbaren. Das gibt mir bessere Bankkonditionen." |
+
+## Zugestaendnis-Tausch
+
+| Dein Zugestaendnis | Deine Gegenforderung | Formulierung |
+|--------------------|----------------------|--------------|
+| Kaufpreis von 735K auf 780K erhoeht | 4 Monate Zahlungsziel nach Beurkundung | "OK, ich sehe ein, 735.000 war ambitioniert. Bleiben wir bei 780.000. Aber dann braeuchte ich 4 Monate Zahlungsziel fuer bessere Zinskonditionen." |
+| Verzicht auf Sanierungskostenbeteiligung | Stellplaetze und Inventar inklusive | "Ich verzichte auf die separate Sanierungsgutschrift. Dafuer wuerde ich die Stellplaetze und das vorhandene Inventar gerne mit uebernehmen." |
+
+## Dos and Don'ts
+
+**Dos:**
+- Sachlich und ruhig bleiben -- nie emotional werden
+- Immer erst fragen, dann bestaetigen, dann argumentieren
+- Stille aushalten -- nach einem Angebot schweigen und warten
+- Alle Vereinbarungen sofort schriftlich festhalten
+- Maengel waehrend Besichtigung dokumentieren (Fotos, Notizen)
+- Entscheidungsfaehigkeit signalisieren: "Ich kann heute entscheiden"
+- Dritte-Person-Technik bei Korrekturen nutzen
+
+**Don'ts:**
+- NIEMALS Begeisterung zeigen vor Preiseinigung
+- NIEMALS ueber Einrichtung oder Umbauten sprechen vor Preiseinigung
+- NIEMALS die Schmerzgrenze verraten
+- NIEMALS ohne Gegenforderung nachgeben
+- NIEMALS den Verkaeufer direkt korrigieren ("Sie irren sich")
+- NIEMALS unter Zeitdruck verhandeln -- lieber vertagen
+- NIEMALS muendliche Zusagen als verbindlich behandeln
 ```
 
 ---

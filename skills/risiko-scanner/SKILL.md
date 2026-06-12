@@ -250,85 +250,84 @@ Bewerte jede Kategorie nach folgendem Schema:
 
 ## Ausgabeformat
 
-```json
-{
-  "analysis_type": "risiko_scan",
-  "analysis_date": "YYYY-MM-DD",
-  "property_summary": {
-    "address": "Strasse Hausnummer, PLZ Ort",
-    "asking_price_eur": 750000,
-    "construction_year": 1965,
-    "units": 12,
-    "total_area_sqm": 850
-  },
-  "risk_categories": [
-    {
-      "id": 1,
-      "category": "Bausubstanz",
-      "weight_pct": 15,
-      "risk_level": "HOCH | MITTEL | NIEDRIG",
-      "risk_score": 3,
-      "weighted_score": 0.45,
-      "summary": "Baujahr 1965, letzte Teilsanierung 1998. Dach und Stranginstallation in den naechsten 5 Jahren faellig.",
-      "findings": [
-        {
-          "finding": "Flachdach ohne Erneuerung seit 1998",
-          "risk_level": "HOCH",
-          "estimated_cost_eur": 85000,
-          "timeline": "1-3 Jahre",
-          "source": "Fotos + Expose S.4"
-        }
-      ],
-      "data_quality": "gut | eingeschraenkt | unzureichend",
-      "recommended_actions": [
-        "Bausachverstaendigen-Gutachten beauftragen (ca. 1.500-3.000 EUR)"
-      ]
-    }
-  ],
-  "overall_assessment": {
-    "weighted_total_score": 2.15,
-    "traffic_light": "GRUEN | GELB | ORANGE | ROT",
-    "high_risks_count": 3,
-    "medium_risks_count": 4,
-    "low_risks_count": 3,
-    "total_quantified_risk_eur": 185000,
-    "suggested_price_adjustment_eur": -120000,
-    "adjusted_purchase_price_eur": 630000,
-    "adjusted_gross_yield_pct": 9.2
-  },
-  "dealbreakers": [
-    {
-      "category": "Rechtliche Risiken",
-      "issue": "Erbbaurecht laeuft 2038 aus, keine Verlaengerungsoption",
-      "recommendation": "Deal nur mit massivem Preisabschlag oder Verlaengerungsvereinbarung"
-    }
-  ],
-  "action_plan": [
-    {
-      "priority": 1,
-      "action": "Baugenehmigung DG pruefen",
-      "category": "Rechtliche Risiken",
-      "deadline_suggestion": "Vor Kaufvertragsentwurf",
-      "estimated_cost_eur": 0,
-      "responsible": "Kaeufer / Anwalt"
-    }
-  ],
-  "confidence_score": {
-    "overall": 0.75,
-    "per_category": {
-      "bausubstanz": 0.60,
-      "mietstruktur": 0.90,
-      "rechtliche_risiken": 0.85,
-      "energetische_risiken": 0.70,
-      "finanzielle_risiken": 0.80,
-      "mieterrisiken": 0.65,
-      "standortrisiken": 0.50,
-      "sanierungsrisiken": 0.55,
-      "verwaltungsrisiken": 0.80,
-      "marktrisiken": 0.50
-    }
-  }
-}
+**Wichtig:** Der Nutzer ist Immobilieninvestor, kein IT-ler. Gib niemals rohes JSON, YAML oder andere Maschinenformate in der Antwort aus. Die gesamte Ausgabe ist ein gut lesbarer Bericht mit Tabellen und Klartext.
+
+Liefere die Ergebnisse in folgendem Format:
+
+### Zusammenfassung (Freitext)
+
+Kurze Gesamteinschaetzung in 3-5 Saetzen: Wie riskant ist das Objekt insgesamt, was sind die groessten Risiken, was ist die Empfehlung?
+
+### Risikobericht
+
+```markdown
+# Risiko-Scan: Musterstr. 12, 44147 Dortmund
+
+**Gesamtbewertung: 🟠 ORANGE** (Score 2,15 von 3,0) -- hohes Risiko, nur mit Erfahrung | Konfidenz: 75%
+
+## Objekt
+
+| | |
+|---|---|
+| Adresse | Musterstr. 12, 44147 Dortmund |
+| Kaufpreis (Angebot) | 750.000 EUR |
+| Baujahr | 1965 |
+| Einheiten | 12 WE |
+| Wohnflaeche | 850 qm |
+
+## Risikouebersicht: 10 Kategorien
+
+| Nr. | Kategorie | Gewicht | Risiko | Datenlage | Konfidenz | Kernaussage |
+|-----|-----------|---------|--------|-----------|-----------|-------------|
+| 1 | Bausubstanz | 15% | 🔴 HOCH | eingeschraenkt | 60% | Dach und Stranginstallation in 5 Jahren faellig |
+| 2 | Mietstruktur | 15% | 🟡 MITTEL | gut | 90% | 3 Mieten deutlich unter Spiegel, Potenzial vorhanden |
+| 3 | Rechtliche Risiken | 12% | 🔴 HOCH | gut | 85% | Erbbaurecht laeuft 2038 aus |
+| ... | (alle 10 Kategorien) | | | | | |
+
+**Bilanz:** 3x HOCH, 4x MITTEL, 3x NIEDRIG | Gewichteter Gesamtscore: 2,15 von 3,0
+
+## Wesentliche Funde im Detail
+
+### 🔴 Bausubstanz (Gewichtung 15%)
+
+Baujahr 1965, letzte Teilsanierung 1998. Dach und Stranginstallation in den naechsten 5 Jahren faellig.
+
+| Fund | Risiko | Geschaetzte Kosten | Zeithorizont | Quelle |
+|------|--------|--------------------|--------------|--------|
+| Flachdach ohne Erneuerung seit 1998 | 🔴 HOCH | 85.000 EUR | 1-3 Jahre | Fotos + Expose S.4 |
+
+**Empfohlene Massnahmen:** Bausachverstaendigen-Gutachten beauftragen (ca. 1.500-3.000 EUR)
+
+(So fuer jede Kategorie mit relevanten Funden. Kategorien ohne Auffaelligkeiten in 1-2 Saetzen begruenden, warum sie NIEDRIG sind.)
+
+## Dealbreaker
+
+| Kategorie | Problem | Empfehlung |
+|-----------|---------|------------|
+| Rechtliche Risiken | Erbbaurecht laeuft 2038 aus, keine Verlaengerungsoption | Deal nur mit massivem Preisabschlag oder Verlaengerungsvereinbarung |
+
+(Falls keine Dealbreaker gefunden: explizit "Keine Dealbreaker identifiziert." schreiben.)
+
+## Finanzielle Gesamtwirkung
+
+| Position | Wert |
+|----------|------|
+| Quantifizierte Risiken gesamt | 185.000 EUR |
+| Empfohlene Kaufpreisanpassung | -120.000 EUR |
+| Angepasster Kaufpreis | 630.000 EUR |
+| Bruttomietrendite nach Anpassung | 9,2% |
+
+## Massnahmenplan
+
+| Prio | Massnahme | Kategorie | Bis wann | Kosten | Verantwortlich |
+|------|-----------|-----------|----------|--------|----------------|
+| 1 | Baugenehmigung DG pruefen | Rechtliche Risiken | Vor Kaufvertragsentwurf | 0 EUR | Kaeufer / Anwalt |
+| 2 | Bausachverstaendigen-Gutachten | Bausubstanz | Vor Preisverhandlung | 1.500-3.000 EUR | Kaeufer |
+
+## Konfidenz und Datenluecken
+
+Gesamt-Konfidenz: 75%. Die Konfidenz je Kategorie steht in der Risikouebersicht.
+Welche Unterlagen die Bewertung verbessern wuerden: (konkrete Liste, z.B. ETV-Protokolle, Baulastenverzeichnis)
 ```
 
 ---

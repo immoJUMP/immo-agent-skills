@@ -166,68 +166,70 @@ Fuer jede gefundene Inkonsistenz formuliere eine konkrete Frage an den Verkaeufe
 
 ## Ausgabeformat
 
-```json
-{
-  "analysis_type": "besichtigungs_vorbereitung",
-  "analysis_date": "YYYY-MM-DD",
-  "property_address": "Strasse Hausnummer, PLZ Ort",
-  "inspection_type": "Erstbesichtigung | Zweitbesichtigung | Nachbesichtigung",
-  "document_based_questions": [
-    {
-      "priority": "HOCH | MITTEL | NIEDRIG",
-      "source_inconsistency": "Wohnflaeche weicht 27 qm ab (Expose vs. TE)",
-      "question": "Liegt eine aktuelle Wohnflaechenberechnung nach WoFlV vor?",
-      "expected_answer_range": "Berechnung vorliegend / Differenz durch Ausbau erklaerbar / Keine Erklaerung",
-      "red_flag_if": "Keine plausible Erklaerung fuer die Abweichung"
-    }
-  ],
-  "physical_checklist": {
-    "exterior": [
-      {
-        "area": "Fassade",
-        "check_items": ["Risse", "Feuchtigkeit", "Daemmzustand"],
-        "specific_concern": "Laut Fotos moegliche Feuchtigkeit an der Nordseite",
-        "status": "OK | AUFFAELLIG | KRITISCH",
-        "notes_field": ""
-      }
-    ],
-    "common_areas": [],
-    "basement": [],
-    "roof": [],
-    "units_inspected": []
-  },
-  "seller_questions": {
-    "property_history": [],
-    "tenant_related": [],
-    "weg_related": [],
-    "financial": [],
-    "planned_measures": []
-  },
-  "red_flags_observed": [
-    {
-      "location": "Keller, Nordseite",
-      "observation": "Salzausblueruhungen an der Wand, feuchter Geruch",
-      "severity": "HOCH | MITTEL",
-      "follow_up_action": "Bausachverstaendigen-Gutachten beauftragen"
-    }
-  ],
-  "neighborhood_assessment": {
-    "infrastructure_score": "1-5",
-    "noise_level": "niedrig | mittel | hoch",
-    "overall_impression": "",
-    "micro_location_notes": ""
-  },
-  "overall_inspection_result": {
-    "proceed_with_offer": true,
-    "conditions": ["Gutachten Feuchtigkeit Keller", "Wohnflaechenberechnung"],
-    "suggested_price_impact": "Minderung um ca. 30.000 EUR wegen Keller-Feuchtigkeit"
-  }
-}
+**Wichtig:** Der Nutzer ist Immobilieninvestor, kein IT-ler. Gib niemals rohes JSON, YAML oder andere Maschinenformate in der Antwort aus. Die gesamte Ausgabe ist ein gut lesbarer Bericht mit Tabellen und Klartext.
+
+### Vorbereitungsbericht
+
+```markdown
+# Besichtigungs-Vorbereitung: Musterstrasse 12, 40210 Duesseldorf
+
+**Art der Besichtigung:** Erstbesichtigung | **Datum der Vorbereitung:** 15.04.2026
+
+## Fragen aus der Dokumentenanalyse
+
+| Prio | Auffaelligkeit in den Unterlagen | Frage an Verkaeufer/Makler | Erwartbare Antworten | 🔴 Red Flag wenn |
+|------|----------------------------------|----------------------------|----------------------|------------------|
+| 🔴 HOCH | Wohnflaeche weicht 27 qm ab (Expose vs. TE) | "Liegt eine aktuelle Wohnflaechenberechnung nach WoFlV vor?" | Berechnung vorliegend / Differenz durch Ausbau erklaerbar / keine Erklaerung | Keine plausible Erklaerung fuer die Abweichung |
+| ... | ... | ... | ... | ... |
+
+## Physische Pruefpunkte
+
+### Aussenbereich
+
+| Bereich | Pruefen auf | Spezifischer Verdacht | Status | Notizen |
+|---------|-------------|----------------------|--------|---------|
+| Fassade | Risse, Feuchtigkeit, Daemmzustand | Laut Fotos moegliche Feuchtigkeit an der Nordseite | OK / AUFFAELLIG / KRITISCH | _________ |
+| ... | ... | ... | ... | ... |
+
+(Gleiche Tabellenstruktur fuer: Gemeinschaftsflaechen, Keller, Dach/Dachboden, besichtigte Wohnungen.)
+
+## Fragen an den Verkaeufer
+
+Gruppiert nach Themen, jeweils als Aufzaehlung:
+
+- **Objekthistorie:** ...
+- **Mieter:** ...
+- **WEG:** ...
+- **Finanzen:** ...
+- **Geplante Massnahmen:** ...
+
+## Beobachtete Red Flags (nach der Besichtigung ausfuellen)
+
+| Ort | Beobachtung | Schwere | Naechster Schritt |
+|-----|-------------|---------|-------------------|
+| Keller, Nordseite | Salzausblueruhungen an der Wand, feuchter Geruch | 🔴 HOCH | Bausachverstaendigen-Gutachten beauftragen |
+
+## Nachbarschafts-Check
+
+| | |
+|---|---|
+| Infrastruktur (1-5) | 4 |
+| Laermpegel | mittel |
+| Gesamteindruck | ... |
+| Mikrolage-Notizen | ... |
+
+## Gesamtergebnis der Besichtigung
+
+| | |
+|---|---|
+| Angebot weiterverfolgen? | Ja, unter Bedingungen |
+| Bedingungen | Gutachten Feuchtigkeit Keller, Wohnflaechenberechnung |
+| Auswirkung auf den Preis | Minderung um ca. 30.000 EUR wegen Keller-Feuchtigkeit |
 ```
 
 ### Druckbare Checkliste
 
-Zusaetzlich zum JSON erstelle eine druckbare Checkliste im folgenden Format:
+Zusaetzlich zum Bericht erstelle eine druckbare Checkliste im folgenden Format:
 
 ```
 =============================================================

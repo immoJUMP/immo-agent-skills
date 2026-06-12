@@ -194,81 +194,70 @@ Pruefe VOR der Kaufvertragsanalyse folgende Rahmenbedingungen:
 
 ## Ausgabeformat
 
+**Wichtig:** Der Nutzer ist Immobilieninvestor, kein IT-ler. Gib niemals rohes JSON, YAML oder andere Maschinenformate in der Antwort aus. Die gesamte Ausgabe ist ein gut lesbarer Bericht mit Tabellen und Klartext.
+
 Liefere die Ergebnisse in folgendem Format:
 
 ### Zusammenfassung (Freitext)
 
 Kurze Zusammenfassung in 3-5 Saetzen: Gesamteindruck des Vertragsentwurfs, Anzahl kritischer Punkte, wichtigste Handlungsempfehlung.
 
-### Strukturierte Bewertung (JSON)
+### Pruefbericht
 
-```json
-{
-  "kaufvertrag_pruefung": {
-    "objekt": {
-      "bezeichnung": "ETW Dortmund, Beispielstr. 42",
-      "kaufpreis_eur": 250000,
-      "objekttyp": "ETW",
-      "vermietet": true,
-      "bundesland": "NRW"
-    },
-    "pruefung": {
-      "gesamtstatus": "WARNUNG",
-      "punkte_ok": 9,
-      "punkte_warnung": 3,
-      "punkte_kritisch": 1,
-      "checkliste": [
-        {
-          "punkt": 0,
-          "titel": "Pre-Beurkundung",
-          "status": "OK",
-          "details": "Milieuschutzgebiet: Nein. Denkmalschutz: Nein. Mietpreisbremse: Ja (Dortmund). Energieausweis: Vorhanden, Klasse E. Versicherung: Geb.vers. mit Elementar vorhanden. Altlasten: Keine.",
-          "handlungsbedarf": null
-        },
-        {
-          "punkt": 1,
-          "titel": "Vertragsparteien",
-          "status": "OK",
-          "details": "Verkaeufer = eingetragener Eigentuemer (natuerliche Person). 14-Tage-Frist eingehalten. Mieter-VKR nach §577 BGB nicht anwendbar (kein Umwandlungsfall).",
-          "handlungsbedarf": null
-        },
-        {
-          "punkt": 7,
-          "titel": "Haftungsausschluss",
-          "status": "WARNUNG",
-          "details": "Haftungsausschluss vereinbart ('wie besehen'). Jedoch: Keine dokumentierte Fragenliste zu Schimmel/Asbest/Feuchtigkeit an Verkaeufer gestellt.",
-          "handlungsbedarf": "Schriftlichen Fragenkatalog (Schimmel, Schwamm, Asbest, Feuchtigkeit, Schaedlinge) VOR Beurkundung an Verkaeufer senden und Antwort archivieren."
-        },
-        {
-          "punkt": 10,
-          "titel": "Ruecktritt",
-          "status": "KRITISCH",
-          "details": "Kein Finanzierungsvorbehalt im Vertragsentwurf enthalten. Bei Finanzierungsablehnung waere Kaeufer zur Kaufpreiszahlung verpflichtet.",
-          "handlungsbedarf": "Finanzierungsvorbehalt mit 6-Wochen-Frist in Vertrag aufnehmen lassen. Formulierungsvorschlag beigefuegt."
-        }
-      ],
-      "fehlende_klauseln": [
-        {
-          "klausel": "Finanzierungsvorbehalt",
-          "prioritaet": "KRITISCH",
-          "formulierungsvorschlag": "Der Kaeufer ist zum Ruecktritt vom Vertrag berechtigt, wenn er bis zum [Datum + 6 Wochen] keine verbindliche Finanzierungszusage fuer den Kaufpreis nebst Nebenkosten erhaelt. Der Ruecktritt ist dem Verkaeufer schriftlich unter Beifuegung der Finanzierungsabsage mitzuteilen."
-        }
-      ]
-    },
-    "steuerliche_hinweise": {
-      "afa_aufschluesselung_vorhanden": false,
-      "afa_empfehlung": "Kaufpreisaufteilung in Grund/Boden und Gebaeude im Vertrag vornehmen. Bodenrichtwert als Basis: ca. XX EUR/qm. Gebaeudeanteil ist AfA-Basis (2% p.a. bei Baujahr ab 1925).",
-      "grest_optimierung": "EBK separat ausweisen (geschaetzter Wert: X.XXX EUR). Ersparnis: ca. XXX EUR GrESt."
-    },
-    "metadaten": {
-      "skill_version": "1.0",
-      "analyse_datum": "2026-04-15",
-      "analyst": "Kaufvertrag-Pruefung-Skill",
-      "rechtsstand": "April 2026",
-      "haftungsausschluss": "Keine Rechtsberatung. Ergaenzt, aber ersetzt nicht die Pruefung durch einen Fachanwalt fuer Immobilienrecht."
-    }
-  }
-}
+```markdown
+# Kaufvertrag-Pruefung: ETW Dortmund, Beispielstr. 42
+
+**Gesamtstatus: 🟡 WARNUNG** | 9x 🟢 OK | 3x 🟡 WARNUNG | 1x 🔴 KRITISCH
+
+## Objekt
+
+| | |
+|---|---|
+| Bezeichnung | ETW Dortmund, Beispielstr. 42 |
+| Kaufpreis | 250.000 EUR |
+| Objekttyp | ETW |
+| Vermietet | Ja |
+| Bundesland | NRW |
+
+## 13-Punkte-Checkliste
+
+(Alle 14 Pruefpunkte 0-13 auffuehren -- hier beispielhaft gekuerzt.)
+
+| Punkt | Titel | Status | Befund |
+|-------|-------|--------|--------|
+| 0 | Pre-Beurkundung | 🟢 OK | Milieuschutzgebiet: Nein. Denkmalschutz: Nein. Mietpreisbremse: Ja (Dortmund). Energieausweis: Vorhanden, Klasse E. Versicherung: Geb.vers. mit Elementar vorhanden. Altlasten: Keine. |
+| 1 | Vertragsparteien | 🟢 OK | Verkaeufer = eingetragener Eigentuemer (natuerliche Person). 14-Tage-Frist eingehalten. Mieter-VKR nach §577 BGB nicht anwendbar (kein Umwandlungsfall). |
+| 7 | Haftungsausschluss | 🟡 WARNUNG | Haftungsausschluss vereinbart ('wie besehen'). Jedoch: Keine dokumentierte Fragenliste zu Schimmel/Asbest/Feuchtigkeit an Verkaeufer gestellt. |
+| 10 | Ruecktritt | 🔴 KRITISCH | Kein Finanzierungsvorbehalt im Vertragsentwurf enthalten. Bei Finanzierungsablehnung waere Kaeufer zur Kaufpreiszahlung verpflichtet. |
+
+## Handlungsbedarf
+
+| Punkt | Prioritaet | Was zu tun ist |
+|-------|-----------|----------------|
+| 10 -- Ruecktritt | 🔴 KRITISCH | Finanzierungsvorbehalt mit 6-Wochen-Frist in Vertrag aufnehmen lassen. Formulierungsvorschlag siehe unten. |
+| 7 -- Haftungsausschluss | 🟡 WARNUNG | Schriftlichen Fragenkatalog (Schimmel, Schwamm, Asbest, Feuchtigkeit, Schaedlinge) VOR Beurkundung an Verkaeufer senden und Antwort archivieren. |
+
+## Fehlende Klauseln mit Formulierungsvorschlag
+
+### 🔴 Finanzierungsvorbehalt (KRITISCH)
+
+Vorschlag fuer den Notar (zum Kopieren):
+
+> Der Kaeufer ist zum Ruecktritt vom Vertrag berechtigt, wenn er bis zum
+> [Datum + 6 Wochen] keine verbindliche Finanzierungszusage fuer den Kaufpreis
+> nebst Nebenkosten erhaelt. Der Ruecktritt ist dem Verkaeufer schriftlich unter
+> Beifuegung der Finanzierungsabsage mitzuteilen.
+
+## Steuerliche Hinweise
+
+| Thema | Befund / Empfehlung |
+|-------|---------------------|
+| AfA-Aufschluesselung | 🟡 Nicht im Vertrag vorhanden. Kaufpreisaufteilung in Grund/Boden und Gebaeude im Vertrag vornehmen. Bodenrichtwert als Basis: ca. XX EUR/qm. Gebaeudeanteil ist AfA-Basis (2% p.a. bei Baujahr ab 1925). |
+| GrESt-Optimierung | EBK separat ausweisen (geschaetzter Wert: X.XXX EUR). Ersparnis: ca. XXX EUR GrESt. |
+
+---
+
+*Rechtsstand: April 2026. Keine Rechtsberatung -- diese Pruefung ergaenzt, aber ersetzt nicht die Pruefung durch einen Fachanwalt fuer Immobilienrecht.*
 ```
 
 ---

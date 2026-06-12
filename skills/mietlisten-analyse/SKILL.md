@@ -254,159 +254,153 @@ Kaufpreisfaktor Soll:    Kaufpreis / Soll-Miete
 
 ## Ausgabeformat
 
-```json
-{
-  "analysis_type": "mietlisten_analyse",
-  "analysis_date": "YYYY-MM-DD",
-  "property": {
-    "address": "Strasse Hausnummer, PLZ Ort",
-    "total_units": 12,
-    "total_living_area_sqm": 850.5,
-    "commercial_units": 0,
-    "asking_price_eur": 750000
-  },
-  "rent_roll_summary": {
-    "total_cold_rent_monthly_eur": 4833,
-    "total_cold_rent_annual_eur": 58000,
-    "average_rent_per_sqm_eur": 5.68,
-    "median_rent_per_sqm_eur": 5.45,
-    "min_rent_per_sqm_eur": 3.20,
-    "max_rent_per_sqm_eur": 8.10,
-    "rent_spread_eur": 4.90,
-    "occupied_units": 11,
-    "vacant_units": 1,
-    "physical_vacancy_pct": 8.3,
-    "economic_vacancy_pct": 9.1,
-    "average_tenancy_duration_years": 7.2,
-    "weighted_average_lease_term_years": 5.8
-  },
-  "units": [
-    {
-      "unit_id": "WE_01",
-      "location": "EG links",
-      "rooms": 3,
-      "area_sqm": 72.5,
-      "cold_rent_eur": 435,
-      "rent_per_sqm_eur": 6.00,
-      "utilities_eur": 180,
-      "total_rent_eur": 615,
-      "lease_start": "2018-03-01",
-      "tenancy_duration_years": 8.1,
-      "lease_type": "unbefristet | befristet | Staffelmiete | Indexmiete",
-      "tenant_name_anonymized": "Mieter A",
-      "mietspiegel_rent_eur_sqm": 7.20,
-      "deviation_from_mietspiegel_pct": -16.7,
-      "market_position": "UNTER_MARKT",
-      "rent_increase_potential": {
-        "target_rent_eur_sqm": 7.20,
-        "max_increase_year_1_eur_sqm": 0.90,
-        "kappungsgrenze_pct": 20,
-        "years_to_market_rent": 6,
-        "annual_additional_income_eur": 780,
-        "mietpreisbremse_applicable": true,
-        "max_new_tenant_rent_eur_sqm": 7.92
-      },
-      "anomalies": [],
-      "risk_flags": []
-    }
-  ],
-  "mietspiegel_comparison": {
-    "mietspiegel_source": "Qualifizierter Mietspiegel Stadt XY 2024",
-    "mietspiegel_date": "2024-01-01",
-    "average_mietspiegel_rent_eur_sqm": 7.20,
-    "average_deviation_pct": -21.1,
-    "units_below_market": 9,
-    "units_at_market": 2,
-    "units_above_market": 0,
-    "total_monthly_rent_increase_potential_eur": 1250,
-    "total_annual_rent_increase_potential_eur": 15000,
-    "realistic_achievable_increase_year_1_eur": 5400,
-    "realistic_achievable_increase_year_3_eur": 11200,
-    "mietpreisbremse_area": true,
-    "kappungsgrenze_pct": 15
-  },
-  "vacancy_analysis": {
-    "vacant_units": [
-      {
-        "unit_id": "WE_07",
-        "area_sqm": 55,
-        "vacant_since": "2025-09-01",
-        "vacancy_duration_months": 7,
-        "reason": "Sanierung | Kein Mieter | Strategie-Leerstand",
-        "estimated_market_rent_eur_sqm": 7.50,
-        "estimated_monthly_rent_eur": 412,
-        "ready_to_rent": false,
-        "estimated_renovation_cost_eur": 15000
-      }
-    ],
-    "annual_vacancy_cost_eur": 4950,
-    "vacancy_trend": "steigend | stabil | fallend"
-  },
-  "anomalies": [
-    {
-      "anomaly_id": "A001",
-      "type": "same_day_leases",
-      "description": "WE 03, WE 05 und WE 09 haben identisches Mietbeginn-Datum 01.01.2024",
-      "severity": "HOCH | MITTEL | NIEDRIG",
-      "possible_explanations": [
-        "Verkaeufer hat kurz vor Verkauf Mietvertraege abgeschlossen",
-        "Umstellung auf neue Vertragsform",
-        "Scheinmieter"
-      ],
-      "recommended_action": "Mietvertraege einsehen, Bonituet der Mieter pruefen, Zahlungseingaenge der letzten 6 Monate anfordern"
-    }
-  ],
-  "area_verification": {
-    "total_area_rent_roll_sqm": 850.5,
-    "total_area_teilungserklaerung_sqm": 823.0,
-    "deviation_pct": 3.3,
-    "units_with_deviation_over_5pct": ["WE_11", "WE_12"],
-    "units_with_deviation_over_10pct": [],
-    "risk_assessment": "MITTEL -- Wohnflaechenberechnung nach WoFlV empfohlen"
-  },
-  "tenant_concentration": {
-    "largest_tenant_share_pct": 14.2,
-    "top_3_tenants_share_pct": 38.5,
-    "concentration_risk": "NIEDRIG | MITTEL | HOCH",
-    "related_parties_suspected": false
-  },
-  "lease_expiration_clustering": {
-    "has_clustering": false,
-    "clustered_periods": [],
-    "risk_assessment": "NIEDRIG"
-  },
-  "financial_summary": {
-    "gross_yield_current_pct": 7.73,
-    "gross_yield_after_increase_pct": 8.93,
-    "purchase_price_factor_current": 12.93,
-    "purchase_price_factor_after_increase": 11.20,
-    "annual_rent_increase_potential_eur": 15000,
-    "realistic_3_year_increase_eur": 11200,
-    "total_vacancy_cost_annual_eur": 4950,
-    "net_operating_income_eur": 48000,
-    "value_add_potential": "HOCH | MITTEL | NIEDRIG"
-  },
-  "risk_summary": {
-    "overall_risk_level": "HOCH | MITTEL | NIEDRIG",
-    "key_risks": [
-      "3 Einheiten mit identischem Mietbeginn -- Scheinmieter pruefen",
-      "WE 03: Mieter seit 26 Jahren, 3.20 EUR/qm -- Erhoehung nur ueber Kappungsgrenze"
-    ],
-    "opportunities": [
-      "9 von 11 Einheiten unter Marktmiete -- Steigerungspotenzial 15.000 EUR/Jahr",
-      "WE 07 nach Sanierung vermietbar fuer ca. 412 EUR/Monat"
-    ]
-  },
-  "confidence_score": {
-    "overall": 0.80,
-    "rent_data_quality": "hoch | mittel | niedrig",
-    "mietspiegel_accuracy": "qualifizierter Mietspiegel | einfacher Mietspiegel | Schaetzung",
-    "limiting_factors": [
-      "Keine Zahlungshistorie vorliegend",
-      "Ausstattungsmerkmale fuer exakte Mietspiegel-Zuordnung fehlen"
-    ]
-  }
-}
+**Wichtig:** Der Nutzer ist Immobilieninvestor, kein IT-ler. Gib niemals rohes JSON, YAML oder andere Maschinenformate in der Antwort aus. Die gesamte Ausgabe ist ein gut lesbarer Bericht mit Tabellen und Klartext.
+
+Liefere die Ergebnisse in folgendem Format:
+
+### Analysebericht
+
+```markdown
+# Mietlisten-Analyse: Strasse Hausnummer, PLZ Ort
+
+**Analysedatum:** 15.04.2026 | **Gesamtrisiko: 🟡 MITTEL** | Konfidenz: 80%
+
+## Objekt
+
+| | |
+|---|---|
+| Adresse | Strasse Hausnummer, PLZ Ort |
+| Einheiten gesamt | 12 WE, 0 GE |
+| Wohnflaeche gesamt | 850,5 qm |
+| Angebotspreis | 750.000 EUR |
+
+## Mietlisten-Ueberblick
+
+| Kennzahl | Wert |
+|----------|------|
+| Kaltmiete monatlich | 4.833 EUR |
+| Kaltmiete jaehrlich | 58.000 EUR |
+| Durchschnittsmiete | 5,68 EUR/qm |
+| Median-Miete | 5,45 EUR/qm |
+| Niedrigste / hoechste Miete | 3,20 / 8,10 EUR/qm (Spreizung 4,90 EUR) |
+| Vermietete Einheiten | 11 |
+| Leerstehende Einheiten | 1 |
+| Physischer Leerstand | 8,3% |
+| Wirtschaftlicher Leerstand | 9,1% |
+| Durchschnittliche Mietdauer | 7,2 Jahre |
+| Gewichtete Restmietdauer | 5,8 Jahre |
+
+## Einheiten im Detail
+
+| Einheit | Lage | Zimmer | qm | Kaltmiete | EUR/qm | NK | Warmmiete | Mietbeginn | Vertragstyp | Mietspiegel EUR/qm | Abweichung | Position |
+|---------|------|--------|-----|-----------|--------|-----|-----------|------------|-------------|--------------------|-----------|----------|
+| WE 01 | EG links | 3 | 72,5 | 435 EUR | 6,00 | 180 EUR | 615 EUR | 01.03.2018 (8,1 J., Mieter A) | unbefristet | 7,20 | -16,7% | 🟢 unter Markt |
+| ... | | | | | | | | | | | | |
+
+(Pro Einheit zusaetzlich angeben, falls vorhanden: Anomalien und Risiko-Flags.)
+
+**Erhoehungspotenzial WE 01:** Zielmiete 7,20 EUR/qm, max. Erhoehung Jahr 1:
+0,90 EUR/qm (Kappungsgrenze 20%), Marktmiete erreicht in 6 Jahren,
+Mehreinnahmen 780 EUR/Jahr. Mietpreisbremse greift: max. Neuvermietungsmiete
+7,92 EUR/qm.
+
+## Mietspiegel-Vergleich
+
+| Kennzahl | Wert |
+|----------|------|
+| Quelle | Qualifizierter Mietspiegel Stadt XY 2024 (Stand 01.01.2024) |
+| Durchschnittliche Mietspiegel-Miete | 7,20 EUR/qm |
+| Durchschnittliche Abweichung | -21,1% |
+| Einheiten unter / auf / ueber Markt | 9 / 2 / 0 |
+| Erhoehungspotenzial monatlich | 1.250 EUR |
+| Erhoehungspotenzial jaehrlich | 15.000 EUR |
+| Realistisch erreichbar Jahr 1 | 5.400 EUR |
+| Realistisch erreichbar Jahr 3 | 11.200 EUR |
+| Mietpreisbremse-Gebiet | Ja |
+| Kappungsgrenze | 15% |
+
+## Leerstandsanalyse
+
+| Einheit | qm | Leer seit | Dauer | Grund | Marktmiete | Vermietbar | Sanierungskosten |
+|---------|-----|-----------|-------|-------|------------|------------|-------------------|
+| WE 07 | 55 | 01.09.2025 | 7 Monate | Sanierung | 7,50 EUR/qm (ca. 412 EUR/Monat) | Nein | ca. 15.000 EUR |
+
+**Leerstandskosten jaehrlich:** 4.950 EUR | **Trend:** stabil
+
+## Auffaelligkeiten
+
+### 🔴 A001: Identische Mietbeginn-Daten (Schweregrad HOCH)
+
+WE 03, WE 05 und WE 09 haben identisches Mietbeginn-Datum 01.01.2024.
+
+Moegliche Erklaerungen:
+- Verkaeufer hat kurz vor Verkauf Mietvertraege abgeschlossen
+- Umstellung auf neue Vertragsform
+- Scheinmieter
+
+**Empfohlene Massnahme:** Mietvertraege einsehen, Bonitaet der Mieter pruefen,
+Zahlungseingaenge der letzten 6 Monate anfordern.
+
+## Wohnflaechen-Abgleich
+
+| | |
+|---|---|
+| Flaeche laut Mietliste | 850,5 qm |
+| Flaeche laut Teilungserklaerung | 823,0 qm |
+| Abweichung | 3,3% |
+| Einheiten mit Abweichung > 5% | WE 11, WE 12 |
+| Einheiten mit Abweichung > 10% | keine |
+
+**Bewertung: 🟡 MITTEL** -- Wohnflaechenberechnung nach WoFlV empfohlen.
+
+## Mieterkonzentration
+
+| | |
+|---|---|
+| Groesster Mieter | 14,2% der Gesamtmiete |
+| Top-3-Mieter | 38,5% der Gesamtmiete |
+| Konzentrationsrisiko | 🟢 NIEDRIG |
+| Verdacht auf verbundene Personen | Nein |
+
+## Vertragsauslauf-Clusterung
+
+Keine Haeufung von Vertragsenden erkennbar — **Risiko: 🟢 NIEDRIG**.
+(Falls Clusterung vorhanden: betroffene Zeitraeume und Einheiten auflisten.)
+
+## Finanzielle Zusammenfassung
+
+| Kennzahl | Wert |
+|----------|------|
+| Bruttomietrendite Ist | 7,73% |
+| Bruttomietrendite nach Erhoehung | 8,93% |
+| Kaufpreisfaktor Ist | 12,93 |
+| Kaufpreisfaktor nach Erhoehung | 11,20 |
+| Erhoehungspotenzial jaehrlich | 15.000 EUR |
+| Realistisch in 3 Jahren | 11.200 EUR |
+| Leerstandskosten jaehrlich | 4.950 EUR |
+| Netto-Betriebsergebnis (NOI) | 48.000 EUR |
+| Value-Add-Potenzial | 🟢 HOCH |
+
+## Risiko-Zusammenfassung
+
+**Gesamtrisiko: 🟡 MITTEL**
+
+Zentrale Risiken:
+- 3 Einheiten mit identischem Mietbeginn -- Scheinmieter pruefen
+- WE 03: Mieter seit 26 Jahren, 3,20 EUR/qm -- Erhoehung nur ueber Kappungsgrenze
+
+Chancen:
+- 9 von 11 Einheiten unter Marktmiete -- Steigerungspotenzial 15.000 EUR/Jahr
+- WE 07 nach Sanierung vermietbar fuer ca. 412 EUR/Monat
+
+## Konfidenz
+
+**Gesamt: 80%** | Datenqualitaet Mietliste: hoch | Mietspiegel-Genauigkeit:
+qualifizierter Mietspiegel
+
+Einschraenkende Faktoren:
+- Keine Zahlungshistorie vorliegend
+- Ausstattungsmerkmale fuer exakte Mietspiegel-Zuordnung fehlen
 ```
 
 ---

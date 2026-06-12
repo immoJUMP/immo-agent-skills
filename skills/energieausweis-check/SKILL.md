@@ -198,112 +198,114 @@ Pruefung Kappungsgrenze (2 EUR/qm):
 
 ## Ausgabeformat
 
-```json
-{
-  "analysis_type": "energieausweis_check",
-  "analysis_date": "YYYY-MM-DD",
-  "property": {
-    "address": "Strasse Hausnummer, PLZ Ort",
-    "construction_year": 1965,
-    "total_living_area_sqm": 850,
-    "units": 12
-  },
-  "energy_certificate": {
-    "type": "Bedarfsausweis | Verbrauchsausweis",
-    "issue_date": "YYYY-MM-DD",
-    "valid_until": "YYYY-MM-DD",
-    "is_valid": true,
-    "final_energy_value_kwh_sqm_a": 185,
-    "primary_energy_value_kwh_sqm_a": 210,
-    "efficiency_class": "F",
-    "primary_energy_source": "Erdgas",
-    "co2_emissions_kg_sqm_a": 42,
-    "reliability_assessment": "hoch | mittel | niedrig",
-    "reliability_notes": "Verbrauchsausweis bei 8% Leerstand -- realer Bedarf ca. 10-15% hoeher"
-  },
-  "heating_system": {
-    "type": "Gas-Niedertemperatur",
-    "installation_year": 1998,
-    "age_years": 28,
-    "expected_remaining_life_years": 0,
-    "geg_compliant": false,
-    "replacement_mandatory": true,
-    "replacement_deadline": "Sofort (Konstanttemperaturkessel > 30 Jahre)",
-    "recommended_replacement": "Luft-Wasser-Waermepumpe",
-    "estimated_replacement_cost_eur": 85000,
-    "available_subsidies_eur": 42500,
-    "net_replacement_cost_eur": 42500
-  },
-  "geg_compliance": {
-    "overall_compliant": false,
-    "violations": [
-      {
-        "requirement": "Austauschpflicht Konstanttemperaturkessel > 30 Jahre",
-        "reference": "GEG § 72",
-        "status": "NICHT_ERFUELLT",
-        "deadline": "Sofort",
-        "estimated_cost_eur": 85000
-      }
-    ],
-    "upcoming_requirements": [
-      {
-        "requirement": "Kommunale Waermeplanung -- 65% EE bei Heizungstausch",
-        "expected_date": "2026-06-30",
-        "impact": "Bei naechstem Heizungstausch muss 65% erneuerbare Energien erfuellt werden"
-      }
-    ]
-  },
-  "insulation_assessment": {
-    "facade": {"status": "ungedaemmt | teilgedaemmt | vollgedaemmt", "estimated_u_value": 1.5, "action_needed": true},
-    "roof": {"status": "ungedaemmt | teilgedaemmt | vollgedaemmt", "estimated_u_value": 0.8, "action_needed": true},
-    "basement_ceiling": {"status": "ungedaemmt | teilgedaemmt | vollgedaemmt", "estimated_u_value": 1.0, "action_needed": true},
-    "windows": {"glazing": "einfach | zweifach | dreifach", "estimated_u_value": 2.8, "action_needed": true}
-  },
-  "renovation_plan": [
-    {
-      "measure": "Heizungstausch Gas -> Waermepumpe",
-      "priority": "SOFORT | KURZFRISTIG | MITTELFRISTIG | LANGFRISTIG",
-      "estimated_cost_eur": 85000,
-      "subsidy_eur": 42500,
-      "net_cost_eur": 42500,
-      "energy_saving_pct": 30,
-      "energy_saving_kwh_a": 47000,
-      "cost_saving_eur_a": 5600,
-      "payback_years": 7.6,
-      "rent_increase_potential_eur_sqm_month": 0.33,
-      "new_energy_class_after": "D"
-    }
-  ],
-  "financial_impact": {
-    "total_renovation_cost_eur": 285000,
-    "total_subsidies_eur": 95000,
-    "total_net_cost_eur": 190000,
-    "annual_energy_cost_saving_eur": 12500,
-    "annual_rent_increase_potential_eur": 9600,
-    "total_annual_benefit_eur": 22100,
-    "simple_payback_years": 8.6,
-    "target_energy_class": "C",
-    "estimated_value_increase_pct": 8
-  },
-  "risk_assessment": {
-    "energy_risk_level": "HOCH | MITTEL | NIEDRIG",
-    "key_risks": [
-      "Heizungstausch-Pflicht nicht erfuellt -- Bussgeld moeglich",
-      "EU-EPBD koennte ab 2030 weitere Sanierung erzwingen"
-    ],
-    "opportunities": [
-      "Durch Sanierung von F auf C: Wertsteigerung ca. 8%",
-      "Modernisierungsumlage: +0.94 EUR/qm/Monat moeglich"
-    ]
-  },
-  "confidence_score": {
-    "overall": 0.75,
-    "limiting_factors": [
-      "Verbrauchsausweis weniger aussagekraeftig als Bedarfsausweis",
-      "Daemmzustand nur geschaetzt (keine Vor-Ort-Pruefung)"
-    ]
-  }
-}
+**Wichtig:** Der Nutzer ist Immobilieninvestor, kein IT-ler. Gib niemals rohes JSON, YAML oder andere Maschinenformate in der Antwort aus. Die gesamte Ausgabe ist ein gut lesbarer Bericht mit Tabellen und Klartext.
+
+### Zusammenfassung (Freitext)
+
+Kurze Zusammenfassung in 3-5 Saetzen: Energetischer Zustand, dringendster Handlungsbedarf, wirtschaftliches Fazit aus Investorensicht.
+
+### Ergebnisbericht
+
+```markdown
+# Energieausweis-Check: MFH Musterstrasse 12, 40210 Duesseldorf
+
+**Energetisches Risiko: 🔴 HOCH** | Effizienzklasse: F | Konfidenz: 75%
+
+## Objekt
+
+| | |
+|---|---|
+| Adresse | Musterstrasse 12, 40210 Duesseldorf |
+| Baujahr | 1965 |
+| Wohnflaeche | 850 qm |
+| Einheiten | 12 WE |
+
+## Energieausweis
+
+| | |
+|---|---|
+| Typ | Verbrauchsausweis |
+| Ausstellungsdatum | 15.05.2023 |
+| Gueltig bis | 14.05.2033 (🟢 gueltig) |
+| Endenergie | 185 kWh/(qm*a) |
+| Primaerenergie | 210 kWh/(qm*a) |
+| Effizienzklasse | F (sehr schlecht) |
+| Energietraeger | Erdgas |
+| CO2-Emissionen | 42 kg/(qm*a) |
+| Verlaesslichkeit | 🟡 Mittel -- Verbrauchsausweis bei 8% Leerstand, realer Bedarf ca. 10-15% hoeher |
+
+## Heizungsanlage
+
+| | |
+|---|---|
+| Typ | Gas-Niedertemperatur |
+| Einbaujahr | 1998 (Alter: 28 Jahre) |
+| Erwartete Restlebensdauer | 0 Jahre |
+| GEG-konform | 🔴 Nein -- Austauschpflicht |
+| Austauschfrist | Sofort (Konstanttemperaturkessel > 30 Jahre) |
+| Empfohlener Ersatz | Luft-Wasser-Waermepumpe |
+| Geschaetzte Austauschkosten | 85.000 EUR |
+| Verfuegbare Foerderung | 42.500 EUR |
+| Netto-Kosten nach Foerderung | 42.500 EUR |
+
+## GEG-Konformitaet
+
+**Gesamtstatus: 🔴 NICHT KONFORM**
+
+| Anforderung | Rechtsgrundlage | Status | Frist | Geschaetzte Kosten |
+|-------------|-----------------|--------|-------|--------------------|
+| Austauschpflicht Konstanttemperaturkessel > 30 Jahre | GEG § 72 | 🔴 Nicht erfuellt | Sofort | 85.000 EUR |
+
+**Kommende Anforderungen:**
+
+| Anforderung | Erwartet ab | Auswirkung |
+|-------------|-------------|------------|
+| Kommunale Waermeplanung -- 65% EE bei Heizungstausch | 30.06.2026 | Bei naechstem Heizungstausch muessen 65% erneuerbare Energien erfuellt werden |
+
+## Daemmzustand
+
+| Bauteil | Zustand | Geschaetzter U-Wert | Handlungsbedarf |
+|---------|---------|---------------------|-----------------|
+| Fassade | Ungedaemmt | 1,5 W/m2K | 🔴 Ja |
+| Dach | Teilgedaemmt | 0,8 W/m2K | 🔴 Ja |
+| Kellerdecke | Ungedaemmt | 1,0 W/m2K | 🔴 Ja |
+| Fenster | Zweifachverglasung | 2,8 W/m2K | 🔴 Ja |
+
+## Sanierungsfahrplan
+
+| Massnahme | Prioritaet | Kosten | Foerderung | Netto | Einsparung | Amortisation | Mieterhoehungspotenzial | Klasse danach |
+|-----------|-----------|--------|------------|-------|------------|--------------|--------------------------|----------------|
+| Heizungstausch Gas -> Waermepumpe | SOFORT | 85.000 EUR | 42.500 EUR | 42.500 EUR | 30% (47.000 kWh/a, 5.600 EUR/a) | 7,6 Jahre | +0,33 EUR/qm/Monat | D |
+
+## Wirtschaftliche Gesamtbetrachtung
+
+| Kennzahl | Wert |
+|----------|------|
+| Gesamtkosten Sanierung | 285.000 EUR |
+| Foerderungen gesamt | 95.000 EUR |
+| Netto-Kosten | 190.000 EUR |
+| Jaehrliche Energiekosteneinsparung | 12.500 EUR |
+| Jaehrliches Mieterhoehungspotenzial | 9.600 EUR |
+| Jaehrlicher Gesamtnutzen | 22.100 EUR |
+| Einfache Amortisation | 8,6 Jahre |
+| Ziel-Energieklasse | C |
+| Geschaetzte Wertsteigerung | ca. 8% |
+
+## Risiken und Chancen
+
+**Risiken:**
+- Heizungstausch-Pflicht nicht erfuellt -- Bussgeld moeglich
+- EU-EPBD koennte ab 2030 weitere Sanierung erzwingen
+
+**Chancen:**
+- Durch Sanierung von F auf C: Wertsteigerung ca. 8%
+- Modernisierungsumlage: +0,94 EUR/qm/Monat moeglich
+
+## Einschraenkungen der Analyse
+
+Konfidenz: 75%. Begrenzende Faktoren:
+- Verbrauchsausweis weniger aussagekraeftig als Bedarfsausweis
+- Daemmzustand nur geschaetzt (keine Vor-Ort-Pruefung)
 ```
 
 ---

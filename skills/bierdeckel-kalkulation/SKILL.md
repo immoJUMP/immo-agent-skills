@@ -320,6 +320,8 @@ Aggregiere alle Berechnungen zu einer Gesamtampel:
 
 ## Ausgabeformat
 
+**Wichtig:** Der Nutzer ist Immobilieninvestor, kein IT-ler. Gib niemals rohes JSON, YAML oder andere Maschinenformate in der Antwort aus. Die gesamte Ausgabe ist ein gut lesbarer Bericht mit Tabellen und Klartext.
+
 Liefere die Ergebnisse in folgendem Format:
 
 ### Bierdeckel (Freitext)
@@ -342,132 +344,140 @@ AMPEL: ROT -- Finger weg (zum aktuellen Preis)
 Verhandlungsziel: KP 1.200.000 EUR (KPF 19x)
 ```
 
-### Strukturierte Kalkulation (JSON)
+### Kalkulationsbericht
 
-```json
-{
-  "bierdeckel_kalkulation": {
-    "objekt": {
-      "bezeichnung": "MFH Dortmund-Nordstadt, Beispielstr. 42",
-      "kaufpreis_eur": 1850000,
-      "wohnflaeche_qm": 620,
-      "anzahl_we": 12,
-      "baujahr": 1962,
-      "heizungstyp": "Gas-Zentralheizung",
-      "standort": "Dortmund, NRW",
-      "lage_kategorie": "C"
-    },
-    "mietdaten": {
-      "ist_miete_eur_qm": 8.50,
-      "marktmiete_eur_qm": 9.50,
-      "monatsmiete_nettokalt_eur": 5270,
-      "jahresnettokaltmiete_eur": 63240,
-      "jahresnettokaltmiete_soll_eur": 70680,
-      "leerstand_we": 0,
-      "leerstandsquote_prozent": 0
-    },
-    "erwerbsnebenkosten": {
-      "grunderwerbsteuer_prozent": 6.5,
-      "grunderwerbsteuer_eur": 120250,
-      "notar_grundbuch_eur": 37000,
-      "makler_eur": 66045,
-      "enk_gesamt_eur": 223295,
-      "enk_gesamt_prozent": 12.07,
-      "gesamtinvestition_eur": 2073295
-    },
-    "kernkennzahlen": {
-      "kaufpreisfaktor": 29.25,
-      "all_in_kaufpreisfaktor": 32.78,
-      "bruttomietrendite_prozent": 3.42,
-      "all_in_bruttomietrendite_prozent": 3.05,
-      "kaufpreis_pro_qm_eur": 2983.87
-    },
-    "bewirtschaftungskosten": {
-      "nicht_umlagefaehige_nk_eur": 2530,
-      "instandhaltungsruecklage_eur_qm_jahr": 15,
-      "instandhaltungsruecklage_eur_jahr": 9300,
-      "mietausfallwagnis_eur": 1897,
-      "verwaltungskosten_eur": 3600,
-      "bwk_gesamt_eur": 17327,
-      "nettomietertrag_eur": 45913,
-      "nettomietrendite_prozent": 2.21
-    },
-    "finanzierung": {
-      "eigenkapital_eur": 518324,
-      "eigenkapital_prozent": 25,
-      "darlehenssumme_eur": 1554971,
-      "sollzins_prozent": 3.80,
-      "tilgung_prozent": 2.00,
-      "annuitaet_jahr_eur": 90188,
-      "annuitaet_monat_eur": 7516,
-      "zinsanteil_jahr_1_eur": 59089,
-      "tilgungsanteil_jahr_1_eur": 31099
-    },
-    "cashflow": {
-      "nettomietertrag_eur": 45913,
-      "annuitaet_eur": 90188,
-      "cashflow_vor_steuern_jahr_eur": -44275,
-      "cashflow_vor_steuern_monat_eur": -3690,
-      "afa_jaehrlich_eur": 27750,
-      "steuerlicher_verlust_eur": -16525,
-      "cashflow_nach_steuern_geschaetzt_monat_eur": -3138
-    },
-    "eigenkapital_rueckfluss": {
-      "jaehrlicher_ek_aufbau_eur": -13176,
-      "ek_rueckfluss_jahre": null,
-      "bewertung": "ROT",
-      "kommentar": "Negativer Cashflow uebersteigt Tilgung. Kein EK-Aufbau, stattdessen Zuschussgeschaeft."
-    },
-    "mieterhoehungspotenzial": {
-      "delta_ist_zu_markt_eur_qm": 1.00,
-      "potenzial_jaehrlich_eur": 7440,
-      "potenzial_prozent": 11.8,
-      "realisierbar_5_jahre_prozent": 60,
-      "potenzial_bruttomietrendite_prozent": 3.82,
-      "kommentar": "Moderates Mieterhoehungspotenzial, reicht nicht aus um negativen Cashflow auszugleichen."
-    },
-    "sanierungskosten_schaetzung": {
-      "zustand_annahme": "teilsaniert",
-      "pauschale_eur_qm": 450,
-      "sanierungskosten_bau_eur": 279000,
-      "heizung_sonderkosten_eur": 40000,
-      "sanierungskosten_gesamt_eur": 319000,
-      "anteil_am_kaufpreis_prozent": 17.2,
-      "gesamtinvestition_inkl_sanierung_eur": 2392295,
-      "rendite_nach_sanierung_prozent": 2.95
-    },
-    "aufteiler_kalkulation": {
-      "etw_verkaufspreis_eur_qm": 2200,
-      "durchschnittliche_we_groesse_qm": 51.67,
-      "brutto_verkaufspreis_pro_we_eur": 113674,
-      "netto_verkaufspreis_pro_we_eur": 108490,
-      "breakeven_einheiten": 5,
-      "breakeven_anteil_prozent": 41.7,
-      "bewertung": "GELB-ROT",
-      "kommentar": "Fast die Haelfte der Einheiten muesste verkauft werden. Knappes Geschaeft."
-    },
-    "sofort_ampel": {
-      "ampel": "ROT",
-      "konfidenz_prozent": 70,
-      "hauptgruende": [
-        "KPF 29,3 ist deutlich zu hoch fuer C-Lage (Zielkorridor: 14-22)",
-        "Bruttomietrendite 3,4% unter Schwelle fuer C-Lage (min. 5%)",
-        "Cashflow stark negativ: -3.690 EUR/Monat",
-        "Kein EK-Rueckfluss absehbar"
-      ],
-      "empfehlung": "Deal funktioniert zum aktuellen Preis nicht. Kaufpreisverhandlung auf ca. 1.200.000 EUR (KPF ~19) notwendig, um in den gruenen Bereich zu kommen.",
-      "verhandlungsziel_eur": 1200000,
-      "verhandlungsziel_kpf": 18.96,
-      "verhandlungsziel_bruttomietrendite_prozent": 5.27
-    },
-    "metadaten": {
-      "skill_version": "1.0",
-      "analyse_datum": "2026-04-15",
-      "analyst": "Bierdeckel-Kalkulation-Skill",
-      "hinweis": "Pauschale Schaetzung, keine detaillierte Due Diligence. Alle Werte sind Naeherungen."
-    }
-  }
-}
+```markdown
+# Bierdeckel-Kalkulation: MFH Dortmund-Nordstadt, Beispielstr. 42
+
+**Sofort-Ampel: 🔴 ROT -- Finger weg (zum aktuellen Preis)** | Konfidenz: 70%
+
+## Objekt
+
+| | |
+|---|---|
+| Kaufpreis | 1.850.000 EUR |
+| Wohnflaeche | 620 qm, 12 WE |
+| Baujahr | 1962 |
+| Heizung | Gas-Zentralheizung |
+| Standort | Dortmund, NRW (C-Lage) |
+
+## Mietdaten
+
+| | |
+|---|---|
+| Ist-Miete | 8,50 EUR/qm |
+| Marktmiete | 9,50 EUR/qm |
+| Monatsmiete nettokalt | 5.270 EUR |
+| Jahresnettokaltmiete (Ist) | 63.240 EUR |
+| Jahresnettokaltmiete (Soll) | 70.680 EUR |
+| Leerstand | 0 WE (0%) |
+
+## Erwerbsnebenkosten
+
+| Position | Betrag |
+|----------|--------|
+| Grunderwerbsteuer (6,5%) | 120.250 EUR |
+| Notar + Grundbuch | 37.000 EUR |
+| Makler | 66.045 EUR |
+| **ENK gesamt (12,07%)** | **223.295 EUR** |
+| **Gesamtinvestition** | **2.073.295 EUR** |
+
+## Kernkennzahlen
+
+| Kennzahl | Wert |
+|----------|------|
+| Kaufpreisfaktor | 29,3 |
+| All-in-Kaufpreisfaktor | 32,8 |
+| Bruttomietrendite | 3,42% |
+| All-in-Bruttomietrendite | 3,05% |
+| Kaufpreis pro qm | 2.984 EUR |
+
+## Bewirtschaftungskosten
+
+| Position | Betrag/Jahr |
+|----------|-------------|
+| Nicht umlagefaehige NK | 2.530 EUR |
+| Instandhaltungsruecklage (15 EUR/qm/Jahr) | 9.300 EUR |
+| Mietausfallwagnis | 1.897 EUR |
+| Verwaltungskosten | 3.600 EUR |
+| **Bewirtschaftungskosten gesamt** | **17.327 EUR** |
+| **Nettomietertrag** | **45.913 EUR** |
+| **Nettomietrendite** | **2,21%** |
+
+## Finanzierung
+
+| | |
+|---|---|
+| Eigenkapital (25%) | 518.324 EUR |
+| Darlehenssumme | 1.554.971 EUR |
+| Sollzins / Tilgung | 3,80% / 2,00% |
+| Annuitaet | 90.188 EUR/Jahr (7.516 EUR/Monat) |
+| Davon Zins / Tilgung (Jahr 1) | 59.089 EUR / 31.099 EUR |
+
+## Cashflow
+
+| Position | Betrag |
+|----------|--------|
+| Nettomietertrag | 45.913 EUR/Jahr |
+| Annuitaet | -90.188 EUR/Jahr |
+| **Cashflow vor Steuern** | **-44.275 EUR/Jahr (-3.690 EUR/Monat)** 🔴 |
+| AfA (jaehrlich) | 27.750 EUR |
+| Steuerlicher Verlust | -16.525 EUR |
+| Cashflow nach Steuern (geschaetzt) | -3.138 EUR/Monat |
+
+## Eigenkapital-Rueckfluss: 🔴 ROT
+
+Jaehrlicher EK-Aufbau: -13.176 EUR -- EK-Rueckfluss nicht berechenbar.
+Negativer Cashflow uebersteigt Tilgung. Kein EK-Aufbau, stattdessen Zuschussgeschaeft.
+
+## Mieterhoehungspotenzial
+
+| | |
+|---|---|
+| Delta Ist zu Markt | 1,00 EUR/qm |
+| Potenzial jaehrlich | 7.440 EUR (+11,8%) |
+| Realisierbar in 5 Jahren | ca. 60% |
+| Potenzial-Bruttomietrendite | 3,82% |
+
+Moderates Mieterhoehungspotenzial, reicht nicht aus um negativen Cashflow auszugleichen.
+
+## Sanierungskosten (Schaetzung)
+
+| | |
+|---|---|
+| Zustandsannahme | teilsaniert (450 EUR/qm Pauschale) |
+| Sanierungskosten Bau | 279.000 EUR |
+| Heizung-Sonderkosten | 40.000 EUR |
+| **Sanierungskosten gesamt** | **319.000 EUR (17,2% des Kaufpreises)** |
+| Gesamtinvestition inkl. Sanierung | 2.392.295 EUR |
+| Rendite nach Sanierung | 2,95% |
+
+## Aufteiler-Kalkulation: 🟡🔴 GELB-ROT
+
+| | |
+|---|---|
+| ETW-Verkaufspreis | 2.200 EUR/qm |
+| Durchschnittliche WE-Groesse | 51,7 qm |
+| Verkaufspreis pro WE (brutto / netto) | 113.674 EUR / 108.490 EUR |
+| Breakeven | 5 Einheiten (41,7% der WE) |
+
+Fast die Haelfte der Einheiten muesste verkauft werden. Knappes Geschaeft.
+
+## Sofort-Ampel: 🔴 ROT
+
+**Hauptgruende:**
+- KPF 29,3 ist deutlich zu hoch fuer C-Lage (Zielkorridor: 14-22)
+- Bruttomietrendite 3,4% unter Schwelle fuer C-Lage (min. 5%)
+- Cashflow stark negativ: -3.690 EUR/Monat
+- Kein EK-Rueckfluss absehbar
+
+**Empfehlung:** Deal funktioniert zum aktuellen Preis nicht. Kaufpreisverhandlung auf
+ca. 1.200.000 EUR (KPF ~19) notwendig, um in den gruenen Bereich zu kommen.
+
+**Verhandlungsziel:** 1.200.000 EUR (KPF 19,0 | Bruttomietrendite 5,27%)
+
+---
+*Pauschale Schaetzung, keine detaillierte Due Diligence. Alle Werte sind Naeherungen.*
 ```
 
 ---

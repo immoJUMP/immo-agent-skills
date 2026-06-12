@@ -194,98 +194,77 @@ Aggregiere alle Teilbewertungen zu einer Gesamtampel:
 
 ## Ausgabeformat
 
+**Wichtig:** Der Nutzer ist Immobilieninvestor, kein IT-ler. Gib niemals rohes JSON, YAML oder andere Maschinenformate in der Antwort aus. Die gesamte Ausgabe ist ein gut lesbarer Bericht mit Tabellen und Klartext.
+
 Liefere die Ergebnisse in folgendem Format:
 
 ### Zusammenfassung (Freitext)
 
 Kurze, praegende Zusammenfassung in 3-5 Saetzen: Was ist das Objekt, was ist die Empfehlung, warum?
 
-### Strukturierte Bewertung (JSON)
+### Bewertungsbericht
 
-```json
-{
-  "deal_screening": {
-    "objekt": {
-      "bezeichnung": "MFH Dortmund-Nordstadt, Beispielstr. 42",
-      "kaufpreis_eur": 1850000,
-      "wohnflaeche_qm": 620,
-      "anzahl_we": 12,
-      "anzahl_ge": 0,
-      "baujahr": 1962,
-      "baujahr_kategorie": "1950-1970",
-      "heizungstyp": "Gas-Zentralheizung",
-      "standort": "44147 Dortmund-Nordstadt",
-      "eigentumsverhaeltnis": "Volleigentum"
-    },
-    "kernkennzahlen": {
-      "jahresnettokaltmiete_eur": 96000,
-      "kaufpreisfaktor": 19.27,
-      "bruttomietrendite_prozent": 5.19,
-      "kaufpreis_pro_qm_eur": 2983.87,
-      "ist_miete_pro_qm_eur": 12.90,
-      "erwerbsnebenkosten_eur": 166500,
-      "erwerbsnebenkosten_prozent": 9.0,
-      "all_in_kaufpreisfaktor": 21.01
-    },
-    "showstopper_pruefung": {
-      "erbbaurecht": false,
-      "altlasten": false,
-      "extremer_sanierungsstau": false,
-      "bevoelkerungsrueckgang_kritisch": false,
-      "kpf_ueber_schwelle": false,
-      "struktureller_leerstand": false,
-      "showstopper_gefunden": false
-    },
-    "teilbewertungen": {
-      "lage": {
-        "kategorie": "C",
-        "bewertung": "GELB",
-        "kommentar": "Dortmund-Nordstadt: Aufwertendes Viertel, aber noch sozialer Brennpunkt-Charakter. Gute OEPNV-Anbindung, Naehe Innenstadt."
-      },
-      "baujahr": {
-        "kategorie": "1950-1970",
-        "bewertung": "GELB",
-        "kommentar": "Nachkriegsbau, typische Substanzrisiken: Leitungen, Fenster, ggf. Asbest pruefen."
-      },
-      "heizung": {
-        "bewertung": "GELB",
-        "kommentar": "Gas-Zentralheizung, GEG-Austauschpflicht beachten. Alter der Anlage erfragen."
-      },
-      "rendite": {
-        "bewertung": "GRUEN",
-        "kommentar": "KPF 19,3 und Bruttomietrendite 5,2% sind fuer C-Lage attraktiv."
-      },
-      "leerstand": {
-        "bewertung": "GELB",
-        "kommentar": "16,7% Leerstand -- Ursache klaeren: Sanierung oder strukturell?"
-      }
-    },
-    "gesamtbewertung": {
-      "ampel": "GELB",
-      "konfidenz_prozent": 65,
-      "empfehlung": "Objekt hat attraktive Renditekennzahlen fuer die Lage. Leerstandsursache, Heizungsalter und Substanzzustand muessen vor Vertiefung geklaert werden. Unterlagen anfordern.",
-      "naechste_schritte": [
-        "Mietliste und Leerstandsbegruendung anfordern",
-        "Alter und Zustand der Heizungsanlage erfragen",
-        "Letzte Sanierungsmassnahmen erfragen",
-        "Bierdeckel-Kalkulation mit vollstaendigen Daten durchfuehren",
-        "Bei positivem Ergebnis: Besichtigung vereinbaren"
-      ]
-    },
-    "fehlende_daten": [
-      "Alter der Heizungsanlage",
-      "Letzte Sanierungsmassnahmen im Detail",
-      "Grundstuecksgroesse",
-      "Energieausweis / Energiekennwert",
-      "Leerstandsgrund"
-    ],
-    "metadaten": {
-      "skill_version": "1.0",
-      "analyse_datum": "2026-04-15",
-      "analyst": "Deal-Screener-Skill"
-    }
-  }
-}
+```markdown
+# Deal-Screening: [Objektbezeichnung]
+
+**Gesamtbewertung: 🟡 GELB** | Konfidenz: 65%
+
+## Objekt
+
+| | |
+|---|---|
+| Objekt | MFH Dortmund-Nordstadt, Beispielstr. 42 |
+| Kaufpreis | 1.850.000 EUR |
+| Wohnflaeche | 620 qm |
+| Einheiten | 12 WE, 0 GE |
+| Baujahr | 1962 (Nachkriegsbau) |
+| Heizung | Gas-Zentralheizung |
+| Standort | 44147 Dortmund-Nordstadt |
+| Eigentum | Volleigentum |
+
+## Kernkennzahlen
+
+| Kennzahl | Wert | Einordnung |
+|----------|------|------------|
+| Jahresnettokaltmiete | 96.000 EUR | |
+| Kaufpreisfaktor | 19,3 | Attraktiv fuer C-Lage |
+| Bruttomietrendite | 5,2% | Akzeptabel bis gut |
+| Kaufpreis pro qm | 2.984 EUR | |
+| Ist-Miete pro qm | 12,90 EUR | |
+| Erwerbsnebenkosten | ca. 166.500 EUR (9,0%) | |
+| All-in-Kaufpreisfaktor | 21,0 | |
+
+## Showstopper-Pruefung
+
+Alle 6 Kriterien geprueft -- **kein Showstopper gefunden**:
+Erbbaurecht ✅ | Altlasten ✅ | Sanierungsstau ✅ | Bevoelkerungsrueckgang ✅ | Kaufpreisfaktor ✅ | Leerstand ✅
+
+(Falls ein Showstopper zutrifft: deutlich hervorheben und begruenden.)
+
+## Teilbewertungen
+
+| Bereich | Ampel | Kommentar |
+|---------|-------|-----------|
+| Lage (C) | 🟡 | Aufwertendes Viertel, aber noch sozialer Brennpunkt-Charakter. Gute OEPNV-Anbindung. |
+| Baujahr (1950-1970) | 🟡 | Nachkriegsbau, typische Substanzrisiken: Leitungen, Fenster, ggf. Asbest pruefen. |
+| Heizung | 🟡 | Gas-Zentralheizung, GEG-Austauschpflicht beachten. Alter der Anlage erfragen. |
+| Rendite | 🟢 | KPF 19,3 und Bruttomietrendite 5,2% sind fuer C-Lage attraktiv. |
+| Leerstand | 🟡 | 16,7% Leerstand -- Ursache klaeren: Sanierung oder strukturell? |
+
+## Empfehlung
+
+Objekt hat attraktive Renditekennzahlen fuer die Lage. Leerstandsursache, Heizungsalter
+und Substanzzustand muessen vor Vertiefung geklaert werden. Unterlagen anfordern.
+
+**Naechste Schritte:**
+1. Mietliste und Leerstandsbegruendung anfordern
+2. Alter und Zustand der Heizungsanlage erfragen
+3. Letzte Sanierungsmassnahmen erfragen
+4. Bierdeckel-Kalkulation mit vollstaendigen Daten durchfuehren
+5. Bei positivem Ergebnis: Besichtigung vereinbaren
+
+**Fehlende Daten** (reduzieren die Konfidenz): Alter der Heizungsanlage, letzte
+Sanierungsmassnahmen, Grundstuecksgroesse, Energieausweis, Leerstandsgrund
 ```
 
 ---

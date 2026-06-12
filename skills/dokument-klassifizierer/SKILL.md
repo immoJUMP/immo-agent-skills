@@ -126,91 +126,76 @@ Du bist ein erfahrener Dokumentenmanager fuer Immobilienportfolios. Analysiere d
 
 ## Ausgabeformat
 
-```json
-{
-  "document_classification": {
-    "processing_date": "2025-11-15",
-    "document_id": "DOK-2025-042",
-    "document_type": "hausgeldabrechnung",
-    "document_category": "verwaltungsunterlagen",
-    "confidence": 0.95,
-    "metadata": {
-      "document_date": "2025-06-30",
-      "title": "Hausgeldabrechnung 2024",
-      "period": {
-        "from": "2024-01-01",
-        "to": "2024-12-31"
-      },
-      "parties": {
-        "issuer": "ABC Hausverwaltung GmbH",
-        "recipient": "Max Mustermann"
-      },
-      "property": {
-        "address": "Musterstrasse 12, 40210 Duesseldorf",
-        "unit": "WE 3",
-        "mea_share": "85.32/1000"
-      },
-      "financial": {
-        "total_hausgeld_paid": 3600.00,
-        "total_costs_share": 3420.00,
-        "balance": 180.00,
-        "balance_type": "guthaben",
-        "instandhaltungsruecklage": 720.00
-      },
-      "reference_numbers": {
-        "file_number": "WEG-2024-MU12",
-        "account_number": "IBAN DE89..."
-      }
-    },
-    "property_assignment": {
-      "property_id": "OBJ-001",
-      "property_address": "Musterstrasse 12, 40210 Duesseldorf",
-      "assignment_confidence": 0.98,
-      "assignment_basis": "Adresse und Eigentuemername stimmen ueberein"
-    },
-    "suggested_filing": {
-      "folder_path": "Musterstr12/Verwaltung/Hausgeldabrechnungen/",
-      "filename": "2025-06-30_Hausgeldabrechnung_2024_3420EUR",
-      "related_folder": "Musterstr12/Verwaltung/Wirtschaftsplaene/"
-    },
-    "completeness_check": {
-      "all_pages_present": true,
-      "signatures_present": false,
-      "signatures_required": false,
-      "document_current": true,
-      "legibility": "gut",
-      "missing_elements": [],
-      "warnings": []
-    },
-    "actionable_items": [
-      {
-        "action": "Guthaben pruefen",
-        "description": "180 EUR Guthaben -- Auszahlung oder Verrechnung mit naechstem Hausgeld",
-        "deadline": null,
-        "priority": "niedrig"
-      },
-      {
-        "action": "Fuer Steuererklaerung vormerken",
-        "description": "Hausgeldabrechnung 2024 fuer Anlage V 2024 relevant (Zeile 39-40, 46-48)",
-        "deadline": "2025-07-31",
-        "priority": "mittel"
-      }
-    ],
-    "related_documents_needed": [
-      {
-        "type": "wirtschaftsplan",
-        "year": 2025,
-        "reason": "Vergleich Plan vs. Ist fuer Kostenplanung"
-      },
-      {
-        "type": "protokoll_eigentuemerversammlung",
-        "year": 2025,
-        "reason": "Beschluesse zu Sonderumlagen oder Instandhaltungsmassnahmen pruefen"
-      }
-    ]
-  }
-}
+**Wichtig:** Der Nutzer ist Immobilieninvestor, kein IT-ler. Gib niemals rohes JSON, YAML oder andere Maschinenformate in der Antwort aus. Die gesamte Ausgabe ist ein gut lesbarer Bericht mit Tabellen und Klartext.
+
+### Klassifizierungsbericht
+
+```markdown
+# Dokument-Klassifizierung: Hausgeldabrechnung 2024
+
+**Dokumenttyp: Hausgeldabrechnung** (Kategorie: Verwaltungsunterlagen) | Konfidenz: Hoch (95%)
+
+## Eckdaten des Dokuments
+
+| | |
+|---|---|
+| Titel | Hausgeldabrechnung 2024 |
+| Dokumentdatum | 30.06.2025 |
+| Abrechnungszeitraum | 01.01.2024 - 31.12.2024 |
+| Aussteller | ABC Hausverwaltung GmbH |
+| Empfaenger | Max Mustermann |
+| Objekt | Musterstrasse 12, 40210 Duesseldorf, WE 3 |
+| Miteigentumsanteil | 85,32/1000 |
+| Aktenzeichen | WEG-2024-MU12 |
+| Bankverbindung | IBAN DE89... |
+
+## Finanzielle Daten
+
+| Position | Betrag |
+|----------|--------|
+| Gezahltes Hausgeld | 3.600,00 EUR |
+| Kostenanteil laut Abrechnung | 3.420,00 EUR |
+| **Saldo: Guthaben** | **180,00 EUR** |
+| Zufuehrung Instandhaltungsruecklage | 720,00 EUR |
+
+## Objekt-Zuordnung
+
+Zugeordnet zu: **Musterstrasse 12, 40210 Duesseldorf** (Zuordnungs-Konfidenz: 98%)
+Begruendung: Adresse und Eigentuemername stimmen ueberein.
+
+## Ablage-Vorschlag
+
+- Ordner: `Musterstr12/Verwaltung/Hausgeldabrechnungen/`
+- Dateiname: `2025-06-30_Hausgeldabrechnung_2024_3420EUR`
+- Verwandter Ordner: `Musterstr12/Verwaltung/Wirtschaftsplaene/`
+
+## Vollstaendigkeitspruefung
+
+| Pruefpunkt | Ergebnis |
+|------------|----------|
+| Alle Seiten vorhanden | 🟢 Ja |
+| Unterschriften | Nicht erforderlich |
+| Dokument aktuell | 🟢 Ja |
+| Lesbarkeit | 🟢 Gut |
+| Fehlende Elemente | Keine |
+| Warnungen | Keine |
+
+## Was zu tun ist
+
+| Prioritaet | Aktion | Frist |
+|-----------|--------|-------|
+| Mittel | Fuer Steuererklaerung vormerken: Hausgeldabrechnung 2024 fuer Anlage V 2024 relevant (Zeile 39-40, 46-48) | 31.07.2025 |
+| Niedrig | Guthaben pruefen: 180 EUR -- Auszahlung oder Verrechnung mit naechstem Hausgeld | -- |
+
+## Verwandte Dokumente anfordern
+
+- **Wirtschaftsplan 2025** -- Vergleich Plan vs. Ist fuer Kostenplanung
+- **Protokoll Eigentuemerversammlung 2025** -- Beschluesse zu Sonderumlagen oder Instandhaltungsmassnahmen pruefen
 ```
+
+### Strukturierte Daten fuer Folge-Skills (nur als Datei)
+
+Falls die extrahierten Daten fuer einen Folge-Skill (z.B. `beleg-sortierer`, `unterlagen-analyst`, `mietlisten-parser`) oder eine sonstige Weiterverarbeitung gebraucht werden: Schreibe die strukturierten Daten als Datei neben das Quelldokument (z.B. JSON-Datei `2025-06-30_Hausgeldabrechnung_2024.json` im selben Ordner). Gib diese strukturierten Daten niemals im Chat aus -- im Chat erscheint ausschliesslich der lesbare Bericht. Erwaehne im Bericht kurz, wohin die Datei geschrieben wurde.
 
 ---
 

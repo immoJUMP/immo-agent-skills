@@ -209,84 +209,108 @@ Typische Antworten:
 
 ## Ausgabeformat
 
+**Wichtig:** Der Nutzer ist Immobilieninvestor, kein IT-ler. Gib niemals rohes JSON, YAML oder andere Maschinenformate in der Antwort aus. Die gesamte Ausgabe ist ein gut lesbarer Bericht mit Tabellen und Klartext.
+
 Liefere die Ergebnisse in folgendem Format:
 
 ### Zusammenfassung (Freitext)
 
 Kurze Einschaetzung der aktuellen Makler-Situation in 3-5 Saetzen: Wo steht der Investor? Was ist der groesste Hebel? Was sollte sofort passieren?
 
-### Strukturierte Makler-Strategie (JSON)
+### Strategiebericht
 
-```json
-{
-  "makler_strategie": {
-    "ausgangssituation": {
-      "region": "Ruhrgebiet, Schwerpunkt Dortmund und Essen",
-      "aktuelle_kontakte": 8,
-      "davon_aktiv_liefernd": 2,
-      "ziel": "Off-Market-Deals erhalten, 2-3 Ankauefe pro Jahr",
-      "bewertung": "Gute Basis, aber zu wenig A-Makler identifiziert und zu wenig Beziehungspflege"
-    },
-    "top_20_prozent_plan": {
-      "a_makler_identifiziert": 2,
-      "a_makler_ziel": 4,
-      "recherche_aufgaben": [
-        "ImmoScout24: Top-10-MFH-Inserenten in Dortmund und Essen der letzten 12 Monate identifizieren",
-        "IHK-Maklerliste Dortmund und Essen durchgehen, MFH-Spezialisten markieren",
-        "Eigenes Netzwerk fragen: Wer kennt aktive MFH-Makler in der Region?"
-      ],
-      "massnahmen_a_makler": [
-        "Persoenliches Treffen (Kaffee/Mittagessen) innerhalb 2 Wochen",
-        "Ankaufsprofil per WhatsApp schicken (kurz, praegnant)",
-        "Exit-Deal exklusiv anbieten (ETW Dortmund-Hoerden)",
-        "Frage stellen: 'Was nervt dich an Investoren?'"
-      ]
-    },
-    "erstansprache_skripte": {
-      "telefon": "Guten Tag, Herr/Frau [Name]. Mein Name ist [Name], ich investiere seit 3 Jahren in Wohnimmobilien im Ruhrgebiet und verwalte 24 Einheiten. Ich suche aktiv MFH mit 6-20 WE und kann schnell entscheiden. Darf ich Ihnen mein Profil schicken?",
-      "email_betreff": "Ankaufsprofil -- [Name], Investor Ruhrgebiet (24 WE)",
-      "email_text": "[Siehe Vorlage in Strategie Schritt 2]",
-      "nach_besichtigung": "Vielen Dank fuer die Besichtigung. Das Objekt passt diesmal nicht ganz, aber ich suche weiter aktiv. Haben Sie gerade etwas anderes in der Pipeline?"
-    },
-    "provisions_kalkulation": {
-      "grundsatz": "Volle Provision zahlen, NIEMALS verhandeln",
-      "schnelle_zahlung": "Innerhalb 48 Stunden nach Rechnungseingang",
-      "doppelprovision_angebot": "Bei starker A-Makler-Beziehung: Doppelprovision gegen Kaufpreisreduktion anbieten",
-      "verwendungszweck": "Vielen Dank fuer die tolle Zusammenarbeit -- [Name]"
-    },
-    "follow_up_vorlagen": {
-      "nach_deal_1_woche": "Hallo Herr/Frau [Name], nochmals vielen Dank fuer [Objektadresse]. Die Uebergabe lief reibungslos. Lust auf ein Mittagessen naechste Woche? Geht auf mich.",
-      "nach_deal_1_monat": "Kurzes Update zu [Adresse]: Alle Wohnungen vermietet, laeuft super. Danke nochmal -- wenn Sie wieder etwas haben, bin ich bereit.",
-      "regelmaessig_6_wochen": "Hallo Herr/Frau [Name], ich hoffe es laeuft gut bei Ihnen. Ich suche weiterhin aktiv -- haben Sie gerade etwas in der Pipeline? Beste Gruesse, [Name]"
-    },
-    "aktionsplan_30_60_90_tage": {
-      "tag_1_bis_30": [
-        "Top-10-MFH-Makler in Region recherchieren und listen",
-        "Bestehende 8 Kontakte in A/B/C kategorisieren",
-        "2 neue A-Makler identifizieren und Erstansprache (Telefon + E-Mail)",
-        "Exit-Deal (ETW Dortmund) einem A-Makler exklusiv anbieten",
-        "Vollmacht-Formular erstellen und digitalisieren"
-      ],
-      "tag_31_bis_60": [
-        "Persoenliche Treffen mit allen A-Maklern (Kaffee/Mittagessen)",
-        "Ankaufsprofil per WhatsApp an alle A- und B-Makler schicken",
-        "Bei naechster Besichtigung: Entscheidung innerhalb 48h demonstrieren",
-        "Erste Provision innerhalb 48h bezahlen und Verwendungszweck nutzen"
-      ],
-      "tag_61_bis_90": [
-        "Follow-up-Routine etablieren (alle 6 Wochen Kontakt mit A-Maklern)",
-        "Geburtstage aller A-Makler in Kalender eintragen",
-        "Ergebnis pruefen: Wie viele Off-Market-Angebote erhalten?",
-        "B-Makler mit Potenzial zu A-Maklern entwickeln"
-      ]
-    },
-    "metadaten": {
-      "skill_version": "1.0",
-      "analyse_datum": "2026-04-15",
-      "analyst": "Makler-Coach-Skill"
-    }
-  }
-}
+```markdown
+# Makler-Strategie: Ruhrgebiet, Schwerpunkt Dortmund und Essen
+
+## Ausgangssituation
+
+| | |
+|---|---|
+| Region | Ruhrgebiet, Schwerpunkt Dortmund und Essen |
+| Aktuelle Kontakte | 8 Makler, davon 2 aktiv liefernd |
+| Ziel | Off-Market-Deals erhalten, 2-3 Ankauefe pro Jahr |
+| Bewertung | Gute Basis, aber zu wenig A-Makler identifiziert und zu wenig Beziehungspflege |
+
+## Top-20%-Plan (A-Makler)
+
+**Status:** 2 A-Makler identifiziert, Ziel: 4
+
+**Recherche-Aufgaben:**
+1. ImmoScout24: Top-10-MFH-Inserenten in Dortmund und Essen der letzten 12 Monate identifizieren
+2. IHK-Maklerliste Dortmund und Essen durchgehen, MFH-Spezialisten markieren
+3. Eigenes Netzwerk fragen: Wer kennt aktive MFH-Makler in der Region?
+
+**Massnahmen fuer A-Makler:**
+- Persoenliches Treffen (Kaffee/Mittagessen) innerhalb 2 Wochen
+- Ankaufsprofil per WhatsApp schicken (kurz, praegnant)
+- Exit-Deal exklusiv anbieten (ETW Dortmund-Hoerden)
+- Frage stellen: "Was nervt dich an Investoren?"
+
+## Erstansprache-Skripte (zum Kopieren)
+
+**Telefon:**
+
+> Guten Tag, Herr/Frau [Name]. Mein Name ist [Name], ich investiere seit 3 Jahren
+> in Wohnimmobilien im Ruhrgebiet und verwalte 24 Einheiten. Ich suche aktiv MFH
+> mit 6-20 WE und kann schnell entscheiden. Darf ich Ihnen mein Profil schicken?
+
+**E-Mail-Betreff:**
+
+> Ankaufsprofil -- [Name], Investor Ruhrgebiet (24 WE)
+
+**E-Mail-Text:** Vollstaendige Vorlage siehe Strategie Schritt 2, auf die Situation des Investors angepasst ausgeben.
+
+**Nach Besichtigung:**
+
+> Vielen Dank fuer die Besichtigung. Das Objekt passt diesmal nicht ganz, aber ich
+> suche weiter aktiv. Haben Sie gerade etwas anderes in der Pipeline?
+
+## Provisions-Strategie
+
+| Grundsatz | Umsetzung |
+|-----------|-----------|
+| Volle Provision zahlen, NIEMALS verhandeln | Gesamtkosten ueber Kaufpreis steuern |
+| Schnelle Zahlung | Innerhalb 48 Stunden nach Rechnungseingang |
+| Doppelprovision-Angebot | Bei starker A-Makler-Beziehung: Doppelprovision gegen Kaufpreisreduktion anbieten |
+| Verwendungszweck | "Vielen Dank fuer die tolle Zusammenarbeit -- [Name]" |
+
+## Follow-up-Vorlagen (zum Kopieren)
+
+**1 Woche nach Deal:**
+
+> Hallo Herr/Frau [Name], nochmals vielen Dank fuer [Objektadresse]. Die Uebergabe
+> lief reibungslos. Lust auf ein Mittagessen naechste Woche? Geht auf mich.
+
+**1 Monat nach Deal:**
+
+> Kurzes Update zu [Adresse]: Alle Wohnungen vermietet, laeuft super. Danke
+> nochmal -- wenn Sie wieder etwas haben, bin ich bereit.
+
+**Regelmaessig alle 6 Wochen:**
+
+> Hallo Herr/Frau [Name], ich hoffe es laeuft gut bei Ihnen. Ich suche weiterhin
+> aktiv -- haben Sie gerade etwas in der Pipeline? Beste Gruesse, [Name]
+
+## Aktionsplan 30/60/90 Tage
+
+**Tag 1-30:**
+1. Top-10-MFH-Makler in Region recherchieren und listen
+2. Bestehende 8 Kontakte in A/B/C kategorisieren
+3. 2 neue A-Makler identifizieren und Erstansprache (Telefon + E-Mail)
+4. Exit-Deal (ETW Dortmund) einem A-Makler exklusiv anbieten
+5. Vollmacht-Formular erstellen und digitalisieren
+
+**Tag 31-60:**
+1. Persoenliche Treffen mit allen A-Maklern (Kaffee/Mittagessen)
+2. Ankaufsprofil per WhatsApp an alle A- und B-Makler schicken
+3. Bei naechster Besichtigung: Entscheidung innerhalb 48h demonstrieren
+4. Erste Provision innerhalb 48h bezahlen und Verwendungszweck nutzen
+
+**Tag 61-90:**
+1. Follow-up-Routine etablieren (alle 6 Wochen Kontakt mit A-Maklern)
+2. Geburtstage aller A-Makler in Kalender eintragen
+3. Ergebnis pruefen: Wie viele Off-Market-Angebote erhalten?
+4. B-Makler mit Potenzial zu A-Maklern entwickeln
 ```
 
 ---

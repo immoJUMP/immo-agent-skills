@@ -109,123 +109,80 @@ Du bist ein erfahrener Buchhalter fuer Wohnimmobilien-Portfolios in Deutschland.
 
 ## Ausgabeformat
 
-```json
-{
-  "beleg_sortierung": {
-    "tax_year": 2025,
-    "processing_date": "2025-11-15",
-    "total_documents": 47,
-    "total_amount_gross": 34250.00,
-    "documents": [
-      {
-        "document_id": "BEL-2025-001",
-        "suggested_filename": "2025-03-15_Handwerkerrechnung_2450EUR",
-        "original_filename": "scan_0042.pdf",
-        "document_type": "handwerkerrechnung",
-        "document_subtype": "sanitaer",
-        "invoice_date": "2025-03-15",
-        "invoice_number": "RE-2025-0734",
-        "issuer": {
-          "name": "Mueller Sanitaer GmbH",
-          "tax_id": "DE123456789"
-        },
-        "service_description": "Austausch defekter Mischbatterie Kueche, WE 3",
-        "service_period": {
-          "from": "2025-03-10",
-          "to": "2025-03-15"
-        },
-        "amounts": {
-          "net": 2058.82,
-          "vat_rate": 0.19,
-          "vat_amount": 391.18,
-          "gross": 2450.00
-        },
-        "property_assignment": {
-          "property_id": "OBJ-001",
-          "property_address": "Musterstrasse 12, 40210 Duesseldorf",
-          "unit": "WE 3",
-          "assignment_confidence": 0.95,
-          "assignment_basis": "Adresse und Einheit auf Rechnung genannt"
-        },
-        "tax_classification": {
-          "category": "erhaltungsaufwand",
-          "immediately_deductible": true,
-          "reasoning": "Austausch defekter Armatur = Reparatur, keine Verbesserung ueber urspruenglichen Zustand",
-          "anlage_v_line": "39",
-          "werbungskosten_category": "erhaltungsaufwand",
-          "anschaffungsnahe_check": {
-            "relevant": true,
-            "years_since_acquisition": 2,
-            "cumulative_maintenance_percent": 8.5,
-            "threshold_percent": 15.0,
-            "status": "unter_grenze",
-            "remaining_budget": 9750.00
-          }
-        },
-        "flags": [],
-        "confidence": 0.92
-      }
-    ],
-    "summary_by_category": {
-      "erhaltungsaufwand": {
-        "count": 12,
-        "total_gross": 15400.00
-      },
-      "herstellungskosten": {
-        "count": 2,
-        "total_gross": 8500.00
-      },
-      "schuldzinsen": {
-        "count": 1,
-        "total_gross": 4200.00
-      },
-      "grundsteuer": {
-        "count": 2,
-        "total_gross": 1780.00
-      },
-      "versicherungen": {
-        "count": 4,
-        "total_gross": 1920.00
-      },
-      "verwaltungskosten": {
-        "count": 6,
-        "total_gross": 2450.00
-      }
-    },
-    "summary_by_property": {
-      "OBJ-001": {
-        "address": "Musterstrasse 12, 40210 Duesseldorf",
-        "document_count": 28,
-        "total_gross": 22100.00
-      },
-      "OBJ-002": {
-        "address": "Beispielweg 5, 50667 Koeln",
-        "document_count": 19,
-        "total_gross": 12150.00
-      }
-    },
-    "flagged_items": [
-      {
-        "document_id": "BEL-2025-023",
-        "flag_type": "address_mismatch",
-        "severity": "high",
-        "message": "Adresse auf Rechnung stimmt mit keinem Objekt ueberein"
-      },
-      {
-        "document_id": "BEL-2025-031",
-        "flag_type": "duplicate_suspected",
-        "severity": "medium",
-        "message": "Gleiche Rechnungsnummer wie BEL-2025-018"
-      },
-      {
-        "document_id": "BEL-2025-045",
-        "flag_type": "unusually_high_amount",
-        "severity": "medium",
-        "message": "Betrag 12.500 EUR fuer Malerarbeiten ungewoehnlich hoch -- Einzelpruefung empfohlen"
-      }
-    ]
-  }
-}
+**Wichtig:** Der Nutzer ist Immobilieninvestor, kein IT-ler. Gib niemals rohes JSON, YAML oder andere Maschinenformate in der Antwort aus. Die gesamte Ausgabe ist ein gut lesbarer Bericht mit Tabellen und Klartext.
+
+**Im Chat:** der unten gezeigte Markdown-Bericht (Beleguebersicht).
+**Als Datei:** maschinenlesbare Daten fuer die Weiterverarbeitung (z.B. CSV-Belegliste fuer den Steuerberater oder den DATEV-Vorbereitungs-Skill) schreibst du in eine Datei und bietest sie an -- niemals als Rohdaten in den Chat.
+
+### Zusammenfassung (Freitext)
+
+2-4 Saetze: Wie viele Belege verarbeitet, Gesamtsumme, wichtigste Auffaelligkeiten, was der Steuerberater noch klaeren muss.
+
+### Beleguebersicht (Bericht)
+
+```markdown
+# Beleg-Sortierung: Steuerjahr 2025
+
+**Verarbeitet am:** 15.11.2025 | **47 Belege** | **Gesamtsumme brutto: 34.250,00 EUR**
+
+## Belegliste
+
+| Nr. | Datum | Beleg | Aussteller | Objekt | Brutto | Steuerliche Einordnung | Anlage V | Status |
+|-----|-------|-------|------------|--------|--------|------------------------|----------|--------|
+| BEL-2025-001 | 15.03.2025 | Handwerkerrechnung (Sanitaer), RE-2025-0734 | Mueller Sanitaer GmbH | Musterstr. 12, Duesseldorf, WE 3 | 2.450,00 EUR | Erhaltungsaufwand (sofort absetzbar) | Zeile 39 | 🟢 |
+| ... | ... | ... | ... | ... | ... | ... | ... | ... |
+
+## Beleg im Detail: BEL-2025-001
+
+| | |
+|---|---|
+| Empfohlener Dateiname | 2025-03-15_Handwerkerrechnung_2450EUR |
+| Originaldatei | scan_0042.pdf |
+| Belegtyp | Handwerkerrechnung (Sanitaer) |
+| Rechnungsdatum / -nummer | 15.03.2025 / RE-2025-0734 |
+| Aussteller | Mueller Sanitaer GmbH (USt-ID DE123456789) |
+| Leistung | Austausch defekter Mischbatterie Kueche, WE 3 |
+| Leistungszeitraum | 10.03.2025 - 15.03.2025 |
+| Betraege | Netto 2.058,82 EUR + 19% USt 391,18 EUR = Brutto 2.450,00 EUR |
+| Objekt-Zuordnung | Musterstrasse 12, 40210 Duesseldorf, WE 3 (Konfidenz 95% -- Adresse und Einheit auf Rechnung genannt) |
+| Steuerliche Einordnung | **Erhaltungsaufwand**, sofort absetzbar -- Austausch defekter Armatur = Reparatur, keine Verbesserung ueber urspruenglichen Zustand |
+| Anlage V | Zeile 39 (Erhaltungsaufwand) |
+| 15%-Grenze (anschaffungsnah) | Relevant (Anschaffung vor 2 Jahren). Kumuliert 8,5% von 15% -- 🟢 unter Grenze, Restbudget 9.750,00 EUR |
+| Auffaelligkeiten | Keine |
+| Konfidenz | 92% |
+
+(Gleiche Detailstruktur fuer alle weiteren Belege; bei vielen Belegen Details nur fuer
+Belege mit Auffaelligkeiten oder unklarer Zuordnung ausschreiben.)
+
+## Summen nach Kategorie
+
+| Kategorie | Anzahl | Summe brutto |
+|-----------|--------|--------------|
+| Erhaltungsaufwand | 12 | 15.400,00 EUR |
+| Herstellungskosten | 2 | 8.500,00 EUR |
+| Schuldzinsen | 1 | 4.200,00 EUR |
+| Grundsteuer | 2 | 1.780,00 EUR |
+| Versicherungen | 4 | 1.920,00 EUR |
+| Verwaltungskosten | 6 | 2.450,00 EUR |
+
+## Summen nach Objekt
+
+| Objekt | Belege | Summe brutto |
+|--------|--------|--------------|
+| Musterstrasse 12, 40210 Duesseldorf | 28 | 22.100,00 EUR |
+| Beispielweg 5, 50667 Koeln | 19 | 12.150,00 EUR |
+
+## Zu klaerende Belege
+
+| Beleg | Problem | Schwere | Hinweis |
+|-------|---------|---------|---------|
+| BEL-2025-023 | Adress-Abweichung | 🔴 hoch | Adresse auf Rechnung stimmt mit keinem Objekt ueberein |
+| BEL-2025-031 | Duplikat-Verdacht | 🟡 mittel | Gleiche Rechnungsnummer wie BEL-2025-018 |
+| BEL-2025-045 | Ungewoehnlich hoher Betrag | 🟡 mittel | Betrag 12.500 EUR fuer Malerarbeiten ungewoehnlich hoch -- Einzelpruefung empfohlen |
+
+## Datei fuer den Steuerberater
+
+Belegliste als CSV geschrieben: `beleg-sortierung_2025.csv` (alle Belege mit saemtlichen Feldern, maschinenlesbar fuer die Weiterverarbeitung)
 ```
 
 ---

@@ -282,88 +282,110 @@ Mit freundlichen Gruessen
 
 ## Ausgabeformat
 
+**Wichtig:** Der Nutzer ist Immobilieninvestor, kein IT-ler. Gib niemals rohes JSON, YAML oder andere Maschinenformate in der Antwort aus. Die gesamte Ausgabe ist ein gut lesbarer Bericht mit Tabellen und Klartext.
+
 Liefere die Ergebnisse in folgendem Format:
 
 ### Zusammenfassung (Freitext)
 
 Kurze Zusammenfassung des Crawl-Ergebnisses: Wie viele Inserate erfasst, wie viele nach Filter uebrig, Top-3 Highlights, ggf. Alarm-Deals.
 
-### Strukturierte Bewertung (JSON)
+### Ergebnisbericht
 
-```json
-{
-  "akquise_ergebnis": {
-    "konfiguration": {
-      "stadt": "Dortmund",
-      "parameter": {
-        "MIN_BRUTTORENDITE_PROZENT": 4.8,
-        "MAX_KP": 350000,
-        "MAKLER_KAEUFER_PROZENT": 3.57,
-        "IH_PAX": 10,
-        "VWM_MONAT": 30,
-        "AUSFALL_PROZENT": 3,
-        "ZINS_PROZENT": 3.75,
-        "TILG_PROZENT": 1.5,
-        "EK_PROZENT": 7
-      }
-    },
-    "crawl_statistik": {
-      "inserate_gesamt": 87,
-      "nach_filter": 23,
-      "showstopper_aussortiert": 64,
-      "showstopper_gruende": {
-        "kp_ueber_budget": 31,
-        "rendite_unter_minimum": 18,
-        "erbpacht": 3,
-        "hohes_hausgeld": 7,
-        "keine_mietdaten": 5
-      }
-    },
-    "top_10": [
-      {
-        "rang": 1,
-        "inserat_url": "https://example.com/inserat/12345",
-        "adresse": "Beispielstr. 42, 44147 Dortmund",
-        "kaufpreis_eur": 89000,
-        "wohnflaeche_qm": 58,
-        "zimmer": 2,
-        "baujahr": 1965,
-        "etage": 2,
-        "ist_miete_nettokalt_monat_eur": 420,
-        "hausgeld_gesamt_eur": 195,
-        "hausgeld_umlagefaehig_eur": 130,
-        "hausgeld_nicht_umlagefaehig_eur": 65,
-        "kennzahlen": {
-          "kp_pro_qm": 1534.48,
-          "brutto_rendite_prozent": 5.66,
-          "netto_rendite_prozent": 3.82,
-          "cap_rate_prozent": 4.01,
-          "coc_prozent": 2.15,
-          "dscr": 1.12,
-          "nk_gesamt_eur": 10680,
-          "all_in_eur": 99680,
-          "ek_bedarf_eur": 6978,
-          "monatlicher_cashflow_eur": 38
-        },
-        "deal_score": 82,
-        "confidence_score": 72,
-        "red_flags": ["Baujahr 1965 -- Leitungen pruefen", "Heizungstyp unbekannt"],
-        "chancen": ["KP/qm deutlich unter Markt", "Mietpotenzial +15%"],
-        "memo": "Guenstige ETW in Nordstadt, 2 Zimmer, 58 qm fuer 89.000 EUR. Brutto 5,66% bei aktueller Miete. Hausgeld im Rahmen. Baujahr-typische Risiken (Leitungen, Heizung), aber KP/qm unter Markt. Mietpotenzial vorhanden. Empfehlung: Unterlagen anfordern, Besichtigung.",
-        "empfehlung": "ANFRAGEN",
-        "alarm": true
-      }
-    ],
-    "csv_export": "akquise_dortmund_2026-04-15.csv",
-    "email_vorlagen_generiert": ["erstanfrage", "besichtigung"],
-    "metadaten": {
-      "skill_version": "1.0",
-      "analyse_datum": "2026-04-15",
-      "analyst": "Akquise-Agent-Skill"
-    }
-  }
-}
+```markdown
+# Akquise-Ergebnis: Dortmund
+
+**🚨 1 TOP-DEAL (Score >= 78) -- sofortige Kontaktaufnahme empfohlen**
+
+## Suchkonfiguration
+
+| Parameter | Wert |
+|-----------|------|
+| Stadt | Dortmund |
+| Mindest-Bruttorendite | 4,8% |
+| Max. Kaufpreis | 350.000 EUR |
+| Makler-Courtage (Kaeufer) | 3,57% |
+| Instandhaltung | 10 EUR/qm/Jahr |
+| Verwaltung | 30 EUR/Monat |
+| Mietausfall | 3% |
+| Zins / Tilgung | 3,75% / 1,5% |
+| Eigenkapitalquote | 7% |
+
+## Crawl-Statistik
+
+| | Anzahl |
+|---|---|
+| Inserate gesamt erfasst | 87 |
+| Nach Filter uebrig | 23 |
+| Aussortiert (Showstopper) | 64 |
+
+**Ausschlussgruende im Detail:**
+
+| Grund | Anzahl |
+|-------|--------|
+| Kaufpreis ueber Budget | 31 |
+| Rendite unter Minimum | 18 |
+| Hohes Hausgeld | 7 |
+| Keine Mietdaten | 5 |
+| Erbpacht | 3 |
+
+## Top-10-Shortlist
+
+| Rang | Adresse | KP | qm | Brutto | Netto | Deal-Score | Empfehlung |
+|------|---------|----|----|--------|-------|------------|------------|
+| 1 🚨 | Beispielstr. 42, 44147 Dortmund | 89.000 EUR | 58 | 5,66% | 3,82% | 82 | ANFRAGEN |
+| 2 | ... | ... | ... | ... | ... | ... | ... |
+
+## Rang 1: Beispielstr. 42, 44147 Dortmund 🚨 TOP-DEAL
+
+**Deal-Score: 82** | Konfidenz: 72% | Empfehlung: **ANFRAGEN**
+
+| | |
+|---|---|
+| Inserat | https://example.com/inserat/12345 |
+| Kaufpreis | 89.000 EUR |
+| Wohnflaeche | 58 qm, 2 Zimmer, 2. Etage |
+| Baujahr | 1965 |
+| Ist-Miete (nettokalt) | 420 EUR/Monat |
+| Hausgeld gesamt | 195 EUR (130 EUR umlagefaehig / 65 EUR nicht umlagefaehig) |
+
+**Kennzahlen:**
+
+| Kennzahl | Wert |
+|----------|------|
+| Kaufpreis pro qm | 1.534 EUR |
+| Brutto-Rendite | 5,66% |
+| Netto-Rendite | 3,82% |
+| Cap Rate | 4,01% |
+| Cash-on-Cash | 2,15% |
+| DSCR | 1,12 |
+| Erwerbsnebenkosten | 10.680 EUR |
+| All-in-Preis | 99.680 EUR |
+| Eigenkapitalbedarf | 6.978 EUR |
+| Monatlicher Cashflow | +38 EUR |
+
+**Red Flags:**
+- Baujahr 1965 -- Leitungen pruefen
+- Heizungstyp unbekannt
+
+**Chancen:**
+- KP/qm deutlich unter Markt
+- Mietpotenzial +15%
+
+**Memo:** Guenstige ETW in Nordstadt, 2 Zimmer, 58 qm fuer 89.000 EUR. Brutto 5,66%
+bei aktueller Miete. Hausgeld im Rahmen. Baujahr-typische Risiken (Leitungen, Heizung),
+aber KP/qm unter Markt. Mietpotenzial vorhanden. Empfehlung: Unterlagen anfordern,
+Besichtigung.
+
+(Gleiche Detailstruktur fuer Rang 2-10.)
+
+## Anhaenge
+
+- **CSV-Export:** akquise_dortmund_2026-04-15.csv (alle 28 Spalten, alle bewerteten Objekte)
+- **E-Mail-Vorlagen generiert:** Erstanfrage, Besichtigung
 ```
+
+Den CSV-Export schreibst du als Datei (nicht in den Chat) und nennst im Bericht nur den Dateinamen.
 
 ---
 

@@ -478,6 +478,8 @@ Wenn ein Kanal nur mit grenzwertigem Verhalten funktionieren wuerde, stufe ihn h
 
 ## Ausgabeformat
 
+**Wichtig:** Der Nutzer ist Immobilieninvestor, kein IT-ler. Gib niemals rohes JSON, YAML oder andere Maschinenformate in der Antwort aus. Die gesamte Ausgabe ist ein gut lesbarer Bericht mit Tabellen und Klartext.
+
 Liefere die Ergebnisse in folgendem Format:
 
 ### Zusammenfassung (Freitext)
@@ -489,113 +491,118 @@ Liefere die Ergebnisse in folgendem Format:
 - groesstem Engpass
 - sofortigem naechsten Schritt
 
-### Strukturierter Akquise-Plan (JSON)
+### Akquise-Plan (Bericht)
 
-```json
-{
-  "akquise_plan_v2": {
-    "ausgangssituation": {
-      "region": "Dortmund, Bochum, Essen",
-      "buybox": "MFH, 6-20 WE, sanierungsfaehig, B/C-Lagen",
-      "investmentstrategie": "Bestandshalter mit Werthebung",
-      "zeitbudget_stunden_woche": 8,
-      "dealziel_pro_jahr": 3,
-      "finanzierungsstatus": "Belastbar, Bank vorbesprochen, indikative Entscheidung in 7 Tagen"
-    },
-    "profilklassifikation": {
-      "hauptprofil": "Lokaler Operator",
-      "nebenprofil": "Beziehungs-Aufbauer",
-      "engpass": "Noch zu wenig wiederholbare Leadquellen ausser Maklern",
-      "staerken": ["Schnelle Sanierung", "Lokale Praesenz", "Handwerker-Netzwerk"]
-    },
-    "score_logik": {
-      "strategie_fit": 30,
-      "wiederholbarkeit": 15,
-      "zeit_bis_erster_lead": 10,
-      "lokaler_vertrauenshebel": 10,
-      "abschluss_fit": 10,
-      "compliance_einfachheit": 10,
-      "budget_fit": 10,
-      "zeit_fit": 5
-    },
-    "priorisierte_kanaele": [
-      {
-        "rang": 1,
-        "kanal": "Maklernetzwerk",
-        "kategorie": "Echte Off-Market-Quelle",
-        "score_0_100": 88,
-        "warum_jetzt": "Schnellster Hebel fuer diese Buybox bei vorhandener Abschlussfaehigkeit",
-        "warum_nicht_hoeher": "Abhaengig von konsequenter Rueckmeldedisziplin",
-        "voraussetzungen": ["Klares Kurzprofil", "A/B/C-Liste", "72h-Rueckmeldeprozess"],
-        "compliance_hinweis": "Nur ehrliche Kaufstory und saubere Maklerkommunikation",
-        "erste_7_tage": [
-          "10 Makler listen",
-          "5 davon anrufen",
-          "Kurzprofil versenden",
-          "2 Kaffee-Termine vereinbaren"
-        ],
-        "kpis_30_tage": {
-          "neue_kontakte": 10,
-          "qualifizierte_gespraeche": 5,
-          "zugelieferte_deals": 3
-        }
-      }
-    ],
-    "sekundaere_kanaele": [
-      {
-        "kanal": "Hausverwalter / WEG-Verwalter",
-        "rolle": "Signalquelle",
-        "bedingung_fuer_hochskalierung": "Mindestens 2 verlaessliche Kontakte und sauberer Weiterleitungsprozess"
-      }
-    ],
-    "abgelehnte_kanaele": [
-      {
-        "kanal": "Online-Marketing-Funnel",
-        "grund": "Zu wenig Budget und Follow-up-Kapazitaet",
-        "spaeter_pruefen_wenn": "Budget > 500 EUR/Monat und klare Leadbearbeitung vorhanden"
-      }
-    ],
-    "wochen_scorecard": {
-      "neue_kontakte": 0,
-      "follow_ups": 0,
-      "qualifizierte_leads": 0,
-      "besichtigungen": 0,
-      "indikative_angebote": 0,
-      "lois": 0,
-      "beurkundungen": 0,
-      "kosten_pro_qualifiziertem_lead_eur": 0
-    },
-    "templates": {
-      "hausverwalter_weiterleitung": "Guten Tag Herr/Frau [Name], ich bin Immobilieninvestor in [Region] und suche [Buybox]. Falls einer Ihrer Eigentuemer diskret ueber einen Verkauf nachdenkt, wuerde ich mich freuen, wenn Sie mein Kurzprofil weiterleiten. Ich bitte ausdruecklich nicht um vertrauliche Daten, sondern nur um Weitergabe meines Kontakts, wenn es fuer Ihre Mandanten passt.",
-      "handwerker_tippgeber": "Wenn Sie auf einen Eigentuemer treffen, der wegen Sanierungsstau oder Ueberforderung ueber einen Verkauf nachdenkt, koennen Sie gern mein Profil weitergeben. Kommt es zu einem notariellen Kauf, verguete ich einen sauberen Hinweis erfolgsabhaengig.",
-      "direktanschreiben": "Sehr geehrte/r Herr/Frau [Name], mein Name ist [Name]. Ich kaufe in [Lage] gezielt [Buybox] und kann diskret, zuegig und fair pruefen. Wenn Sie sich mit dem Gedanken an einen Verkauf beschaeftigen, freue ich mich ueber ein unverbindliches Gespraech.",
-      "multiplikator_weiterleitung": "Falls Sie in Ihrem Umfeld jemanden kennen, fuer den ein diskreter Immobilienverkauf sinnvoll sein koennte, leiten Sie mein Profil gern weiter. Ich suche [Buybox] in [Region] und arbeite verlaesslich und ohne Verkaufsdruck."
-    },
-    "plan_30_60_90_tage": {
-      "tag_1_bis_30": [
-        "Top-3 Kanaele aufsetzen",
-        "CRM oder Tracking-Tabelle anlegen",
-        "Kurzprofil und 2 Vorlagen finalisieren",
-        "erste Outreach-Welle starten"
-      ],
-      "tag_31_bis_60": [
-        "Conversion je Kanal auswerten",
-        "schwache Kanaele nicht ausbauen",
-        "starke Kanaele mit fester Wochenroutine vertiefen"
-      ],
-      "tag_61_bis_90": [
-        "Budget und Zeit auf Top-2 Kanaele konzentrieren",
-        "Referral-Loop aktivieren",
-        "90-Tage-Rueckblick und Neugewichtung durchfuehren"
-      ]
-    },
-    "metadaten": {
-      "skill_version": "2.0",
-      "analyse_datum": "[heutiges_datum]",
-      "analyst": "Akquise-Netzwerk-Skill"
-    }
-  }
-}
+```markdown
+# Akquise-Plan: Dortmund / Bochum / Essen
+
+## Ausgangssituation
+
+| | |
+|---|---|
+| Region | Dortmund, Bochum, Essen |
+| Buybox | MFH, 6-20 WE, sanierungsfaehig, B/C-Lagen |
+| Investmentstrategie | Bestandshalter mit Werthebung |
+| Zeitbudget | 8 Stunden/Woche |
+| Deal-Ziel | 3 Ankauefe pro Jahr |
+| Finanzierungsstatus | Belastbar, Bank vorbesprochen, indikative Entscheidung in 7 Tagen |
+
+## Profilklassifikation
+
+| | |
+|---|---|
+| Hauptprofil | Lokaler Operator |
+| Nebenprofil | Beziehungs-Aufbauer |
+| Engpass | Noch zu wenig wiederholbare Leadquellen ausser Maklern |
+| Staerken | Schnelle Sanierung, lokale Praesenz, Handwerker-Netzwerk |
+
+## So wurde bewertet (Score-Logik)
+
+Strategie-Fit 30% | Wiederholbarkeit 15% | Zeit bis erster Lead 10% | Lokaler Vertrauenshebel 10% | Abschluss-Fit 10% | Compliance-Einfachheit 10% | Budget-Fit 10% | Zeit-Fit 5%
+
+## Priorisierte Kanaele (Top 3-4)
+
+### Rang 1: Maklernetzwerk -- Score 88/100 🟢
+
+**Kategorie:** Echte Off-Market-Quelle
+
+- **Warum jetzt:** Schnellster Hebel fuer diese Buybox bei vorhandener Abschlussfaehigkeit
+- **Warum nicht hoeher:** Abhaengig von konsequenter Rueckmeldedisziplin
+- **Voraussetzungen:** Klares Kurzprofil, A/B/C-Liste, 72h-Rueckmeldeprozess
+- **Compliance-Hinweis:** Nur ehrliche Kaufstory und saubere Maklerkommunikation
+
+**Erste 7 Tage:**
+1. 10 Makler listen
+2. 5 davon anrufen
+3. Kurzprofil versenden
+4. 2 Kaffee-Termine vereinbaren
+
+**KPIs nach 30 Tagen:**
+
+| KPI | Ziel |
+|-----|------|
+| Neue Kontakte | 10 |
+| Qualifizierte Gespraeche | 5 |
+| Zugelieferte Deals | 3 |
+
+(Gleiche Detailstruktur fuer Rang 2-4.)
+
+## Sekundaere Kanaele
+
+| Kanal | Rolle | Hochskalieren wenn |
+|-------|-------|--------------------|
+| Hausverwalter / WEG-Verwalter | Signalquelle | Mindestens 2 verlaessliche Kontakte und sauberer Weiterleitungsprozess |
+
+## Aktuell nicht empfohlene Kanaele
+
+| Kanal | Grund | Spaeter pruefen wenn |
+|-------|-------|----------------------|
+| Online-Marketing-Funnel | Zu wenig Budget und Follow-up-Kapazitaet | Budget > 500 EUR/Monat und klare Leadbearbeitung vorhanden |
+
+## Wochen-Scorecard (Vorlage zum Tracking)
+
+| KPI | Diese Woche |
+|-----|-------------|
+| Neue Kontakte | |
+| Follow-ups | |
+| Qualifizierte Leads | |
+| Besichtigungen | |
+| Indikative Angebote | |
+| LOIs | |
+| Beurkundungen | |
+| Kosten pro qualifiziertem Lead (EUR) | |
+
+## Gespraechs- und Anschreiben-Vorlagen
+
+**Hausverwalter (Weiterleitung):**
+> Guten Tag Herr/Frau [Name], ich bin Immobilieninvestor in [Region] und suche [Buybox]. Falls einer Ihrer Eigentuemer diskret ueber einen Verkauf nachdenkt, wuerde ich mich freuen, wenn Sie mein Kurzprofil weiterleiten. Ich bitte ausdruecklich nicht um vertrauliche Daten, sondern nur um Weitergabe meines Kontakts, wenn es fuer Ihre Mandanten passt.
+
+**Handwerker (Tippgeber):**
+> Wenn Sie auf einen Eigentuemer treffen, der wegen Sanierungsstau oder Ueberforderung ueber einen Verkauf nachdenkt, koennen Sie gern mein Profil weitergeben. Kommt es zu einem notariellen Kauf, verguete ich einen sauberen Hinweis erfolgsabhaengig.
+
+**Direktanschreiben:**
+> Sehr geehrte/r Herr/Frau [Name], mein Name ist [Name]. Ich kaufe in [Lage] gezielt [Buybox] und kann diskret, zuegig und fair pruefen. Wenn Sie sich mit dem Gedanken an einen Verkauf beschaeftigen, freue ich mich ueber ein unverbindliches Gespraech.
+
+**Multiplikator (Weiterleitung):**
+> Falls Sie in Ihrem Umfeld jemanden kennen, fuer den ein diskreter Immobilienverkauf sinnvoll sein koennte, leiten Sie mein Profil gern weiter. Ich suche [Buybox] in [Region] und arbeite verlaesslich und ohne Verkaufsdruck.
+
+## 30/60/90-Tage-Plan
+
+**Tag 1-30:**
+- Top-3 Kanaele aufsetzen
+- CRM oder Tracking-Tabelle anlegen
+- Kurzprofil und 2 Vorlagen finalisieren
+- Erste Outreach-Welle starten
+
+**Tag 31-60:**
+- Conversion je Kanal auswerten
+- Schwache Kanaele nicht ausbauen
+- Starke Kanaele mit fester Wochenroutine vertiefen
+
+**Tag 61-90:**
+- Budget und Zeit auf Top-2 Kanaele konzentrieren
+- Referral-Loop aktivieren
+- 90-Tage-Rueckblick und Neugewichtung durchfuehren
 ```
 
 ---

@@ -95,163 +95,78 @@ Du bist ein erfahrener Immobilienanalyst. Extrahiere aus der uebergebenen Mietli
 
 ## Ausgabeformat
 
-```json
-{
-  "rent_roll": {
-    "property": {
-      "property_id": "OBJ-001",
-      "address": "Musterstrasse 12, 40210 Duesseldorf",
-      "reference_date": "2025-01-01",
-      "data_source": "PDF Hausverwaltung ABC GmbH",
-      "data_quality": "gut"
-    },
-    "units": [
-      {
-        "unit_id": "WE-01",
-        "unit_label": "WE 1",
-        "floor": "EG",
-        "position": "links",
-        "usage_type": "wohnung",
-        "rooms": 3,
-        "area_sqm": 72.50,
-        "tenant": {
-          "name": "Schmidt, Thomas",
-          "anonymized": false
-        },
-        "rent": {
-          "cold_rent_monthly": 520.00,
-          "cold_rent_per_sqm": 7.17,
-          "utility_prepayment_monthly": 180.00,
-          "heating_prepayment_monthly": 80.00,
-          "total_rent_monthly": 780.00,
-          "cold_rent_annual": 6240.00
-        },
-        "lease": {
-          "lease_start": "2019-04-01",
-          "lease_type": "unbefristet",
-          "lease_end": null,
-          "last_increase_date": "2022-07-01",
-          "last_increase_amount": 35.00,
-          "index_clause": false,
-          "graduated_rent": false
-        },
-        "deposit": {
-          "amount": 1560.00,
-          "type": "barkaution"
-        },
-        "status": "vermietet",
-        "arrears": 0.00,
-        "notes": ""
-      },
-      {
-        "unit_id": "WE-05",
-        "unit_label": "WE 5",
-        "floor": "2.OG",
-        "position": "rechts",
-        "usage_type": "wohnung",
-        "rooms": 2,
-        "area_sqm": 55.00,
-        "tenant": null,
-        "rent": {
-          "cold_rent_monthly": 0.00,
-          "cold_rent_per_sqm": 0.00,
-          "utility_prepayment_monthly": 0.00,
-          "heating_prepayment_monthly": 0.00,
-          "total_rent_monthly": 0.00,
-          "cold_rent_annual": 0.00,
-          "estimated_market_rent_per_sqm": 8.50,
-          "estimated_market_rent_monthly": 467.50
-        },
-        "lease": {
-          "lease_start": null,
-          "lease_type": null,
-          "lease_end": null
-        },
-        "deposit": null,
-        "status": "leerstand",
-        "vacancy_since": "2024-11-01",
-        "vacancy_reason": "mieterwechsel",
-        "notes": "Renovierung abgeschlossen, Neuvermietung ab sofort moeglich"
-      },
-      {
-        "unit_id": "GAR-01",
-        "unit_label": "Garage 1",
-        "floor": "UG",
-        "position": null,
-        "usage_type": "garage",
-        "rooms": null,
-        "area_sqm": 15.00,
-        "tenant": {
-          "name": "Schmidt, Thomas",
-          "anonymized": false
-        },
-        "rent": {
-          "cold_rent_monthly": 60.00,
-          "cold_rent_per_sqm": 4.00,
-          "utility_prepayment_monthly": 0.00,
-          "heating_prepayment_monthly": 0.00,
-          "total_rent_monthly": 60.00,
-          "cold_rent_annual": 720.00
-        },
-        "lease": {
-          "lease_start": "2019-04-01",
-          "lease_type": "unbefristet"
-        },
-        "deposit": null,
-        "status": "vermietet",
-        "notes": "Separat vermietet -- USt-pflichtig beachten"
-      }
-    ],
-    "summary": {
-      "total_units": 8,
-      "residential_units": 6,
-      "commercial_units": 0,
-      "garage_units": 2,
-      "total_area_sqm": 425.00,
-      "residential_area_sqm": 395.00,
-      "occupied_units": 7,
-      "vacant_units": 1,
-      "vacancy_rate_units_percent": 12.5,
-      "vacancy_rate_area_percent": 12.9,
-      "actual_cold_rent_monthly": 3420.00,
-      "actual_cold_rent_annual": 41040.00,
-      "potential_cold_rent_monthly": 3887.50,
-      "potential_cold_rent_annual": 46650.00,
-      "average_rent_per_sqm_residential": 7.85,
-      "average_rent_per_sqm_all": 8.05,
-      "total_utility_prepayments_monthly": 1080.00,
-      "total_utility_prepayments_annual": 12960.00,
-      "total_gross_rent_monthly": 4500.00,
-      "total_gross_rent_annual": 54000.00,
-      "total_deposits": 9360.00,
-      "total_arrears": 0.00,
-      "upside_potential_monthly": 467.50,
-      "upside_potential_annual": 5610.00,
-      "upside_potential_percent": 13.7
-    },
-    "rent_distribution": {
-      "below_5_eur": { "count": 0, "area_sqm": 0.00 },
-      "5_to_7_eur": { "count": 1, "area_sqm": 85.00 },
-      "7_to_9_eur": { "count": 4, "area_sqm": 255.00 },
-      "9_to_11_eur": { "count": 0, "area_sqm": 0.00 },
-      "above_11_eur": { "count": 0, "area_sqm": 0.00 }
-    },
-    "data_quality_flags": [
-      {
-        "unit_id": "WE-03",
-        "flag_type": "low_rent",
-        "severity": "info",
-        "message": "Miete 5.80 EUR/qm liegt deutlich unter Durchschnitt (7.85 EUR/qm) -- Mieterhoehungspotenzial?"
-      },
-      {
-        "unit_id": "GAR-01",
-        "flag_type": "ust_relevant",
-        "severity": "info",
-        "message": "Separat vermietete Garage -- USt-Pflicht pruefen (§4 Nr.12 S.2 UStG)"
-      }
-    ]
-  }
-}
+**Wichtig:** Der Nutzer ist Immobilieninvestor, kein IT-ler. Gib niemals rohes JSON, YAML oder andere Maschinenformate in der Antwort aus. Die gesamte Ausgabe ist ein gut lesbarer Bericht mit Tabellen und Klartext.
+
+**Weitergabe an Folge-Skills:** Werden die extrahierten Daten fuer einen Folge-Skill gebraucht (z.B. Deal-Screening, Bankenpitch, Steuer), dann schreibe die strukturierten Daten zusaetzlich als DATEI -- z.B. eine JSON- oder CSV-Datei neben dem Quelldokument (etwa `mietliste-musterstrasse-12.json`). Gib diese strukturierten Daten niemals im Chat aus; nenne im Bericht nur den Dateipfad, unter dem die Datei abgelegt wurde.
+
+Liefere die Ergebnisse im Chat in folgendem Format:
+
+### Ergebnisbericht
+
+```markdown
+# Mietliste: Musterstrasse 12, 40210 Duesseldorf
+
+**Objekt-ID:** OBJ-001 | **Stichtag:** 01.01.2025 |
+**Quelle:** PDF Hausverwaltung ABC GmbH | **Datenqualitaet:** gut
+
+## Mietliste
+
+| Einheit | Lage | Nutzung | Zimmer | qm | Mieter | Kaltmiete | EUR/qm | NK-VZ | Heizk.-VZ | Gesamtmiete | Kaltmiete p.a. | Status |
+|---------|------|---------|--------|-----|--------|-----------|--------|-------|-----------|-------------|----------------|--------|
+| WE 1 | EG links | Wohnung | 3 | 72,50 | Schmidt, Thomas | 520,00 | 7,17 | 180,00 | 80,00 | 780,00 | 6.240,00 | 🟢 vermietet |
+| WE 5 | 2.OG rechts | Wohnung | 2 | 55,00 | -- | 0,00 | -- | -- | -- | 0,00 | 0,00 | 🔴 Leerstand |
+| Garage 1 | UG | Garage | -- | 15,00 | Schmidt, Thomas | 60,00 | 4,00 | -- | -- | 60,00 | 720,00 | 🟢 vermietet |
+
+## Vertragsdetails
+
+| Einheit | Mietbeginn | Vertragstyp | Letzte Erhoehung | Index / Staffel | Kaution | Rueckstand | Anmerkung |
+|---------|------------|-------------|------------------|-----------------|---------|------------|-----------|
+| WE 1 | 01.04.2019 | unbefristet | 01.07.2022 (+35,00 EUR) | nein / nein | 1.560,00 EUR (Barkaution) | 0,00 EUR | -- |
+| WE 5 | -- | -- | -- | -- | -- | -- | Leer seit 01.11.2024 (Mieterwechsel). Renovierung abgeschlossen, Neuvermietung ab sofort moeglich. Geschaetzte Marktmiete 8,50 EUR/qm = 467,50 EUR/Monat. |
+| Garage 1 | 01.04.2019 | unbefristet | -- | -- | -- | 0,00 EUR | Separat vermietet -- USt-pflichtig beachten |
+
+## Summen
+
+| Kennzahl | Wert |
+|----------|------|
+| Einheiten gesamt | 8 (6 Wohnungen, 0 Gewerbe, 2 Garagen) |
+| Flaeche gesamt | 425,00 qm (davon Wohnen 395,00 qm) |
+| Vermietet / Leerstand | 7 / 1 Einheiten |
+| Leerstandsquote (Einheiten) | 12,5% |
+| Leerstandsquote (Flaeche) | 12,9% |
+| Ist-Kaltmiete monatlich | 3.420,00 EUR |
+| Ist-Kaltmiete jaehrlich | 41.040,00 EUR |
+| Potenzial-Kaltmiete monatlich | 3.887,50 EUR |
+| Potenzial-Kaltmiete jaehrlich | 46.650,00 EUR |
+| Durchschnittsmiete Wohnen | 7,85 EUR/qm |
+| Durchschnittsmiete gesamt | 8,05 EUR/qm |
+| NK-Vorauszahlungen monatlich | 1.080,00 EUR (12.960,00 EUR p.a.) |
+| Bruttomiete monatlich | 4.500,00 EUR (54.000,00 EUR p.a.) |
+| Kautionen gesamt | 9.360,00 EUR |
+| Rueckstaende gesamt | 0,00 EUR |
+| Upside-Potenzial | 467,50 EUR/Monat = 5.610,00 EUR/Jahr (+13,7%) |
+
+## Mietverteilung
+
+| Mietniveau | Einheiten | Flaeche |
+|------------|-----------|---------|
+| unter 5 EUR/qm | 0 | 0,00 qm |
+| 5-7 EUR/qm | 1 | 85,00 qm |
+| 7-9 EUR/qm | 4 | 255,00 qm |
+| 9-11 EUR/qm | 0 | 0,00 qm |
+| ueber 11 EUR/qm | 0 | 0,00 qm |
+
+## Auffaelligkeiten
+
+- ℹ️ **WE 3:** Miete 5,80 EUR/qm liegt deutlich unter Durchschnitt (7,85 EUR/qm)
+  -- Mieterhoehungspotenzial?
+- ℹ️ **Garage 1:** Separat vermietete Garage -- USt-Pflicht pruefen
+  (§4 Nr.12 S.2 UStG)
+
+## Strukturierte Daten fuer Folge-Skills
+
+Datei abgelegt unter: `./mietliste-musterstrasse-12.json`
+(nur falls Daten fuer einen Folge-Skill gebraucht werden)
 ```
 
 ---

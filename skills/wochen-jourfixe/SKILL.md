@@ -94,104 +94,77 @@ Du bist ein erfahrener Immobilien-Assetmanager, der woechentlich einen strukturi
 
 ## Ausgabeformat
 
-```json
-{
-  "report_type": "wochen_jourfixe",
-  "report_date": "2026-04-15",
-  "period": {
-    "from": "2026-04-08",
-    "to": "2026-04-15"
-  },
-  "summary": {
-    "total_issues": 23,
-    "critical": 3,
-    "new_this_week": 8,
-    "resolved_this_week": 5,
-    "still_open": 15
-  },
-  "brennpunkte": [
-    {
-      "id": "BP-001",
-      "category": "mietrueckstand",
-      "property": "Musterstr. 12, 10115 Berlin",
-      "unit": "WE 04",
-      "tenant": "Nachname, Vorname",
-      "description": "Mietrueckstand seit 2 Monaten, Gesamtrueckstand 1.840 EUR",
-      "priority": "kritisch",
-      "action_required": "2. Mahnung versenden, Kuendigungsandrohung pruefen",
-      "deadline": "2026-04-18",
-      "status": "offen"
-    }
-  ],
-  "vermietung": {
-    "leerstand_units": [
-      {
-        "property": "Musterstr. 12, 10115 Berlin",
-        "unit": "WE 07",
-        "vacant_since": "2026-03-01",
-        "status": "besichtigungen_geplant",
-        "next_step": "3 Besichtigungstermine am 17.04.",
-        "target_rent_eur": 620.00
-      }
-    ],
-    "kuendigungen": [],
-    "uebergaben": []
-  },
-  "finanzen": {
-    "mietrueckstaende_total_eur": 3240.00,
-    "offene_rechnungen": [
-      {
-        "supplier": "Sanitaer Meier GmbH",
-        "amount_eur": 1850.00,
-        "due_date": "2026-04-20",
-        "property": "Musterstr. 12, 10115 Berlin",
-        "description": "Reparatur Steigleitung WE 02"
-      }
-    ],
-    "versorger_themen": [],
-    "nebenkostenabrechnung_status": []
-  },
-  "instandhaltung": [
-    {
-      "id": "IH-012",
-      "property": "Musterstr. 12, 10115 Berlin",
-      "unit": "WE 03",
-      "issue": "Schimmelbildung Schlafzimmer Aussenwand",
-      "reported_date": "2026-04-10",
-      "status": "handwerker_beauftragt",
-      "contractor": "Bautenschutz Mueller",
-      "estimated_cost_eur": 2200.00,
-      "next_step": "Termin am 16.04."
-    }
-  ],
-  "kalender_highlights": [
-    {
-      "date": "2026-04-22",
-      "type": "frist",
-      "description": "Frist Nebenkostenabrechnung 2024 -- Objekt Beispielweg 5",
-      "urgency": "gelb"
-    }
-  ],
-  "offene_anrufe": [
-    {
-      "date": "2026-04-14",
-      "caller": "Mieter Schmidt, WE 09",
-      "property": "Musterstr. 12, 10115 Berlin",
-      "topic": "Heizung funktioniert nicht",
-      "urgency": "hoch",
-      "callback_required": true
-    }
-  ],
-  "fristen_monitor": {
-    "ueberfaellig": [],
-    "faellig_diese_woche": [],
-    "faellig_naechste_woche": []
-  },
-  "confidence_score": 0.85,
-  "data_gaps": [
-    "Zahlungseingaenge fuer Objekt Beispielweg 5 nicht vorhanden"
-  ]
-}
+**Wichtig:** Der Nutzer ist Immobilieninvestor, kein IT-ler. Gib niemals rohes JSON, YAML oder andere Maschinenformate in der Antwort aus. Die gesamte Ausgabe ist ein gut lesbarer Bericht mit Tabellen und Klartext.
+
+### Wochenreport
+
+```markdown
+# Wochen-Jourfixe: 08.04. - 15.04.2026
+
+**23 Vorgaenge gesamt** | 🔴 3 kritisch | 8 neu diese Woche | 5 erledigt | 15 weiterhin offen
+
+## 🔴 Brennpunkte (sofort handeln)
+
+| Nr. | Thema | Objekt / Einheit | Beschreibung | Naechster Schritt | Frist | Status |
+|-----|-------|------------------|--------------|--------------------|-------|--------|
+| BP-001 | Mietrueckstand | Musterstr. 12, Berlin / WE 04 (Mieter: Nachname, Vorname) | Mietrueckstand seit 2 Monaten, Gesamtrueckstand 1.840 EUR | 2. Mahnung versenden, Kuendigungsandrohung pruefen | 18.04.2026 | offen |
+
+## Vermietung & Besichtigung
+
+**Leerstand:**
+
+| Objekt / Einheit | Leer seit | Status | Naechster Schritt | Zielmiete |
+|------------------|-----------|--------|--------------------|-----------|
+| Musterstr. 12, Berlin / WE 07 | 01.03.2026 | Besichtigungen geplant | 3 Besichtigungstermine am 17.04. | 620 EUR |
+
+**Kuendigungen:** Keine neuen Kuendigungen diese Woche.
+
+**Uebergaben:** Keine anstehenden Uebergaben.
+
+## Finanzen & Versorger
+
+**Mietrueckstaende gesamt: 3.240 EUR**
+
+**Offene Rechnungen:**
+
+| Lieferant | Betrag | Faellig | Objekt | Beschreibung |
+|-----------|--------|---------|--------|--------------|
+| Sanitaer Meier GmbH | 1.850 EUR | 20.04.2026 | Musterstr. 12, Berlin | Reparatur Steigleitung WE 02 |
+
+**Versorger-Themen:** Keine.
+
+**Nebenkostenabrechnungen:** Keine offenen Vorgaenge.
+
+## Instandhaltung
+
+| Nr. | Objekt / Einheit | Problem | Gemeldet | Status | Handwerker | Geschaetzte Kosten | Naechster Schritt |
+|-----|------------------|---------|----------|--------|------------|--------------------|--------------------|
+| IH-012 | Musterstr. 12, Berlin / WE 03 | Schimmelbildung Schlafzimmer Aussenwand | 10.04.2026 | Handwerker beauftragt | Bautenschutz Mueller | 2.200 EUR | Termin am 16.04. |
+
+## Kalender-Highlights
+
+| Datum | Art | Beschreibung | Dringlichkeit |
+|-------|-----|--------------|---------------|
+| 22.04.2026 | Frist | Frist Nebenkostenabrechnung 2024 -- Objekt Beispielweg 5 | 🟡 diese Woche |
+
+## Offene Anrufe / Rueckrufe
+
+| Datum | Anrufer | Objekt | Thema | Dringlichkeit | Rueckruf noetig |
+|-------|---------|--------|-------|----------------|------------------|
+| 14.04.2026 | Mieter Schmidt, WE 09 | Musterstr. 12, Berlin | Heizung funktioniert nicht | 🔴 hoch | Ja |
+
+## Fristenmonitor
+
+| Status | Vorgaenge |
+|--------|-----------|
+| 🔴 Ueberfaellig | Keine |
+| 🟡 Faellig diese Woche | Frist Nebenkostenabrechnung 2024 (22.04.) |
+| 🟢 Faellig naechste Woche | Keine |
+
+## Datenluecken
+
+Konfidenz: 85%
+- Zahlungseingaenge fuer Objekt Beispielweg 5 nicht vorhanden
 ```
 
 ---
@@ -200,7 +173,7 @@ Du bist ein erfahrener Immobilien-Assetmanager, der woechentlich einen strukturi
 
 - [ ] Jede E-Mail / Nachricht wurde genau einer Kategorie zugeordnet
 - [ ] Brennpunkte sind tatsaechlich kritisch (kein Aufblaehen, kein Unterschlagen)
-- [ ] Alle Vorgaenge haben einen klaren naechsten Schritt (`action_required` oder `next_step`)
+- [ ] Alle Vorgaenge haben einen klaren naechsten Schritt (Spalte "Naechster Schritt" befuellt)
 - [ ] Fristen sind korrekt berechnet und der Fristenmonitor ist aktuell
 - [ ] Offene Vorgaenge aus der Vorwoche sind abgeglichen (erledigt / weiterhin offen / eskaliert)
 - [ ] Mieterrueckstaende stimmen mit den Zahlungsdaten ueberein
@@ -228,7 +201,7 @@ Du bist ein erfahrener Immobilien-Assetmanager, der woechentlich einen strukturi
 - Wenn keine Zahlungsdaten vorliegen: Finanzen-Bereich als "Zahlungsdaten nicht verfuegbar" markieren, nicht schaetzen.
 - Wenn kein Vorwochen-Report vorliegt: Alle Vorgaenge als "neu" kennzeichnen, kein Abgleich moeglich.
 - Wenn Kalendereintraege fehlen: Kalender-Highlights leer lassen, Hinweis "Kalenderdaten nicht uebermittelt" ausgeben.
-- Fehlende Daten immer im Feld `data_gaps` dokumentieren.
+- Fehlende Daten immer im Berichtsabschnitt "Datenluecken" dokumentieren.
 
 ---
 

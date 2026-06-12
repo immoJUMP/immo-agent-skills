@@ -242,114 +242,88 @@ Bereite Antworten auf diese Standard-Bankerfragen vor:
 
 ## Ausgabeformat
 
+**Wichtig:** Der Nutzer ist Immobilieninvestor, kein IT-ler. Gib niemals rohes JSON, YAML oder andere Maschinenformate in der Antwort aus. Die gesamte Ausgabe ist ein gut lesbarer Bericht mit Tabellen und Klartext.
+
 Liefere die Ergebnisse in folgendem Format:
 
 ### Zusammenfassung (Freitext)
 
 Kurze Einschaetzung der Finanzierungssituation in 3-5 Saetzen: Wie stark ist die Position? Welche Bank passt am besten? Wo liegen die groessten Herausforderungen?
 
-### Strukturierte Gespraechsvorbereitung (JSON)
+### Gespraechsvorbereitung (Bericht)
 
-```json
-{
-  "bankgespraech_vorbereitung": {
-    "investorenprofil_zusammenfassung": {
-      "staerken": [
-        "Festes Einkommen 85K brutto",
-        "3 Deals Erfahrung, 16 WE Bestand",
-        "SCHUFA-Score 97,3% (sehr gut)",
-        "Bestehende Bankbeziehung (Sparkasse, 5 Jahre)"
-      ],
-      "schwaechen": [
-        "Kapitaldienstfaehigkeit koennte knapp werden (Bestandskredite + neuer Kredit)",
-        "EK-Quote relativ niedrig (15,8%)"
-      ],
-      "herausforderungen": [
-        "Zweiter Kredit bei gleicher Bank -- Risikokonzentration fuer die Bank"
-      ]
-    },
-    "banken_empfehlung": {
-      "bank_1_hausbank": {
-        "name": "Sparkasse Dortmund",
-        "strategie": "Bestehende Beziehung nutzen, aber nicht als einzige Option",
-        "staerke": "Kennt den Kunden, kurze Wege",
-        "risiko": "Risikokonzentration, moegliche Ablehnung bei Marktfolge"
-      },
-      "bank_2_alternativ": {
-        "name": "Volksbank Dortmund oder DKB",
-        "strategie": "Neues Angebot einholen, als Benchmark nutzen",
-        "staerke": "Frischer Blick, andere Risikobewertung",
-        "risiko": "Keine bestehende Beziehung"
-      },
-      "bank_3_benchmark": {
-        "name": "Vermittler (z.B. Interhyp, Dr. Klein)",
-        "strategie": "Beste Konditionen am Markt ermitteln",
-        "staerke": "Zugang zu 400+ Banken",
-        "risiko": "Keine persoenliche Beziehung"
-      }
-    },
-    "gespraechs_fahrplan": {
-      "vor_dem_gespraech": [
-        "1 Stunde frueher vor Ort sein, mental vorbereiten",
-        "Alle Unterlagen ausgedruckt und sortiert in Ordner",
-        "Portfolio-Uebersicht auf 1 Seite vorbereiten",
-        "Objektpraesentation mit Expose, Mietliste, Fotos vorbereiten"
-      ],
-      "eroeffnung": "Guten Tag, Herr/Frau [Name]. Ich moechte Ihnen ein attraktives Investmentobjekt vorstellen. Ich verwalte aktuell 16 Wohneinheiten und moechte mein Portfolio strategisch erweitern.",
-      "kernbotschaften": [
-        "Professioneller Investor mit Track Record",
-        "Solide Mieteinnahmen im Bestand",
-        "Konservative Kalkulation, keine Spekulation",
-        "Langfristiger Bestandshalter, kein Flipper"
-      ],
-      "abschluss": "Was sind die naechsten Schritte? Welche Unterlagen brauchen Sie noch? Bis wann kann ich mit einer Rueckmeldung rechnen?"
-    },
-    "fragen_die_du_stellen_solltest": [
-      "Bis zu welcher Summe liegt Ihre alleinige Entscheidungskompetenz?",
-      "Wie lange dauert eine Kreditentscheidung bei Ihnen im Schnitt?",
-      "Welche Sondertilgungsoptionen bieten Sie an?",
-      "Ist eine Konditionsanfrage ohne SCHUFA-Abfrage moeglich?",
-      "Welche Unterlagen brauchen Sie von mir?"
-    ],
-    "fragen_die_du_erwarten_musst": [
-      {
-        "frage": "Wie finanzieren Sie Ihren Lebensunterhalt?",
-        "antwort": "Ich bin angestellt als Ingenieur mit 85.000 EUR brutto. Zusaetzlich generiere ich X EUR Mieteinnahmen netto pro Monat aus meinem Bestand."
-      },
-      {
-        "frage": "Was passiert bei Leerstand?",
-        "antwort": "Ich rechne mit 5% Leerstand in meiner Kalkulation. Meine Liquiditaetsreserve von X EUR deckt 6 Monate Totalausfall eines Objekts ab."
-      },
-      {
-        "frage": "Wie hoch ist Ihre Gesamtverschuldung?",
-        "antwort": "Aktuell 480.000 EUR Restschuld bei der Sparkasse Dortmund, monatliche Rate 1.850 EUR. Die Objekte erwirtschaften einen positiven Cashflow von X EUR/Monat nach Kapitaldienst."
-      }
-    ],
-    "dos_und_donts": {
-      "dos": [
-        "Als Geschaeftspartner auftreten, nicht als Bittsteller",
-        "Vollstaendige Unterlagen mitbringen (ausgedruckt und sortiert)",
-        "Konservativ kalkulieren -- lieber weniger versprechen und mehr liefern",
-        "Nach konkreten naechsten Schritten fragen",
-        "Ehrlich sein -- Banken pruefen alles",
-        "Portfolio-Erfolge sichtbar machen"
-      ],
-      "donts": [
-        "NIEMALS 'Ich brauche das Geld' sagen",
-        "NIEMALS finanzielle Schwierigkeiten erwaehnen",
-        "NIEMALS Zahlen beschoenigen oder verschweigen",
-        "NIEMALS den Banker unter Druck setzen",
-        "NIEMALS ohne Vorbereitung ins Gespraech gehen",
-        "NIEMALS SCHUFA ziehen lassen ohne Commitment"
-      ]
-    },
-    "metadaten": {
-      "skill_version": "1.0",
-      "analyse_datum": "2026-04-15",
-      "analyst": "Bankgespraech-Coach-Skill"
-    }
-  }
-}
+```markdown
+# Bankgespraech-Vorbereitung: MFH Dortmund, 950K
+
+## Deine Position
+
+**Staerken:**
+- Festes Einkommen 85K brutto
+- 3 Deals Erfahrung, 16 WE Bestand
+- SCHUFA-Score 97,3% (sehr gut)
+- Bestehende Bankbeziehung (Sparkasse, 5 Jahre)
+
+**Schwaechen:**
+- Kapitaldienstfaehigkeit koennte knapp werden (Bestandskredite + neuer Kredit)
+- EK-Quote relativ niedrig (15,8%)
+
+**Herausforderungen:**
+- Zweiter Kredit bei gleicher Bank -- Risikokonzentration fuer die Bank
+
+## Banken-Empfehlung (3 Banken parallel)
+
+| Bank | Strategie | Staerke | Risiko |
+|------|-----------|---------|--------|
+| 1. Sparkasse Dortmund (Hausbank) | Bestehende Beziehung nutzen, aber nicht als einzige Option | Kennt den Kunden, kurze Wege | Risikokonzentration, moegliche Ablehnung bei Marktfolge |
+| 2. Volksbank Dortmund oder DKB (Alternative) | Neues Angebot einholen, als Benchmark nutzen | Frischer Blick, andere Risikobewertung | Keine bestehende Beziehung |
+| 3. Vermittler, z.B. Interhyp, Dr. Klein (Benchmark) | Beste Konditionen am Markt ermitteln | Zugang zu 400+ Banken | Keine persoenliche Beziehung |
+
+## Gespraechs-Fahrplan
+
+**Vor dem Gespraech:**
+1. 1 Stunde frueher vor Ort sein, mental vorbereiten
+2. Alle Unterlagen ausgedruckt und sortiert in Ordner
+3. Portfolio-Uebersicht auf 1 Seite vorbereiten
+4. Objektpraesentation mit Expose, Mietliste, Fotos vorbereiten
+
+**Eroeffnung (woertlich):**
+> Guten Tag, Herr/Frau [Name]. Ich moechte Ihnen ein attraktives Investmentobjekt vorstellen. Ich verwalte aktuell 16 Wohneinheiten und moechte mein Portfolio strategisch erweitern.
+
+**Kernbotschaften:**
+- Professioneller Investor mit Track Record
+- Solide Mieteinnahmen im Bestand
+- Konservative Kalkulation, keine Spekulation
+- Langfristiger Bestandshalter, kein Flipper
+
+**Abschluss (woertlich):**
+> Was sind die naechsten Schritte? Welche Unterlagen brauchen Sie noch? Bis wann kann ich mit einer Rueckmeldung rechnen?
+
+## Fragen, die DU stellen solltest
+
+1. Bis zu welcher Summe liegt Ihre alleinige Entscheidungskompetenz?
+2. Wie lange dauert eine Kreditentscheidung bei Ihnen im Schnitt?
+3. Welche Sondertilgungsoptionen bieten Sie an?
+4. Ist eine Konditionsanfrage ohne SCHUFA-Abfrage moeglich?
+5. Welche Unterlagen brauchen Sie von mir?
+
+## Fragen, die du erwarten musst -- mit vorbereiteten Antworten
+
+| Bankerfrage | Deine Antwort |
+|-------------|---------------|
+| "Wie finanzieren Sie Ihren Lebensunterhalt?" | "Ich bin angestellt als Ingenieur mit 85.000 EUR brutto. Zusaetzlich generiere ich X EUR Mieteinnahmen netto pro Monat aus meinem Bestand." |
+| "Was passiert bei Leerstand?" | "Ich rechne mit 5% Leerstand in meiner Kalkulation. Meine Liquiditaetsreserve von X EUR deckt 6 Monate Totalausfall eines Objekts ab." |
+| "Wie hoch ist Ihre Gesamtverschuldung?" | "Aktuell 480.000 EUR Restschuld bei der Sparkasse Dortmund, monatliche Rate 1.850 EUR. Die Objekte erwirtschaften einen positiven Cashflow von X EUR/Monat nach Kapitaldienst." |
+
+## Do's und Don'ts
+
+| ✅ Do | ❌ Don't |
+|-------|----------|
+| Als Geschaeftspartner auftreten, nicht als Bittsteller | NIEMALS "Ich brauche das Geld" sagen |
+| Vollstaendige Unterlagen mitbringen (ausgedruckt und sortiert) | NIEMALS finanzielle Schwierigkeiten erwaehnen |
+| Konservativ kalkulieren -- lieber weniger versprechen und mehr liefern | NIEMALS Zahlen beschoenigen oder verschweigen |
+| Nach konkreten naechsten Schritten fragen | NIEMALS den Banker unter Druck setzen |
+| Ehrlich sein -- Banken pruefen alles | NIEMALS ohne Vorbereitung ins Gespraech gehen |
+| Portfolio-Erfolge sichtbar machen | NIEMALS SCHUFA ziehen lassen ohne Commitment |
 ```
 
 ---

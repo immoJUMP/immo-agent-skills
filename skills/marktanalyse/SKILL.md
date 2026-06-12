@@ -252,150 +252,164 @@ Fuehre alle Teilanalysen zusammen:
 
 ## Ausgabeformat
 
+**Wichtig:** Der Nutzer ist Immobilieninvestor, kein IT-ler. Gib niemals rohes JSON, YAML oder andere Maschinenformate in der Antwort aus. Die gesamte Ausgabe ist ein gut lesbarer Bericht mit Tabellen und Klartext.
+
 Liefere die Ergebnisse in folgendem Format:
 
 ### Zusammenfassung (Freitext)
 
 Praegnante Standorteinschaetzung in 5-8 Saetzen: Wie ist der Standort einzuordnen? Was sind die staerksten Argumente dafuer und dagegen? Wie sieht die Zukunft aus?
 
-### Strukturierte Bewertung (JSON)
+### Standortbericht
 
-```json
-{
-  "marktanalyse": {
-    "standort": {
-      "adresse_oder_plz": "44147 Dortmund-Nordstadt",
-      "stadt": "Dortmund",
-      "stadtteil": "Nordstadt",
-      "bundesland": "Nordrhein-Westfalen"
-    },
-    "makrolage": {
-      "lage_kategorie": "C",
-      "einwohner": 588250,
-      "bevoelkerungsentwicklung_10j_prozent": 2.1,
-      "bevoelkerungsprognose_2040_prozent": -1.5,
-      "arbeitslosenquote_prozent": 11.2,
-      "kaufkraftindex": 88.5,
-      "wichtigste_arbeitgeber": ["Technische Universitaet", "Westfalenhuette", "Signal Iduna", "Continental"],
-      "universitaetsstadt": true,
-      "bewertung": "GELB",
-      "kommentar": "Dortmund im strukturellen Wandel. Universitaet als Nachfragetreiber, aber ueberdurchschnittliche Arbeitslosigkeit. Bevoelkerung zuletzt leicht wachsend, Prognose 2040 leicht ruecklaeufig."
-    },
-    "mikrolage": {
-      "infrastruktur_score_prozent": 58,
-      "oepnv_score": 4,
-      "einkauf_score": 4,
-      "schulen_score": 3,
-      "aerzte_score": 3,
-      "gruenflaechen_score": 2,
-      "anbindung_score": 4,
-      "laerm_score": 3,
-      "sozialstruktur_score": 2,
-      "bewertung": "GELB",
-      "kommentar": "Gute OEPNV-Anbindung und Infrastruktur, aber sozialer Brennpunkt-Charakter. Aufwertungstendenz durch Nordstadt-Initiative und Uni-Naehe."
-    },
-    "mietspiegel": {
-      "qualifizierter_mietspiegel_vorhanden": true,
-      "mietspiegel_jahr": 2024,
-      "vergleichsmiete_unterer_wert_eur_qm": 5.80,
-      "vergleichsmiete_mittelwert_eur_qm": 7.20,
-      "vergleichsmiete_oberer_wert_eur_qm": 8.90,
-      "ist_miete_eur_qm": 8.50,
-      "mietpotenzial_eur_qm": -1.30,
-      "mietpotenzial_prozent": -15.3,
-      "mietpreisbremse_aktiv": true,
-      "kappungsgrenze_prozent": 15,
-      "kommentar": "Ist-Miete liegt ueber Mietspiegel-Mittelwert. Eingeschraenktes Mieterhoehungspotenzial. Bei Neuvermietung Mietpreisbremse beachten."
-    },
-    "bevoelkerungsentwicklung": {
-      "einwohner_2015": 576000,
-      "einwohner_aktuell": 588250,
-      "veraenderung_10j_prozent": 2.1,
-      "prognose_2030_prozent": 0.5,
-      "prognose_2040_prozent": -1.5,
-      "haushaltsentwicklung_trend": "Leicht steigend durch Singularisierung",
-      "bewertung": "GELB",
-      "kommentar": "Moderate Entwicklung. Zuzug durch Universitaet kompensiert natuerlichen Rueckgang teilweise."
-    },
-    "leerstandsquote": {
-      "stadt_gesamt_prozent": 3.8,
-      "stadtteil_geschaetzt_prozent": 5.5,
-      "trend": "Leicht sinkend",
-      "bewertung": "GELB",
-      "kommentar": "Leerstand im Stadtteil ueber Stadtdurchschnitt, aber ruecklaeufig."
-    },
-    "vergleichsobjekte": {
-      "kaufpreis_vergleich": [
-        {
-          "bezeichnung": "MFH Mallinckrodtstr., 8 WE, Bj. 1958",
-          "kaufpreis_eur_qm": 1350,
-          "kaufpreisfaktor": 17.5,
-          "quelle": "Immobilienscout24"
-        },
-        {
-          "bezeichnung": "MFH Muensterstr., 10 WE, Bj. 1965",
-          "kaufpreis_eur_qm": 1520,
-          "kaufpreisfaktor": 19.8,
-          "quelle": "Immobilienscout24"
-        },
-        {
-          "bezeichnung": "MFH Bornstr., 15 WE, Bj. 1960, saniert",
-          "kaufpreis_eur_qm": 1800,
-          "kaufpreisfaktor": 22.1,
-          "quelle": "Makler-Angebot"
-        }
-      ],
-      "durchschnitt_kaufpreis_eur_qm": 1557,
-      "mietpreis_vergleich_eur_qm_spanne": "6.50 - 9.50",
-      "mietpreis_vergleich_eur_qm_durchschnitt": 7.80,
-      "kommentar": "Kaufpreise im Stadtteil zwischen 1.300-1.800 EUR/qm. Sanierte Objekte deutlich teurer."
-    },
-    "mietpreisentwicklung": {
-      "entwicklung_5j_prozent": 12.5,
-      "entwicklung_pa_prozent": 2.4,
-      "neubaupipeline_we": 450,
-      "nachfrage_treiber": ["TU Dortmund", "Nordstadt-Quartiersentwicklung", "Phoenix-See Ausstrahlung"],
-      "prognose_basis_pa_prozent": 1.5,
-      "prognose_optimistisch_pa_prozent": 3.0,
-      "prognose_pessimistisch_pa_prozent": 0.0,
-      "bewertung": "GELB",
-      "kommentar": "Moderates Mietwachstum. Nachholeffekte in der Nordstadt moeglich, aber Mietpreisbremse begrenzt."
-    },
-    "gesamtbewertung": {
-      "standort_score_prozent": 56,
-      "makrolage_score": 5,
-      "mikrolage_score": 5,
-      "mietpotenzial_score": 4,
-      "bevoelkerungstrend_score": 5,
-      "marktliquiditaet_score": 6,
-      "ampel": "GELB",
-      "empfehlung": "Standort mit Chancen und Risiken. Gute OEPNV-Anbindung und Uni-Naehe als Pluspunkte. Sozialstruktur und begrenztes Mietpotenzial als Risikofaktoren. Geeignet fuer erfahrene Investoren mit lokaler Kenntnis und aktiver Bewirtschaftungsstrategie.",
-      "chancen": [
-        "Guenstige Einkaufspreise im Vergleich zu anderen Ruhrgebietsstadtteilen",
-        "Aufwertungstendenz durch staedtische Quartiersprojekte",
-        "TU Dortmund als stabiler Nachfragetreiber fuer kleine Wohnungen"
-      ],
-      "risiken": [
-        "Sozialer Brennpunkt mit erhoehtem Verwaltungsaufwand",
-        "Mietpotenzial begrenzt durch Mietspiegel und Mietpreisbremse",
-        "Leicht negative Bevoelkerungsprognose langfristig"
-      ]
-    },
-    "fehlende_daten": [],
-    "quellen": [
-      "Mietspiegel Dortmund 2024",
-      "Bertelsmann Stiftung Wegweiser Kommune",
-      "Immobilienscout24 Angebotsanalyse",
-      "CBRE-empirica Leerstandsindex",
-      "Stadt Dortmund Statistikportal"
-    ],
-    "metadaten": {
-      "skill_version": "1.0",
-      "analyse_datum": "2026-04-15",
-      "analyst": "Marktanalyse-Skill"
-    }
-  }
-}
+```markdown
+# Marktanalyse: 44147 Dortmund-Nordstadt
+
+**Gesamtbewertung: 🟡 GELB** | Standort-Score: 56%
+
+| | |
+|---|---|
+| Adresse / PLZ | 44147 Dortmund-Nordstadt |
+| Stadt | Dortmund |
+| Stadtteil | Nordstadt |
+| Bundesland | Nordrhein-Westfalen |
+
+## Makrolage 🟡
+
+| Kennzahl | Wert |
+|----------|------|
+| Lage-Kategorie | C |
+| Einwohner | 588.250 |
+| Bevoelkerungsentwicklung 10 Jahre | +2,1% |
+| Bevoelkerungsprognose 2040 | -1,5% |
+| Arbeitslosenquote | 11,2% |
+| Kaufkraftindex | 88,5 |
+| Universitaetsstadt | Ja |
+| Wichtigste Arbeitgeber | Technische Universitaet, Westfalenhuette, Signal Iduna, Continental |
+
+Dortmund im strukturellen Wandel. Universitaet als Nachfragetreiber, aber
+ueberdurchschnittliche Arbeitslosigkeit. Bevoelkerung zuletzt leicht wachsend,
+Prognose 2040 leicht ruecklaeufig.
+
+## Mikrolage 🟡
+
+**Infrastruktur-Score: 58%**
+
+| Kriterium | Score (1-5) |
+|-----------|-------------|
+| OEPNV | 4 |
+| Einkauf | 4 |
+| Schulen | 3 |
+| Aerzte | 3 |
+| Gruenflaechen | 2 |
+| Anbindung | 4 |
+| Laerm | 3 |
+| Sozialstruktur | 2 |
+
+Gute OEPNV-Anbindung und Infrastruktur, aber sozialer Brennpunkt-Charakter.
+Aufwertungstendenz durch Nordstadt-Initiative und Uni-Naehe.
+
+## Mietspiegel & Mietpotenzial
+
+| Kennzahl | Wert |
+|----------|------|
+| Qualifizierter Mietspiegel | Ja (2024) |
+| Vergleichsmiete unterer Wert | 5,80 EUR/qm |
+| Vergleichsmiete Mittelwert | 7,20 EUR/qm |
+| Vergleichsmiete oberer Wert | 8,90 EUR/qm |
+| Ist-Miete | 8,50 EUR/qm |
+| Mietpotenzial | -1,30 EUR/qm (-15,3%) |
+| Mietpreisbremse | Aktiv |
+| Kappungsgrenze | 15% |
+
+Ist-Miete liegt ueber Mietspiegel-Mittelwert. Eingeschraenktes
+Mieterhoehungspotenzial. Bei Neuvermietung Mietpreisbremse beachten.
+
+## Bevoelkerungsentwicklung 🟡
+
+| Kennzahl | Wert |
+|----------|------|
+| Einwohner 2015 | 576.000 |
+| Einwohner aktuell | 588.250 |
+| Veraenderung 10 Jahre | +2,1% |
+| Prognose 2030 | +0,5% |
+| Prognose 2040 | -1,5% |
+| Haushaltsentwicklung | Leicht steigend durch Singularisierung |
+
+Moderate Entwicklung. Zuzug durch Universitaet kompensiert natuerlichen
+Rueckgang teilweise.
+
+## Leerstandsquote 🟡
+
+| Kennzahl | Wert |
+|----------|------|
+| Stadt gesamt | 3,8% |
+| Stadtteil (geschaetzt) | 5,5% |
+| Trend | Leicht sinkend |
+
+Leerstand im Stadtteil ueber Stadtdurchschnitt, aber ruecklaeufig.
+
+## Vergleichsobjekte
+
+| Objekt | Kaufpreis EUR/qm | Kaufpreisfaktor | Quelle |
+|--------|------------------|-----------------|--------|
+| MFH Mallinckrodtstr., 8 WE, Bj. 1958 | 1.350 | 17,5 | Immobilienscout24 |
+| MFH Muensterstr., 10 WE, Bj. 1965 | 1.520 | 19,8 | Immobilienscout24 |
+| MFH Bornstr., 15 WE, Bj. 1960, saniert | 1.800 | 22,1 | Makler-Angebot |
+
+**Durchschnitt Kaufpreis:** 1.557 EUR/qm
+**Mietpreis-Vergleich:** 6,50 - 9,50 EUR/qm (Durchschnitt 7,80 EUR/qm)
+
+Kaufpreise im Stadtteil zwischen 1.300-1.800 EUR/qm. Sanierte Objekte deutlich teurer.
+
+## Mietpreisentwicklung 🟡
+
+| Kennzahl | Wert |
+|----------|------|
+| Entwicklung 5 Jahre | +12,5% |
+| Entwicklung p.a. | +2,4% |
+| Neubaupipeline | 450 WE |
+| Prognose Basis | +1,5% p.a. |
+| Prognose optimistisch | +3,0% p.a. |
+| Prognose pessimistisch | 0,0% p.a. |
+
+**Nachfrage-Treiber:** TU Dortmund, Nordstadt-Quartiersentwicklung, Phoenix-See Ausstrahlung
+
+Moderates Mietwachstum. Nachholeffekte in der Nordstadt moeglich, aber
+Mietpreisbremse begrenzt.
+
+## Gesamtbewertung
+
+**Standort-Score: 56% — 🟡 GELB**
+
+| Dimension | Score (1-10) |
+|-----------|--------------|
+| Makrolage | 5 |
+| Mikrolage | 5 |
+| Mietpotenzial | 4 |
+| Bevoelkerungstrend | 5 |
+| Marktliquiditaet | 6 |
+
+**Empfehlung:** Standort mit Chancen und Risiken. Gute OEPNV-Anbindung und
+Uni-Naehe als Pluspunkte. Sozialstruktur und begrenztes Mietpotenzial als
+Risikofaktoren. Geeignet fuer erfahrene Investoren mit lokaler Kenntnis und
+aktiver Bewirtschaftungsstrategie.
+
+**Chancen:**
+- Guenstige Einkaufspreise im Vergleich zu anderen Ruhrgebietsstadtteilen
+- Aufwertungstendenz durch staedtische Quartiersprojekte
+- TU Dortmund als stabiler Nachfragetreiber fuer kleine Wohnungen
+
+**Risiken:**
+- Sozialer Brennpunkt mit erhoehtem Verwaltungsaufwand
+- Mietpotenzial begrenzt durch Mietspiegel und Mietpreisbremse
+- Leicht negative Bevoelkerungsprognose langfristig
+
+**Fehlende Daten:** keine
+
+**Quellen:** Mietspiegel Dortmund 2024, Bertelsmann Stiftung Wegweiser Kommune,
+Immobilienscout24 Angebotsanalyse, CBRE-empirica Leerstandsindex,
+Stadt Dortmund Statistikportal
 ```
 
 ---

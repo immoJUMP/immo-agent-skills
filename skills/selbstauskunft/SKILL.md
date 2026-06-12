@@ -235,66 +235,77 @@ Pruefe vor Abgabe:
 
 ## Ausgabeformat
 
+**Wichtig:** Der Nutzer ist Immobilieninvestor, kein IT-ler. Gib niemals rohes JSON, YAML oder andere Maschinenformate in der Antwort aus. Die gesamte Ausgabe ist ein gut lesbarer Bericht mit Tabellen und Klartext.
+
 Liefere die Ergebnisse in folgendem Format:
 
 ### Zusammenfassung (Freitext)
 
 Kurze Zusammenfassung in 3-5 Saetzen: Erwerbsstatus, Vollstaendigkeit des Pakets, fehlende Dokumente, Handlungsempfehlung.
 
-### Strukturierte Bewertung (JSON)
+### Bank-Paket (Bericht)
 
-```json
-{
-  "selbstauskunft": {
-    "erwerbsstatus": "ANGESTELLT",
-    "partner": true,
-    "kaufobjekt": {
-      "bezeichnung": "ETW Dortmund, Beispielstr. 42",
-      "kaufpreis_eur": 250000,
-      "nebenkosten_eur": 30000,
-      "finanzierungsbedarf_eur": 245000
-    },
-    "formular": {
-      "einnahmen_gesamt_eur": 4800,
-      "ausgaben_gesamt_eur": 1250,
-      "vermoegen_gesamt_eur": 85000,
-      "verbindlichkeiten_gesamt_eur": 12000,
-      "neue_darlehensrate_eur": 1072,
-      "frei_verfuegbar_nach_rate_eur": 2478,
-      "haushaltsrechnung_positiv": true
-    },
-    "dokumente": {
-      "erforderlich_gesamt": 12,
-      "vorhanden": 9,
-      "fehlt": 2,
-      "angefordert": 1,
-      "checkliste": [
-        {"nr": 1, "dokument": "Personalausweis", "status": "vorhanden", "hinweis": null},
-        {"nr": 2, "dokument": "Meldebescheinigung", "status": "vorhanden", "hinweis": null},
-        {"nr": 3, "dokument": "Gehaltsabrechnungen 3 Monate", "status": "vorhanden", "hinweis": null},
-        {"nr": 4, "dokument": "Arbeitsvertrag", "status": "vorhanden", "hinweis": "Unbefristet"},
-        {"nr": 5, "dokument": "Selbstauskunft", "status": "vorhanden", "hinweis": "Durch diesen Skill generiert"},
-        {"nr": 6, "dokument": "Kontoauszuege privat 3 Monate", "status": "vorhanden", "hinweis": null},
-        {"nr": 7, "dokument": "Kontoauszuege Geschaeft", "status": "nicht_zutreffend", "hinweis": null},
-        {"nr": 8, "dokument": "Steuerbescheide 2 Jahre", "status": "fehlt", "hinweis": "Beim Finanzamt anfordern oder Steuerberater kontaktieren"},
-        {"nr": 9, "dokument": "Vermoegensnachweise", "status": "vorhanden", "hinweis": "Depot-Auszug + Bausparer"},
-        {"nr": 10, "dokument": "Schuldenueberblick", "status": "vorhanden", "hinweis": "Autokredit Restschuld 12.000 EUR"},
-        {"nr": 11, "dokument": "Rentenversicherungsverlauf", "status": "angefordert", "hinweis": "Online bei DRV beantragt"},
-        {"nr": 12, "dokument": "Bestandsimmobilien-Aufstellung", "status": "vorhanden", "hinweis": "1 ETW Bestand, Mieteinnahmen 380 EUR netto"}
-      ]
-    },
-    "optimierungshinweise": [
-      "Steuerbescheide 2023 + 2024 nachreichen -- ohne Steuerbescheide wird die Bank das Einkommen nicht final bestaetigen.",
-      "Schenkung der Eltern (10.000 EUR EK-Anteil) per Schenkungsvertrag oder Kontoauszug dokumentieren.",
-      "Autokredit (12.000 EUR Restschuld, 280 EUR Rate) reduziert Kapitaldienstfaehigkeit -- ggf. vor Bankgespraech abloesen."
-    ],
-    "metadaten": {
-      "skill_version": "1.0",
-      "analyse_datum": "2026-04-15",
-      "analyst": "Selbstauskunft-Skill"
-    }
-  }
-}
+Das Deliverable ist ein Bank-Paket: die ausgefuellte Selbstauskunft in Tabellenform plus Dokumenten-Checkliste mit Status-Emojis.
+
+```markdown
+# Selbstauskunft-Paket: ETW Dortmund, Beispielstr. 42
+
+**Erwerbsstatus: Angestellt** (mit Partner) | Dokumente: 9 von 12 vorhanden | Haushaltsrechnung: ✅ positiv
+
+## Kaufvorhaben
+
+| | |
+|---|---|
+| Objekt | ETW Dortmund, Beispielstr. 42 |
+| Kaufpreis | 250.000 EUR |
+| Nebenkosten | 30.000 EUR |
+| Finanzierungsbedarf | 245.000 EUR |
+
+## Ausgefuellte Selbstauskunft
+
+(Hier folgen alle sechs Bloecke A-F aus Schritt 2 als vollstaendig befuellte Tabellen
+im Zwei-Spalten-Format: Persoenliche Daten, Familienstand/Gueterstand, Einnahmen,
+Ausgaben, Vermoegen, Verbindlichkeiten -- mit allen erfassten Werten und Summen.)
+
+## Haushaltsrechnung
+
+| Position | Wert (monatlich) |
+|----------|------------------|
+| Einnahmen gesamt | 4.800 EUR |
+| Ausgaben gesamt | -1.250 EUR |
+| Neue Darlehensrate | -1.072 EUR |
+| **Frei verfuegbar nach Rate** | **2.478 EUR** |
+
+**Ergebnis: ✅ Haushaltsrechnung positiv** -- die Bank wird die Kapitaldienstfaehigkeit
+voraussichtlich anerkennen.
+
+| Vermoegensuebersicht | Wert |
+|----------------------|------|
+| Vermoegen gesamt | 85.000 EUR |
+| Verbindlichkeiten gesamt | 12.000 EUR |
+
+## Dokumenten-Checkliste (9 von 12 vorhanden, 2 fehlen, 1 angefordert)
+
+| Nr. | Dokument | Status | Hinweis |
+|-----|----------|--------|---------|
+| 1 | Personalausweis | ✅ vorhanden | |
+| 2 | Meldebescheinigung | ✅ vorhanden | |
+| 3 | Gehaltsabrechnungen 3 Monate | ✅ vorhanden | |
+| 4 | Arbeitsvertrag | ✅ vorhanden | Unbefristet |
+| 5 | Selbstauskunft | ✅ vorhanden | Durch diesen Skill generiert |
+| 6 | Kontoauszuege privat 3 Monate | ✅ vorhanden | |
+| 7 | Kontoauszuege Geschaeft | ➖ nicht zutreffend | |
+| 8 | Steuerbescheide 2 Jahre | ❌ fehlt | Beim Finanzamt anfordern oder Steuerberater kontaktieren |
+| 9 | Vermoegensnachweise | ✅ vorhanden | Depot-Auszug + Bausparer |
+| 10 | Schuldenueberblick | ✅ vorhanden | Autokredit Restschuld 12.000 EUR |
+| 11 | Rentenversicherungsverlauf | ⏳ angefordert | Online bei DRV beantragt |
+| 12 | Bestandsimmobilien-Aufstellung | ✅ vorhanden | 1 ETW Bestand, Mieteinnahmen 380 EUR netto |
+
+## Optimierungshinweise
+
+1. Steuerbescheide 2023 + 2024 nachreichen -- ohne Steuerbescheide wird die Bank das Einkommen nicht final bestaetigen.
+2. Schenkung der Eltern (10.000 EUR EK-Anteil) per Schenkungsvertrag oder Kontoauszug dokumentieren.
+3. Autokredit (12.000 EUR Restschuld, 280 EUR Rate) reduziert Kapitaldienstfaehigkeit -- ggf. vor Bankgespraech abloesen.
 ```
 
 ---

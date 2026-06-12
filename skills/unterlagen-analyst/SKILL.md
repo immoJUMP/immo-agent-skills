@@ -132,130 +132,109 @@ Kategorisiere jeden Fund in eine Risikostufe:
 
 ## Ausgabeformat
 
-Gib die Analyse in folgendem JSON-Schema aus, gefolgt von einer menschenlesbaren Zusammenfassung:
+**Wichtig:** Der Nutzer ist Immobilieninvestor, kein IT-ler. Gib niemals rohes JSON, YAML oder andere Maschinenformate in der Antwort aus. Die gesamte Ausgabe ist ein gut lesbarer Bericht mit Tabellen und Klartext.
 
-```json
-{
-  "analysis_type": "unterlagen_analyse",
-  "analysis_date": "YYYY-MM-DD",
-  "property": {
-    "address": "Strasse Hausnummer, PLZ Ort",
-    "construction_year": 1965,
-    "total_living_area_sqm": 850.5,
-    "total_units": 12,
-    "commercial_units": 0,
-    "plot_size_sqm": 1200,
-    "property_type": "MFH"
-  },
-  "documents_received": [
-    {
-      "document_type": "expose",
-      "date": "YYYY-MM-DD",
-      "pages": 12,
-      "freshness": "aktuell | veraltet",
-      "notes": ""
-    }
-  ],
-  "documents_missing": [
-    {
-      "document_type": "baulastenverzeichnis",
-      "criticality": "HOCH | MITTEL | NIEDRIG",
-      "reason": "Ohne Baulastenverzeichnis koennen versteckte Baubeschraenkungen nicht ausgeschlossen werden"
-    }
-  ],
-  "key_metrics": {
-    "asking_price_eur": 750000,
-    "gross_rental_income_annual_eur": 58000,
-    "gross_yield_pct": 7.73,
-    "price_per_sqm_eur": 882,
-    "purchase_price_factor": 12.93,
-    "vacancy_rate_pct": 8.3,
-    "avg_rent_per_sqm_eur": 5.68,
-    "maintenance_reserve_per_sqm_eur": 7.20,
-    "hausgeld_monthly_eur": 2800
-  },
-  "cross_reference_check": [
-    {
-      "check": "Wohnflaeche Expose vs. Teilungserklaerung",
-      "source_a": {"document": "Expose", "value": "850 qm"},
-      "source_b": {"document": "Teilungserklaerung", "value": "823 qm"},
-      "deviation_pct": 3.3,
-      "risk_level": "MITTEL",
-      "assessment": "Abweichung von 27 qm (3.3%). Wohnflaechenberechnung nach WoFlV anfordern."
-    }
-  ],
-  "findings": [
-    {
-      "id": "F001",
-      "category": "Mietstruktur",
-      "risk_level": "HOCH | MITTEL | NIEDRIG",
-      "title": "Mieter in WE 3 seit 26 Jahren ohne Mieterhoehung",
-      "description": "Mieter Mueller zahlt 3.20 EUR/qm seit 1999. Marktmiete ca. 6.50 EUR/qm. Theoretisches Steigerungspotenzial 103%, aber durch Kappungsgrenze auf 20%/3J begrenzt.",
-      "source_documents": ["Mietliste S.1", "Mietspiegel-Referenz"],
-      "recommended_action": "Mieterhoehungspotenzial kalkulieren unter Beruecksichtigung der Kappungsgrenze. Pruefen ob Staffelmiete oder Indexmiete vereinbart.",
-      "financial_impact_eur": 2400
-    }
-  ],
-  "risk_summary": {
-    "high_risks": 2,
-    "medium_risks": 5,
-    "low_risks": 3,
-    "dealbreakers_found": false,
-    "top_risks": [
-      "Fehlende Baugenehmigung fuer Dachgeschossausbau (WE 11-12)",
-      "Instandhaltungsruecklage nur 2.10 EUR/qm -- Sonderumlage wahrscheinlich"
-    ]
-  },
-  "recommendation": {
-    "action": "WEITER_PRUEFEN | NACHVERHANDELN | ABLEHNEN",
-    "rationale": "Objekt grundsaetzlich interessant (7.7% Bruttomietrendite), aber 2 hohe Risiken muessen vor Kaufpreisverhandlung geklaert werden.",
-    "next_steps": [
-      "Baugenehmigung fuer DG-Ausbau beim Bauamt anfordern",
-      "Wohnflaechenberechnung nach WoFlV erstellen lassen",
-      "Aktuelle Hausgeldabrechnung anfordern"
-    ]
-  },
-  "confidence_score": {
-    "overall": 0.72,
-    "data_completeness": 0.65,
-    "data_consistency": 0.80,
-    "limiting_factors": [
-      "Kein Baulastenverzeichnis vorliegend",
-      "Wirtschaftsplan fehlt -- Hausgeld-Angaben nur aus Expose"
-    ]
-  }
-}
-```
+Liefere die Ergebnisse in folgendem Format:
 
-### Menschenlesbare Zusammenfassung
+### Executive Summary (Freitext)
 
-Nach dem JSON-Block folgt eine Zusammenfassung im folgenden Format:
+3-5 Saetze Gesamteinschaetzung: Was fuer ein Objekt, wie ist die Datenlage, was sind die Top-Risiken, was ist die Empfehlung?
 
-```
-## Unterlagen-Analyse: [Adresse]
+### Pruefbericht
 
-### Executive Summary
-[3-5 Saetze Gesamteinschaetzung]
+```markdown
+# Unterlagen-Analyse: Musterstr. 12, 44147 Dortmund
 
-### Dokumentenstatus
-[Tabelle: vorhandene und fehlende Dokumente mit Kritikalitaet]
+**Empfehlung: WEITER PRUEFEN** | 🔴 2 hohe, 🟡 5 mittlere, 🟢 3 niedrige Risiken | Keine Dealbreaker | Konfidenz: 72%
 
-### Kerndaten auf einen Blick
-[Tabelle mit den wichtigsten Kennzahlen]
+## Objekt
 
-### Funde nach Risikostufe
+| | |
+|---|---|
+| Adresse | Musterstr. 12, 44147 Dortmund |
+| Objekttyp | MFH |
+| Baujahr | 1965 |
+| Wohnflaeche gesamt | 850,5 qm |
+| Einheiten | 12 WE, 0 GE |
+| Grundstueck | 1.200 qm |
 
-#### HOCH (X Funde)
-[Nummerierte Liste]
+## Dokumentenstatus
 
-#### MITTEL (X Funde)
-[Nummerierte Liste]
+**Vorhandene Dokumente:**
 
-#### NIEDRIG (X Funde)
-[Nummerierte Liste]
+| Dokument | Datum | Seiten | Aktualitaet | Anmerkung |
+|----------|-------|--------|-------------|-----------|
+| Expose | 15.03.2026 | 12 | aktuell | |
+| Grundbuchauszug | 10.01.2026 | 4 | aktuell | |
 
-### Naechste Schritte
-[Priorisierte Liste mit Verantwortlichkeit und Deadline-Vorschlag]
+**Fehlende Dokumente:**
+
+| Dokument | Kritikalitaet | Warum wichtig |
+|----------|---------------|---------------|
+| Baulastenverzeichnis | 🔴 HOCH | Ohne Baulastenverzeichnis koennen versteckte Baubeschraenkungen nicht ausgeschlossen werden |
+
+## Kerndaten auf einen Blick
+
+| Kennzahl | Wert |
+|----------|------|
+| Kaufpreis (Angebot) | 750.000 EUR |
+| Jahresnettokaltmiete | 58.000 EUR |
+| Bruttomietrendite | 7,73% |
+| Kaufpreisfaktor | 12,9 |
+| Kaufpreis pro qm | 882 EUR |
+| Leerstandsquote | 8,3% |
+| Durchschnittsmiete pro qm | 5,68 EUR |
+| Instandhaltungsruecklage pro qm | 7,20 EUR |
+| Hausgeld monatlich | 2.800 EUR |
+
+## Dokumentenuebergreifender Abgleich
+
+| Pruefung | Quelle A | Quelle B | Abweichung | Risiko | Einschaetzung |
+|----------|----------|----------|------------|--------|---------------|
+| Wohnflaeche Expose vs. Teilungserklaerung | Expose: 850 qm | Teilungserklaerung: 823 qm | 3,3% | 🟡 MITTEL | Abweichung von 27 qm. Wohnflaechenberechnung nach WoFlV anfordern. |
+
+## Funde nach Risikostufe
+
+### 🔴 HOCH (2 Funde)
+
+**1. Fehlende Baugenehmigung fuer Dachgeschossausbau (WE 11-12)** -- Kategorie: Rechtliches
+[Beschreibung mit Quellenangabe, empfohlene Massnahme, finanzielle Auswirkung in EUR]
+
+### 🟡 MITTEL (5 Funde)
+
+**1. Mieter in WE 3 seit 26 Jahren ohne Mieterhoehung** -- Kategorie: Mietstruktur
+Mieter Mueller zahlt 3,20 EUR/qm seit 1999. Marktmiete ca. 6,50 EUR/qm. Theoretisches
+Steigerungspotenzial 103%, aber durch Kappungsgrenze auf 20%/3J begrenzt.
+Quellen: Mietliste S.1, Mietspiegel-Referenz | Potenzial: ca. 2.400 EUR/Jahr
+Empfehlung: Mieterhoehungspotenzial unter Beruecksichtigung der Kappungsgrenze kalkulieren. Pruefen ob Staffelmiete oder Indexmiete vereinbart.
+
+### 🟢 NIEDRIG (3 Funde)
+
+[Nummerierte Liste im gleichen Muster, kuerzer]
+
+## Empfehlung
+
+**WEITER PRUEFEN** -- Objekt grundsaetzlich interessant (7,7% Bruttomietrendite), aber 2 hohe Risiken muessen vor Kaufpreisverhandlung geklaert werden.
+
+**Naechste Schritte:**
+
+| Prio | Schritt | Verantwortlich | Bis wann |
+|------|---------|----------------|----------|
+| 1 | Baugenehmigung fuer DG-Ausbau beim Bauamt anfordern | Kaeufer | Vor Preisverhandlung |
+| 2 | Wohnflaechenberechnung nach WoFlV erstellen lassen | Verkaeufer/Makler | 2 Wochen |
+| 3 | Aktuelle Hausgeldabrechnung anfordern | Makler | 1 Woche |
+
+## Konfidenz der Analyse
+
+| Aspekt | Bewertung |
+|--------|-----------|
+| Gesamt-Konfidenz | 72% |
+| Datenvollstaendigkeit | 65% |
+| Datenkonsistenz | 80% |
+
+**Einschraenkende Faktoren:**
+- Kein Baulastenverzeichnis vorliegend
+- Wirtschaftsplan fehlt -- Hausgeld-Angaben nur aus Expose
 ```
 
 ---
@@ -270,7 +249,7 @@ Vor Ausgabe des Ergebnisses pruefe:
 - [ ] Abweichungen zwischen Dokumenten sind in Prozent angegeben
 - [ ] Fehlende Dokumente sind nach Kritikalitaet bewertet
 - [ ] Empfohlene Massnahmen sind konkret und umsetzbar
-- [ ] Die Zusammenfassung ist auch ohne JSON-Block verstaendlich
+- [ ] Der Bericht ist ohne Vorwissen verstaendlich und enthaelt kein rohes JSON
 - [ ] Keine Annahmen als Fakten dargestellt -- Unsicherheit klar gekennzeichnet
 
 ---

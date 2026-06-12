@@ -124,123 +124,98 @@ Du bist ein erfahrener Immobilienverwalter mit Expertise in der Nebenkostenabrec
 
 ## Ausgabeformat
 
-```json
-{
-  "report_type": "nebenkosten_pruefung",
-  "report_date": "2026-04-15",
-  "billing_period": {
-    "start": "2025-01-01",
-    "end": "2025-12-31",
-    "duration_months": 12,
-    "duration_valid": true
-  },
-  "delivery_check": {
-    "delivery_date": "2026-04-10",
-    "deadline_date": "2026-12-31",
-    "within_deadline": true,
-    "days_remaining": 265
-  },
-  "property": "Musterstr. 12, 10115 Berlin",
-  "unit": "WE 04",
-  "tenant": "Nachname, Vorname",
-  "formal_check": {
-    "passed": true,
-    "issues": []
-  },
-  "cost_positions": [
-    {
-      "position": "Grundsteuer",
-      "total_cost_eur": 4800.00,
-      "allocation_key": "wohnflaeche",
-      "unit_share": 0.125,
-      "tenant_share_eur": 600.00,
-      "allocable": true,
-      "betrkv_reference": "§2 Nr. 1 BetrKV",
-      "calculation_correct": true,
-      "issues": []
-    },
-    {
-      "position": "Verwaltungskosten",
-      "total_cost_eur": 3600.00,
-      "allocation_key": "einheiten",
-      "unit_share": 0.0833,
-      "tenant_share_eur": 300.00,
-      "allocable": false,
-      "betrkv_reference": "nicht in §2 BetrKV enthalten",
-      "calculation_correct": true,
-      "issues": [
-        {
-          "severity": "schwer",
-          "description": "Verwaltungskosten sind nicht umlagefaehig (§1 Abs. 2 Nr. 1 BetrKV)",
-          "correction": "Position streichen, Mieteranteil um 300,00 EUR reduzieren"
-        }
-      ]
-    }
-  ],
-  "heating_check": {
-    "consumption_share_percent": 60,
-    "base_share_percent": 40,
-    "heizkv_compliant": true,
-    "consumption_recording_method": "heizkostenverteiler",
-    "warm_water_separated": true,
-    "issues": []
-  },
-  "calculation_summary": {
-    "total_costs_billed_eur": 2400.00,
-    "total_costs_corrected_eur": 2100.00,
-    "prepayments_eur": 1800.00,
-    "balance_billed_eur": 600.00,
-    "balance_corrected_eur": 300.00,
-    "difference_eur": -300.00,
-    "overpayment_by_tenant_eur": 300.00
-  },
-  "prepayment_adjustment": {
-    "current_monthly_eur": 150.00,
-    "recommended_monthly_eur": 175.00,
-    "adjustment_eur": 25.00,
-    "basis": "Tatsaechliche Kosten 2025 zzgl. 5% Puffer fuer Kostensteigerungen",
-    "legal_basis": "§560 BGB"
-  },
-  "year_over_year_comparison": {
-    "total_costs_previous_year_eur": 2000.00,
-    "total_costs_current_year_eur": 2100.00,
-    "change_percent": 5.0,
-    "significant_changes": [
-      {
-        "position": "Heizkosten",
-        "previous_eur": 800.00,
-        "current_eur": 960.00,
-        "change_percent": 20.0,
-        "plausible": true,
-        "explanation": "Energiepreissteigerung"
-      }
-    ]
-  },
-  "errors_found": {
-    "critical": 1,
-    "moderate": 0,
-    "minor": 0,
-    "total": 1,
-    "errors": [
-      {
-        "severity": "schwer",
-        "position": "Verwaltungskosten",
-        "description": "Nicht umlagefaehige Kosten abgerechnet",
-        "financial_impact_eur": -300.00,
-        "correction": "Position aus Abrechnung entfernen"
-      }
-    ]
-  },
-  "overall_result": {
-    "status": "fehlerhaft",
-    "action_required": "Abrechnung korrigieren und erneut zustellen",
-    "financial_impact_tenant_eur": -300.00
-  },
-  "confidence_score": 0.88,
-  "data_gaps": [
-    "Mietvertragsklauseln zur Umlage nicht vorhanden -- Umlageschluessel-Pruefung basiert auf gesetzlicher Standardregelung"
-  ]
-}
+**Wichtig:** Der Nutzer ist Immobilieninvestor, kein IT-ler. Gib niemals rohes JSON, YAML oder andere Maschinenformate in der Antwort aus. Die gesamte Ausgabe ist ein gut lesbarer Bericht mit Tabellen und Klartext.
+
+Liefere die Ergebnisse in folgendem Format:
+
+### Pruefbericht
+
+```markdown
+# Nebenkosten-Pruefung: Musterstr. 12, 10115 Berlin, WE 04
+
+**Gesamtergebnis: 🔴 FEHLERHAFT** | Konfidenz: 88%
+**Erforderliche Aktion:** Abrechnung korrigieren und erneut zustellen
+**Finanzielle Auswirkung fuer den Mieter:** -300,00 EUR
+
+| | |
+|---|---|
+| Objekt / Einheit | Musterstr. 12, 10115 Berlin, WE 04 |
+| Mieter | Nachname, Vorname |
+| Pruefdatum | 15.04.2026 |
+
+## Abrechnungszeitraum & Zustellung
+
+| Pruefpunkt | Wert | Status |
+|------------|------|--------|
+| Abrechnungszeitraum | 01.01.2025 - 31.12.2025 (12 Monate) | 🟢 gueltig |
+| Zustellung | 10.04.2026 |  |
+| Zustellungsfrist | 31.12.2026 | 🟢 eingehalten (265 Tage Reserve) |
+
+## Formelle Pruefung
+
+🟢 Bestanden -- keine formellen Maengel.
+(Falls Maengel: jeden Mangel mit Auswirkung auflisten.)
+
+## Kostenpositionen
+
+| Position | Gesamtkosten | Umlageschluessel | Anteil Einheit | Mieteranteil | Umlagefaehig | BetrKV | Berechnung |
+|----------|--------------|------------------|----------------|--------------|--------------|--------|------------|
+| Grundsteuer | 4.800,00 EUR | Wohnflaeche | 12,5% | 600,00 EUR | 🟢 Ja (§2 Nr. 1 BetrKV) | OK | 🟢 korrekt |
+| Verwaltungskosten | 3.600,00 EUR | Einheiten | 8,33% | 300,00 EUR | 🔴 Nein (nicht in §2 BetrKV) | Fehler | 🟢 korrekt |
+
+**🔴 Befund Verwaltungskosten (schwer):** Verwaltungskosten sind nicht
+umlagefaehig (§1 Abs. 2 Nr. 1 BetrKV). Korrektur: Position streichen,
+Mieteranteil um 300,00 EUR reduzieren.
+
+## Heizkosten-Pruefung
+
+| Pruefpunkt | Wert | Status |
+|------------|------|--------|
+| Verbrauchsabhaengiger Anteil | 60% | 🟢 HeizKV-konform |
+| Grundkostenanteil | 40% | 🟢 |
+| Verbrauchserfassung | Heizkostenverteiler | 🟢 |
+| Warmwasser separat erfasst | Ja | 🟢 |
+
+## Rechnerische Zusammenfassung
+
+| Kennzahl | Abgerechnet | Korrigiert |
+|----------|-------------|------------|
+| Gesamtkosten | 2.400,00 EUR | 2.100,00 EUR |
+| Vorauszahlungen | 1.800,00 EUR | 1.800,00 EUR |
+| Nachzahlung | 600,00 EUR | 300,00 EUR |
+
+**Differenz: -300,00 EUR** -- der Mieter wuerde 300,00 EUR zu viel zahlen.
+
+## Vorauszahlungs-Anpassung
+
+| | |
+|---|---|
+| Aktuelle Vorauszahlung | 150,00 EUR/Monat |
+| Empfohlene Vorauszahlung | 175,00 EUR/Monat |
+| Anpassung | +25,00 EUR/Monat |
+| Basis | Tatsaechliche Kosten 2025 zzgl. 5% Puffer fuer Kostensteigerungen |
+| Rechtsgrundlage | §560 BGB |
+
+## Vorjahresvergleich
+
+Gesamtkosten: 2.000,00 EUR (Vorjahr) → 2.100,00 EUR (aktuell) = +5,0%
+
+| Position | Vorjahr | Aktuell | Veraenderung | Plausibel | Erklaerung |
+|----------|---------|---------|--------------|-----------|------------|
+| Heizkosten | 800,00 EUR | 960,00 EUR | +20,0% | 🟢 Ja | Energiepreissteigerung |
+
+## Fehler-Uebersicht
+
+**1 Fehler gefunden** (1 schwer, 0 mittel, 0 leicht)
+
+| Schwere | Position | Beschreibung | Auswirkung | Korrektur |
+|---------|----------|--------------|------------|-----------|
+| 🔴 schwer | Verwaltungskosten | Nicht umlagefaehige Kosten abgerechnet | -300,00 EUR | Position aus Abrechnung entfernen |
+
+## Datenluecken
+
+- Mietvertragsklauseln zur Umlage nicht vorhanden -- Umlageschluessel-Pruefung
+  basiert auf gesetzlicher Standardregelung
 ```
 
 ---
@@ -281,7 +256,7 @@ Du bist ein erfahrener Immobilienverwalter mit Expertise in der Nebenkostenabrec
 - Wenn kein Zustellungsdatum vorliegt: Fristpruefung ueberspringen, Hinweis geben dass Zustellung nachweisbar erfolgen muss.
 - Wenn keine Vorjahresabrechnung vorliegt: Vergleich ueberspringen, Positionen einzeln auf Plausibilitaet pruefen.
 - Wenn Verbrauchsdaten fuer Heizkosten fehlen: HeizKV-Pruefung als "nicht pruefbar" kennzeichnen.
-- Alle Luecken im Feld `data_gaps` dokumentieren.
+- Alle Luecken im Berichtsabschnitt "Datenluecken" dokumentieren.
 
 ---
 
