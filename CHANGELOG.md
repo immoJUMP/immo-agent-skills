@@ -1,6 +1,18 @@
 # Aenderungsprotokoll
 
 Alle wesentlichen Aenderungen an diesem Projekt.
+## [1.5.0](https://github.com/immoJUMP/immo-agent-skills/compare/v1.4.1...v1.5.0) (2026-06-12)
+
+
+### Hinzugefuegt
+
+* Workflow build-skills -- baut bei jedem Push Upload-fertige Skill-ZIPs als Artifact ([a8dc05d](https://github.com/immoJUMP/immo-agent-skills/commit/a8dc05d97c7e44bc1b77061db8ac3465ce497481))
+
+
+### Behoben
+
+* name-Feld in allen 30 SKILL.md Frontmattern ergaenzt -- claude.ai Skill-Upload verlangt non-empty name ([2af2017](https://github.com/immoJUMP/immo-agent-skills/commit/2af201794730cd940966601d593a857503468351))
+
 ## [1.4.1](https://github.com/immoJUMP/immo-agent-skills/compare/v1.4.0...v1.4.1) (2026-06-12)
 
 
