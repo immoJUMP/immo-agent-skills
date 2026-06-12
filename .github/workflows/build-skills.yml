@@ -1,0 +1,47 @@
+name: Build Skill ZIPs
+
+on:
+  push:
+    branches: [main]
+    paths:
+      - "skills/**"
+      - ".github/workflows/build-skills.yml"
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Validate SKILL.md front matter
+        run: |
+          set -euo pipefail
+          fail=0
+          for f in skills/*/SKILL.md; do
+            if ! awk 'NR==1 && $0!="---"{exit 1} /^---$/{c++; if(c==2) exit 1} /^name: ./{found=1; exit 0} END{exit !found}' "$f"; then
+              echo "::error file=$f::SKILL.md front matter braucht ein non-empty name-Feld"
+              fail=1
+            fi
+          done
+          exit $fail
+
+      - name: Build skill ZIPs
+        run: |
+          set -euo pipefail
+          mkdir -p dist
+          for skill_dir in skills/*/; do
+            skill_name="$(basename "$skill_dir")"
+            (cd skills && zip -qr "../dist/${skill_name}.zip" "${skill_name}")
+          done
+          ls -la dist/
+
+      - name: Upload skill ZIPs as artifact
+        uses: actions/upload-artifact@v4
+        with:
+          name: skill-zips
+          path: dist/*.zip
+          retention-days: 30
