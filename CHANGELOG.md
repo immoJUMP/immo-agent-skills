@@ -1,6 +1,13 @@
 # Aenderungsprotokoll
 
 Alle wesentlichen Aenderungen an diesem Projekt.
+## [1.6.0](https://github.com/immoJUMP/immo-agent-skills/compare/v1.5.1...v1.6.0) (2026-06-17)
+
+
+### Hinzugefuegt
+
+* **prozess-designer:** Interview-first Umbau + Live-Bau-Erkenntnisse ([08de6c1](https://github.com/immoJUMP/immo-agent-skills/commit/08de6c1980ad83a9cf5ab152a34edf3c31be0240))
+
 ## [1.5.1](https://github.com/immoJUMP/immo-agent-skills/compare/v1.5.0...v1.5.1) (2026-06-12)
 
 
