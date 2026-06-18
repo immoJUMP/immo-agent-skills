@@ -163,6 +163,37 @@
   .foot .brand{color:#dfe6ff;font-size:16px;margin-bottom:6px}
   .foot-links{font-size:14px;color:#6f7c9e;display:flex;gap:12px;justify-content:center;flex-wrap:wrap;margin:2px 0 14px}
   .foot-links span{color:#46517a}
+
+  .mac{border-radius:13px;overflow:hidden;border:1px solid #d6dae3;box-shadow:0 34px 80px -34px rgba(13,20,38,.55);background:#fff;font-size:13.5px}
+  .mac-bar{display:flex;align-items:center;height:42px;padding:0 14px;background:linear-gradient(#f7f8fa,#e9ebef);border-bottom:1px solid #dcdfe6}
+  .mac-bar .tl{display:flex;gap:8px}
+  .mac-bar .tl i{width:12px;height:12px;border-radius:50%;display:block}
+  .mac-bar .ttl{flex:1;text-align:center;font-weight:600;color:#3a4254;margin-right:54px}
+  .mac-body{display:grid;grid-template-columns:204px 1fr}
+  .mac-side{background:#f3f4f7;border-right:1px solid #e3e6ed;padding:10px 8px}
+  .mac-side .grp{color:#97a0b2;font-size:11px;font-weight:700;text-transform:uppercase;letter-spacing:.05em;padding:8px 8px 5px}
+  .mac-side .it{display:flex;align-items:center;gap:9px;padding:8px 9px;border-radius:8px;cursor:pointer;color:#2a3142}
+  .mac-side .it:hover{background:#e8ebf1}
+  .mac-side .it.active{background:#dbe7fb;color:#15489c}
+  .mac-side .it b{font-weight:600;font-size:13px}
+  .mac-side .it small{display:block;color:#98a1b3;font-weight:400;font-size:11px}
+  .mac-side .it.active small{color:#5a7cc0}
+  .mac-main{min-height:430px;max-height:560px;overflow:auto}
+  .mac-cols{display:flex;color:#98a1b3;font-size:11.5px;padding:7px 14px;border-bottom:1px solid #eef0f4;position:sticky;top:0;background:#fff;z-index:1}
+  .mac-cols .c1{flex:1}.mac-cols .c3{width:90px;text-align:right}
+  .mac ul{list-style:none;margin:0;padding:0}
+  .mac ul ul{padding-left:19px}
+  .mac li>ul{display:none}.mac li.open>ul{display:block}
+  .mac .row{display:flex;align-items:center;gap:8px;padding:6px 14px;border-radius:6px;white-space:nowrap}
+  .mac .row:hover{background:#f2f6fd}
+  .mac .row.dir{cursor:pointer}
+  .mac .ic{display:flex;align-items:center;flex:none}
+  .mac .chev{width:11px;color:#aab2c2;font-size:9px;flex:none;transition:transform .12s}
+  .mac li.open>.row .chev{transform:rotate(90deg)}
+  .mac .nm{flex:1;color:#1f2632}
+  .mac .row.file .nm{color:#5a6573;font-weight:400}
+  .mac .row.dir .nm{font-weight:600}
+  .mac .c3{width:90px;text-align:right;color:#9aa3b5;font-size:12px}
 </style>
 </head>
 <body>
@@ -217,11 +248,14 @@
     </div>
 
     <div class="tree-wrap">
-      <div class="fx">
-        <div class="fx-head"><span class="dots"><i style="background:#ff5f57"></i><i style="background:#febc2e"></i><i style="background:#28c840"></i></span>Beispiel-Ablage &middot; zum Durchklicken</div>
-        <div class="fx-body" id="fx-tree"></div>
+      <div class="mac">
+        <div class="mac-bar"><span class="tl"><i style="background:#ff5f57"></i><i style="background:#febc2e"></i><i style="background:#28c840"></i></span><span class="ttl" id="mac-ttl">Musterbesitz GbR</span></div>
+        <div class="mac-body">
+          <aside class="mac-side" id="mac-side"></aside>
+          <div class="mac-main"><div class="mac-cols"><span class="c1">Name</span><span class="c3">Art</span></div><div id="mac-tree"></div></div>
+        </div>
       </div>
-      <p class="fx-cap">Klick dich durch &mdash; Ordner &ouml;ffnen/schlie&szlig;en per Klick. Nur Beispiel-<b>Dateinamen</b>, keine Inhalte.</p>
+      <p class="fx-cap">Wie im Finder: links die Firma/Halteform w&auml;hlen, rechts durch die Ordner klicken. Drei echte Anwendungsf&auml;lle &mdash; nur Beispiel-<b>Dateinamen</b>, keine Inhalte.</p>
       <div>
         <div class="note-card">
           <h3>🔑 Das Kürzel-Prinzip</h3>
@@ -350,59 +384,72 @@
 
 <script>
 (function(){
-  var T={n:"Immobilien",t:"d",o:1,c:[
-    {n:"Musterbesitz GbR",t:"d",o:1,c:[
-      {n:"1_Bestand",t:"d",o:1,c:[
-        {n:"B8 \u2014 Musterstra\u00dfe 8, Musterstadt",t:"d",o:1,c:[
-          {n:"00_Objektdatenblatt.md",t:"f"},
-          {n:"01_Stammdaten",t:"d",c:[
-            {n:"2021-03-10_Grundbuchauszug.pdf",t:"f"},{n:"Teilungserkl\u00e4rung.pdf",t:"f"},
-            {n:"Energieausweis.pdf",t:"f"},{n:"Wohnfl\u00e4chenberechnung.pdf",t:"f"},{n:"Lageplan.pdf",t:"f"}]},
-          {n:"02_Kaufprozess",t:"d",c:[
-            {n:"Expos\u00e9.pdf",t:"f"},{n:"2021-02-15_Kaufvertrag_Notar.pdf",t:"f"},{n:"Kaufpreisaufteilung.xlsx",t:"f"}]},
-          {n:"03_Finanzierung",t:"d",c:[
-            {n:"Darlehensvertrag.pdf",t:"f"},{n:"Grundschuldbestellung.pdf",t:"f"},{n:"2024_Zinsbescheinigung.pdf",t:"f"}]},
-          {n:"04_Einheiten",t:"d",o:1,c:[
-            {n:"WE1 EG-links",t:"d",o:1,c:[
-              {n:"_Wohnungsdaten",t:"d",c:[{n:"Grundriss_WE1.pdf",t:"f"},{n:"Zaehlernummern.txt",t:"f"},{n:"Schluesselplan.pdf",t:"f"}]},
-              {n:"2025-11 – heute · Müller",t:"d",c:[{n:"2025-11-01_Mietvertrag.pdf",t:"f"},{n:"Selbstauskunft.pdf",t:"f"},{n:"Kaution.pdf",t:"f"},{n:"Uebergabe_Einzug.pdf",t:"f"}]},
-              {n:"2018-03 – 2025-09 · Schmidt",t:"d",c:[{n:"2018-03-01_Mietvertrag.pdf",t:"f"},{n:"Uebergabe_Einzug.pdf",t:"f"},{n:"Uebergabe_Auszug.pdf",t:"f"},{n:"Kaution_Rueckzahlung.pdf",t:"f"}]}]},
-            {n:"WE2 OG-rechts",t:"d",c:[
-              {n:"_Wohnungsdaten",t:"d",c:[{n:"Grundriss_WE2.pdf",t:"f"}]},
-              {n:"2024-06 – heute · Yılmaz",t:"d",c:[{n:"2024-06-01_Mietvertrag.pdf",t:"f"},{n:"Kaution.pdf",t:"f"}]}]}]},
-          {n:"05_Verwaltung",t:"d",c:[
-            {n:"Versicherung",t:"d",c:[{n:"Geb\u00e4udeversicherung_Police.pdf",t:"f"}]},
-            {n:"Reparaturen",t:"d",c:[{n:"2024-09-02_Rechnung_Sanit\u00e4r.pdf",t:"f"}]},
-            {n:"Modernisierung",t:"d",c:[]},
-            {n:"Z\u00e4hlerst\u00e4nde",t:"d",c:[{n:"2024-12-31_Strom.pdf",t:"f"}]},
-            {n:"Fotos",t:"d",c:[]}]},
-          {n:"06_Belege",t:"d",c:[
-            {n:"2024",t:"d",c:[{n:"2024-07-14_Rechnung_Heizungswartung.pdf",t:"f"}]},{n:"2025",t:"d",c:[]}]},
-          {n:"07_Nebenkosten",t:"d",c:[{n:"2024",t:"d",c:[{n:"NK_2024_WE1.pdf",t:"f"}]}]},
-          {n:"08_Steuer",t:"d",c:[{n:"2024",t:"d",c:[{n:"Anlage_V_2024.pdf",t:"f"}]}]},
-          {n:"09_Konto",t:"d",c:[{n:"2024_Kontoausz\u00fcge.pdf",t:"f"}]}
-        ]}
-      ]}
-    ]}
-  ]};
-  function mk(node){
-    var li=document.createElement("li"), dir=node.t==="d";
-    var row=document.createElement("div"); row.className="row "+(dir?"dir":"file");
-    row.innerHTML='<span class="chev">'+(dir?"\u25b6":"")+'</span><span class="ic">'+(dir?"\ud83d\udcc1":"\ud83d\udcc4")+'</span><span class="nm"></span>';
-    row.querySelector(".nm").textContent=node.n;
-    if(dir&&node.c){var b=document.createElement("span");b.className="b2";b.textContent=node.c.length;row.appendChild(b);}
+  var FOLD='<svg viewBox="0 0 28 22" width="20" height="16"><path d="M2 6c0-1 .8-1.8 1.8-1.8h6c.5 0 .9.2 1.2.5L12.8 6H24c1 0 1.8.8 1.8 1.8V8H2V6z" fill="#3FA0EE"/><path d="M2 7.6h23.8V18c0 1-.8 1.8-1.8 1.8H3.8C2.8 19.8 2 19 2 18V7.6z" fill="#64C1FF"/></svg>';
+  var FILE='<svg viewBox="0 0 24 24" width="17" height="17"><path d="M6 2.5h7.4L18 7v14.5H6z" fill="#ffffff" stroke="#c7cedd"/><path d="M13.4 2.7V7H18" fill="none" stroke="#c7cedd"/></svg>';
+  function meta(n){ if(n.t==='d') return 'Ordner'; var e=n.n.indexOf('.')>=0?n.n.split('.').pop().toUpperCase():''; return e&&e.length<=4?e:'Datei'; }
+  function mk(n){
+    var li=document.createElement('li'), dir=n.t==='d';
+    var row=document.createElement('div'); row.className='row '+(dir?'dir':'file');
+    var ch=document.createElement('span'); ch.className='chev'; ch.textContent=(dir&&n.c&&n.c.length)?'▶':'';
+    var ic=document.createElement('span'); ic.className='ic'; ic.innerHTML=dir?FOLD:FILE;
+    var nm=document.createElement('span'); nm.className='nm'; nm.textContent=n.n;
+    var mt=document.createElement('span'); mt.className='c3'; mt.textContent=meta(n);
+    row.appendChild(ch); row.appendChild(ic); row.appendChild(nm); row.appendChild(mt);
     li.appendChild(row);
-    if(dir&&node.c&&node.c.length){
-      var ul=document.createElement("ul");
-      node.c.forEach(function(ch){ul.appendChild(mk(ch));});
-      li.appendChild(ul);
-      row.addEventListener("click",function(){li.classList.toggle("open");});
-      if(node.o) li.classList.add("open");
-    }
+    if(dir&&n.c&&n.c.length){ var ul=document.createElement('ul'); n.c.forEach(function(c){ul.appendChild(mk(c));}); li.appendChild(ul);
+      row.addEventListener('click',function(){li.classList.toggle('open');}); if(n.o) li.classList.add('open'); }
     return li;
   }
-  var root=document.getElementById("fx-tree");
-  if(root){var ul=document.createElement("ul");ul.appendChild(mk(T));root.appendChild(ul);}
+  function tree(t){ var host=document.getElementById('mac-tree'); host.innerHTML=''; var ul=document.createElement('ul'); t.forEach(function(n){ul.appendChild(mk(n));}); host.appendChild(ul); }
+
+  var OBJ=[{n:'00_Objektdatenblatt.md',t:'f'},
+    {n:'01_Stammdaten',t:'d',c:[{n:'Grundbuchauszug.pdf',t:'f'},{n:'Teilungserklärung.pdf',t:'f'},{n:'Energieausweis.pdf',t:'f'}]},
+    {n:'02_Kaufprozess',t:'d',c:[{n:'Exposé.pdf',t:'f'},{n:'Kaufvertrag_Notar.pdf',t:'f'},{n:'Kaufpreisaufteilung.xlsx',t:'f'}]},
+    {n:'03_Finanzierung',t:'d',c:[{n:'Darlehensvertrag.pdf',t:'f'},{n:'Zinsbescheinigung_2024.pdf',t:'f'}]},
+    {n:'04_Einheiten',t:'d',o:1,c:[
+      {n:'WE1 EG-links',t:'d',o:1,c:[
+        {n:'_Wohnungsdaten',t:'d',c:[{n:'Grundriss_WE1.pdf',t:'f'},{n:'Zählernummern.txt',t:'f'}]},
+        {n:'2025-11 – heute · Müller',t:'d',c:[{n:'Mietvertrag.pdf',t:'f'},{n:'Kaution.pdf',t:'f'},{n:'Übergabe_Einzug.pdf',t:'f'}]},
+        {n:'2018-03 – 2025-09 · Schmidt',t:'d',c:[{n:'Mietvertrag.pdf',t:'f'},{n:'Übergabe_Auszug.pdf',t:'f'},{n:'Kaution_Rückzahlung.pdf',t:'f'}]}]},
+      {n:'WE2 OG-rechts',t:'d',c:[{n:'2024-06 – heute · Yılmaz',t:'d',c:[{n:'Mietvertrag.pdf',t:'f'}]}]}]},
+    {n:'05_Verwaltung',t:'d',c:[{n:'Versicherung',t:'d',c:[]},{n:'Reparaturen',t:'d',c:[]},{n:'Modernisierung',t:'d',c:[]},{n:'Zählerstände',t:'d',c:[]},{n:'Fotos',t:'d',c:[]}]},
+    {n:'06_Belege',t:'d',c:[{n:'2024',t:'d',c:[{n:'Rechnung_Heizungswartung.pdf',t:'f'}]},{n:'2025',t:'d',c:[]}]},
+    {n:'07_Nebenkosten',t:'d',c:[{n:'2024',t:'d',c:[]}]},
+    {n:'08_Steuer',t:'d',c:[{n:'2024',t:'d',c:[{n:'Anlage_V_2024.pdf',t:'f'}]}]},
+    {n:'09_Konto',t:'d',c:[{n:'2024_Kontoauszüge.pdf',t:'f'}]}];
+
+  var DATA=[
+   {name:'Musterbesitz GbR',tag:'Buy & Hold (Bestand)',tree:[
+     {n:'1_Bestand',t:'d',o:1,c:[{n:'B8 — MFH Musterstraße 8, Musterstadt',t:'d',o:1,c:OBJ}]}]},
+   {name:'FlipWerk GmbH',tag:'Fix & Flip',tree:[
+     {n:'0_Ankauf',t:'d',o:1,c:[{n:'Lindenweg 5 — in Prüfung',t:'d',c:[{n:'Exposé.pdf',t:'f'},{n:'Bierdeckel-Kalkulation.xlsx',t:'f'},{n:'Besichtigung_Fotos',t:'d',c:[]}]}]},
+     {n:'1_Bestand',t:'d',o:1,c:[{n:'Lindenweg 5 — Sanierung läuft',t:'d',o:1,c:[
+        {n:'02_Kaufprozess',t:'d',c:[{n:'Kaufvertrag_Notar.pdf',t:'f'}]},
+        {n:'03_Finanzierung',t:'d',c:[{n:'Zwischenfinanzierung.pdf',t:'f'}]},
+        {n:'05_Verwaltung',t:'d',o:1,c:[{n:'Modernisierung',t:'d',o:1,c:[{n:'Angebot_Bad.pdf',t:'f'},{n:'Rechnung_Elektrik.pdf',t:'f'},{n:'Vorher_Nachher_Fotos',t:'d',c:[]}]}]}]}]},
+     {n:'2_Verkauft',t:'d',o:1,c:[{n:'Ahornstraße 12 — verkauft 08/2025',t:'d',o:1,c:[
+        {n:'Verkauf',t:'d',o:1,c:[{n:'Verkaufs-Exposé.pdf',t:'f'},{n:'2025-08-10_Kaufvertrag_Käufer.pdf',t:'f'},{n:'Übergabe_an_Käufer.pdf',t:'f'},{n:'Verkaufsabrechnung.xlsx',t:'f'}]},
+        {n:'08_Steuer',t:'d',c:[{n:'Veräußerungsgewinn_2025.pdf',t:'f'}]}]}]}]},
+   {name:'Privat (Bruchteilseigentum)',tag:'Kurzzeitvermietung',tree:[
+     {n:'1_Bestand',t:'d',o:1,c:[{n:'Strandweg 3 — Kurzzeitvermietung',t:'d',o:1,c:[
+        {n:'05_Verwaltung',t:'d',c:[{n:'Reinigung',t:'d',c:[]},{n:'Welcomebook.pdf',t:'f'},{n:'Hausregeln.pdf',t:'f'}]},
+        {n:'06_Belege',t:'d',o:1,c:[{n:'2025',t:'d',c:[{n:'Airbnb_Auszahlungen_2025.pdf',t:'f'},{n:'Booking_Abrechnung_2025.pdf',t:'f'}]}]},
+        {n:'08_Steuer',t:'d',c:[{n:'USt-Voranmeldung_Q1.pdf',t:'f'},{n:'Anlage_V_2025.pdf',t:'f'}]},
+        {n:'09_Konto',t:'d',c:[{n:'2025_Kontoauszüge.pdf',t:'f'}]}]}]}]}
+  ];
+
+  var side=document.getElementById('mac-side');
+  var g=document.createElement('div'); g.className='grp'; g.textContent='Firmen / Halteformen'; side.appendChild(g);
+  DATA.forEach(function(co,i){
+    var it=document.createElement('div'); it.className='it'+(i===0?' active':'');
+    var ic=document.createElement('span'); ic.className='ic'; ic.innerHTML=FOLD;
+    var tx=document.createElement('span'); tx.innerHTML='<b></b><small></small>'; tx.querySelector('b').textContent=co.name; tx.querySelector('small').textContent=co.tag;
+    it.appendChild(ic); it.appendChild(tx);
+    it.addEventListener('click',function(){ [].forEach.call(side.querySelectorAll('.it'),function(x){x.classList.remove('active');}); it.classList.add('active'); document.getElementById('mac-ttl').textContent=co.name; tree(co.tree); });
+    side.appendChild(it);
+  });
+  document.getElementById('mac-ttl').textContent=DATA[0].name;
+  tree(DATA[0].tree);
 })();
 </script>
 </body>
