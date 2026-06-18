@@ -14,3 +14,7 @@ Thumbs.db
 credentials.*
 **/private/
 **/sensitive/
+
+# Office-Sperr-/Temp-Dateien
+~$*
+.~lock.*#
