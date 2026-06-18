@@ -85,7 +85,7 @@ B8 — MFH Beispielstrasse 8, Musterstadt/
 │                           Kaufnebenkosten-Belege (Grunderwerbsteuer, Notar, Makler → AfA), Datenraum, Gutachter, Angebote
 ├── 03_Finanzierung         Darlehensvertraege, Grundschuldbestellung/Grundpfandrechte, Tilgungsplaene,
 │                           Zinsbescheinigungen (jaehrlich → Anlage V), Restnutzungsdauer-Gutachten
-├── 04_Einheiten            je WE ein Ordner: Mietvertrag, Kaution (Konto + Ein-/Rueckzahlung), Uebergabeprotokolle, Mieterkommunikation
+├── 04_Einheiten            je WE ein Ordner mit Mieter-Chronik (pro Mieter ein datierter Ordner, s.u.) + _Wohnungsdaten je Einheit
 ├── 05_Verwaltung
 │   ├── Versicherung/ (+ Schaeden/)    Grundsteuer/    Reparaturen/ (laufender Erhaltungsaufwand)
 │   ├── Modernisierung/                Zaehlerstaende/    Fotos/ (Aussen · Umfeld · Innen)
@@ -101,7 +101,7 @@ B8 — MFH Beispielstrasse 8, Musterstadt/
 ### Die Nummern-Regel (verhindert die Umnummerier-Hoelle)
 
 - **Geschlossene Mengen → durchnummerieren.** Die Objekt-Ebene `00-09` und der `01_Stammdaten`-Inhalt sind feste, nicht wachsende Listen → Nummern sind hier ideal und sortieren stabil.
-- **Wachsende Mengen → NIE nummerieren, sondern datieren/benennen.** Belege, Nebenkosten, Steuer laufen nach **Jahr** (`2024/`, `2025/`). Einheiten/Mieter nach **Name + Einzug** (`WE1 Mustermann seit 2021-03`). So muss nie umnummeriert werden, wenn etwas dazukommt.
+- **Wachsende Mengen → NIE nummerieren, sondern datieren/benennen.** Belege, Nebenkosten, Steuer laufen nach **Jahr** (`2024/`, `2025/`). Mieter-Ordner nach **Zeitraum + Name** (aktuell `2025-11 – heute · Müller`, Vormieter `2018-03 – 2025-09 · Schmidt`). So muss nie umnummeriert werden, wenn etwas dazukommt.
 
 ### Kuerzel-Konvention (kurz, aber kollisionssicher)
 
@@ -127,6 +127,26 @@ JJJJ-MM-TT_<Typ>_<Beschreibung>
 Datum vorn → chronologische Sortierung. Typ-Kuerzel (Rechnung / Vertrag / Abrechnung / Zaehlerstand / Mahnung) → filterbar.
 
 **Das Objekt-Kuerzel gehoert in den Ordnernamen und ins Register -- nicht zwingend in jeden Dateinamen.** Der Objektordner (`B8 — ...`) liefert den Objektbezug bereits, und ein erzwungenes Kuerzel im Dateinamen wuerde mit den Dateien beissen, die `dokument-klassifizierer`/`beleg-sortierer` ohne Kuerzel erzeugen. Nur fuer Dateien **ausserhalb** der Objektstruktur oder objektuebergreifend gesammelt ist ein vorangestelltes Kuerzel sinnvoll -- konventionskonform mit Unterstrich: `JJJJ-MM-TT_B8_<Typ>_<Beschreibung>`. So bleibt jede Datei kompatibel, und die Suche nach `B8` findet trotzdem alles Objektuebergreifende.
+
+### Einheiten-Ebene -- Wohnungen & Mieter
+
+Jede Wohnung ist ein **stabiler Ordner** (`WE<Nr> <Lage>`, z.B. `WE1 EG-links`) -- die WE-Nummer aendert sich nie. Darin liegt die **Mieter-Chronik**: pro Mieter ein datierter Ordner. So sieht man auf einen Blick, wer wann in der Wohnung wohnte, und jede Mietakte bleibt erhalten.
+
+```
+04_Einheiten/
+└── WE1 EG-links/
+    ├── _Wohnungsdaten/             mieterunabhaengig: Grundriss WE, Wohnflaeche, Zaehlernummern, Schluesselplan
+    ├── 2025-11 – heute · Müller/    aktueller Mieter (Ende offen)
+    ├── 2018-03 – 2025-09 · Schmidt/
+    └── 2015-05 – 2018-02 · Meier/
+```
+
+Pro Mieter-Ordner: Mietvertrag, Selbstauskunft/Bonitaet, Kaution, Uebergabe (Ein+Aus), Mieterhoehungen, Korrespondenz.
+
+- **Benennung:** `JJJJ-MM – heute · Name` fuer den aktuellen Mieter (das Wort „heute" markiert ihn), `JJJJ-MM – JJJJ-MM · Name` fuer Vormieter. Datum vorn -> die Liste sortiert chronologisch.
+- **Mieterwechsel = 2 Handgriffe:** beim ausziehenden Mieter „heute" durch das Auszugsdatum ersetzen (Ordner bleibt liegen, **nichts loeschen**), neuen Mieter-Ordner anlegen.
+- **Belege bleiben in `06_Belege`:** Rechnungen (auch Renovierung nach Auszug) gehoeren zur Buchhaltung/Steuer, nicht in den Mieter-Ordner -- der ist die *Mietakte*.
+- **ETW:** genau **eine** WE, gleiche Logik -- Konsistenz vor Sonderloesung.
 
 ### Sonderformen (gleiche Vorlage, nur ein Kennzeichen)
 
