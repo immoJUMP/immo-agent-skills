@@ -54,15 +54,19 @@ Pro Mieter-Ordner: Mietvertrag, Selbstauskunft/Bonität, Kaution, Übergabe (Ein
 - **Mieterwechsel = 2 Handgriffe:** beim ausziehenden Mieter „heute" durch das Auszugsdatum ersetzen (Ordner bleibt liegen, nichts wird gelöscht) und neuen Mieter-Ordner anlegen.
 - **Belege bleiben in `06_Belege`** – auch die Renovierung nach Auszug. Der Mieter-Ordner ist die Mietakte, nicht die Buchhaltung.
 
-## Drei Anwendungsfälle – dasselbe System
+## Anwendungsfälle – dasselbe System, jede Strategie
 
-Damit es greifbar wird: dieselbe Struktur, drei Strategien.
+Damit es greifbar wird: dieselbe Struktur, egal wie du investierst.
+
+> **Nur einzelne Eigentumswohnungen?** Du brauchst die Firmen-Ebene gar nicht – deine Wohnung ist einfach ein Objekt mit den Ordnern 00–09. Genauso einfach.
 
 **Buy & Hold (Bestand).** Kaufen und halten. Die Objekte liegen in `1_Bestand`, jedes mit der Struktur 00–09 und der Mieter-Chronik je Wohnung.
 
 **Fix & Flip.** Kaufen, sanieren, verkaufen. Ein Objekt wandert `0_Ankauf` → `1_Bestand` (mit `05_Verwaltung/Modernisierung` für die Sanierungsgewerke) → `2_Verkauft`. Das verkaufte Objekt bekommt einen eigenen `Verkauf/`-Ordner (Verkaufs-Exposé, Käufer-Kaufvertrag, Übergabe, Verkaufsabrechnung), die Veräußerungsgewinn-Unterlagen in `08_Steuer`.
 
 **Kurzzeitvermietung.** Plattform-Abrechnungen (Airbnb/Booking) wandern in `06_Belege`, die Umsatzsteuer-Voranmeldungen in `08_Steuer`, dazu Reinigung & Welcomebook in `05_Verwaltung`.
+
+**Einzelne Eigentumswohnung.** Für Einsteiger mit ein, zwei Wohnungen: kein Firmen-Ordner nötig, die Wohnung ist ein Objekt mit 00–09 – mit WEG-Unterlagen (Hausgeld, Protokolle, Wirtschaftsplan) in `05_Verwaltung`.
 
 ## Kurze Kürzel – mit drei Regeln
 
