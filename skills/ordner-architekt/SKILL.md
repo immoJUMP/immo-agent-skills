@@ -76,11 +76,13 @@ Ein einziges Template fuer alle Objekttypen -- eine ETW ist einfach ein Objekt m
 ```
 B8 — MFH Beispielstrasse 8, Musterstadt/
 ├── 00_Objektdatenblatt     Eckdaten, Kuerzel, Flaeche, Baujahr, WE-Liste, Kaufdatum, AfA-Basis, Zaehlernummern (living doc)
+│                           + optional: jaehrlicher Objekt-Review/Investmentcheck ("performt das Objekt noch?")
 ├── 01_Stammdaten           evergreen: Grundbuch, Plaene/Grundrisse, Lageplan/Flurkarte, Wohnflaechenberechnung,
 │                           Energieausweis, Baubeschreibung, Behoerdenvollmacht, Teilungserklaerung (WEG)
 ├── 02_Kaufprozess          einmalig, fuer immer: Expose, Notar/Kaufvertrag, Kaufpreisaufteilung (Boden/Gebaeude → AfA!),
-│                           Datenraum, Gutachter, Angebote
-├── 03_Finanzierung         Darlehensvertraege, Tilgungsplaene, Zinsbescheinigungen (jaehrlich → Anlage V), Restnutzungsdauer-Gutachten
+│                           Kaufnebenkosten-Belege (Grunderwerbsteuer, Notar, Makler → AfA), Datenraum, Gutachter, Angebote
+├── 03_Finanzierung         Darlehensvertraege, Grundschuldbestellung/Grundpfandrechte, Tilgungsplaene,
+│                           Zinsbescheinigungen (jaehrlich → Anlage V), Restnutzungsdauer-Gutachten
 ├── 04_Einheiten            je WE ein Ordner: Mietvertrag, Kaution (Konto + Ein-/Rueckzahlung), Uebergabeprotokolle, Mieterkommunikation
 ├── 05_Verwaltung
 │   ├── Versicherung/ (+ Schaeden/)    Grundsteuer/    Reparaturen/ (laufender Erhaltungsaufwand)
