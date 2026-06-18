@@ -1,6 +1,6 @@
 ---
 name: ordner-architekt
-description: "Baut eine saubere, dauerhaft tragfaehige Ordnerstruktur fuer ein Immobilien-Portfolio auf -- oder raeumt eine gewachsene, chaotische Ablage neu. Im gefuehrten Gespraech: Der Skill testet zuerst den Zugriff auf deine Ablage (Google Drive, Dropbox, lokaler Ordner), erforscht den Ist-Zustand, bewertet ihn objektiv gegen eine bewaehrte Referenzstruktur, fragt deinen Soll-Zustand ab und legt dir einen bestaetigungspflichtigen Umzugsplan vor -- inklusive Frage nach einer Sicherungskopie -- bevor irgendetwas angelegt, umbenannt oder verschoben wird. Nutze diesen Skill wenn du deine Objektablage neu aufsetzen, vereinheitlichen oder aufraeumen willst, wenn jedes Objekt anders sortiert ist, wenn du Kuerzel-Konventionen einfuehren willst oder wenn du vor Steuererklaerung/Bankgespraech/Verkauf eine konsistente Struktur brauchst."
+description: "Baut eine saubere, dauerhaft tragfaehige Ordnerstruktur fuer ein Immobilien-Portfolio auf -- oder raeumt eine gewachsene, chaotische Ablage neu. Im gefuehrten Gespraech: Der Skill testet zuerst den Zugriff auf deine Ablage (Google Drive, Dropbox, lokaler Ordner), erforscht den Ist-Zustand, bewertet ihn objektiv gegen eine bewaehrte Referenzstruktur, fragt deinen Soll-Zustand ab und legt dir einen bestaetigungspflichtigen Umzugsplan vor -- inklusive Frage nach einer Sicherungskopie -- bevor irgendetwas angelegt, umbenannt oder verschoben wird -- und setzt den bestaetigten Umbau dann selbst um, sodass du am Ende eine fertig sortierte Ablage hast statt einer To-do-Liste. Nutze diesen Skill wenn du deine Objektablage neu aufsetzen, vereinheitlichen oder aufraeumen willst, wenn jedes Objekt anders sortiert ist, wenn du Kuerzel-Konventionen einfuehren willst oder wenn du vor Steuererklaerung/Bankgespraech/Verkauf eine konsistente Struktur brauchst."
 ---
 
 # Ordner-Architekt -- Immobilien-Ablage aufbauen & neu ordnen
@@ -25,10 +25,12 @@ Dieser Skill baut Ordnung -- nicht, indem er raet, sondern indem er **dich befra
 
 ## Was du mitbringen musst: Zugriff
 
-Du musst keine fertige Struktur vorbereiten und nichts vorab sortieren. Der Skill fragt dich ab. Das **Einzige**, was er braucht, ist **Zugriff auf deine Ablage**:
+Du musst keine fertige Struktur vorbereiten, nichts vorab sortieren und am Ende nichts selbst verschieben. Der Skill fragt dich ab und **baut dann selbst um**. Das **Einzige**, was er braucht, ist **Zugriff auf deine Ablage -- moeglichst mit Schreibrecht**, damit er die Arbeit auch ausfuehren kann:
 
-- **Google Drive / Dropbox (per Anbindung):** Du gibst den/die Ordner fuer das verbundene Konto frei. Der Skill testet zu Beginn, ob er sie wirklich sieht -- und ob er **schreiben** darf (siehe Schritt 0, das ist nicht selbstverstaendlich).
-- **Lokaler Ordner / synchronisierter Cloud-Ordner (Drive for Desktop, Dropbox-App):** Du nennst den Pfad. Das ist der **bevorzugte Weg fuer die Umsetzung**, weil Anlegen, Umbenennen und Verschieben dort sicher und in einem Schritt funktionieren und die Aenderungen in die Cloud zuruecksynchronisieren.
+- **Google Drive / Dropbox (per Anbindung):** Du gibst den/die Ordner fuer das verbundene Konto frei. Wichtig ist eine Anbindung, die nicht nur lesen, sondern auch **anlegen, umbenennen und verschieben** darf -- dann erledigt der Skill den Umbau direkt. Der Skill prueft das zu Beginn (Schritt 0).
+- **Lokaler Ordner / synchronisierter Cloud-Ordner (Drive for Desktop, Dropbox-App):** Du nennst den Pfad. Funktioniert immer, weil Anlegen, Umbenennen und Verschieben dort sicher in einem Schritt laufen und die Aenderungen in die Cloud zuruecksynchronisieren.
+
+Ziel ist immer dasselbe: Am Ende ist deine Ablage fertig sortiert -- **der Skill macht das, nicht du.**
 
 Wenn du schon eine alte Struktur-Notiz, eine Readme-Datei oder eine Vorlage hast: rein damit. Der Skill liest sie und baut darauf auf, statt neu zu erfinden.
 
@@ -40,7 +42,7 @@ Wenn du schon eine alte Struktur-Notiz, eine Readme-Datei oder eine Vorlage hast
 
 Lege dem Nutzer dann einen **vollstaendigen Umzugsplan** vor -- was neu angelegt, was umbenannt, was verschoben wird, Datei fuer Datei nachvollziehbar -- und benenne dabei ausdruecklich die kritischen Punkte (was koennte ihm in 2 Jahren auf die Fuesse fallen). Frag nach einer **Sicherungskopie**.
 
-Setze den Umbau **erst nach Bestaetigung** um -- bevorzugt auf einer lokal synchronisierten Kopie (Anlegen/Umbenennen/Verschieben), niemals durch massenhaftes Kopieren oder Loeschen. Wo nur Lesezugriff besteht, liefere den Plan als exakte, ausfuehrbare Schritt-fuer-Schritt-Anleitung statt vorzutaeuschen, du haettest gebaut.
+Setze den Umbau **erst nach Bestaetigung und Sicherungskopie selbst um** -- lege die Ordner an, benenne um, verschiebe die Dateien, ueber die Schreib-Werkzeuge der Anbindung oder direkt im lokal synchronisierten Ordner. Der Investor bekommt eine fertig sortierte Ablage, **keine To-do-Liste**. Niemals massenhaft kopieren oder loeschen. Nur wenn gar kein Schreibweg existiert, hilf dem Nutzer zuerst, einen einzurichten (schreibfaehige Anbindung oder lokaler Sync) -- und erst als allerletzte Notloesung gibst du eine manuelle Anleitung aus, statt vorzutaeuschen, du haettest gebaut.
 
 ---
 
@@ -152,9 +154,10 @@ Dann **zwei Dinge testen, nacheinander, und das Ergebnis ehrlich melden:**
    - **Berechtigungs-Infos lesen** (Drive: `get_file_permissions` / die Berechtigungsfelder aus `get_file_metadata` wie `canAddChildren`, `canRename`, `canEdit`; lokal: Schreibrecht am Pfad pruefen). Das ist rein lesend und reicht in den allermeisten Faellen, um Lese- von Schreibzugang zu unterscheiden.
    - **Faehigkeiten der Anbindung kennen:** Viele Cloud-Anbindungen koennen faktisch **nur lesen** -- sie koennen lesen und teils Dateien anlegen/kopieren, aber **nicht umbenennen, verschieben oder loeschen**. Wenn die verfuegbaren Werkzeuge kein Verschieben/Umbenennen/Loeschen anbieten, steht das Ergebnis schon fest, ohne irgendetwas anzufassen.
    - **Nur wenn die Berechtigungs-Infos nicht eindeutig sind:** hol dir eine **ausdrueckliche kurze Freigabe** fuer *eine* harmlose Schreibprobe (einen leeren Test-Ordner `_zugriffstest_` anlegen und sofort wieder entfernen) -- und nur in einem klar als Test markierten Bereich, nie an Bestandsdateien. Frag vorher: *"Darf ich kurz einen leeren Test-Ordner anlegen, um Schreibrechte zu pruefen? Loesche ich sofort wieder."*
-   - Wenn Schreiben/Verschieben **nicht** geht: sag es offen und biete die zwei tragfaehigen Wege an:
-     > *"Ich kann deine Ablage lesen, aber ueber diese Anbindung nicht umbenennen oder verschieben. Zwei saubere Wege: (a) Du oeffnest den Ordner lokal mit Drive for Desktop / der Dropbox-App -- dann erledige ich Anlegen/Umbenennen/Verschieben direkt auf dem Rechner, und es synct in die Cloud zurueck. Oder (b) ich liefere dir den kompletten Umzugsplan als exakte Klick-Anleitung, die du selbst abarbeitest. Was ist dir lieber?"*
-   - **Tu niemals so, als haettest du umgebaut, wenn die Anbindung es nicht kann.** Lieber ein praeziser Plan als eine Luege.
+   - Wenn Schreiben/Verschieben **geht**: gut -- dann fuehrt der Skill den Umbau spaeter selbst aus (Schritt 7). Das ist der Normalfall und das Ziel.
+   - Wenn Schreiben/Verschieben **nicht** geht: das Ziel bleibt, dass *der Skill* umbaut -- also hilf dem Nutzer zuerst, einen Schreibweg herzustellen, statt ihm Handarbeit aufzudruecken:
+     > *"Ich kann deine Ablage lesen, aber ueber diese Anbindung noch nicht umbenennen/verschieben. Am einfachsten: Du oeffnest den Ordner lokal mit Drive for Desktop / der Dropbox-App und nennst mir den Pfad -- dann baue ich alles direkt um, und es synct in die Cloud zurueck. (Alternativ eine schreibfaehige Drive-Anbindung verbinden.)"*
+   - **Erst als allerletzte Notloesung** -- wenn partout kein Schreibweg machbar ist -- gibst du eine manuelle Klick-Anleitung aus. Und: **tu niemals so, als haettest du umgebaut, wenn du es nicht konntest.**
 
 Erst wenn der Zugriff (mindestens Lesen) steht, weiter zu Schritt 1.
 
@@ -232,11 +235,12 @@ Bevor du **irgendetwas** anlegst, umbenennst oder verschiebst, hol dir zwei Ding
 
 ### Schritt 7: Umsetzung + Bericht
 
-Setze um -- in dieser Sicherheits-Reihenfolge:
+Der Skill fuehrt den Umbau jetzt **selbst** aus -- der Nutzer muss nichts klicken. Such dir den verfuegbaren Schreibweg in dieser Reihenfolge:
 
-- **Bevorzugt: lokal synchronisierter Ordner.** Anlegen (`mkdir`), Umbenennen/Verschieben (`mv`). Sicher, schnell, behaelt bei Cloud-Synchronisation die Datei-Historie. Arbeite **objektweise** und melde nach jedem Objekt kurz, was passiert ist.
-- **Cloud-Anbindung mit Schreibrechten:** Ordner anlegen, dann Dateien verschieben. **Bevorzuge Umbenennen/Verschieben vor Kopieren** -- Umbenennen behaelt in Google Drive die Datei-Kennung und alle Freigabe-Links; **Kopieren erzeugt neue Kennungen (zerstoert Links, verdoppelt Speicher, verliert Kommentare/Versionen).** Niemals massenhaft kopieren.
-- **Nur Lesezugriff:** kein Schein-Umbau. Gib den Umzugsplan als exakte, nummerierte Klick-Anleitung aus (oder als Skript fuer den lokalen Sync-Ordner), die der Nutzer selbst ausfuehrt.
+- **Schreibfaehige Cloud-Anbindung:** Ordner anlegen, dann Dateien direkt umbenennen/verschieben. **Bevorzuge Umbenennen/Verschieben vor Kopieren** -- Umbenennen behaelt in Google Drive die Datei-Kennung und alle Freigabe-Links; **Kopieren erzeugt neue Kennungen (zerstoert Links, verdoppelt Speicher, verliert Kommentare/Versionen).** Niemals massenhaft kopieren.
+- **Lokal synchronisierter Ordner** (Drive for Desktop / Dropbox-App): Anlegen (`mkdir`), Umbenennen/Verschieben (`mv`). Sicher, schnell, behaelt bei Cloud-Synchronisation die Datei-Historie und synct von selbst zurueck.
+- Arbeite in beiden Faellen **objektweise** und melde nach jedem Objekt kurz, was passiert ist.
+- **Nur wenn gar kein Schreibweg existiert** (und auch keiner einzurichten war): kein Schein-Umbau -- dann, und nur dann, eine exakte, nummerierte Klick-Anleitung ausgeben. Das ist die Ausnahme, nicht der Normalfall.
 
 **Sicherheitsregeln bei der Umsetzung:**
 - **Niemals loeschen.** Was unklar ist, kommt in einen `_Zu_pruefen/`-Ordner, nicht in den Papierkorb. Der Nutzer entscheidet ueber Loeschungen selbst.
@@ -272,7 +276,7 @@ Was wurde angelegt/umbenannt/verschoben (mit Zahlen), was liegt in `_Zu_pruefen/
 ## Warnsignale
 
 - **Keine Sicherungskopie, aber Massen-Umbau gewuenscht** → erst sichern, dann bauen. Nicht verhandelbar bei >1 Objekt.
-- **Anbindung kann nur lesen, Nutzer erwartet Umbau** → ehrlich sagen, auf lokalen Sync oder Klick-Anleitung umschwenken.
+- **Anbindung kann nur lesen, Nutzer erwartet Umbau** → Ziel bleibt, dass der Skill umbaut: zuerst einen Schreibweg herstellen (lokaler Sync / schreibfaehige Anbindung). Klick-Anleitung nur als allerletzte Notloesung, nie als bequeme Standardantwort.
 - **Halteformen sollen "der Einfachheit halber" zusammen** → widersprechen: Steuer laeuft pro Halteform, Vermischung ist ein echtes Risiko.
 - **Nutzer will Kuerzel rueckwirkend aendern** (Erstbelegten umbenennen) → die Eingefroren-Regel erklaeren, der Neuankoemmling weicht stattdessen aus.
 - **Loeschen statt Parken** → niemals loeschen, immer `_Zu_pruefen/`.
@@ -281,7 +285,7 @@ Was wurde angelegt/umbenannt/verschoben (mit Zahlen), was liegt in `_Zu_pruefen/
 ## Bei fehlenden Daten
 
 - **Objekttyp/Halteform unklar** → fragen, nicht annehmen; im Zweifel die volle Objekt-Vorlage (leere Ordner kosten nichts).
-- **Kein Schreibzugriff feststellbar** → Planungs-Modus, exakte Anleitung liefern.
+- **Kein Schreibzugriff feststellbar** → erst Schreibweg herstellen (lokaler Sync / schreibfaehige Anbindung), damit der Skill selbst umbauen kann; manuelle Anleitung nur als Notloesung.
 - **Alte Struktur-Notizen widerspruechlich** → dem Nutzer vorlegen und entscheiden lassen, was gilt.
 
 ## Konfidenz-Bewertung
