@@ -35,6 +35,25 @@ Eine einzige Vorlage für jedes Objekt. Gleiche Struktur überall – man findet
 
 > **Steuer-Kernregel:** Reparaturen und Modernisierung strikt getrennt ablegen – wegen der 15-%-Grenze für anschaffungsnahe Herstellungskosten (§ 6 Abs. 1 Nr. 1a EStG) in den ersten drei Jahren nach Kauf.
 
+## Die Einheiten-Ebene – Wohnungen & Mieter
+
+Jede Wohnung ist ein **stabiler Ordner** (`WE1 EG-links`) – die WE-Nummer ändert sich nie. Darin liegt die **Mieter-Chronik**: pro Mieter ein datierter Ordner. So siehst du auf einen Blick, wer wann in der Wohnung wohnte – und behältst jede Mietakte.
+
+```
+04_Einheiten/
+└── WE1 EG-links/
+    ├── _Wohnungsdaten/             Grundriss, Zählernummern, Schlüsselplan
+    ├── 2025-11 – heute · Müller/    aktueller Mieter (Ende offen)
+    ├── 2018-03 – 2025-09 · Schmidt/
+    └── 2015-05 – 2018-02 · Meier/
+```
+
+Pro Mieter-Ordner: Mietvertrag, Selbstauskunft/Bonität, Kaution, Übergabe (Ein+Aus), Mieterhöhungen, Korrespondenz.
+
+- **Benennung:** `JJJJ-MM – heute · Name` für den aktuellen Mieter (das Wort „heute" markiert ihn), `JJJJ-MM – JJJJ-MM · Name` für Vormieter.
+- **Mieterwechsel = 2 Handgriffe:** beim ausziehenden Mieter „heute" durch das Auszugsdatum ersetzen (Ordner bleibt liegen, nichts wird gelöscht) und neuen Mieter-Ordner anlegen.
+- **Belege bleiben in `06_Belege`** – auch die Renovierung nach Auszug. Der Mieter-Ordner ist die Mietakte, nicht die Buchhaltung.
+
 ## Kurze Kürzel – mit drei Regeln
 
 Kurze Objekt-Kürzel wie `B8` oder `A19` sind Gold: schnell getippt, eindeutig im Gespräch und in der Buchhaltung. Drei Regeln halten sie sauber:
