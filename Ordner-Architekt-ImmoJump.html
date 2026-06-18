@@ -136,6 +136,27 @@
     .section{padding:34px 0;break-inside:avoid}
     body{font-size:13px}
   }
+
+  .fx{background:#fff;border:1px solid var(--line);border-radius:var(--radius);box-shadow:var(--shadow);overflow:hidden;font-size:14.5px}
+  .fx-head{display:flex;align-items:center;gap:10px;padding:12px 16px;background:var(--bg-soft);border-bottom:1px solid var(--line);font-size:12px;font-weight:700;letter-spacing:.08em;text-transform:uppercase;color:var(--muted)}
+  .fx-head .dots{display:flex;gap:6px}
+  .fx-head .dots i{width:11px;height:11px;border-radius:50%;display:block}
+  .fx-body{padding:8px 6px;max-height:540px;overflow:auto}
+  .fx ul{list-style:none;margin:0;padding-left:0}
+  .fx ul ul{padding-left:14px;margin-left:17px;border-left:1px solid var(--line)}
+  .fx li>ul{display:none}
+  .fx li.open>ul{display:block}
+  .fx .row{display:flex;align-items:center;gap:9px;padding:7px 11px;border-radius:9px;white-space:nowrap}
+  .fx .row.dir{cursor:pointer}
+  .fx .row.dir:hover{background:var(--bg-soft)}
+  .fx .chev{width:12px;flex:none;color:var(--muted);font-size:10px;transition:transform .15s}
+  .fx li.open>.row .chev{transform:rotate(90deg)}
+  .fx .ic{flex:none;width:20px;text-align:center;font-size:16px}
+  .fx .nm{color:var(--ink)}
+  .fx .row.file .nm{color:var(--ink-soft);font-weight:400}
+  .fx .row.dir .nm{font-weight:600}
+  .fx .b2{margin-left:14px;font-size:11px;color:var(--brand);background:rgba(47,107,255,.1);padding:2px 9px;border-radius:999px;font-weight:700}
+  .fx-cap{font-size:13px;color:var(--muted);margin-top:10px}
 </style>
 </head>
 <body>
@@ -190,20 +211,11 @@
     </div>
 
     <div class="tree-wrap">
-      <div class="tree">
-<span class="c"># So sieht jedes Objekt danach aus</span>
-<b>B8 — MFH Beispielstr. 8, Musterstadt/</b>
-├── <span class="f">00_Objektdatenblatt.md</span>   <span class="c">Eckdaten, AfA-Basis, Zähler</span>
-├── <span class="f">01_Stammdaten/</span>          <span class="c">Grundbuch, Pläne, Energieausweis</span>
-├── <span class="f">02_Kaufprozess/</span>         <span class="c">Notar, Kaufvertrag, Kaufpreisaufteilung</span>
-├── <span class="f">03_Finanzierung/</span>        <span class="c">Darlehen, Zinsbescheinigungen</span>
-├── <span class="f">04_Einheiten/</span>           <span class="c">Mietvertrag, Kaution, Übergabe</span>
-├── <span class="f">05_Verwaltung/</span>          <span class="c">Versicherung, Reparatur, Modernisierung</span>
-├── <span class="f">06_Belege/</span>      <span class="y">2024/ 2025/</span>  <span class="c">Steuerbelege</span>
-├── <span class="f">07_Nebenkosten/</span> <span class="y">2024/ 2025/</span>
-├── <span class="f">08_Steuer/</span>      <span class="y">2024/ 2025/</span>  <span class="c">Anlage V</span>
-└── <span class="f">09_Konto/</span>            <span class="c">Objektkonto</span>
+      <div class="fx">
+        <div class="fx-head"><span class="dots"><i style="background:#ff5f57"></i><i style="background:#febc2e"></i><i style="background:#28c840"></i></span>Beispiel-Ablage &middot; zum Durchklicken</div>
+        <div class="fx-body" id="fx-tree"></div>
       </div>
+      <p class="fx-cap">Klick dich durch &mdash; Ordner &ouml;ffnen/schlie&szlig;en per Klick. Nur Beispiel-<b>Dateinamen</b>, keine Inhalte.</p>
       <div>
         <div class="note-card">
           <h3>🔑 Das Kürzel-Prinzip</h3>
@@ -326,5 +338,58 @@
   </div>
 </footer>
 
+<script>
+(function(){
+  var T={n:"Immobilien",t:"d",o:1,c:[
+    {n:"Musterbesitz GbR",t:"d",o:1,c:[
+      {n:"1_Bestand",t:"d",o:1,c:[
+        {n:"B8 \u2014 Musterstra\u00dfe 8, Musterstadt",t:"d",o:1,c:[
+          {n:"00_Objektdatenblatt.md",t:"f"},
+          {n:"01_Stammdaten",t:"d",c:[
+            {n:"2021-03-10_Grundbuchauszug.pdf",t:"f"},{n:"Teilungserkl\u00e4rung.pdf",t:"f"},
+            {n:"Energieausweis.pdf",t:"f"},{n:"Wohnfl\u00e4chenberechnung.pdf",t:"f"},{n:"Lageplan.pdf",t:"f"}]},
+          {n:"02_Kaufprozess",t:"d",c:[
+            {n:"Expos\u00e9.pdf",t:"f"},{n:"2021-02-15_Kaufvertrag_Notar.pdf",t:"f"},{n:"Kaufpreisaufteilung.xlsx",t:"f"}]},
+          {n:"03_Finanzierung",t:"d",c:[
+            {n:"Darlehensvertrag.pdf",t:"f"},{n:"Grundschuldbestellung.pdf",t:"f"},{n:"2024_Zinsbescheinigung.pdf",t:"f"}]},
+          {n:"04_Einheiten",t:"d",c:[
+            {n:"WE1 \u00b7 Mustermann (Einzug 03/2021)",t:"d",c:[
+              {n:"2021-03-01_Mietvertrag.pdf",t:"f"},{n:"Kaution.pdf",t:"f"},{n:"\u00dcbergabeprotokoll.pdf",t:"f"}]},
+            {n:"WE2 \u00b7 leer",t:"d",c:[]}]},
+          {n:"05_Verwaltung",t:"d",c:[
+            {n:"Versicherung",t:"d",c:[{n:"Geb\u00e4udeversicherung_Police.pdf",t:"f"}]},
+            {n:"Reparaturen",t:"d",c:[{n:"2024-09-02_Rechnung_Sanit\u00e4r.pdf",t:"f"}]},
+            {n:"Modernisierung",t:"d",c:[]},
+            {n:"Z\u00e4hlerst\u00e4nde",t:"d",c:[{n:"2024-12-31_Strom.pdf",t:"f"}]},
+            {n:"Fotos",t:"d",c:[]}]},
+          {n:"06_Belege",t:"d",c:[
+            {n:"2024",t:"d",c:[{n:"2024-07-14_Rechnung_Heizungswartung.pdf",t:"f"}]},{n:"2025",t:"d",c:[]}]},
+          {n:"07_Nebenkosten",t:"d",c:[{n:"2024",t:"d",c:[{n:"NK_2024_WE1.pdf",t:"f"}]}]},
+          {n:"08_Steuer",t:"d",c:[{n:"2024",t:"d",c:[{n:"Anlage_V_2024.pdf",t:"f"}]}]},
+          {n:"09_Konto",t:"d",c:[{n:"2024_Kontoausz\u00fcge.pdf",t:"f"}]}
+        ]}
+      ]}
+    ]}
+  ]};
+  function mk(node){
+    var li=document.createElement("li"), dir=node.t==="d";
+    var row=document.createElement("div"); row.className="row "+(dir?"dir":"file");
+    row.innerHTML='<span class="chev">'+(dir?"\u25b6":"")+'</span><span class="ic">'+(dir?"\ud83d\udcc1":"\ud83d\udcc4")+'</span><span class="nm"></span>';
+    row.querySelector(".nm").textContent=node.n;
+    if(dir&&node.c){var b=document.createElement("span");b.className="b2";b.textContent=node.c.length;row.appendChild(b);}
+    li.appendChild(row);
+    if(dir&&node.c&&node.c.length){
+      var ul=document.createElement("ul");
+      node.c.forEach(function(ch){ul.appendChild(mk(ch));});
+      li.appendChild(ul);
+      row.addEventListener("click",function(){li.classList.toggle("open");});
+      if(node.o) li.classList.add("open");
+    }
+    return li;
+  }
+  var root=document.getElementById("fx-tree");
+  if(root){var ul=document.createElement("ul");ul.appendChild(mk(T));root.appendChild(ul);}
+})();
+</script>
 </body>
 </html>
