@@ -1,0 +1,2 @@
+# Marketing-/Doku-Assets nicht in Release-Tarballs aufnehmen
+docs/ export-ignore
