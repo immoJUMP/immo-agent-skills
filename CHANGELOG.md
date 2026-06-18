@@ -1,6 +1,43 @@
 # Aenderungsprotokoll
 
 Alle wesentlichen Aenderungen an diesem Projekt.
+## [1.7.0](https://github.com/immoJUMP/immo-agent-skills/compare/v1.6.0...v1.7.0) (2026-06-18)
+
+
+### Hinzugefuegt
+
+* add ordner-architekt skill for filing structure setup & restructuring ([ed7880d](https://github.com/immoJUMP/immo-agent-skills/commit/ed7880df3847d886b2e58c35fb096bf91d82e569))
+* **docs:** Mac-Finder-Screenshots in Word/PDF + 3 Anwendungsfaelle ([746c976](https://github.com/immoJUMP/immo-agent-skills/commit/746c9764082076bb40cd22e24144c90bf6f16b39))
+* **docs:** Objekt-Vorlage als Finder-Screenshot statt Tabelle ([e1724fa](https://github.com/immoJUMP/immo-agent-skills/commit/e1724fa0ae91c8b08a116aa94d5f94e27859e5c1))
+* **docs:** Top-Ebene als Bild + Einsteiger/ETW-Anwendungsfall ([0078cc3](https://github.com/immoJUMP/immo-agent-skills/commit/0078cc389fc04ca29e1db59cc7960e41b16656c0))
+* enrich ordner-architekt reference (Grundschuld, Kaufnebenkosten, jaehrlicher Objekt-Review) ([a727812](https://github.com/immoJUMP/immo-agent-skills/commit/a7278123615f958b8309712cacec507e787b4c0b))
+* **ordner-architekt:** Einheiten-Ebene als Mieter-Chronik ausarbeiten ([0b6f2cc](https://github.com/immoJUMP/immo-agent-skills/commit/0b6f2ccc4627c5176e543d90bb81ba1a1aed2296))
+* **ordner-architekt:** HTML-Explorer als macOS-Finder + 3 Anwendungsfaelle ([6a7e90d](https://github.com/immoJUMP/immo-agent-skills/commit/6a7e90dab62baba4d708e203fd958abfa7a9354e))
+* **ordner-architekt:** Kopier-Weg (anlegen+kopieren ohne move/delete) + anklickbare Links als Pflicht ([ecd05bb](https://github.com/immoJUMP/immo-agent-skills/commit/ecd05bb9d57c5875a4e8cbeb8eae11c9804eb35b))
+* **ordner-architekt:** Selbst-Ausfuehrung als Standardfall, Handarbeit nur als Notloesung ([c2a4506](https://github.com/immoJUMP/immo-agent-skills/commit/c2a450621daa4e45c4d515ff874d8061e36ba752))
+* **ordner-architekt:** statischen Baum durch interaktiven Datei-Explorer ersetzen ([ec868d6](https://github.com/immoJUMP/immo-agent-skills/commit/ec868d69ccdc9abd49080fa009bed53e6f81d00b))
+
+
+### Behoben
+
+* **ordner-architekt:** robuste Ausfuehrungs-Spezifikation nach Review ([9cd49ed](https://github.com/immoJUMP/immo-agent-skills/commit/9cd49ed9c222a9584976f6c7a0c22c72c6b56b80))
+
+
+### Dokumentation
+
+* **ordner-architekt:** Anglizismen entfernen, deutsche Begriffe durchziehen ([d85d7b3](https://github.com/immoJUMP/immo-agent-skills/commit/d85d7b30f51415c5591a73a30d5b6b593be47ca5))
+* **ordner-architekt:** HTML generisch machen + ImmoDigit-Copyright ([8f42974](https://github.com/immoJUMP/immo-agent-skills/commit/8f429745271825f9b8fc19a7aa7266e555287c3c))
+* **ordner-architekt:** immoJUMP-Branding + dezente Footer-Links ([1f96f8b](https://github.com/immoJUMP/immo-agent-skills/commit/1f96f8bbe800b67139111cfa738792354bbae304))
+* **ordner-architekt:** ImmoJump-Produktseite (autarke HTML mit eingebettetem Logo) ([ed813a4](https://github.com/immoJUMP/immo-agent-skills/commit/ed813a478eb3637fd03a2c6a71c83e3300590471))
+* WordPress-Beitrag als einfuegefertiges HTML ([ab54062](https://github.com/immoJUMP/immo-agent-skills/commit/ab54062e4376fefdeb9cde102207bc81f8c03721))
+* WordPress-Beitrag Download-Links als klare Platzhalter (Medien-URLs einsetzen) ([39cfe88](https://github.com/immoJUMP/immo-agent-skills/commit/39cfe88840dc26d7c0c053cc674f70572c53d8af))
+
+
+### Sonstiges
+
+* Marketing-Dokumente nach docs/ verschieben (aus Releases ausgeschlossen) ([3deddd8](https://github.com/immoJUMP/immo-agent-skills/commit/3deddd807d97c7f5cee7bf119b6f1f0411538fdb))
+* Office-Sperrdatei entfernen + .gitignore ergaenzen ([41459c8](https://github.com/immoJUMP/immo-agent-skills/commit/41459c8c7993f2fd0ac9534360ddead6f71c1e7e))
+
 ## [1.6.0](https://github.com/immoJUMP/immo-agent-skills/compare/v1.5.1...v1.6.0) (2026-06-17)
 
 
