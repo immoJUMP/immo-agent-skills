@@ -152,7 +152,7 @@ Dann **zwei Dinge testen, nacheinander, und das Ergebnis ehrlich melden:**
 
 2. **Schreib-Faehigkeit feststellen -- ohne dabei selbst zu schreiben (kritisch, wird gern vergessen):** Du musst *wissen*, ob der Zugang Ordner anlegen/umbenennen/verschieben/loeschen kann, bevor du einen Umsetzungsweg versprichst. Aber **ein echter Schreibversuch ist bereits eine Aenderung an echten Dateien** -- der darf nicht vor Sicherungskopie und Freigabe passieren. Stelle die Faehigkeit deshalb **passiv** fest, in dieser Reihenfolge:
    - **Berechtigungs-Infos lesen** (Drive: `get_file_permissions` / die Berechtigungsfelder aus `get_file_metadata` wie `canAddChildren`, `canRename`, `canEdit`; lokal: Schreibrecht am Pfad pruefen). Das ist rein lesend und reicht in den allermeisten Faellen, um Lese- von Schreibzugang zu unterscheiden.
-   - **Faehigkeiten der Anbindung kennen:** Viele Cloud-Anbindungen koennen faktisch **nur lesen** -- sie koennen lesen und teils Dateien anlegen/kopieren, aber **nicht umbenennen, verschieben oder loeschen**. Wenn die verfuegbaren Werkzeuge kein Verschieben/Umbenennen/Loeschen anbieten, steht das Ergebnis schon fest, ohne irgendetwas anzufassen.
+   - **Faehigkeiten der Anbindung kennen:** Viele Cloud-Anbindungen koennen faktisch **nur lesen** -- sie koennen lesen und teils Dateien anlegen/kopieren, aber **nicht umbenennen, verschieben oder loeschen**. Wenn die verfuegbaren Werkzeuge kein Verschieben/Umbenennen/Loeschen anbieten, steht das Ergebnis schon fest, ohne irgendetwas anzufassen. **Wichtige Zwischenstufe:** Manche Anbindungen koennen zwar **anlegen und kopieren**, aber nicht verschieben/umbenennen/loeschen (`canAddChildren: true`, aber kein Move/Rename/Delete) -- das reicht. Dann laeuft der Umbau ueber den **Kopier-Weg** (Schritt 7): saubere Struktur daneben anlegen, Dateien hineinkopieren, das alte Verzeichnis raeumt der Nutzer am Ende weg.
    - **Nur wenn die Berechtigungs-Infos nicht eindeutig sind:** hol dir eine **ausdrueckliche kurze Freigabe** fuer *eine* harmlose Schreibprobe (einen leeren Test-Ordner `_zugriffstest_` anlegen und sofort wieder entfernen) -- und nur in einem klar als Test markierten Bereich, nie an Bestandsdateien. Frag vorher: *"Darf ich kurz einen leeren Test-Ordner anlegen, um Schreibrechte zu pruefen? Loesche ich sofort wieder."*
    - Wenn Schreiben/Verschieben **geht**: gut -- dann fuehrt der Skill den Umbau spaeter selbst aus (Schritt 7). Das ist der Normalfall und das Ziel.
    - Wenn Schreiben/Verschieben **nicht** geht: das Ziel bleibt, dass *der Skill* umbaut -- also hilf dem Nutzer zuerst, einen Schreibweg herzustellen, statt ihm Handarbeit aufzudruecken:
@@ -239,7 +239,9 @@ Der Skill fuehrt den Umbau jetzt **selbst** aus -- der Nutzer muss nichts klicke
 
 - **Schreibfaehige Cloud-Anbindung:** Ordner anlegen, dann Dateien direkt umbenennen/verschieben. **Bevorzuge Umbenennen/Verschieben vor Kopieren** -- Umbenennen behaelt in Google Drive die Datei-Kennung und alle Freigabe-Links; **Kopieren erzeugt neue Kennungen (zerstoert Links, verdoppelt Speicher, verliert Kommentare/Versionen).** Niemals massenhaft kopieren.
 - **Lokal synchronisierter Ordner** (Drive for Desktop / Dropbox-App): Anlegen (`mkdir`), Umbenennen/Verschieben (`mv`). Sicher, schnell, behaelt bei Cloud-Synchronisation die Datei-Historie und synct von selbst zurueck.
-- Arbeite in beiden Faellen **objektweise** und melde nach jedem Objekt kurz, was passiert ist.
+- **Anbindung kann anlegen + kopieren, aber nicht verschieben/umbenennen/loeschen** (haeufig in der Cloud): Bau die saubere Zielstruktur **neu daneben** (z.B. Ordner `_NEU sortiert`) und **kopiere** die Dateien hinein -- **immer mit dem Originalnamen** (`title` mitgeben, sonst entsteht „Kopie von ..."). Sag dem Nutzer ehrlich die zwei Folgen: der Speicher verdoppelt sich voruebergehend, und **du kannst deine eigenen Kopien nicht loeschen** -- das alte Verzeichnis raeumt der Nutzer am Ende selbst weg, nachdem er geprueft hat. Tief verschachtelte Ordner (Foto-Saetze!) bewusst in Wellen stueckeln und einen Kontrollpunkt nach dem ersten Objekt setzen.
+- Arbeite in allen Faellen **objektweise** und melde nach jedem Objekt kurz, was passiert ist.
+- **Immer anklickbare Links mitgeben:** Zu jedem neu angelegten oder befuellten Ordner den direkten Link (`viewUrl`) ausgeben -- im Fortschritt *und* im Abschlussbericht -- damit der Nutzer mit einem Klick reinschauen kann.
 - **Nur wenn gar kein Schreibweg existiert** (und auch keiner einzurichten war): kein Schein-Umbau -- dann, und nur dann, eine exakte, nummerierte Klick-Anleitung ausgeben. Das ist die Ausnahme, nicht der Normalfall.
 
 **Sicherheitsregeln bei der Umsetzung:**
@@ -269,7 +271,7 @@ Plus: kritische Langzeit-Pruefung (1-3 Punkte) + Frage nach Sicherungskopie + Fr
 
 ### Abschlussbericht
 
-Was wurde angelegt/umbenannt/verschoben (mit Zahlen), was liegt in `_Zu_pruefen/`, wo steht das Kuerzel-Register, was sind die naechsten Schritte (z.B. Dateinamen nach Konvention nachziehen -- optional als Folgelauf).
+Was wurde angelegt/umbenannt/verschoben/kopiert (mit Zahlen), **mit anklickbarem Link je Zielordner**, was liegt in `_Zu_pruefen/`, wo steht das Kuerzel-Register, was sind die naechsten Schritte (z.B. beim Kopier-Weg: altes Verzeichnis nach Pruefung loeschen; Dateinamen nach Konvention nachziehen -- optional als Folgelauf).
 
 ---
 
@@ -280,7 +282,7 @@ Was wurde angelegt/umbenannt/verschoben (mit Zahlen), was liegt in `_Zu_pruefen/
 - **Halteformen sollen "der Einfachheit halber" zusammen** → widersprechen: Steuer laeuft pro Halteform, Vermischung ist ein echtes Risiko.
 - **Nutzer will Kuerzel rueckwirkend aendern** (Erstbelegten umbenennen) → die Eingefroren-Regel erklaeren, der Neuankoemmling weicht stattdessen aus.
 - **Loeschen statt Parken** → niemals loeschen, immer `_Zu_pruefen/`.
-- **Massenhaftes Kopieren in der Cloud** → stoppen: zerstoert Links, verdoppelt Speicher. Umbenennen/Verschieben nutzen.
+- **Massenhaftes Kopieren in der Cloud** → wenn Verschieben/Umbenennen verfuegbar ist, das bevorzugen (behaelt Datei-Kennung + Links). Den Kopier-Weg nur bewusst und **mit Ansage** waehlen (Speicher verdoppelt sich, Originale bleiben, Nutzer loescht alt) -- und Original-Dateinamen via `title` erhalten, sonst entsteht ueberall „Kopie von ...".
 
 ## Bei fehlenden Daten
 
