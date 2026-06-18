@@ -54,6 +54,16 @@ Pro Mieter-Ordner: Mietvertrag, Selbstauskunft/Bonität, Kaution, Übergabe (Ein
 - **Mieterwechsel = 2 Handgriffe:** beim ausziehenden Mieter „heute" durch das Auszugsdatum ersetzen (Ordner bleibt liegen, nichts wird gelöscht) und neuen Mieter-Ordner anlegen.
 - **Belege bleiben in `06_Belege`** – auch die Renovierung nach Auszug. Der Mieter-Ordner ist die Mietakte, nicht die Buchhaltung.
 
+## Drei Anwendungsfälle – dasselbe System
+
+Damit es greifbar wird: dieselbe Struktur, drei Strategien.
+
+**Buy & Hold (Bestand).** Kaufen und halten. Die Objekte liegen in `1_Bestand`, jedes mit der Struktur 00–09 und der Mieter-Chronik je Wohnung.
+
+**Fix & Flip.** Kaufen, sanieren, verkaufen. Ein Objekt wandert `0_Ankauf` → `1_Bestand` (mit `05_Verwaltung/Modernisierung` für die Sanierungsgewerke) → `2_Verkauft`. Das verkaufte Objekt bekommt einen eigenen `Verkauf/`-Ordner (Verkaufs-Exposé, Käufer-Kaufvertrag, Übergabe, Verkaufsabrechnung), die Veräußerungsgewinn-Unterlagen in `08_Steuer`.
+
+**Kurzzeitvermietung.** Plattform-Abrechnungen (Airbnb/Booking) wandern in `06_Belege`, die Umsatzsteuer-Voranmeldungen in `08_Steuer`, dazu Reinigung & Welcomebook in `05_Verwaltung`.
+
 ## Kurze Kürzel – mit drei Regeln
 
 Kurze Objekt-Kürzel wie `B8` oder `A19` sind Gold: schnell getippt, eindeutig im Gespräch und in der Buchhaltung. Drei Regeln halten sie sauber:
