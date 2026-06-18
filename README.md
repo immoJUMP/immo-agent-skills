@@ -186,6 +186,7 @@ immo-agent-skills/
 │   ├── datev-vorbereitung/SKILL.md # DATEV-Export vorbereiten
 │   ├── anlage-v-assistent/SKILL.md # Anlage V fuer Steuerberater
 │   ├── dokument-klassifizierer/SKILL.md # Dokumenttyp erkennen
+│   ├── ordner-architekt/SKILL.md  # Ablage aufbauen & restrukturieren
 │   ├── mietlisten-parser/SKILL.md # Mietlisten aus PDF extrahieren
 │   ├── expose-parser/SKILL.md     # Expose-Daten strukturiert extrahieren
 │   ├── akquise-netzwerk/SKILL.md  # Off-Market Akquiseplan
@@ -270,6 +271,7 @@ immo-agent-skills/
 | Skill | Beschreibung | Typischer Input |
 |-------|-------------|-----------------|
 | **Dokument-Klassifizierer** | Erkennt Dokumenttyp automatisch | Beliebiges Dokument (PDF/Scan) |
+| **Ordner-Architekt** | Baut/restrukturiert die Objektablage, interview-gefuehrt mit Ist-Analyse & Migrationsplan | Zugriff auf Drive/Dropbox/lokalen Ordner |
 | **Mietlisten-Parser** | Extrahiert strukturierte Daten aus Mietlisten-PDFs | Mietliste als PDF |
 | **Expose-Parser** | Extrahiert Eckdaten aus Makler-Exposes | Expose-PDF |
 
