@@ -278,7 +278,7 @@ immo-agent-skills/
 
 | Skill | Beschreibung | Typischer Input |
 |-------|-------------|-----------------|
-| **Ordner-Architekt** | Baut/restrukturiert die Portfolio-Ablage als Grundlage fuer alle Folge-Skills -- interview-gefuehrt mit Ist-Inventar, Bewertung & bestaetigungspflichtigem Migrationsplan | Zugriff auf Drive/Dropbox/lokalen Ordner |
+| **Ordner-Architekt** | Baut/ordnet die Portfolio-Ablage als Grundlage fuer alle Folge-Skills -- im gefuehrten Gespraech mit Ist-Inventar, Bewertung & bestaetigungspflichtigem Umzugsplan | Zugriff auf Drive/Dropbox/lokalen Ordner |
 
 ---
 
