@@ -271,9 +271,14 @@ immo-agent-skills/
 | Skill | Beschreibung | Typischer Input |
 |-------|-------------|-----------------|
 | **Dokument-Klassifizierer** | Erkennt Dokumenttyp automatisch | Beliebiges Dokument (PDF/Scan) |
-| **Ordner-Architekt** | Baut/restrukturiert die Objektablage, interview-gefuehrt mit Ist-Analyse & Migrationsplan | Zugriff auf Drive/Dropbox/lokalen Ordner |
 | **Mietlisten-Parser** | Extrahiert strukturierte Daten aus Mietlisten-PDFs | Mietliste als PDF |
 | **Expose-Parser** | Extrahiert Eckdaten aus Makler-Exposes | Expose-PDF |
+
+### Organisation & Ablage
+
+| Skill | Beschreibung | Typischer Input |
+|-------|-------------|-----------------|
+| **Ordner-Architekt** | Baut/restrukturiert die Portfolio-Ablage als Grundlage fuer alle Folge-Skills -- interview-gefuehrt mit Ist-Inventar, Bewertung & bestaetigungspflichtigem Migrationsplan | Zugriff auf Drive/Dropbox/lokalen Ordner |
 
 ---
 

@@ -75,7 +75,7 @@ Ein einziges Template fuer alle Objekttypen -- eine ETW ist einfach ein Objekt m
 
 ```
 B8 — MFH Beispielstrasse 8, Musterstadt/
-├── 00_Objektdatenblatt     Eckdaten, Kuerzel, Flaeche, Baujahr, WE-Liste, Kaufdatum, AfA-Basis, Zaehlernummern (living doc)
+├── 00_Objektdatenblatt.md  EINE Datei (living doc): Eckdaten, Kuerzel, Flaeche, Baujahr, WE-Liste, Kaufdatum, AfA-Basis, Zaehlernummern
 │                           + optional: jaehrlicher Objekt-Review/Investmentcheck ("performt das Objekt noch?")
 ├── 01_Stammdaten           evergreen: Grundbuch, Plaene/Grundrisse, Lageplan/Flurkarte, Wohnflaechenberechnung,
 │                           Energieausweis, Baubeschreibung, Behoerdenvollmacht, Teilungserklaerung (WEG)
@@ -113,13 +113,18 @@ Wer breit ueber mehrere Staedte investiert und Kollisionen ganz vermeiden will, 
 
 ### Datei-Namens-Konvention (der eigentliche Hebel)
 
+**Identisch zu den Folge-Skills `dokument-klassifizierer` und `beleg-sortierer`** -- sonst zerbricht genau die Kette, die diesen Skill wertvoll macht. Diese nutzen `YYYY-MM-DD_Dokumenttyp_Details` (Unterstrich, Datum vorn). Diese Konvention uebernimmt der Skill 1:1:
+
 ```
-JJJJ-MM-TT · <Kuerzel> · <WE> · <Typ> · <Kurzbeschreibung>.pdf
-2025-07-14 · B8 · WE1 · Rechnung · Heizungswartung.pdf
-2025-12-31 · B8 · WE2 · Zaehlerstand · Strom.pdf
+YYYY-MM-DD_<Typ>_<Beschreibung>
+2025-07-14_Rechnung_Heizungswartung.pdf
+2024-06-01_Mietvertrag_Mustermann.pdf
+2025-12-31_Zaehlerstand_Strom_WE2.pdf
 ```
 
-Datum vorn → chronologische Sortierung. Kuerzel drin → eine Suche nach `B8` ueber die ganze Ablage zieht jeden Beleg zum Objekt, egal in welchem Ordner. Typ-Tag (Rechnung / Vertrag / Abrechnung / Zaehlerstand / Mahnung) → filterbar. Genau das macht aus `beleg-sortierer`, `datev-vorbereitung` und `anlage-v-assistent` eine funktionierende Kette.
+Datum vorn → chronologische Sortierung. Typ-Tag (Rechnung / Vertrag / Abrechnung / Zaehlerstand / Mahnung) → filterbar.
+
+**Das Kuerzel gehoert in den Ordnernamen und ins Register -- nicht zwingend in jeden Dateinamen.** Der Objektordner (`B8 — ...`) liefert den Objektbezug bereits, und ein erzwungenes Kuerzel im Dateinamen wuerde mit den Dateien kollidieren, die `dokument-klassifizierer`/`beleg-sortierer` ohne Kuerzel erzeugen. Nur fuer Dateien **ausserhalb** der Objektstruktur oder objektuebergreifend gesammelt ist ein vorangestelltes Kuerzel sinnvoll -- konventionskonform mit Unterstrich: `YYYY-MM-DD_B8_<Typ>_<Beschreibung>`. So bleibt jede Datei kompatibel, und die Suche nach `B8` findet trotzdem alles Objektuebergreifende.
 
 ### Sonderformen (gleiches Template, nur Marker)
 
@@ -143,7 +148,10 @@ Dann **zwei Dinge testen, nacheinander, und das Ergebnis ehrlich melden:**
 1. **Lesezugriff:** Oeffne den Zielordner und liste den Inhalt (Drive-Connector: `get_file_metadata` + `search_files` auf die Ordner-ID; lokal: Verzeichnis auflisten).
    - Schlaegt es fehl ("nicht gefunden"), liegt es fast immer daran, dass der Ordner mit dem *falschen Account* geteilt ist oder gar nicht. Sag das klar und nenne den konkreten Fix: *"Ich haenge am Account X. Gib den Ordner fuer X frei, oder nenn mir einen lokalen Pfad. Dann teste ich neu."* **Nicht weitermachen, solange du nichts siehst.**
 
-2. **Schreibzugriff (kritisch, wird gern vergessen):** Pruefe, ob der Zugang Ordner anlegen/umbenennen/verschieben *kann*. Viele Cloud-Connectoren sind **read-only** -- sie koennen lesen und teils Dateien anlegen/kopieren, aber **nicht umbenennen, verschieben oder loeschen**. Genau das braucht eine Restrukturierung aber.
+2. **Schreib-Faehigkeit feststellen -- ohne dabei selbst zu schreiben (kritisch, wird gern vergessen):** Du musst *wissen*, ob der Zugang Ordner anlegen/umbenennen/verschieben/loeschen kann, bevor du einen Umsetzungsweg versprichst. Aber **ein echter Schreibversuch ist bereits eine Aenderung an Live-Dateien** -- der darf nicht vor Backup und Freigabe passieren. Stelle die Faehigkeit deshalb **passiv** fest, in dieser Reihenfolge:
+   - **Permission-Metadaten lesen** (Drive: `get_file_permissions` / die Capability-Felder aus `get_file_metadata` wie `canAddChildren`, `canRename`, `canEdit`; lokal: Schreibrecht am Pfad pruefen). Das ist read-only und reicht in den allermeisten Faellen, um Lese- von Schreibzugang zu unterscheiden.
+   - **Konnektor-Faehigkeiten kennen:** Viele Cloud-Connectoren sind faktisch **read-only** -- sie koennen lesen und teils Dateien anlegen/kopieren, aber **nicht umbenennen, verschieben oder loeschen**. Wenn die verfuegbaren Tools kein Move/Rename/Delete anbieten, steht das Ergebnis schon fest, ohne irgendetwas anzufassen.
+   - **Nur wenn die Metadaten nicht eindeutig sind:** hol dir eine **ausdrueckliche Mini-Freigabe** fuer *eine* harmlose Schreibprobe (einen leeren Test-Ordner `_zugriffstest_` anlegen und sofort wieder entfernen) -- und nur in einem klar als Test markierten Bereich, nie an Bestandsdateien. Frag vorher: *"Darf ich kurz einen leeren Test-Ordner anlegen, um Schreibrechte zu pruefen? Loesche ich sofort wieder."*
    - Wenn Schreiben/Verschieben **nicht** geht: sag es offen und biete die zwei tragfaehigen Wege an:
      > *"Ich kann deine Ablage lesen, aber ueber diesen Connector nicht umbenennen oder verschieben. Zwei saubere Wege: (a) Du oeffnest den Ordner lokal mit Drive for Desktop / der Dropbox-App -- dann erledige ich Anlegen/Umbenennen/Verschieben direkt auf dem Rechner, und es synct in die Cloud zurueck. Oder (b) ich liefere dir den kompletten Migrationsplan als exakte Klick-Anleitung, die du selbst abarbeitest. Was ist dir lieber?"*
    - **Tu niemals so, als haettest du umgebaut, wenn der Connector es nicht kann.** Lieber ein praeziser Plan als eine Luege.
@@ -167,13 +175,17 @@ Halte das Gespraech schlank: eine Frage, ein bis zwei Saetze Kontext, fertig. Ke
 
 ### Schritt 2: Ist-Zustand erforschen
 
-Jetzt crawlst du die echte Ablage und baust ein **Inventar** -- nicht aus Annahmen, sondern aus dem, was wirklich da ist:
+Jetzt crawlst du die echte Ablage und baust ein **vollstaendiges Inventar** -- nicht aus Annahmen, sondern aus dem, was wirklich da ist. Ein Migrationsplan, der „Datei fuer Datei" verspricht, braucht auch eine Datei-Ebene als Grundlage; eine reine Top-Ebenen-Sicht reicht dafuer nicht.
 
-- Top-Ebene auflisten, dann pro Objekt **eine Ebene tief** hineinschauen (Drive: `search_files` mit `parentId`; lokal: rekursiv listen, aber lesbar begrenzt).
+**Inventar-Regeln (verbindlich):**
+- **Voll rekursiv crawlen**, nicht nur eine Ebene (Drive: `search_files` mit `parentId`, pro Ordner weiter absteigen; lokal: rekursives Listing). Tiefer liegende Altstruktur, Dubletten und falsch einsortierte Dateien faellt man sonst nicht auf.
+- **Pro Datei erfassen:** Pfad, Name, Typ/Endung, Groesse, Aenderungsdatum, Eltern-Ordner. Daraus baust du eine echte Datei-Liste (kein Bauchgefuehl).
+- **Dubletten-Heuristik:** gleicher/aehnlicher Name oder gleiche Groesse in verschiedenen Ordnern markieren (`Fotos` vs. `2_Fotos`, `Kalkulation (1).pdf`).
+- **Skalierungsregel statt stillem Abbruch:** Bei sehr grossen Bestaenden (Richtwert > ~2.000 Dateien oder > ~25 Objekte) nicht abbrechen, sondern **objektweise** vorgehen -- ein Objekt vollstaendig inventarisieren, Muster-Migration zeigen, bestaetigen lassen, dann das Muster batchweise ueber die restlichen Objekte ziehen. **Sag offen, wenn du aus Mengengruenden gerade nur eine Stichprobe gezeigt hast** -- nie so tun, als sei alles erfasst, wenn es das nicht ist.
 - Vorhandene Struktur-Hinweise lesen: `README.md`, `Info.md`, `Anleitung`, alte Vorlagen-Ordner -- der Nutzer hat oft schon mal etwas angefangen. Lies es, statt neu zu erfinden (aber pruefe, ob es noch aktuell ist oder nur Archaeologie).
-- Erfasse pro Objekt: Kuerzel (falls vorhanden), Objekttyp, welche Unterordner existieren, wo lose Dateien in der Wurzel liegen, welche Entitaet.
+- Erfasse pro Objekt: Kuerzel (falls vorhanden), Objekttyp, vorhandene Unterordner, lose Dateien in der Wurzel, Entitaet.
 
-Melde dem Nutzer den Ist-Stand **kompakt und faktisch** zurueck (z.B. als kleine Tabelle: Entitaet / Objekt / Kuerzel / Auffaelligkeiten), bevor du wertest.
+Melde dem Nutzer den Ist-Stand **kompakt und faktisch** zurueck (z.B. Tabelle: Entitaet / Objekt / Kuerzel / Dateianzahl / Auffaelligkeiten), und nenne explizit, ob das Inventar **vollstaendig** oder eine **Stichprobe** ist, bevor du wertest.
 
 ### Schritt 3: Ist-Zustand objektiv bewerten
 
@@ -215,7 +227,7 @@ Fasse zusammen und lass bestaetigen: *"Soll ich genau das so umsetzen?"*
 
 Bevor du **irgendetwas** anlegst, umbenennst oder verschiebst, hol dir zwei Dinge:
 
-1. **Backup-Frage (nicht ueberspringen):** *"Willst du vorher ein Backup? Bei Cloud-Ablage am einfachsten: den ganzen Bestand-Ordner einmal duplizieren oder als ZIP herunterladen, bevor wir umbauen. Dann sind wir auf der sicheren Seite, falls dir das Ergebnis nicht gefaellt."* Empfiehl das Backup aktiv -- Umbenennen/Verschieben in grossem Stil ist nicht trivial rueckgaengig zu machen.
+1. **Backup -- Pflicht, keine Option, sobald mehr als ein Objekt betroffen ist.** Formuliere es als feste Regel, nicht als offene Frage, sonst klickt der Nutzer sie weg: *"Bevor ich umbaue, brauchen wir ein Backup -- bei mehr als einem Objekt setze ich nur **nach** Backup um, sonst bleibe ich im Plan-Modus. Am einfachsten: den ganzen Bestand-Ordner einmal duplizieren oder als ZIP herunterladen. Sag mir Bescheid, wenn das Backup steht."* Erst wenn das Backup bestaetigt ist (oder der Nutzer ausdruecklich nur den Plan will), geht es weiter. Bei genau **einem** Objekt mit wenigen Dateien darf der Nutzer bewusst darauf verzichten -- dann aber explizit benannt.
 2. **Freigabe:** *"Soll ich jetzt loslegen?"* -- niemals ungefragt ins Live-System.
 
 ### Schritt 7: Umsetzung + Bericht
@@ -245,7 +257,7 @@ Tabelle: Entitaet / Objekt / aktuelles Kuerzel / Objekttyp / Auffaelligkeiten. D
 
 | Aktion | Von | Nach |
 |--------|-----|------|
-| Anlegen | -- | `Musterbesitz GbR/1_Bestand/B8 — .../00_Objektdatenblatt` |
+| Anlegen | -- | `Musterbesitz GbR/1_Bestand/B8 — .../00_Objektdatenblatt.md` |
 | Umbenennen | `BNBU8 - ...` | `B8 — MFH Beispielstr. 8, Musterstadt` |
 | Verschieben | `Kalkulation.pdf` (Wurzel) | `B8 — .../02_Kaufprozess/` |
 
