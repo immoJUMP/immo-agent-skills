@@ -97,7 +97,7 @@ JJJJ-MM-TT_Typ_Beschreibung
 
 Genau dafür gibt es den **Ordner-Architekt** – einen KI-Skill, der diese Struktur **im Gespräch gemeinsam mit dir aufbaut**, zugeschnitten auf dein Portfolio: Er prüft deinen Ist-Zustand, schlägt den Umbau vor und setzt ihn nach deiner Freigabe selbst um. So bekommst du die saubere Ablage, ohne selbst zu sortieren.
 
-**Vorlage zum Download:** Die komplette Struktur gibt es als [Word-Dokument](#) und als [PDF](#) zum Mitnehmen.
+**Vorlage zum Download:** Die komplette Struktur gibt es als [Word-Dokument](LINK-DOCX-EINSETZEN) und als [PDF](LINK-PDF-EINSETZEN) zum Mitnehmen.
 
 ---
 
