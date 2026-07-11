@@ -1,6 +1,6 @@
 ---
 name: prozess-designer
-description: "Entwirft komplette Immobilienprozesse, indem der Skill DICH interviewt statt umgekehrt -- er stellt Schritt fuer Schritt die richtigen Fragen (welcher Prozess, hast du Unterlagen, welche Phasen, Definition of Done, Pflichtinfos, Rhythmus) und baut daraus Pipelines, Phasen und Aktivitaeten-Templates (Ketten, Entscheidungen, wiederkehrende Aufgaben) direkt in immoJUMP ueber MCP. Fragt dich explizit, welcher Pipeline-Typ gebaut wird (Kontakt-, Immobilien- oder Dealpipeline) und ob im Hintergrund automatisch standardisierte Aufgaben ausgeloest werden sollen, sobald ein Eintrag in einen Status kommt -- oder ob du den Prozess erstmal nur als Sichtstruktur willst. Nutze diesen Skill fuer Ankaufs-, Sanierungs-, Neuvermietungs-, Verkaufs- oder Maklernetzwerk-Pipelines, wenn du Ablaeufe standardisieren, Verantwortung klar vergeben und im System verankern willst."
+description: "Entwirft komplette Immobilienprozesse, indem der Skill DICH interviewt statt umgekehrt -- er stellt Schritt fuer Schritt die richtigen Fragen (welcher Prozess, hast du Unterlagen, welche Phasen, Definition of Done, Pflichtinfos, Rhythmus) und baut daraus Pipelines, Phasen und Aktivitaeten-Templates (Ketten, Entscheidungen, wiederkehrende Aufgaben) direkt in immoJUMP ueber MCP. Fragt dich explizit, welcher Pipeline-Typ gebaut wird (Kontakt-, Immobilien- oder Dealpipeline) und ob im Hintergrund automatisch standardisierte Aufgaben ausgeloest werden sollen, sobald ein Eintrag in einen Status kommt -- oder ob du den Prozess erstmal nur als Sichtstruktur willst. Bringt erprobte Referenzprozesse aus der Skalierungspraxis mit (Dealflow-Maschine, Akquiseteam mit Freigabestufen, Handwerker-Onboarding, Verwalter-Steuerung), KPI-Vorschlaege pro Prozessphase und eine Reifegrad-Logik (Selbermacher -> Delegation -> Team). Nutze diesen Skill fuer Ankaufs-, Sanierungs-, Neuvermietungs-, Verkaufs- oder Maklernetzwerk-Pipelines, wenn du Ablaeufe standardisieren, Verantwortung klar vergeben und im System verankern willst."
 ---
 
 # Prozess-Designer -- Immobilienprozesse entwerfen & delegierbar machen
@@ -860,6 +860,84 @@ Entitaet: immobilie
 Phasen/Bereiche: Monatliche Kontrolle -> Nebenkostenabrechnung -> Mieterhoehung -> Instandhaltung -> Mieterkommunikation
 Recurring: monatliche Mieteingangs-Kontrolle, jaehrliche NK-Abrechnung
 
+### Handwerker-Onboarding-Pipeline
+Entitaet: contact (Handwerker/Allrounder)
+Phasen: Empfohlen/Gefunden -> Unterlagen-Check -> Testauftrag -> Bewaehrt -> Stammhandwerker
+Definition of Done je Phase: "Unterlagen-Check" = Gewerbeanmeldung, Qualifikationsnachweis, Betriebshaftpflicht und Referenzen liegen vor; "Bewaehrt" = Testauftrag in Qualitaet, Frist und Preis ohne Beanstandung
+Entscheidungen: nach Unterlagen-Check "Testauftrag ja/nein"; nach Testauftrag "hochstufen/aussortieren"
+Auto-Aktivitaeten: in "Unterlagen-Check" Kette "Nachweise anfordern" -> "Nachweise pruefen"; in "Testauftrag" Aufgabe "kleinen, unkritischen Auftrag vergeben -- Zahlung nach Baufortschritt, Schlussrate (Richtwert ~20%) erst nach Fertigstellung"
+Regeln: Gas, Wasser und Elektrik wegen Mangelfolgeschaeden NUR an Fachbetriebe; Bewertung nach Qualitaet, Zuverlaessigkeit, Preis, Reaktionszeit, Fachzulassung
+Quellen fuer Kandidaten: Empfehlungen, Investoren-Stammtische, Hausverwaltungen, Steuerberater, Banker, Portale, Direktansprache auf Baustellen
+
+### Akquiseteam-Pipeline (Tippgeber & Akquisiteure)
+Entitaet: contact
+Phasen: Kandidat -> Onboarding (Suchprofil, Kalkulationsvorlage, Skripte uebergeben) -> Tippgeber aktiv -> Akquisiteur (erweiterte Freigaben) -> Partner
+Entscheidungen: Freigabestufe erhoehen ja/nein (siehe Delegationsstufen unten)
+Recurring: woechentlicher Deal Call -- 20-30 Minuten je Objekt, feste Agenda: Fotos, Eckdaten, Kalkulation, Rueckfragen, naechste Schritte
+Regeln: LOIs und Angebote gehen NIE ohne Freigabe des Investors raus; Verguetung passend zum Wertbeitrag (Tippgeber pauschal oder prozentual, Akquisiteure 1-2% vom Kaufpreis, bei Handelsgeschaeften Gewinnbeteiligung -- rechtlich pruefen lassen: Maklerrecht, Tippgeberrecht, Vollmachten)
+
+---
+
+## Praxiswissen Skalierung: Reifegrade, KPIs, Engpaesse
+
+Dieses Wissen fliesst ins Interview und ins Verbesserungs-Sparring (0.3.6) ein -- als Angebot, nicht als Dogma. Grundregel der Skalierung: **Nicht alle Hebel gleichzeitig, sondern den aktuellen Engpass identifizieren und genau dort einen Prozess bauen.**
+
+### Reifegrad-Stufen: Selbermacher -> Delegation -> Team
+
+| Stufe | Woran du sie erkennst | Was der Prozess leisten muss | Typischer naechster Schritt |
+|-------|------------------------|-------------------------------|------------------------------|
+| **1. Selbermacher** | Investor macht alles selbst, Wissen im Kopf, kein System | Eigene Arbeit strukturieren: Phasen, Definition of Done, Wiedervorlagen -- Sichtstruktur reicht oft | Ablauf dokumentieren, damit Delegation ueberhaupt moeglich wird |
+| **2. Delegation** | Erste Zuarbeiter/Dienstleister (Backoffice, Allrounder, Verwalter), aber staendige Rueckfragen | Aufgaben mit Wie, Referenz und Done; Freigabestufen; Automatik bei Statuswechsel | Boomerang-Aufgaben eliminieren, SOPs in Templates giessen |
+| **3. Team** | Mehrere Rollen (Akquisiteure, Bauleitung, Verwaltung), Investor als Gatekeeper | Rollen mit Verantwortungsbereich, Deal Calls, Eskalationswege, Scorecards, Reporting | Gatekeeper-Rolle (Teamleiter) einziehen, Investor arbeitet AM System |
+
+**Wenn/Dann-Regeln zur Einordnung:**
+
+- **Wenn** der Nutzer mehr kaufen will, als er selbst akquirieren kann (Zeitengpass, raeumliche Distanz, Wachstumsziel) → **dann** Akquiseteam-Prozess vorschlagen (Tippgeber vor Akquisiteur, Freigabestufen von Anfang an).
+- **Wenn** wiederkehrend saniert wird und der Bestand waechst (Richtwert: ab ca. 30-50 Wohneinheiten) → **dann** lohnt die Pruefung eines festen Allrounders statt reiner Fremdvergabe (Erfahrungswert: interne Vollkosten ca. 22-23 EUR/h vs. extern 45-50 EUR/h) -- vorher Handwerker-Onboarding-Prozess aufbauen.
+- **Wenn** Verwaltung Zeit und Motivation frisst, waehrend Akquise und Finanzierung liegen bleiben → **dann** Fremdverwaltung pruefen (Erfahrungswerte: Sondereigentumsverwaltung ETW ca. 15-20 EUR netto/WE/Monat, MFH-Mietverwaltung ca. 25-35 EUR brutto/Einheit) und einen Verwalter-Steuerungsprozess bauen (Reporting, Abrechnungsfristen, Erreichbarkeit) statt eines Eigenverwaltungs-Prozesses. Merke: Verwalterwechsel ist teuer -- Auswahlprozess ernst nehmen.
+- **Wenn** der Nutzer Stufe 1 ist und nach Team-Prozessen fragt → **dann** ehrlich bremsen: erst dokumentierter Eigenprozess, dann Delegation. Delegation ohne dokumentierten Ablauf erzeugt nur Rueckfragen.
+
+### Delegationsstufen in der Akquise (Freigabelogik)
+
+Verantwortung wird stufenweise gegeben, nicht auf einmal. Im Prozess heisst das: Entscheidungs-Templates als Freigabe-Schleusen einbauen.
+
+| Stufe | Der Akquisiteur darf... | Freigabe durch Investor noetig fuer... |
+|-------|--------------------------|----------------------------------------|
+| 1 (neu) | Inserate screenen, Unterlagen anfordern, Grobkalkulation | alles Weitere |
+| 2 | Besichtigungen allein durchfuehren, Besichtigungsbericht | Angebote, LOIs, Preisaussagen |
+| 3 | Kalkulation, Expose-Aufbereitung, Verhandlungsvorbereitung | LOI-Versand, finale Preisverhandlung |
+| 4 (austrainiert) | Verhandlung fuehren, Bankunterlagen vorbereiten | Kaufentscheidung, Notartermin |
+
+### KPI-Vorschlaege pro Prozessphase
+
+Biete dem Nutzer pro Phase 1-2 messbare Groessen an -- ein Prozess ohne Zahlen ist nicht steuerbar. Nicht alle aufzwingen; die zum Engpass passenden auswaehlen.
+
+| Prozess / Phase | KPI-Vorschlaege |
+|-----------------|-----------------|
+| Dealflow / Screening | Angebote gesichtet pro Woche, Grobkalkulationen ("Bierdeckel") pro Woche, sichtbarer Funnel im Suchgebiet (Orientierung: >100 passende On-Market-Angebote als Startindikator, sonst Suchradius weiten) |
+| Erstkontakt / Nachfass | Kontaktaufnahmen pro Woche, Reaktionszeit auf Zuleitungen (Ziel: jede Zuleitung beantwortet, sonst sterben Tippgeber), offene Wiedervorlagen |
+| Besichtigung | Besichtigungen pro Woche/Monat, Quote Besichtigung → Angebot |
+| Verhandlung / LOI | LOIs pro Monat, Quote LOI → Zuschlag, durchschnittlicher Nachlass |
+| Sanierung | Gewerke mit 3 Angeboten, Termintreue je Gewerk, Budgetabweichung, einbehaltene Schlussraten |
+| Vermietung | Tage Leerstand, Anfragen pro Inserat, Quote Besichtigung → Bewerbung |
+| Verwaltung | Mieteingangsquote zum Stichtag, offene Maengel > 14 Tage, NK-Abrechnungen im Fristplan |
+| Team | Deals pro Akquisiteur, Deal-Call-Teilnahme, Boomerang-Quote (zurueckgekommene Aufgaben) |
+
+### Typische Engpaesse und Prozess-Anti-Patterns
+
+Aktiv gegenpruefen, wenn der Nutzer seinen Ist-Zustand beschreibt:
+
+| Anti-Pattern | Warum es scheitert | Gegenmittel im Prozess-Design |
+|--------------|--------------------|-------------------------------|
+| **Funnel ohne Filter** | Viele Angebote sichten ohne Kriterien erzeugt Scheinarbeit statt Deals | Suchprofil als Pflichtinfo der ersten Phase; Go/NoGo-Entscheidung frueh einbauen |
+| **Zuleitungen versanden** | Wer Tipps ignoriert, verliert Tippgeber -- die Quelle stirbt leise | Antwort-Aufgabe mit kurzer Frist automatisch bei jeder Zuleitung; Reaktionszeit als KPI |
+| **Delegation ohne Vorlage** | Ohne Suchprofil, Kalkulationsvorlage und Skript liefert jeder Akquisiteur anders | Onboarding-Phase mit Vorlagen-Uebergabe als Definition of Done |
+| **LOI ohne Freigabe** | Schlechte oder eigenmaechtige Angebote schaedigen den Ruf am Markt dauerhaft | Freigabe-Entscheidung als Pflicht-Template vor jedem LOI/Angebot |
+| **Alle Hebel gleichzeitig** | Akquiseteam + Handwerker + Verwalterwechsel + neue Struktur parallel ueberfordert jeden | Pro Quartal EIN Engpass, EIN neuer Prozess -- den Rest bewusst zurueckstellen |
+| **Pipeline als Friedhof** | Phasen ohne Frist und Done werden zum Zwischenparkplatz | Jede Phase mit Frist + Eskalation; wiederkehrender Pipeline-Review (siehe `wochen-jourfixe`) |
+| **Einzeldeal-Fixierung** | Emotionale Abhaengigkeit von einem Objekt zerstoert Verhandlungsposition | Pipeline-Denken verankern: KPI ist der Funnel, nicht der eine Deal |
+| **Prozess ohne Plan B** | Sanierungs-, Handels- und Gewerbeprozesse ohne Rueckfalloption werden bei Marktdrehung teuer | Plan-B-Feld als Pflichtinfo (z.B. "Verkauf scheitert → normale Vermietung") |
+
 ---
 
 ## Beispiel: Off-Market-Akquise-Pipeline (vollstaendig, Typ Kontakt)
@@ -937,6 +1015,7 @@ Sei am Ende ehrlich mit dem Nutzer und sprich kurz die zwei, drei Stellen an, an
 
 - `skills/akquise-agent/SKILL.md` -- Systematische Deal-Suche (kann als Input fuer Ankauf-Prozess dienen)
 - `skills/deal-screener/SKILL.md` -- Schnellbewertung einzelner Objekte
-- `skills/wochen-jourfixe/SKILL.md` -- Woechentliche Statusbesprechung (nutzt die Prozess-Ergebnisse)
+- `skills/wochen-jourfixe/SKILL.md` -- Woechentliche Statusbesprechung und Pipeline-Review (nutzt die Prozess-Ergebnisse; dort auch der Wochenrhythmus mit Akquise-Slots und Wochen-KPIs)
+- `skills/ordner-architekt/SKILL.md` -- Ablagestruktur, die die Prozesse mit Dokumenten versorgt (Objektakte, Bankmappe, Fristen-Dokumente)
 - `skills/unterlagen-analyst/SKILL.md` -- Analyse der Objektunterlagen (wird im Ankauf-Prozess eingebunden)
 - `skills/kaufvertrag-pruefung/SKILL.md` -- Kaufvertragspruefung (Teilprozess im Ankauf)
