@@ -1,6 +1,6 @@
 ---
 name: ordner-architekt
-description: "Baut eine saubere, dauerhaft tragfaehige Ordnerstruktur fuer ein Immobilien-Portfolio auf -- oder raeumt eine gewachsene, chaotische Ablage neu. Im gefuehrten Gespraech: Der Skill testet zuerst den Zugriff auf deine Ablage (Google Drive, Dropbox, lokaler Ordner), erforscht den Ist-Zustand, bewertet ihn objektiv gegen eine bewaehrte Referenzstruktur, fragt deinen Soll-Zustand ab und legt dir einen bestaetigungspflichtigen Umzugsplan vor -- inklusive Frage nach einer Sicherungskopie -- bevor irgendetwas angelegt, umbenannt oder verschoben wird -- und setzt den bestaetigten Umbau dann selbst um, sodass du am Ende eine fertig sortierte Ablage hast statt einer To-do-Liste. Nutze diesen Skill wenn du deine Objektablage neu aufsetzen, vereinheitlichen oder aufraeumen willst, wenn jedes Objekt anders sortiert ist, wenn du Kuerzel-Konventionen einfuehren willst oder wenn du vor Steuererklaerung/Bankgespraech/Verkauf eine konsistente Struktur brauchst."
+description: "Baut eine saubere, dauerhaft tragfaehige Ordnerstruktur fuer ein Immobilien-Portfolio auf -- oder raeumt eine gewachsene, chaotische Ablage neu. Im gefuehrten Gespraech: Der Skill testet zuerst den Zugriff auf deine Ablage (Google Drive, Dropbox, lokaler Ordner), erforscht den Ist-Zustand, bewertet ihn objektiv gegen eine bewaehrte Referenzstruktur, fragt deinen Soll-Zustand ab und legt dir einen bestaetigungspflichtigen Umzugsplan vor -- inklusive Frage nach einer Sicherungskopie -- bevor irgendetwas angelegt, umbenannt oder verschoben wird -- und setzt den bestaetigten Umbau dann selbst um, sodass du am Ende eine fertig sortierte Ablage hast statt einer To-do-Liste. Kennt die fuenf Akten der Investorenpraxis (Objektakte, Bankmappe, Mieterakte, Steuerbelege, Notfallakte) und die Fristen-relevanten Dokumente (Zinsbindung, NK-Abrechnung, Mietanpassung). Nutze diesen Skill wenn du deine Objektablage neu aufsetzen, vereinheitlichen oder aufraeumen willst, wenn jedes Objekt anders sortiert ist, wenn du Kuerzel-Konventionen einfuehren willst, wenn du eine Bankmappe oder Notfallakte anlegen willst oder wenn du vor Steuererklaerung/Bankgespraech/Verkauf eine konsistente Struktur brauchst."
 ---
 
 # Ordner-Architekt -- Immobilien-Ablage aufbauen & neu ordnen
@@ -58,6 +58,8 @@ Die oberste Achse ist **nicht** "Bestand vs. Ankauf", sondern die **Halteform** 
 Immobilien/
 ├── 00_Vorlagen/                    Muster-Blankos (Objektdatenblatt, Behoerdenvollmacht, Mieterliste ...)
 ├── 00_Portfolio/                   Kuerzel-Register + Portfolio-Uebersicht + Darlehensuebersicht
+│   ├── Bankmappe/                  Selbstauskunft, Vermoegensaufstellung, Objektliste (jaehrlich aktualisieren, s.u.)
+│   └── Notfallakte/                Vollmachten, Konten-/Ansprechpartnerliste (s.u.)
 │
 ├── <Halteform A, z.B. Musterbesitz GbR>/
 │   ├── 00_Gesellschaft/            Gesellschaftsvertrag, Eintragung, Transparenzregister, Angestellte
@@ -73,7 +75,7 @@ Immobilien/
 
 ### Die Objekt-Vorlage (gleich fuer ETW, MFH, Sonderformen)
 
-Eine einzige Vorlage fuer alle Objekttypen -- eine ETW ist einfach ein Objekt mit *einer* Einheit. Gleiche Struktur = gleiche Handgriffe ueberall, und Folge-Skills (`beleg-sortierer`, `nebenkosten-pruefer`, `anlage-v-assistent`) finden sich auf jedem Objekt identisch zurecht. Leere Ordner kosten nichts; uneinheitliche Strukturen kosten bei jeder Automatisierung.
+Eine einzige Vorlage fuer alle Objekttypen -- eine ETW ist einfach ein Objekt mit *einer* Einheit. Gleiche Struktur = gleiche Handgriffe ueberall, und Folge-Skills (`beleg-sortierer`, `nebenkosten-pruefer`, `datev-vorbereitung`) finden sich auf jedem Objekt identisch zurecht. Leere Ordner kosten nichts; uneinheitliche Strukturen kosten bei jeder Automatisierung.
 
 ```
 B8 — MFH Beispielstrasse 8, Musterstadt/
@@ -155,6 +157,42 @@ Pro Mieter-Ordner: Mietvertrag, Selbstauskunft/Bonitaet, Kaution, Uebergabe (Ein
 - **Grundstueck (unbebaut):** keine AfA aufs Land, kein `04_Einheiten`; `01_Stammdaten` + `02_Kaufprozess` + Grundsteuer reichen oft.
 - **Extern verwaltetes Objekt:** `05_Verwaltung/Hausverwaltung-extern/` mit Verwaltervertrag, Abrechnungen, Schriftverkehr.
 
+### Dokumenttypen-Systematik: die fuenf Akten der Investorenpraxis
+
+Hinter der Ordnerstruktur stehen fuenf logische Akten -- jede beantwortet eine andere Frage und hat einen anderen Abnehmer. Die Struktur oben bildet sie ab; im Gespraech helfen sie zu pruefen, ob nichts fehlt:
+
+| Akte | Frage / Abnehmer | Wo sie in der Struktur liegt | Kerninhalt |
+|------|-------------------|------------------------------|------------|
+| **Objektakte** | "Alles zu diesem Objekt?" -- du selbst, Kaeufer, Gutachter | der komplette Objektordner `00-09` | Stammdaten, Kaufprozess, Verwaltung, Historie |
+| **Bankmappe** | "Bist du kreditwuerdig?" -- die Bank | `00_Portfolio/Bankmappe/` (objektuebergreifend) + je Objekt `03_Finanzierung` | Selbstauskunft, Vermoegensaufstellung, Objekt- und Darlehensuebersicht, letzte Steuerbescheide, Mietlisten -- aktuell gehalten |
+| **Mieterakte** | "Was ist mit diesem Mietverhaeltnis?" -- Anwalt, Verwalter, du | `04_Einheiten/WE.../<Mieter-Ordner>` | Mietvertrag, Selbstauskunft, Kaution, Uebergaben, Erhoehungen, Korrespondenz |
+| **Steuerbelege** | "Was ist absetzbar?" -- Steuerberater, Finanzamt | `06_Belege/<Jahr>/` + `08_Steuer/<Jahr>/` | Rechnungen, Zinsbescheinigungen, Anlage V/Feststellung -- Erhaltung vs. Herstellung getrennt |
+| **Notfallakte** | "Was, wenn dir etwas passiert?" -- Partner, Erben, Bevollmaechtigte | `00_Portfolio/Notfallakte/` | Vollmachten, Konten-/Darlehensliste, Versicherungsuebersicht, Ansprechpartner (Verwalter, Steuerberater, Bank), Zugaenge-Hinweis |
+
+**Warum die Bankmappe eigener Pflege-Kandidat ist:** Finanzierungsfaehigkeit haengt zur Haelfte an Zahlen, zur Haelfte an Auftritt -- wer der Bank binnen eines Tages eine vollstaendige, aktuelle Mappe liefert, verhandelt aus einer anderen Position als wer drei Wochen sammelt. Deshalb gehoert in `00_Portfolio/Bankmappe/` ein jaehrlicher Aktualisierungslauf (Vermoegensaufstellung, Objektliste, Darlehensstaende), nicht nur ein Einmal-Ablageplatz. Wer skalieren will, behandelt die Bankmappe wie ein lebendes Dokument.
+
+### Fristen-relevante Dokumente (die Struktur muss sie auffindbar machen)
+
+Eine gute Ablage ist auch ein Fristen-Fruehwarnsystem: Diese Dokumente tragen Termine mit Geldfolgen -- sie muessen an ihrem festen Platz liegen, damit ein Wochen- oder Jahresreview (siehe `wochen-jourfixe`) sie findet:
+
+| Dokument | Ordner | Frist dahinter | Konsequenz bei Versaeumnis |
+|----------|--------|----------------|-----------------------------|
+| Darlehensvertrag / Konditionsblatt | `03_Finanzierung` | Zinsbindungsablauf (12-24 Monate vorher handeln) | Schlechte Anschlusskondition, Cashflow-Einbruch |
+| Nebenkostenabrechnung + Belege | `07_Nebenkosten/<Jahr>` | 12-Monats-Abrechnungsfrist | Nachforderungen an Mieter verfallen |
+| Mietvertrag + Erhoehungshistorie | Mieterakte | Mietanpassungsfenster, Kappungsgrenze | Dauerhaft entgangene Miete |
+| Energieausweis | `01_Stammdaten` | 10 Jahre Gueltigkeit | Pflichtangabe bei Neuvermietung/Verkauf fehlt |
+| Versicherungspolicen | `05_Verwaltung/Versicherung` | Kuendigungs- und Schadenmeldefristen | Doppelversicherung oder verweigerte Regulierung |
+| Zinsbescheinigungen | `03_Finanzierung` | jaehrlich fuer Anlage V | Steuererklaerung verzoegert sich |
+| WEG-Protokolle / Beschluesse | `05_Verwaltung/WEG` | Anfechtungsfrist nach Beschluss | Teurer Beschluss wird bestandskraeftig |
+
+### Reifegrad: Die Struktur waechst mit (Selbermacher -> Delegation -> Team)
+
+Die gleiche Struktur traegt vom Alleininvestor bis zum Team -- aber der Anspruch steigt:
+
+- **Selbermacher (1-5 Objekte):** Struktur dient dem eigenen Wiederfinden. Kuerzel-Register und Namenskonvention reichen als Disziplin.
+- **Delegation (Verwalter, Steuerberater, Allrounder greifen zu):** Jetzt ist die Ablage eine **Schnittstelle**. Externe brauchen klar geschnittene Zugriffsbereiche: der Steuerberater `06_Belege` + `08_Steuer`, der Verwalter `04_Einheiten` + `05_Verwaltung`, die Bank die Bankmappe -- nie den ganzen Bestand freigeben. Wenn/Dann-Regel: **Wenn** ein Externer regelmaessig Unterlagen anfordert, **dann** bekommt er einen fest definierten Ordner-Ausschnitt statt E-Mail-Anhaengen -- das ist der Moment, in dem uneinheitliche Strukturen richtig teuer werden.
+- **Team (eigene Mitarbeiter, viele Objekte):** Die Struktur wird Teil der Prozesse -- Aufgaben in Pipelines (siehe `prozess-designer`) referenzieren feste Ablageorte ("Unterlagen nach `02_Kaufprozess`, Belege nach `06_Belege/<Jahr>`"). Jede Abweichung von der Vorlage bricht jetzt nicht mehr nur die Ordnung, sondern die Delegation.
+
 ---
 
 ## Strategie
@@ -221,6 +259,8 @@ Jetzt der ehrliche Abgleich gegen die Referenzstruktur. Sei **Sparringspartner, 
 - **Doppelte/verwaiste Ordner:** `Fotos` und `2_Fotos` nebeneinander; kaputte Nummern (`20_`, `21_`, `2_`).
 - **Steuerlich riskante Vermischung:** Reparatur und Modernisierung im selben Ordner (§6 Abs. 1 Nr. 1a EStG).
 - **Fehlende Pflichtbloecke:** kein Stammdaten-Block, keine Kaution, kein Objektkonto, keine Zinsbescheinigungen.
+- **Fehlende Portfolio-Akten:** keine Bankmappe (Selbstauskunft und Objektliste werden vor jedem Bankgespraech neu zusammengesucht) und keine Notfallakte -- beide gezielt ansprechen, sie fehlen fast immer.
+- **Fristen-Dokumente verstreut:** Darlehensvertraege, NK-Unterlagen oder Versicherungspolicen liegen nicht an ihrem festen Platz -- damit ist kein Fristen-Monitoring moeglich (siehe Fristen-Tabelle oben).
 
 Fasse die Befunde priorisiert zusammen: zuerst die mit steuerlichen/rechtlichen Zaehnen, dann die reinen Ordnungsthemen. Halte es knapp -- 3-7 Punkte, nicht dreissig.
 
@@ -335,4 +375,6 @@ Gib am Ende der Ist-Bewertung eine kurze Einschaetzung, wie sicher die Zuordnung
 - **`dokument-klassifizierer`** -- ordnet *einzelne* Dokumente dem richtigen Objekt + Zielordner zu. Ideal als Folgelauf, um lose Dateien nach dem Strukturaufbau einzusortieren.
 - **`beleg-sortierer`** -- klassifiziert Belege (Erhaltung vs. Herstellung) fuer `06_Belege/` und die Steuer.
 - **`prozess-designer`** -- baut Arbeitsablaeufe in immoJUMP (z.B. "Onboarding nach Kauf"), die die angelegte Objekt-Vorlage bespielen.
-- **`anlage-v-assistent`** / **`nebenkosten-pruefer`** -- arbeiten direkt auf den Jahres-Ordnern (`07`, `08`), die diese Struktur bereitstellt.
+- **`datev-vorbereitung`** / **`nebenkosten-pruefer`** -- arbeiten direkt auf den Jahres-Ordnern (`07`, `08`), die diese Struktur bereitstellt.
+- **`wochen-jourfixe`** -- nutzt die Ablage als Fristen-Fruehwarnsystem (Zinsbindung aus `03_Finanzierung`, NK-Frist aus `07_Nebenkosten`, Mietanpassung aus der Mieterakte).
+- **`selbstauskunft`** / **`bankenpitch`** -- greifen auf die Bankmappe in `00_Portfolio/` zu; je aktueller sie gepflegt ist, desto schneller steht das Bankpaket.
