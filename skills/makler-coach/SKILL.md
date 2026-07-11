@@ -1,6 +1,6 @@
 ---
 name: makler-coach
-description: "Entwickelt eine Makler-Strategie mit Aktionsplan, Gespraechs-Skripten und Follow-up-Vorlagen um zum bevorzugten Kaeufer in der Region zu werden. Nutze diesen Skill wenn du Off-Market-Deals willst, ein Maklernetzwerk aufbauen oder bestehende Kontakte aktivieren willst."
+description: "Entwickelt eine Makler-Strategie mit Aktionsplan, Gespraechs-Skripten und Follow-up-Vorlagen um zum bevorzugten VIP-Kaeufer in der Region zu werden. Nutze diesen Skill wenn du Off-Market- oder Vor-Markt-Deals willst, ein Maklernetzwerk aufbauen, bestehende Kontakte aktivieren oder bei Maklern als Erster angerufen werden willst."
 ---
 
 # Makler-Coach -- Maklerbeziehungen aufbauen und pflegen
@@ -78,14 +78,15 @@ Entwickle eine vollstaendige Makler-Strategie mit konkretem Aktionsplan, Gesprae
 
 ### Schritt 1: Top-20%-Identifikation (Pareto-Prinzip fuer Makler)
 
-**Grundprinzip:** 20% deiner Maklerkontakte werden 80% deiner Deals liefern. Identifiziere diese 20% und investiere ueberproportional in diese Beziehungen.
+**Grundprinzip:** 20% deiner Maklerkontakte werden 80% deiner Deals liefern. Identifiziere diese 20% und investiere ueberproportional in diese Beziehungen. 5-6 belastbare Maklerbeziehungen schlagen 40 lose, ungepflegte Kontakte.
 
 **Identifikation der Top-Makler:**
 
 1. Recherchiere: Welche Makler haben im letzten Jahr die meisten MFH-Deals in deiner Region vermittelt?
    - ImmoScout24, Immowelt, Kleinanzeigen: Wer inseriert regelmaessig MFH?
-   - IHK-Maklerliste der Region durchgehen
+   - IHK-Maklerliste der Region durchgehen; IVD-Mitgliederverzeichnis als Rechercheanker
    - Grundbuchaemter: Wer taucht als Vermittler bei Kaufvertraegen auf? (ueber Notar-Kontakte)
+   - Faustwert fuer wirklich aktive Makler: Groessenordnung 30-50 Verkaeufe pro Jahr; lokale Erfahrung und Mikrostandort-Kenntnis zaehlen mehr als Buerogroesse
 
 2. Bewerte jeden Makler nach:
    - Dealvolumen pro Jahr (Anzahl und Summe)
@@ -98,15 +99,45 @@ Entwickle eine vollstaendige Makler-Strategie mit konkretem Aktionsplan, Gesprae
    - **B-Makler (mittlere 30%):** Gelegentlich relevante Deals, Potenzial → Regelmaessiger Kontakt
    - **C-Makler (untere 50%):** Selten relevante Deals → Basiskontakt halten
 
+**Maklertypen und passende Ansprache:**
+
+| Typ | Merkmale | Ansprache |
+|-----|----------|-----------|
+| **Wald-und-Wiesen-Makler** | Klein, wenig digital, schwache Exposes, lokal verwurzelt | Persoenlich, unkompliziert, telefonisch; oft schlecht vermarktete Objekte mit Verhandlungsspielraum |
+| **Profimakler** | Hohe Deal-Frequenz, professionelle Prozesse | Effizienz zeigen: klares Profil, schnelle Rueckmeldung, saubere Abwicklung -- er sortiert Kaeufer knallhart nach Abschlusswahrscheinlichkeit |
+| **Digital-/Franchisemakler** | Systemgetrieben, standardisierte Ablaeufe, oft wenig lokale Bindung | In deren Prozess einfuegen (Portale, Formulare), zusaetzlich persoenlichen Draht zum einzelnen Berater suchen |
+
 **Sonderregel fuer den Ankauf:**
 - KLEINE, wenig professionelle Makler bewusst fuer KAUF suchen: Weniger Konkurrenz, schlecht vermarktete Objekte, mehr Verhandlungsspielraum
 - TOP-professionelle Makler fuer VERKAUF nutzen: Maximale Reichweite, hoechster Verkaufspreis
+
+**Beziehungsstufen tracken:** Jeder Makler hat einen Status: `kalt -> bekannt -> aktiv -> VIP`. Ziel ist nicht, viele Kontakte zu sammeln, sondern gezielt Kontakte die Stufen hochzuentwickeln. VIP heisst: Der Makler ruft dich VOR der Veroeffentlichung an (Vor-Markt) -- per WhatsApp mit Foto, qm-Preis und Ist-Miete.
+
+### Was Makler wirklich wollen (Motiv-Landkarte)
+
+Makler sortieren Kaeufer nach **Abschlusswahrscheinlichkeit und Aufwand**. Wer beides positiv bedient, wird bevorzugt:
+
+| Maklermotiv | Was du konkret lieferst |
+|-------------|-------------------------|
+| Sichere Provision | Volle Provision ohne Diskussion, puenktliche Zahlung |
+| Hohe Abschlusswahrscheinlichkeit | Finanzierungsnachweis, klare Buybox, Entscheidungsfaehigkeit in Tagen |
+| Wenig Aufwand | Praezise Rueckfragen statt 37 Einzelmails, Vollmacht-Strategie, eigene Unterlagenbeschaffung |
+| Zufriedener Verkaeufer | Faire, respektvolle Verhandlung -- der Makler muss dich intern rechtfertigen koennen |
+| Nicht ausgestochen werden | Nie am Makler vorbei zum Verkaeufer; Provisionsanspruch respektieren |
+| Wertschaetzung | Ehrliches Feedback nach jedem Angebot, Dank nach Abschluss, Google-Bewertung |
+| Folgegeschaeft | Exit-Objekte, weiterempfohlene Interessenten, langfristige Perspektive |
+
+**Anti-Muster, die den VIP-Status zerstoeren:** Vage "ich nehme alles"-Profile, keine Rueckmeldung auf zugesandte Angebote, Reservierungen ohne triftigen Grund platzen lassen, Provision druecken, Finanzierung behaupten die nicht steht. Rueckzieher ohne Grund kosten mehr Reputation als eine ehrliche fruehe Absage.
 
 ### Schritt 2: Erstansprache-Strategie
 
 **Erstansprache an neue Makler -- Gespraechs-Skript Telefon:**
 
 "Guten Tag, Herr/Frau [Name]. Mein Name ist [Name], ich bin Immobilieninvestor hier in [Region]. Ich habe gesehen, dass Sie regelmaessig Mehrfamilienhaeuser in [Stadtteil/Stadt] vermarkten. Ich suche aktiv und kann schnell entscheiden -- Finanzierung steht. Darf ich Ihnen kurz sagen, was ich suche, damit Sie an mich denken, wenn etwas reinkommt?"
+
+**Ehrlichkeitsregel:** "Finanzierung steht" nur sagen, wenn es belastbar ist (Rahmen vorbesprochen, EK-Nachweis vorhanden). Sonst ehrlich formulieren: "Meine Hausbank kennt mein Vorhaben, ich kann eine Finanzierungsbestaetigung innerhalb von [X] Tagen liefern." Eine geplatzte Finanzierung nach grossen Worten beendet die Beziehung endgueltig.
+
+**60-Sekunden-Regel fuers Kaeuferprofil:** Der Makler muss dein Ankaufsprofil in einer Minute verstehen und intern weitergeben koennen: Objektart, Lage, Groesse, Zustand, Preisrahmen, Entscheidungsgeschwindigkeit. "Ich nehme alles, was rentiert" ist fuer Makler wertlos -- vage Profile schaden mehr als sie nutzen.
 
 **Erstansprache per E-Mail -- Vorlage:**
 
@@ -148,9 +179,19 @@ Mit freundlichen Gruessen,
 2. **Kunden zuliefern:** Wenn ein Objekt nicht fuer dich passt, leite es an Investoren-Kollegen weiter und sage dem Makler: "Ich habe Ihnen einen Interessenten geschickt -- Herr/Frau [Name]."
 3. **Exit-Deals exklusiv anbieten:** "Ich verkaufe meine ETW in [Ort]. Moechten Sie die exklusiv vermarkten?"
 4. **Unkompliziert sein:** Keine 37 Rueckfragen per E-Mail. Kurze Entscheidungswege.
-5. **Ultimativer Vertrauensbeweis:** Provision bezahlen, auch wenn du rechtlich nicht muestest (z.B. bei Off-Market-Deal ohne Provisionsvereinbarung)
+5. **Ehrliches Feedback nach JEDEM Angebot und jeder Besichtigung:** Auch bei Absage kurz begruenden (Preis, Lage, Zustand, Kennzahl). Eine saubere, freundliche Absage mit Begruendung hebt dich von ca. 90% der Mitbewerber ab und schaerft beim Makler dein Suchprofil.
+6. **Ultimativer Vertrauensbeweis:** Provision bezahlen, auch wenn du rechtlich nicht muestest (z.B. bei Off-Market-Deal ohne Provisionsvereinbarung). (Pruefbedarf: steuerliche und vertragliche Einordnung einer freiwilligen Provisionszahlung vorab klaeren.)
 
 **Formulierung:** "Ich weiss, dass Sie von diesem Deal keine Provision bekommen muessten. Aber Sie haben mir den Zugang verschafft -- das hat einen Wert. Hier ist eine Rechnung ueber [Betrag], die ich gerne bezahle."
+
+**Absage-Vorlage (Beziehungspflege):**
+
+> Hallo Herr/Frau [Name], danke fuer [Adresse]. Fuer mich passt es diesmal nicht:
+> [konkreter Grund, z.B. "bei dem Hausgeld komme ich netto unter meine Zielrendite"].
+> Damit Sie mich besser einsortieren koennen: Ich suche [Buybox in einem Satz].
+> Ich melde mich verlaesslich innerhalb von 24h auf alles, was Sie mir schicken.
+
+**Die Top-Kaeufer-Frage:** Stelle A-Maklern direkt die Frage: "Was muss passieren, damit ich fuer Sie ein richtig guter Kaeufer bin?" Die Antwort ist dein persoenlicher VIP-Fahrplan -- und die Frage selbst signalisiert Professionalitaet.
 
 ### Schritt 4: Provisions-Strategie
 
@@ -173,6 +214,12 @@ Mit freundlichen Gruessen,
 1. Innerhalb 1 Woche: Persoenliches Dankeschoen (Anruf + kurze Nachricht)
 2. Innerhalb 2 Wochen: Einladung zum Mittagessen oder Kaffee
 3. Innerhalb 1 Monat: Kurzes Update: "Die Wohnungen sind vermietet, laeuft super -- danke nochmal fuer den Deal."
+
+**Aftersales-Bausteine (kosten wenig, wirken lange):**
+- Google-Bewertung fuer den Makler schreiben (fuer Makler bares Marketing-Geld wert)
+- Dankeskarte oder kleines Praesent (z.B. Tankgutschein) nach Abschluss
+- Testimonial anbieten, das der Makler nutzen darf
+- Aktualisiertes Ankaufsprofil DIREKT nach dem Abschluss senden: "Der naechste Deal kann kommen" -- genau in dem Moment, in dem der Makler dich als sicheren Abschluss erlebt hat
 
 **Laufende Beziehungspflege (auch ohne aktiven Deal):**
 - Alle 6-8 Wochen kurzer Kontakt (WhatsApp, Anruf)
@@ -204,6 +251,15 @@ Typische Antworten:
 **Vorteil fuer den Makler:** "Ich mache Ihnen keinen Aufwand -- ich kuemmere mich selbst um die Unterlagen. Ich brauche nur eine Vollmacht vom Eigentuemer."
 
 **Vorteil fuer dich:** Schnelligkeit, Kontrolle, Vollstaendigkeit.
+
+### Schritt 7: Verkaeuferzugang ueber den Makler (Tuersteher-Logik)
+
+Der Makler hat die Tuersteherrolle zum Verkaeufer -- und seine groesste Angst ist, ausgestochen zu werden. Direkter Verkaeuferkontakt am Makler vorbei zerstoert die Beziehung dauerhaft.
+
+**Sauberer Weg zum Verkaeufergespraech:**
+1. Dem Makler explizit Sicherheit geben: "Ihre Provision ist fuer mich selbstverstaendlich, unabhaengig davon, wie wir den Deal strukturieren." Bei Bedarf schriftlicher Provisionsschutz (Pruefbedarf: Formulierung rechtlich pruefen lassen).
+2. 3er-Gespraech vorschlagen: Kaeufer, Makler und Verkaeufer gemeinsam am Tisch -- der Makler bleibt eingebunden und behaelt die Kontrolle.
+3. Im Gespraech die Verkaeufermotive erfragen (Verkaufsgrund, Zeitrahmen, was neben dem Preis wichtig ist) -- das ist die Basis fuer ein Angebot, das mehr loest als den Kaufpreis (siehe `skills/verhandlungs-assistent/SKILL.md`).
 
 ---
 
@@ -315,6 +371,28 @@ Kurze Einschaetzung der aktuellen Makler-Situation in 3-5 Saetzen: Wo steht der 
 
 ---
 
+## Makler-CRM-Datenfelder
+
+Empfiehl dem Investor, pro Makler mindestens diese Felder zu pflegen -- Beziehungsaufbau ohne Tracking ist Zufall:
+
+| Feld | Beispielwerte |
+|------|---------------|
+| Maklertyp | Wald-und-Wiesen / Profi / Digital-Franchise |
+| Kategorie | A / B / C |
+| Beziehungsstufe | kalt / bekannt / aktiv / VIP |
+| Region + Spezialisierung | z.B. Dortmund-Nord, MFH |
+| Aktivitaet (Deals/Jahr, geschaetzt) | z.B. 30-50 |
+| Suchprofil gesendet | ja/nein + Datum |
+| Finanzierungsnachweis gesendet | ja/nein + Datum |
+| Letzter Kontakt / naechster Kontakt | Datum + Kanal |
+| Erhaltene Angebote + Qualitaet | Anzahl, Passgenauigkeit |
+| Feedback gegeben | ja/nein pro Angebot |
+| Abschluesse ueber diesen Makler | Anzahl |
+| Persoenliches (Geburtstag, Interessen) | fuer Beziehungspflege |
+| Antwort auf Top-Kaeufer-Frage | sein persoenlicher VIP-Fahrplan |
+
+---
+
 ## Qualitaetspruefung
 
 Vor Abgabe der Makler-Strategie pruefe:
@@ -325,8 +403,10 @@ Vor Abgabe der Makler-Strategie pruefe:
 4. **Provisions-Strategie**: Wurde klar kommuniziert, dass Provision NICHT verhandelt wird?
 5. **Follow-up-Vorlagen**: Sind Vorlagen fuer alle wichtigen Touchpoints vorhanden?
 6. **Regionsbezug**: Ist die Strategie auf die spezifische Region zugeschnitten?
-7. **Beidseitiger Nutzen**: Wurde klar herausgearbeitet, welchen Wert der Investor dem Makler bietet (nicht nur umgekehrt)?
+7. **Beidseitiger Nutzen**: Wurde klar herausgearbeitet, welchen Wert der Investor dem Makler bietet (nicht nur umgekehrt)? Sind die Maklermotive (sichere Provision, wenig Aufwand, zufriedener Verkaeufer, nicht ausgestochen werden) adressiert?
 8. **Vollmacht-Vorbereitung**: Wurde die Vollmacht-Strategie als konkretes Werkzeug eingebaut?
+9. **Ehrlichkeit der Skripte**: Enthaelt kein Skript Finanzierungs- oder Kaufzusagen, die der Investor nicht belegen kann?
+10. **Feedback-Schleife**: Ist verankert, dass JEDES zugesandte Angebot eine begruendete Rueckmeldung bekommt (auch Absagen)?
 
 ---
 
@@ -341,6 +421,8 @@ Vor Abgabe der Makler-Strategie pruefe:
 | **Makler gibt keine vollstaendigen Unterlagen** | Unprofessionell oder Verkaeufer blockiert | Vollmacht-Strategie anwenden |
 | **Makler reagiert nicht auf Nachrichten** | Kein Interesse oder ueberlastet | 2x Follow-up, dann als C einstufen |
 | **Makler hat schlechten Ruf bei anderen Investoren** | Vorsicht, aber Chance pruefen | Eigene Erfahrung machen, aber vorsichtig |
+| **Du bekommst nur "Ladenhueter" zugeschickt** | Suchprofil unklar gebrieft oder Teststatus | Buybox nachschaerfen, Feedback konkreter machen, Beispieldeals nennen |
+| **Makler bietet dir als Eigenankauf ein Objekt aus seinem eigenen Auftrag an** | Moeglicher Interessenkonflikt | Neutrale Wertermittlung verlangen, Transparenz gegenueber Verkaeufer pruefen |
 
 ### Dealbreaker in Makler-Beziehungen
 
@@ -389,6 +471,8 @@ Vor Abgabe der Makler-Strategie pruefe:
 
 - `skills/verhandlungs-assistent/SKILL.md` -- Preisverhandlung nach erfolgreicher Makler-Kontaktaufnahme
 - `skills/akquise-netzwerk/SKILL.md` -- Makler als einer von 12 Akquise-Kanaelen (Gesamtstrategie)
+- `skills/akquise-agent/SKILL.md` -- On-Market-Suche, deren Anfragen und Besichtigungen die Rohkontakte fuer das Maklernetzwerk liefern
 - `skills/deal-screener/SKILL.md` -- Schnellbewertung der vom Makler gelieferten Deals
-- `skills/bierdeckel-kalkulation/SKILL.md` -- Schnelle Kalkulation fuer schnelle Rueckmeldung an den Makler
+- `skills/bierdeckel-kalkulation/SKILL.md` -- Schnelle Kalkulation fuer schnelle Rueckmeldung an den Makler (24h-Feedback)
+- `skills/besichtigung-prep/SKILL.md` -- Professionelle Besichtigungsvorbereitung als Kompetenzsignal gegenueber dem Makler
 - `skills/bankgespraech-coach/SKILL.md` -- Finanzierungszusage als Makler-Argument vorbereiten
