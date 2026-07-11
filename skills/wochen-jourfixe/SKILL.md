@@ -1,6 +1,6 @@
 ---
 name: wochen-jourfixe
-description: "Erstellt automatische Wochenreports fuer Immobilien-Portfolios nach dem Pareto-Prinzip: Kritische 20% der Themen oben, priorisiert nach Handlungsbedarf. Nutze diesen Skill wenn du Team-Meetings vorbereitest, einen Portfolio-Ueberblick brauchst oder Fristen im Blick behalten willst."
+description: "Erstellt automatische Wochenreports fuer Immobilien-Portfolios nach dem Pareto-Prinzip: Kritische 20% der Themen oben, priorisiert nach Handlungsbedarf. Enthaelt den Wochenrhythmus eines professionellen Investors (feste Akquise-Slots, Follow-up-Zyklen, Pipeline-Review), Wochen-KPIs (Angebote gesichtet, Grobkalkulationen, Besichtigungen, LOIs) und ein Fristen-Monitoring inkl. strategischer Fristen wie Zinsbindungsablauf, Mietanpassungsfenster und Nebenkostenabrechnung. Nutze diesen Skill wenn du Team-Meetings oder deinen Wochen-Jourfixe vorbereitest, einen Portfolio- und Pipeline-Ueberblick brauchst oder Fristen im Blick behalten willst."
 ---
 
 # Wochen-Jourfixe -- Automatischer Wochenreport
@@ -11,7 +11,8 @@ description: "Erstellt automatische Wochenreports fuer Immobilien-Portfolios nac
 - Ueberblick ueber alle laufenden Vorgaenge im Bestand (10-500+ Einheiten)
 - Kritische Themen identifizieren, bevor sie eskalieren
 - E-Mail-Postfach / Eingangskommunikation strukturiert auswerten
-- Offene Vorgaenge tracken und Fristen ueberwachen
+- Offene Vorgaenge tracken und Fristen ueberwachen (operativ UND strategisch: Zinsbindung, Mietanpassung, NK-Abrechnung)
+- Akquise-Pipeline reviewen: Was ist diese Woche in den Funnel gekommen, was liegt fest, was versandet?
 
 ---
 
@@ -24,6 +25,8 @@ description: "Erstellt automatische Wochenreports fuer Immobilien-Portfolios nac
 | `payment_data` | Object | Nein | Zahlungseingaenge der Woche (fuer Finanz-Ueberblick) |
 | `calendar_entries` | Array | Nein | Kalendereintraege der naechsten 7-14 Tage |
 | `property_portfolio` | Array | Nein | Liste der Objekte mit Adressen und Einheitenzahl |
+| `pipeline_data` | Array | Nein | Akquise-Pipeline: Angebote, Funnel-Stufe, letzte Aktion, Wiedervorlagen, LOI-Status |
+| `loan_data` | Array | Nein | Darlehen mit Zinsbindungsende und Restschuld (fuer strategisches Fristen-Monitoring) |
 | `report_date` | String | Nein | Stichtag des Reports (Default: aktuelles Datum) |
 
 ---
@@ -87,8 +90,58 @@ Du bist ein erfahrener Immobilien-Assetmanager, der woechentlich einen strukturi
    - Ueberfaellig (rot)
    - Faellig diese Woche (gelb)
    - Faellig naechste Woche (gruen)
+   - **Strategische Fristen zusaetzlich mitfuehren** (die operative Wochenlogik uebersieht sie sonst, weil sie weit weg wirken -- teuer werden sie trotzdem):
 
-10. **Report zusammenstellen** -- Strukturierten Report im Ausgabeformat generieren, priorisiert nach Dringlichkeit.
+   | Frist | Vorlauf / Ampellogik | Warum kritisch |
+   |-------|----------------------|----------------|
+   | Zinsbindungsablauf je Darlehen | 🟡 ab 24 Monate vorher (Prolongation/Umschuldung vorbereiten), 🔴 ab 12 Monate ohne Plan | Anschlussfinanzierung entscheidet ueber den Cashflow der naechsten Dekade |
+   | Nebenkostenabrechnung | 🟡 3 Monate vor Ablauf der 12-Monats-Frist, 🔴 danach | Nachforderungen verfallen bei verspaeteter Abrechnung -- Guthaben des Mieters bleibt |
+   | Mietanpassungsfenster | 🟡 sobald letzte Erhoehung > 12 Monate her und Potenzial vorhanden | Nicht gezogene Erhoehungen sind dauerhafter Ertragsverlust (Kappungsgrenze beachten) |
+   | Kuendigungsfristen (Mieter/Verwalter/Versicherung) | 🟡 8 Wochen vorher | Verpasste Fristen binden ein weiteres Jahr |
+   | Energieausweis-Gueltigkeit | 🟡 6 Monate vor Ablauf | Pflicht bei Neuvermietung und Verkauf |
+
+10. **Akquise- & Pipeline-Review** (wenn `pipeline_data` vorhanden) -- Der Jourfixe ist nicht nur Bestandsverwaltung, sondern auch der Wochentakt der Akquise:
+   - Neue Angebote im Funnel diese Woche (Anzahl, Quelle)
+   - Offene Follow-ups und ueberfaellige Wiedervorlagen (aeltester zuerst)
+   - Besichtigungen: durchgefuehrt und geplant
+   - LOIs / Angebote: rausgegangen, angenommen, abgelehnt
+   - Liegengebliebene Deals: Welche Funnel-Stufe sammelt Karteileichen? (typischer Engpass-Indikator)
+   - Unbeantwortete Zuleitungen von Tippgebern/Maklern (Warnsignal: wer Tipps ignoriert, verliert die Quelle)
+   - Learnings der Woche (Absagegruende, Marktbeobachtungen)
+
+11. **Report zusammenstellen** -- Strukturierten Report im Ausgabeformat generieren, priorisiert nach Dringlichkeit.
+
+---
+
+## Wochenrhythmus eines professionellen Investors (Referenz)
+
+Der Jourfixe-Report ist der Kontrollpunkt eines festen Wochenrhythmus -- verlaesslicher Dealflow und saubere Verwaltung entstehen durch wiederholbare Zeitbloecke, nicht durch sporadisches Reagieren. Wenn der Nutzer noch keinen Rhythmus hat, biete dieses Raster als Startpunkt an (Umfang nach Investorentyp skalieren):
+
+| Slot | Rhythmus | Inhalt |
+|------|----------|--------|
+| Portalcheck & Screening | 2-3x pro Woche, fester Block | Neue Inserate sichten, Grobkalkulation ("Bierdeckel") fuer passende Objekte |
+| Telefon-/Nachfass-Slot | 1-2x pro Woche | Makler- und Tippgeber-Kontakte, offene Wiedervorlagen abtelefonieren |
+| Follow-up-Zyklus | laufend, max. 48h Reaktionszeit | Jede Zuleitung und jede Unterlagen-Lieferung bekommt eine Antwort -- ohne Ausnahme |
+| Besichtigungen | gebuendelt (z.B. ein Nachmittag) | Fahrzeit minimieren, Besichtigungsbericht direkt danach |
+| Wochen-Jourfixe | 1x pro Woche, fester Termin | Dieser Report: Brennpunkte, Bestand, Finanzen, Fristen, Pipeline-Review |
+| Fristen-/Zahlenblick | 1x pro Woche (im Jourfixe) | Mieteingaenge, Fristenmonitor inkl. Zinsbindung, NK-Frist, Mietanpassung |
+
+**Zeitbudget als Realitaetscheck** (Erfahrungswerte): Nebenberuflicher Investor mindestens 3-4 h/Woche; ambitionierter Aufbau eher ein voller Immobilientag pro Woche. Wenn der Report woechentlich null Akquise-Aktivitaet zeigt, ist das kein Zufall, sondern ein Zeitbudget-Problem -- offen ansprechen.
+
+### Wochen-KPIs (Vorschlag)
+
+Wenige Zahlen, jede Woche dieselben -- Trend schlaegt Momentaufnahme:
+
+| KPI | Woche | Vorwoche | Kommentar |
+|-----|-------|----------|-----------|
+| Angebote gesichtet | | | Funnel-Eingang |
+| Grobkalkulationen ("Bierdeckel") | | | Screening-Durchsatz |
+| Kontaktaufnahmen / Nachfaesse | | | Netzwerkpflege |
+| Besichtigungen | | | Funnel-Mitte |
+| LOIs / Angebote abgegeben | | | Funnel-Ausgang |
+| Unbeantwortete Zuleitungen | | | Ziel: 0 |
+| Mieteingangsquote | | | Bestand |
+| Offene Maengel > 14 Tage | | | Verwaltung |
 
 ---
 
@@ -153,6 +206,19 @@ Du bist ein erfahrener Immobilien-Assetmanager, der woechentlich einen strukturi
 |-------|---------|--------|-------|----------------|------------------|
 | 14.04.2026 | Mieter Schmidt, WE 09 | Musterstr. 12, Berlin | Heizung funktioniert nicht | 🔴 hoch | Ja |
 
+## Akquise & Pipeline
+
+**Wochen-KPIs:** 14 Angebote gesichtet | 6 Bierdeckel gerechnet | 2 Besichtigungen | 1 LOI abgegeben | 0 unbeantwortete Zuleitungen
+
+| Funnel-Stufe | Anzahl | Aeltester Eintrag | Auffaellig |
+|--------------|--------|-------------------|------------|
+| Screening | 8 | 3 Tage | -- |
+| Unterlagen angefordert | 4 | 12 Tage | 2 Nachfaesse ueberfaellig |
+| Besichtigung geplant | 2 | -- | Termine 17.04. |
+| LOI / Verhandlung | 1 | 5 Tage | Rueckmeldung Makler steht aus |
+
+**Learnings der Woche:** Absage Beispielweg 5 wegen Hausgeld -- Suchprofil um Hausgeld-Obergrenze ergaenzen?
+
 ## Fristenmonitor
 
 | Status | Vorgaenge |
@@ -160,6 +226,13 @@ Du bist ein erfahrener Immobilien-Assetmanager, der woechentlich einen strukturi
 | 🔴 Ueberfaellig | Keine |
 | 🟡 Faellig diese Woche | Frist Nebenkostenabrechnung 2024 (22.04.) |
 | 🟢 Faellig naechste Woche | Keine |
+
+**Strategische Fristen (Vorlauf-Radar):**
+
+| Frist | Objekt | Termin | Status |
+|-------|--------|--------|--------|
+| Zinsbindungsablauf Darlehen Sparkasse | Musterstr. 12, Berlin | 30.06.2027 | 🟡 14 Monate -- Prolongationsangebote einholen |
+| Mietanpassung moeglich | Beispielweg 5 / WE 02 | ab sofort | 🟡 letzte Erhoehung 2023, Potenzial lt. Mietspiegel |
 
 ## Datenluecken
 
@@ -192,6 +265,11 @@ Konfidenz: 85%
 | Frist < 3 Tage | Drohendes Fristversaeumnis | Sofort bearbeiten oder Fristverlaengerung |
 | Leerstand > 60 Tage | Ertragsausfall signifikant | Inserat und Preisstrategie ueberpruefen |
 | Heizungsausfall im Winter | Notfall, Mietminderung 100% moeglich | Sofort Notdienst beauftragen |
+| Zinsbindung endet < 12 Monate ohne Plan | Anschlussfinanzierungs-Risiko, Verhandlungsposition schwindet | Prolongationsangebot anfordern, Vergleichsangebote einholen |
+| NK-Abrechnungsfrist < 3 Monate | Nachforderungen drohen zu verfallen | Abrechnung sofort priorisieren oder Verwalter eskalieren |
+| Zuleitung/Tipp > 48h unbeantwortet | Tippgeber- und Maklerbeziehung stirbt leise | Sofort antworten, auch wenn Absage |
+| 0 Akquise-Aktivitaet in der Woche | Dealflow reisst ab -- Wiederanlauf kostet Wochen | Zeitbudget und Akquise-Slots im Kalender pruefen |
+| Deals > 14 Tage ohne Statuswechsel in einer Funnel-Stufe | Pipeline wird zum Friedhof | Stufe im Jourfixe durchgehen: nachfassen oder sauber absagen |
 
 ---
 
@@ -201,6 +279,8 @@ Konfidenz: 85%
 - Wenn keine Zahlungsdaten vorliegen: Finanzen-Bereich als "Zahlungsdaten nicht verfuegbar" markieren, nicht schaetzen.
 - Wenn kein Vorwochen-Report vorliegt: Alle Vorgaenge als "neu" kennzeichnen, kein Abgleich moeglich.
 - Wenn Kalendereintraege fehlen: Kalender-Highlights leer lassen, Hinweis "Kalenderdaten nicht uebermittelt" ausgeben.
+- Wenn keine Pipeline-Daten vorliegen: Abschnitt "Akquise & Pipeline" weglassen (nicht mit leeren Tabellen aufblaehen), aber einmalig anbieten, die Pipeline kuenftig mitzufuehren.
+- Wenn keine Darlehensdaten vorliegen: strategische Fristen als "Zinsbindungsdaten nicht verfuegbar" markieren -- nicht schaetzen.
 - Fehlende Daten immer im Berichtsabschnitt "Datenluecken" dokumentieren.
 
 ---
@@ -230,3 +310,5 @@ Faktoren die den Score senken:
 - `skills/mahn-assistent/SKILL.md` -- Detail-Skill fuer Mahnwesen bei Mietrueckstaenden
 - `skills/nebenkosten-pruefer/SKILL.md` -- Detail-Skill fuer Nebenkostenpruefung
 - `skills/mieterhoehung/SKILL.md` -- Mieterhoehungspotenzial fuer Vermietungs-Kategorie
+- `skills/prozess-designer/SKILL.md` -- verankert den Wochenrhythmus als wiederkehrende Aufgaben (Pipeline-Review, Mieteingangs-Kontrolle) direkt im System
+- `skills/ordner-architekt/SKILL.md` -- Ablagestruktur, aus der Fristen-Dokumente (Darlehensvertraege, NK-Abrechnungen) sauber auffindbar sind
