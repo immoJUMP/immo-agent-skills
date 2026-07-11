@@ -1,6 +1,6 @@
 ---
 name: bankgespraech-coach
-description: "Vollstaendige Gespraechsvorbereitung fuer Banktermine mit Fahrplan, Formulierungsvorschlaegen, erwartbaren Fragen und Antworten. Nutze diesen Skill wenn du ein Erstgespraech mit einer Bank vorbereitest, eine Finanzierung beantragst, wenig EK hast oder mehrere Banken parallel anfragen willst."
+description: "Vollstaendige Gespraechsvorbereitung fuer Banktermine: Bankentypen-Auswahl, Fahrplan, Formulierungsvorschlaege, erwartbare Bankerfragen mit starken Antworten und No-Gos. Nutze diesen Skill wenn du ein Erst-, Zweit- oder Jahresgespraech mit einer Bank vorbereitest, eine Finanzierung beantragst, wenig EK hast, mehrere Banken parallel anfragen willst oder dein Kreditvolumen ueber 1 Mio wachsen soll."
 ---
 
 # Bankgespraech-Coach -- Vorbereitung und Strategie fuer Finanzierungsgespraeche
@@ -24,6 +24,33 @@ Du bist KEIN Finanzierungsrechner. Du bist ein Strategieberater, der den Investo
 - Du bist Selbstaendiger, hast wenig Eigenkapital oder eine komplexe Situation
 - Du willst bestehende Bankbeziehungen strategisch weiterentwickeln
 - Du willst kreative Finanzierungsstrategien fuer fortgeschrittene Deals vorbereiten
+- Du willst dein Kreditvolumen ueber die 1-Mio-Schwelle skalieren und die Bank strategisch mitnehmen
+
+---
+
+## Banklogik: So entscheidet die Bank wirklich
+
+Bevor du Formulierungen trainierst, verstehe, gegen wen du spielst -- und dass es zwei Gegner gibt:
+
+| Instanz | Rolle | Konsequenz fuer dich |
+|---------|-------|----------------------|
+| **Markt (dein Berater)** | Vertrieb -- er will abschliessen und verkauft deinen Deal intern | Gib ihm Munition: ein Dokument, das er ohne Nacharbeit weiterreichen kann |
+| **Marktfolge (Risiko)** | Prueft unabhaengig, sitzt nie mit am Tisch, entscheidet mit | Beantworte ihre Fragen proaktiv im Unterlagenpaket -- wer der Marktfolge Arbeit abnimmt, erhoeht die Zusagechance |
+
+**Die Bank prueft zwei getrennte Dinge -- beide muessen bestehen:**
+
+| Dimension | Was gemeint ist | Woran die Bank es misst |
+|-----------|-----------------|-------------------------|
+| **Kreditfaehigkeit** | Harte Fakten: Traegt dein Cashflow den Kapitaldienst? | Haushaltsrechnung (mit Bank-Pauschalen, nicht deinem Wunschbudget), Einkommen, bestehende Raten, nur anteilig angerechnete Mieteinnahmen |
+| **Kreditwuerdigkeit** | Verhalten und Historie: Bist du verlaesslich? | Schufa, Kontenfuehrung (keine ungenehmigten Ueberziehungen!), Puenktlichkeit bei Raten und Unterlagen, Qualitaet deiner Zahlen |
+
+**Was Banker jenseits der Zahlen wirklich pruefen:**
+- Hast du dein Portfolio zahlenmaessig im Griff (Mieten, Leerstand, Restschulden auswendig)?
+- Kommen Unterlagen vollstaendig und schnell -- oder troepfchenweise?
+- Laufen deine Konten sauber (keine Rueckbuchungen, keine stillschweigenden Ueberziehungen)?
+- Ist deine Kalkulation konservativ oder schoengerechnet?
+
+> **Interner Qualitaetsmassstab vor jedem Termin:** "Wuerde ich mir als Banker auf Basis dieser Unterlagen selbst Geld geben?" Wenn nein: erst nachbessern, dann anfragen.
 
 ---
 
@@ -122,6 +149,19 @@ Entwickle eine vollstaendige Gespraechsvorbereitung mit konkretem Fahrplan, Form
 2. **Regionalbank / Volksbank / Sparkasse (neu):** Oft ueberraschend gute Konditionen bei Gewerbeobjekten. Persoenlicher Kontakt moeglich.
 3. **Ueberregionale Bank / Vermittler:** Beste Konditionen, aber weniger persoenlich. Als Benchmark nutzen.
 
+**Bankentypen im Detail -- welcher Typ passt zu welchem Deal:**
+
+| Banktyp | Staerke | Schwaeche | Passt fuer |
+|---------|---------|-----------|------------|
+| **Sparkasse / Volksbank (regional)** | Kennt den lokalen Markt, persoenliche Entscheidung, finanziert auch B-/C-Lagen vor Ort | Gebietslogik (finanziert ungern ausserhalb der Region), begrenzte Bilanzsumme, Grosskredite brauchen Gremien | MFH und Value-Add am eigenen Standort, komplexere Deals mit Erklaerungsbedarf |
+| **Grossbank / Direktbank** | Guenstige Konditionen, schnelle Standardprozesse, ueberregional | Stark standardisiert -- Komplexitaet (Sanierung, Leerstand, Gewerbeanteil) passt schlecht ins Raster | Einfache Standardobjekte: vermietete ETW, gepflegtes MFH, klare Bonitaet |
+| **Vermittler (Plattform)** | Zugang zu hunderten Banken, Marktueberblick, Benchmark-Funktion | Keine eigene Entscheidung, keine Beziehung, bei Spezialfaellen begrenzt | Konditionsvergleich, Standarddeals, Zeitdruck |
+| **Spezialbank / Versicherer** | Nischen: Portfolios, Gewerbe, Projektentwicklung, grosse Volumina | Hoehere Anforderungen an Unterlagen und Professionalitaet | Portfoliofinanzierung, Spezialassets, Skalierung |
+
+**Wichtig:** Es gibt nicht "die beste Bank", sondern die passende Bank fuer den jeweiligen Dealtyp. Eine Ablehnung ist oft keine Aussage ueber den Deal, sondern ueber den Fit zwischen Deal und Bankprofil -- die falsche Bank kann einen guten Deal wie einen schlechten aussehen lassen.
+
+**Drei-Banken-Setup fuer Skalierer:** Hausbank (Beziehung) + eine neue Regionalbank (Wachstum, zweites Standbein) + eine Spezial-/Direktbank oder Vermittler (Benchmark, Spezialfaelle). Skalierung mit nur einer Bank ist ein Klumpenrisiko -- die Bank kann intern ihr Limit fuer dich erreichen, ohne dass du es merkst.
+
 **Bilanzsumme beachten:**
 - Ein 1,3-Mio-Kredit ist fuer eine kleine Sparkasse ein Grosskredit (braucht Vorstandsgenehmigung)
 - Derselbe Kredit ist fuer eine grosse Bank ein Standardgeschaeft (Berater-Kompetenz reicht)
@@ -148,6 +188,8 @@ Entwickle eine vollstaendige Gespraechsvorbereitung mit konkretem Fahrplan, Form
 
 ### Schritt 3: Gespraechsvorbereitung
 
+**Timing: Das erste Bankgespraech findet idealerweise VOR dem konkreten Objekt statt.** Ziel des Ersttermins ist nicht die Zusage, sondern die beidseitige Qualifikation: Finanzierungsrahmen, EK-Anforderung, Dealtyp-Fit, Prozessdauer, Unterlagenbedarf und Entscheidungskompetenz klaeren. Wer erst mit unterschriebenem Angebot zur Bank geht, verhandelt unter Zeitdruck aus der schwaecheren Position. Kein intensiver Ankauf ohne geklaerten Finanzierungsrahmen.
+
 **Vor dem Gespraech:**
 - 1 Stunde frueher am Ort sein. Kaffee trinken, Unterlagen nochmal durchgehen, mental vorbereiten.
 - Kleidung: Business Casual minimum. Nicht overdressed, aber professionell.
@@ -162,12 +204,16 @@ Entwickle eine vollstaendige Gespraechsvorbereitung mit konkretem Fahrplan, Form
 - Praestentiere das neue Objekt mit vollstaendigen Unterlagen (Expose, Mietliste, Grundbuch, Energieausweis)
 - Nenne deine gewuenschte Finanzierungsstruktur klar und begruendet
 - Frage aktiv nach den naechsten Schritten und dem Zeitrahmen
+- Liefere Unterlagen zusaetzlich digital als EIN vollstaendiges, sauber benanntes ZIP per E-Mail -- nicht per USB-Stick, Dropbox-Link oder in fuenf Einzelmails
+- Adressiere die kritischste Risikofrage (Leerstand, Zustand, Zinsanstieg) proaktiv, bevor der Banker sie stellt -- das ist Arbeit, die du der Marktfolge abnimmst
 
 **Don'ts im Gespraech:**
 - NIEMALS sagen "Ich brauche das Geld" oder "Ohne Kredit geht es nicht"
 - NIEMALS ueber finanzielle Schwierigkeiten sprechen (auch nicht vergangene)
 - NIEMALS den Banker unter Druck setzen ("Wenn Sie mir nicht helfen, gehe ich woanders hin")
 - NIEMALS luegen oder Daten beschoenigen -- Banken pruefen alles
+- NIEMALS Unterlagen troepfchenweise nachliefern -- jede Nachlieferung kostet Vertrauen und Bearbeitungszeit
+- NIEMALS mit ungeklaerten Kontosignalen in den Termin gehen: ungenehmigte Ueberziehungen, Ruecklastschriften oder Dispo-Dauernutzung in den letzten 3 Monaten Kontoauszuegen vorher bereinigen
 
 ### Schritt 4: Bankenziele als Hebel nutzen
 
@@ -220,6 +266,11 @@ Bereite Antworten auf diese Standard-Bankerfragen vor:
 | "Haben Sie andere Bankanfragen laufen?" | Ehrlich: "Ja, ich spreche mit [Anzahl] Banken. Ich suche den besten Partner." |
 | "Wer verwaltet Ihre Objekte?" | "Ich selbst / Hausverwaltung [Name]. Alle Objekte sind voll vermietet und profitabel." |
 | "Was ist Ihre Exit-Strategie?" | "Langfristiger Bestandshalter. Exit nur bei extremem Wertanstieg oder persoenlicher Veraenderung." |
+| "Woher stammt Ihr Eigenkapital?" | Herkunft lueckenlos belegbar: "X EUR aus Gehaltsersparnis (Kontoauszuege), Y EUR aus Schenkung (Vertrag liegt bei)." Unklare EK-Herkunft ist ein spaeter Deal-Killer. |
+| "Wie kommen Sie auf den Kaufpreis?" | Herleitung ueber Faktor/JNKM und 2-3 Vergleichsobjekte: "Faktor X auf die Jahresnettokaltmiete, vergleichbare Objekte in der Lage handeln bei Faktor Y." |
+| "Was passiert nach Ende der Zinsbindung?" | Anschlusszins-Szenario gerechnet: "Restschuld dann X EUR. Selbst bei Z% Anschlusszins traegt die Miete den Kapitaldienst -- hier ist die Rechnung." |
+| "Warum so wenig Tilgung?" | Strategisch begruenden, nicht rechtfertigen: "Bewusste Liquiditaetssteuerung fuer weitere Ankaeufe. Als Ausgleich wuensche ich X% Sondertilgungsrecht -- Flexibilitaet statt Pflicht." |
+| "Wollen Sie kurzfristig wieder verkaufen?" | Bei Flip/kurzer Haltedauer OFFEN sein: "Ja, geplanter Verkauf nach X Monaten. Mir ist bewusst, dass Sie daran verdienen muessen -- lassen Sie uns ueber Laufzeit, Zins oder Gebuehr sprechen." Die Bank muss Ertrag sehen; verdeckte Kurzlaeufer zerstoeren die Beziehung. |
 
 ### Schritt 7: Kreative Finanzierungsstrategien (fuer fortgeschrittene Investoren)
 
@@ -237,6 +288,36 @@ Bereite Antworten auf diese Standard-Bankerfragen vor:
 - Erst kleiner Deal (200K), dann mittlerer (600K), dann grosser (1,2 Mio)
 - Jeder erfolgreiche Deal baut Track Record auf
 - Formulierung: "Dieses Objekt ist bewusst ueberschaubar -- ich moechte, dass wir eine Erfolgsbilanz aufbauen, bevor die groesseren Deals kommen."
+
+**Strategie 4: Kreditlinie auf freie Grundschuld**
+- Abbezahlte oder stark getilgte Bestandsobjekte haben freie Grundschulden -- darauf laesst sich eine Abruf-/Kontokorrentlinie einrichten
+- Vorteil: Handlungsfaehigkeit bei schnellen Ankaeufen und Sanierungen ohne neuen Einzelantrag
+- Formulierung: "Auf meinem Bestandsobjekt [Adresse] ist eine freie Grundschuld ueber X EUR. Koennen wir darauf eine Linie einrichten, damit ich bei Gelegenheiten schnell handlungsfaehig bin?"
+
+**Strategie 5: Nachbeleihung nach Wertsteigerung**
+- Sanierte oder im Wert gestiegene Bestandsobjekte neu bewerten lassen und die Differenz als Kapital freisetzen
+- Voraussetzung: Wertsteigerung dokumentiert (Mietsteigerung, Sanierungsnachweise, ggf. Gutachten) und vorab mit der Bank besprochen -- die Bank nutzt eigene, konservative Bewertung (Niederwertprinzip)
+- Formulierung: "Das Objekt hat nach Sanierung eine JNKM von X EUR statt Y EUR. Ich moechte eine Nachbewertung anstossen und den freien Beleihungsraum fuer den naechsten Ankauf nutzen."
+
+> **Wichtig bei allen Zusatzsicherheiten (Sparkonto, Depot, Grundschuld):** Keine Sicherheit ohne SCHRIFTLICHE Freigabeklausel -- also ein definiertes Kriterium (z.B. LTV unter X%, Y Jahre puenktliche Raten), bei dem die Bank die Sicherheit wieder freigibt. Ohne Freigabemechanik blockiert Ueberbesicherung dein Wachstum unbemerkt. (Pruefbedarf: Formulierung mit Bank und ggf. Rechtsberatung abstimmen.)
+
+### Schritt 8: Ab 1 Mio. Kreditvolumen -- die Bank strategisch mitnehmen
+
+Bankinterne Abteilungen haben Volumenschwellen: Je nach Institut endet der Privatkundenbereich bei ca. 500K, 750K oder 1 Mio. EUR Gesamtvolumen. Darueber uebernimmt der Firmenkunden-/Gewerbebereich mit Rating statt Scoring. (Pruefbedarf: institutsspezifisch.)
+
+**Was sich aendert:**
+
+| Vorher | Ab der Schwelle |
+|--------|-----------------|
+| Scoring + Haushaltsrechnung pro Deal | Rating auf das Gesamtengagement, Portfolio-Kapitaldienstfaehigkeit |
+| Objektbezogene Einzelentscheidung | Marktfolge und Gremien intensiver eingebunden |
+| Anfrage bei Bedarf | Laufende Beziehung: jaehrliches Strategiegespraech mit Rueckblick, Portfolioentwicklung und Ausblick |
+
+**Spielregeln fuer die Skalierung:**
+- **Nicht geschlossen fragen** ("Bekomme ich mehr als 1 Mio.?"). Stattdessen die Bank mit Zielbild und Wachstumsplan mitnehmen und die Skalierungsfaehigkeit indirekt klaeren: "Ich plane in den naechsten 3 Jahren X Einheiten. Wie stellen wir die Zusammenarbeit auf, damit das gemeinsam funktioniert?"
+- **Track-Record-Spiel verstehen:** Die Bank beobachtet laufend, ob Raten puenktlich kommen, Konten stabil laufen, Unterlagen vollstaendig und schnell geliefert werden und du dein Portfolio im Griff hast. Jede ungenehmigte Ueberziehung und jede verspaetete Unterlage kostet Rating-Punkte.
+- **Jahresgespraech als Pflichttermin:** Einmal jaehrlich proaktiv Portfolio-Update praesentieren (Bestand, Mieten, Leerstand, Tilgungsfortschritt, Ziele) -- auch ohne konkreten Finanzierungsbedarf. Das ist Kontakt 4-7 der Beziehungsleiter auf Skalierungsniveau.
+- **Investorenbroschuere mitbringen:** Ab mehreren Objekten ein wiederverwendbares Dokument mit Person, Track Record, Portfolio, Strategiephasen, Ankaufsprofil und Risikoverstaendnis. Einfachheit schlaegt Show -- klare Struktur statt Hochglanz.
 
 ---
 
@@ -305,6 +386,11 @@ Kurze Einschaetzung der Finanzierungssituation in 3-5 Saetzen: Wie stark ist die
 3. Welche Sondertilgungsoptionen bieten Sie an?
 4. Ist eine Konditionsanfrage ohne SCHUFA-Abfrage moeglich?
 5. Welche Unterlagen brauchen Sie von mir?
+6. Welche Eigenkapitalanforderung haben Sie bei diesem Objekttyp -- und wie ermitteln Sie den Beleihungswert?
+7. Wie viel der Mieteinnahmen rechnen Sie in der Haushaltsrechnung an, und mit welchen Pauschalen kalkulieren Sie?
+8. Finanzieren Sie auch [MFH / Sanierungsobjekte / Objekte ausserhalb Ihrer Region / GmbH-Strukturen]?
+9. Wer prueft bei Ihnen in der Marktfolge -- und was sind dort erfahrungsgemaess die kritischen Punkte?
+10. In welchem Format moechten Sie die Unterlagen (ZIP per E-Mail, Portal)?
 
 ## Fragen, die du erwarten musst -- mit vorbereiteten Antworten
 
@@ -340,6 +426,8 @@ Vor Abgabe der Gespraechsvorbereitung pruefe:
 6. **Herausforderungen-Adressierung**: Wurden die spezifischen Herausforderungen des Investors in der Strategie beruecksichtigt?
 7. **Einstiegsgeschaeft-Logik**: Wurde bei neuen Bankbeziehungen die Einstiegsgeschaeft-Strategie empfohlen?
 8. **7-Kontakte-Plan**: Wurde ein konkreter Plan zum Beziehungsaufbau ueber mehrere Kontakte geliefert?
+9. **Red-Flag-Check**: Wurden die eigenen Red Flags (Kontenfuehrung, Schufa, Konsumkredite, EK-Herkunft, Unterlagenaktualitaet) geprueft und mit Gegenmassnahmen versehen?
+10. **Banktyp-Fit**: Passt der empfohlene Banktyp zum Dealtyp (regional vs. standardisiert vs. Spezialfall)?
 
 ---
 
@@ -364,6 +452,21 @@ Vor Abgabe der Gespraechsvorbereitung pruefe:
 | **Vorfaelligkeitsentschaedigung ohne Deckelung** | Kann bei Verkauf oder Umschuldung extrem teuer werden | Standard: max. 1% der Restschuld |
 | **Bank verweigert Konditionsanfrage ohne SCHUFA** | Veraltet oder unserioes | Groessere/professionellere Bank waehlen |
 | **Zins deutlich ueber Markt (> 0,5% Aufschlag ohne Grund)** | Schlechtes Geschaeft | Nur wenn keine andere Bank finanziert |
+| **Zusatzsicherheit ohne schriftliche Freigabeklausel** | Ueberbesicherung blockiert Wachstum dauerhaft | Nur mit definiertem Freigabekriterium akzeptieren |
+
+### Red Flags auf DEINER Seite -- was Finanzierungen killt
+
+Diese Punkte VOR dem Termin pruefen und beheben; sie fallen der Bank auf, nicht dir:
+
+| Red Flag | Wirkung bei der Bank | Gegenmassnahme |
+|----------|----------------------|----------------|
+| **Ungenehmigte Ueberziehungen / Ruecklastschriften** in den letzten 3 Monaten | Kreditwuerdigkeitssignal -- schlaegt aufs Scoring/Rating durch | Konten 3 Monate vor Anfrage sauber fuehren |
+| **SCHUFA-Score unter ca. 90-92** | Haeufig faktische Ablehnungsgrenze; Ziel ist 98+ | Eigenauskunft ziehen, Fehler korrigieren, erledigte Eintraege loeschen lassen, ungenutzte Kreditrahmen/Kreditkarten kuendigen (siehe Skill selbstauskunft) |
+| **Konsumkredite und Dauerdispo** | Belasten Haushaltsrechnung UND Vertrauen | Vor Antrag abloesen oder umschulden |
+| **Unklare EK-Herkunft** | Geldwaesche-Verdacht / Rueckfragen der Marktfolge | Herkunft lueckenlos belegen (Kontoauszuege, Schenkungsvertrag) |
+| **Veraltete Unterlagen** (BWA aelter als 2-3 Monate, alte Steuerbescheide) | Signalisiert: Investor hat seine Zahlen nicht im Griff | Unterlagenpaket vor jedem Termin aktualisieren |
+| **Troepfchenweise Nachlieferung** | Jede Nachlieferung = neue Wartezeit + Vertrauensverlust | Vollstaendiges Paket in einem Rutsch (siehe Skill selbstauskunft) |
+| **Negativer Einkommenstrend (Selbstaendige)** | Bank rechnet mit Durchschnitt der letzten 2-3 Jahre; fallender Trend wiegt schwerer | Anfrage-Timing pruefen, Auftragslage dokumentieren |
 
 ---
 
@@ -403,6 +506,9 @@ Vor Abgabe der Gespraechsvorbereitung pruefe:
 
 ### Verwandte Skills
 
+- `skills/bankenpitch/SKILL.md` -- Das Finanzierungskonzept/die 13-Sektionen-Praesentation, die du in den Termin mitnimmst
+- `skills/selbstauskunft/SKILL.md` -- Bonitaetsunterlagen und Dokumenten-Checkliste VOR dem Termin komplettieren
+- `skills/cashflow-modell/SKILL.md` -- Anschlusszins- und Leerstandsszenarien fuer die Antworten auf Risikofragen
 - `skills/finanzierung/finanzierungsrechner.md` -- Detaillierte Finanzierungsberechnung als Bank-Unterlage
 - `skills/verhandlungs-assistent/SKILL.md` -- Verhandlungstechniken auf Bankgespraeche anwenden
 - `skills/makler-coach/SKILL.md` -- Finanzierungszusage als Makler-Argument nutzen
