@@ -1,6 +1,6 @@
 ---
 name: verhandlungs-assistent
-description: "Entwickelt Verhandlungsstrategien mit wortwoertlich verwendbaren Formulierungen, Zugestaendnis-Strategie und Fahrplan vom Eroeffnungsangebot bis zum Notartermin. Nutze diesen Skill wenn du in die Preisverhandlung einsteigst, Einwaende vorbereiten oder Kaufvertragsbedingungen verhandeln willst."
+description: "Entwickelt Verhandlungsstrategien mit wortwoertlich verwendbaren Formulierungen, Zugestaendnis-Strategie, LOI-Struktur und Fahrplan vom Eroeffnungsangebot bis zum Notartermin. Nutze diesen Skill wenn du in die Preisverhandlung einsteigst, ein Kaufangebot oder einen LOI formulieren, Einwaende vorbereiten, nachverhandeln oder Kaufvertragsbedingungen verhandeln willst."
 ---
 
 # Verhandlungs-Assistent -- Preisverhandlung und Vertragsgestaltung bei Immobilienkauf
@@ -109,6 +109,26 @@ Analysiere die Verhandlungsposition beider Seiten:
 - Differenz Asking Price zu eigener Schmerzgrenze als prozentualer Rahmen
 - Marktvergleiche als objektive Ankerpunkte
 - Sanierungskosten als legitime Abzugsposten
+- Listingdauer und Preisreduktionen des Inserats: Objekte, die lange am Markt sind oder bereits reduziert wurden, haben nachweislich Verhandlungsfenster
+
+**Verkaeufertyp bestimmen -- Motiv schlaegt Taktik:**
+
+Der Preis ist oft NICHT das Hauptmotiv. Zeit, Sicherheit, Entlastung, Diskretion oder "gute Haende" fuer Objekt und Mieter koennen wichtiger sein. Wer das Motiv trifft, verhandelt weniger ueber Preis und mehr ueber Loesung.
+
+| Verkaeufertyp | Typisches Hauptmotiv | Dein staerkster Hebel |
+|---------------|----------------------|------------------------|
+| **Senior/in** | Entlastung, gute Haende, wuerdiger Abschluss | Respekt, Zeit fuer Gespraech, Mieterschutz zusichern, Hilfe bei Entruempelung/Umzug |
+| **Erbe / Erbengemeinschaft** | Schnelle, faire, streitfreie Aufteilung | Tempo, klarer Prozess, ein Ansprechpartner, verlaessliche Termine |
+| **Scheidung / Trennung** | Diskretion, Neutralitaet, schneller sauberer Schnitt | Diskrete Abwicklung, keine Schuldzuweisungen, zuegiger Notartermin |
+| **Liquiditaetsdruck** | Geschwindigkeit und Zahlungssicherheit | Finanzierungsnachweis, kurzer Weg zum Notar -- aber Drucklage NIE ausnutzen mit irrefuehrenden Zusagen |
+| **Ueberforderter Bestandshalter** | Entlastung von Verwaltung, Mietern, Sanierungsstau | Komplettuebernahme "wie es steht", keine Nachforderungen, unkomplizierte Uebergabe |
+| **Beruflich Umziehende/r** | Planbarer Termin, wenig Aufwand | Flexibler Uebergabetermin, Uebernahme von Inventar |
+| **Marktantester** | Maximalpreis, kein echter Verkaufsdruck | Vorsicht: wenig Spielraum. Anker setzen, Frist setzen, nicht hinterherlaufen |
+| **Profi / Bautraeger / Investor** | Zahlen, Sicherheit, Transaktionskosten | Sachliche Kennzahlenargumente, schnelle DD, keine Emotionsrhetorik |
+
+**Kernfragen zur Motivermittlung** (frueh im Gespraech): "Was ist die Geschichte hinter dem Verkauf?" / "Was ist Ihnen neben dem Preis am wichtigsten?" / "Wer entscheidet ausser Ihnen noch mit?" / "Bis wann soll alles abgeschlossen sein?" -- Verkaufsgrund, Entscheidungsmacht und Zeitrahmen bestimmen die gesamte Strategie.
+
+**Nicht-Preis-Leistungen als Verhandlungswaehrung:** Entruempelung, Umzugshilfe, flexible oder schnelle Uebergabe, Mieterschutz-Zusagen, Uebernahme des Notartermins nach Wunsch des Verkaeufers, Diskretion. Diese Leistungen kosten dich wenig und koennen mehr wert sein als 10.000 EUR Preisnachlass -- der beste Preis entsteht oft, wenn du das groesste Problem des Verkaeufers loest.
 
 ### Schritt 2: Dreischritt-Methode anwenden
 
@@ -254,6 +274,62 @@ Korrigiere Fehleinschaetzungen des Verkaeufers NIEMALS direkt. Nutze die Dritte-
 
 **Warum:** Direkte Korrektur erzeugt Widerstand. Die dritte Person (Gutachter, Verwalter, Bankberater) ist glaubwuerdiger und erzeugt keinen persoenlichen Angriff.
 
+### Schritt 9: Rhetorik-Werkzeugkasten
+
+**Grundhaltung:** Der Empfaenger bestimmt die Botschaft -- nicht deine Absicht zaehlt, sondern was ankommt. Gute Verhandlung ist Diagnose, nicht Monolog: weniger reden, mehr fragen, mehr spiegeln. Wer fragt, fuehrt.
+
+**Bewaehrte Satzoeffner (situativ einsetzen, nicht mechanisch):**
+
+| Satzoeffner | Wirkung | Beispiel |
+|-------------|---------|----------|
+| "Mal angenommen, ..." | Oeffnet hypothetischen Raum ohne Festlegung | "Mal angenommen, wir einigen uns beim Preis -- wie schnell koennten Sie zum Notar?" |
+| "Hand aufs Herz, ..." | Laedt zu ehrlicher Antwort ein | "Hand aufs Herz: Was ist preislich wirklich moeglich?" |
+| "Koennen Sie mir helfen?" | Senkt Abwehr, aktiviert Hilfsbereitschaft | "Koennen Sie mir helfen zu verstehen, wie der Preis zustande kam?" |
+| "Was konkret muesste passieren, damit ...?" | Macht Bedingungen sichtbar | "Was konkret muesste passieren, damit Sie sich fuer mein Angebot entscheiden?" |
+
+**Spiegeln:** Die letzten 2-3 Schluesselworte des Gegenuebers fragend wiederholen ("...zu viele schlechte Erfahrungen mit Kaeufern?"). Das haelt das Gespraech beim Gegenueber und foerdert Informationen zutage, die keine direkte Frage liefert.
+
+**"Ja, aber" vermeiden:** Es entwertet das Gesagte und erzeugt Widerstand. Alternativen: "Ja, allerdings...", "Verstanden -- trotzdem...", oder ein klar begruendetes Nein.
+
+**Nein-Typen unterscheiden:** Ein Nein ist selten endgueltig. Unterscheide (a) Nein zur aktuellen Bedingung (verhandelbar), (b) "Vielleicht" verkleidet als Nein (nachfassen), (c) finales Nein (respektieren, Beziehung erhalten, Wiedervorlage in 3-6 Monaten -- Situationen von Verkaeufern aendern sich).
+
+**Unwissen ehrlich zugeben:** "Das weiss ich nicht, das klaere ich bis morgen" wirkt staerker als gespielte Sicherheit. Authentizitaet ist ein Kompetenzsignal, Bluffen ein Risiko.
+
+**Kommunikationstyp grob einschaetzen (Heuristik, kein Schubladendenken):** Analytische Gespraechspartner wollen Zahlen, Unterlagen und Zeit; sozial orientierte wollen Beziehung, Sicherheit und "gute Haende"; dominante/tempoorientierte wollen Ergebnis, Status und Geschwindigkeit. Sprache und Tempo anpassen, Inhalte gleich lassen.
+
+### Schritt 10: Angebot als LOI strukturieren
+
+Ein muendlicher Preis ist ein Gespraech -- ein LOI ist eine Verhandlung. Nach Besichtigung und Kalkulation sollte das Angebot zeitnah als kurzer, weiterleitbarer Letter of Intent kommen. **Regel: Kein LOI ohne Besichtigungs- und Kalkulationsgrundlage.**
+
+**Ein guter LOI beantwortet auf einer Seite:**
+
+| Baustein | Inhalt |
+|----------|--------|
+| Wer kauft | Person/Gesellschaft, kurzer Track Record |
+| Was, zu welchem Preis | Objekt, Angebotspreis |
+| Preisbegruendung | 2-4 sachliche Anker: Maengel, Sanierungskosten, Marktvergleiche, Hausgeld/WEG, Mietniveau -- idealerweise mit Drittbeleg (Handwerker, Bank, Gutachter) |
+| Finanzierung | Status ehrlich benennen (Zusage / Rahmen vorbesprochen), ggf. Nachweis beilegen |
+| Bedingungen | Finanzierungsvorbehalt, Unterlagenpruefung, Flaechenbestaetigung, WEG-Protokolle, technische Pruefung |
+| Zeitplan | Notartermin-Horizont |
+| Frist | Gueltigkeit des Angebots (z.B. 14 Tage) -- ohne Frist ist ein Angebot nur eine Meinung |
+
+**Aufbau nach der Sandwich-Methode:** (1) Wert und Staerken des Objekts anerkennen, (2) Abzuege sachlich begruenden, (3) klares Angebot mit Bedingungen und Frist. So kann der Makler den LOI direkt an den Verkaeufer weiterreichen und dein Angebot intern verteidigen.
+
+**Pruefbedarf (rechtlich):** Die Bindungswirkung von LOI, Reservierungsvereinbarung, Reservierungsgebuehr und Nebenabreden ist rechtlich unterschiedlich und im Zweifel gering -- vor Verwendung Formulierungen pruefen lassen. Ein LOI ersetzt keinen notariellen Vertrag; verbindlich wird der Kauf erst mit Beurkundung.
+
+### Schritt 11: Nachverhandlungs-Regeln (beide Richtungen)
+
+**Deine eigene Nachverhandlung -- nur mit Substanz:**
+- **Eiserne Regel: Keine Nachverhandlung ohne neue belastbare Fakten.** Taktische Preisdruecker nach Einigung oder nach Beauftragung des Notars zerstoeren Vertrauen, Makler-Reputation und oft den ganzen Deal.
+- Legitime Ausloeser: Unterlagen zeigen Abweichungen (kleinere Wohnflaeche, beschlossene Sonderumlage, nicht offengelegte Maengel, Mietrueckstaende, WEG-Risiken), Gutachten oder Handwerkerangebote belegen hoehere Kosten als angenommen.
+- Form: sofort ansprechen, schriftlich, mit Beleg und konkretem neuen Preis oder alternativer Loesung (z.B. Gutschrift/Notaranderkonto statt Preissenkung).
+- Formulierung: "Aus den Unterlagen hat sich ein Punkt ergeben, den wir beide vorher nicht kannten: [Fakt + Beleg]. Auf der urspruenglichen Basis haette ich anders kalkuliert. Ich schlage vor: [neuer Preis / Loesung]."
+- **Bei Taeuschung aussteigen:** Bewusst falsche Flaechenangaben, zurueckgehaltene Unterlagen oder verschwiegene Risiken sind Dealbreaker -- nicht Nachverhandlungsanlass.
+
+**Nachverhandlung durch den Verkaeufer abwehren:**
+- Gleiche Messlatte anlegen: "Gibt es einen neuen Sachverhalt, den wir beide nicht kannten? Wenn nein, bleibt es bei unserer Einigung."
+- Bei wiederholtem Aufschnueren ohne neue Fakten: Frist setzen und Walk-away-Bereitschaft zeigen. Wer einmal grundlos nachgibt, verhandelt ab dann immer zweimal.
+
 ---
 
 ## Ausgabeformat
@@ -375,7 +451,10 @@ Vor Abgabe der Verhandlungsstrategie pruefe:
 5. **Zugestaendnis-Symmetrie**: Hat jedes Zugestaendnis eine klar benannte Gegenforderung?
 6. **Kaufsignal-Warnung**: Wurde der Investor auf unbewusste Kaufsignale hingewiesen?
 7. **Formulierungs-Praxistauglichkeit**: Klingen die Formulierungen natuerlich und nicht auswendig gelernt?
-8. **Situationspassung**: Passen die Taktiken zur spezifischen Verkaeufersituation (Erbe, Investor, Privatperson)?
+8. **Situationspassung**: Passen die Taktiken zum spezifischen Verkaeufertyp und -motiv (Senior, Erbe, Scheidung, Liquiditaetsdruck, Ueberforderung, Marktantester, Profi)?
+9. **Motiv-Hebel**: Wurden Nicht-Preis-Leistungen (Entruempelung, flexible Uebergabe, Mieterschutz, Diskretion, Tempo) als Verhandlungswaehrung geprueft?
+10. **LOI-Faehigkeit**: Ist das Angebot als weiterleitbarer LOI mit Begruendung, Bedingungen und Frist strukturierbar -- und liegt eine Besichtigungs- und Kalkulationsgrundlage vor?
+11. **Nachverhandlungs-Disziplin**: Ist klar markiert, dass Nachverhandlung nur mit neuen belastbaren Fakten erfolgt?
 
 ---
 
@@ -388,7 +467,9 @@ Vor Abgabe der Verhandlungsstrategie pruefe:
 | **Verkaeufer nennt sofort "letzter Preis"** | Oft Taktik, selten wahr | Ruhig bleiben, auf Gesamtkonditionen lenken |
 | **Makler draengt auf schnelle Entscheidung** | Kuenstlicher Zeitdruck | Nie unter Druck entscheiden. "Ich entscheide in meinem Tempo." |
 | **Verkaeufer wird emotional** | Persoenliche Bindung ans Objekt | Empathie zeigen, Dreischritt anwenden, nicht sachlich kontern |
-| **Ploetzlich neue Forderungen nach Einigung** | Nachverhandlung / Bad Faith | Klar Grenzen setzen: "Wir hatten eine Einigung. Neue Punkte muessen gegenseitig sein." |
+| **Ploetzlich neue Forderungen nach Einigung** | Nachverhandlung / Bad Faith | Messlatte anlegen: "Gibt es einen neuen Sachverhalt, den wir beide nicht kannten?" Sonst bei der Einigung bleiben |
+| **Falsche Flaechen, fehlende Unterlagen, verschwiegene Risiken** | Taeuschung, kein Verhandlungsthema | Ausstieg pruefen -- Taeuschung ist Dealbreaker, nicht Nachverhandlungsanlass |
+| **Makler wirkt uebergangen oder ausgeschlossen** | Tuersteher blockiert kuenftig | Makler aktiv einbinden, Provisionssicherheit zusichern (siehe makler-coach) |
 | **Verkaeufer will keinen Notar einschalten** | Unserioes, moeglicherweise Betrug | Sofort abbrechen. Kein Deal ohne Notar. |
 | **Kaufvertragsentwurf weicht von Vereinbarung ab** | Absichtlich oder Fehler | Punkt fuer Punkt pruefen, Abweichungen schriftlich beanstanden |
 
@@ -441,6 +522,9 @@ Vor Abgabe der Verhandlungsstrategie pruefe:
 
 - `skills/deal-screener/SKILL.md` -- Objektbewertung VOR der Verhandlung (ist das Objekt ueberhaupt verhandlungswuerdig?)
 - `skills/bierdeckel-kalkulation/SKILL.md` -- Schnelle Renditeberechnung fuer preisbasierte Argumente
-- `skills/makler-coach/SKILL.md` -- Maklerbeziehung als Verhandlungsvorteil nutzen
+- `skills/besichtigung-prep/SKILL.md` -- Besichtigung liefert die Maengel- und Faktenbasis fuer Preisargumente und LOI
+- `skills/unterlagen-analyst/SKILL.md` -- Unterlagenpruefung als Quelle legitimer Nachverhandlungs-Fakten
+- `skills/makler-coach/SKILL.md` -- Maklerbeziehung als Verhandlungsvorteil nutzen (Tuersteher-Logik, Provisionsschutz)
+- `skills/kaufvertrag-pruefung/SKILL.md` -- Abgleich Kaufvertragsentwurf gegen Verhandlungsergebnis vor dem Notartermin
 - `skills/bankgespraech-coach/SKILL.md` -- Finanzierungszusage als Verhandlungsargument vorbereiten
 - `skills/finanzierung/finanzierungsrechner.md` -- Detaillierte Finanzierungsberechnung fuer Zahlungsziel-Argumente
