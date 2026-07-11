@@ -194,6 +194,19 @@ Nicht umlagefaehiges Hausgeld (ca.) = Hausgeld × 0,30 bis 0,35
 
 ## 6. Mietrendite-Benchmarks nach Lagequalitaet
 
+### Lage-Kategorien: Definitionskriterien
+
+| Kriterium | A-Lage | B-Lage | C-Lage | D-Lage |
+|---|---|---|---|---|
+| Typ | Metropole / Top-7 + Speckguertel | Regionales Oberzentrum | Kleinere Stadt / laendlich-staedtisch | Sehr kleiner Ort |
+| Einwohner (grob) | > 500.000 | 200.000-500.000 | 50.000-200.000 | < 50.000 |
+| Nachfragekreise | Regional + national + international | Regional, teils ueberregional (Uni) | Regional | Nur lokal |
+| Bevoelkerungstrend | Wachsend | Stabil bis wachsend | Stabil | Oft schrumpfend |
+| Wertsteigerung | Hoch (eingepreist) | Moderat | Gering, nicht einpreisen | Unwahrscheinlich |
+| Exit-Markt | Sehr liquide | Liquide | Duenner | Sehr duenn, oft nur mit Abschlag |
+
+Je kleiner der Nachfragekreis, desto duenner der Exit -- die hoehere Anfangsrendite in C/D ist die Bezahlung fuer dieses Risiko, kein Geschenk.
+
 ### Bruttomietrendite nach Lage
 
 | Lagequalitaet | Bruttomietrendite | Kaufpreisfaktor | Typische Staedte/Lagen |
@@ -211,6 +224,53 @@ Nicht umlagefaehiges Hausgeld (ca.) = Hausgeld × 0,30 bis 0,35
 | **B-Lage** | 3,0-5,0% | Ausgewogen: Cashflow + moderate Wertsteigerung |
 | **C-Lage** | 4,0-6,5% | Cashflow-orientiert, hoehere Rendite fuer hoeheres Risiko |
 | **D-Lage** | 5,5-10,0% | Reine Cashflow-Strategie, Wertsteigerung unwahrscheinlich |
+
+### Cashflow-Zeitachse je Lage (Daumenregeln)
+
+| Lage | Wann muss das Objekt cash-neutral/positiv sein? |
+|---|---|
+| **A-Lage** | 3-6 Jahre bis cash-neutral vertretbar, wenn der Pfad (Mieterhoehung, Entwicklung) klar ist |
+| **B-Lage** | Zeitnah cash-neutral, mittelfristig positiv |
+| **C-Lage** | Spaetestens mit der naechsten Mieterhoehungsrunde nach ca. 3 Jahren cash-neutral |
+| **D-Lage** | Ab Tag 1 deutlich cashflow-positiv -- sonst kein Kauf |
+
+### D-Lage-Logik: hohe Rendite, hohes Lagerisiko
+
+D-Lagen (Bruttomietrenditen von 8-11%+ sind dort erreichbar) funktionieren nur unter engen Bedingungen:
+
+- **Nur mit lokaler Spezialkenntnis:** Ortskenntnis, Handwerker-Netzwerk und schnelle Reaktionsfaehigkeit vor Ort sind Voraussetzung, kein Bonus.
+- **Sanierungsfalle:** Sanierung kostet in der D-Lage genauso viel wie in der A-Lage, trifft aber auf niedrige Objektwerte -- 500 EUR/qm Sanierung koennen den halben Kaufpreis ausmachen.
+- **Kein Nachbeleihungspotenzial:** Ohne Wertsteigerung entsteht kein Beleihungsspielraum; Folgekaeufe brauchen frisches Eigenkapital. Ueberschuesse daher als Ruecklage ansparen.
+- **Leerstand und Mieterklientel:** Hoeheres Mietausfallwagnis ansetzen (siehe Abschnitt 3) und aktive Bewirtschaftung einplanen.
+- **Exit:** Verkauf dauert lange und gelingt oft nur mit Abschlag; die Strategie muss ohne Exit funktionieren.
+- **Je schwaecher die Lage, desto wichtiger die Mikrolage:** In C-/D-Staedten entscheidet das Viertel bzw. die Strasse, nicht das Stadtlabel.
+
+### Rueckwaertsrechnung: Max-Einstand aus Zielrendite
+
+```
+Max-Faktor = 100 / Zielrendite-in-%
+Max-Einstand/qm (Kaufpreis + Sanierung) = Marktmiete/qm * 12 * Max-Faktor
+```
+
+Beispiel: Zielrendite 8% -> Faktor 12,5; Marktmiete 10 EUR/qm -> Max-Einstand 1.500 EUR/qm inkl. Sanierung. Ergebnis immer mit der regionalen qm-Preis-Schallgrenze aus echten Comparables plausibilisieren -- der Faktor allein kann taeuschen.
+
+---
+
+## 6a. Standort-Mindestkriterien (Suchprofil-Ebene)
+
+Orientierungswerte fuer die Standortfestlegung (Daumenregeln, Speckguertel-Effekte gesondert wuerdigen):
+
+| Kriterium | Daumenregel |
+|---|---|
+| Zukunftssicherheit allgemein | Ab ca. 50.000 Einwohner ohne Sonderbegruendung |
+| Buy-and-Hold | Ab ca. 10.000 Einwohner vertretbar (Mikrolage + Cashflow muessen stimmen) |
+| Fix-and-Flip / Verkauf an Eigennutzer | Ab ca. 40.000 Einwohner (liquider Kaeufermarkt noetig) |
+| Kleinere Orte | Nur mit Naehe zu 200.000-300.000+-Stadt oder Sonderstory (Uni, Klinikum, Grossarbeitgeber, Infrastrukturprojekt) |
+| Dealflow | Ca. 50-100 zum Suchprofil passende Angebote in den Portalen als Untergrenze |
+| Suchradius | Ca. 1 Stunde um Wohn-/Arbeitsort als praktikabler Standard (Besichtigungen, Handwerker, Netzwerk) |
+| Fokusdauer | Gewaehlten Standort mindestens 3-6 Monate konsequent bearbeiten, bevor gewechselt wird |
+
+Objektbezogene Suchprofil-Daumenregeln: ETW ab ca. 1 Zimmer / 25 qm (hohe qm-Miete, Moeblierungshebel); MFH ab ca. 6 Einheiten (Skalierung, weniger Konkurrenz); Wohn-/Geschaeftshaus mit Gewerbeanteil moeglichst < 30%, sonst Finanzierung als Gewerbeobjekt; Erbbaurecht nur mit Restlaufzeit >= 40 Jahre.
 
 ---
 
@@ -270,6 +330,58 @@ Nicht umlagefaehiges Hausgeld (ca.) = Hausgeld × 0,30 bis 0,35
 | Grossstaedte Ost (Leipzig, Dresden) | 3-6% | Steigend (Nachholeffekt) |
 | Laendlicher Raum Ost | 0-1% | Stagnierend |
 | Laendlicher Raum West/Sued | 1-2% | Leicht steigend |
+
+### Marktstruktur-Kennzahlen (Groessenordnungen, Stand ca. 2025 -- selbst verifizieren)
+
+| Kennzahl | Groessenordnung |
+|---|---|
+| Wohnungsbedarf Deutschland | 600.000-800.000 WE/Jahr |
+| Fertigstellungen | Ca. 200.000-300.000 WE/Jahr -- strukturelles Unterangebot |
+| Als gesund geltende Leerstandsquote | Ca. 3% (in vielen Maerkten unterschritten) |
+| qm-Preisspanne Wohnimmobilien DE | Ca. 500 bis 20.000 EUR/qm -- Teilmaerkte, kein Gesamtmarkt |
+| Miet- vs. Kaufpreisdynamik | Mieten steigen vielerorts deutlich staerker als Kaufpreise |
+| Neubau-Vorlauf | 2-5+ Jahre von Planung bis Fertigstellung |
+
+Konsequenz: Kein Market-Timing versuchen. Der Markt ist intransparent, traege und zinsgetrieben -- entscheidend ist der gute Einkauf im eigenen Teilmarkt, nicht der perfekte Zeitpunkt.
+
+### Zielgruppen-Miethebel aus Megatrends (Groessenordnungen, selbst verifizieren)
+
+| Trend | Miethebel |
+|---|---|
+| Alternde Bevoelkerung | Barrierearme Wohnungen (Aufzug/ebenerdig, breite Tueren, Arzt/Apotheke/Einkauf fusslaeufig): ca. +5-8% ueber Vergleichsmiete |
+| Urbanisierung | Mikrowohnungen und kleine Einheiten: hoeherer qm-Preis, praktisch immer vermietbar; Stellplatz/Garage gewinnt an Wert |
+| Nachhaltigkeit | Fuer die Mehrheit der Mieter relevant; PV/Mieterstrom und Balkonkraftwerk als Differenzierung |
+| Homeoffice | Arbeitszimmer-faehiger Grundriss und schnelles Internet als Vermietungsargument |
+| Aussenflaeche | Balkon/Terrasse/Garten seit Corona ein Entscheidungskriterium -- Aufpreis im Einkauf lohnt bei sonst gleichen Objekten |
+
+---
+
+## 9a. Vermarktungsdauer und Verhandlungsindikatoren
+
+### Marktuebliche Vermarktungsdauern (Groessenordnung, Stand ca. 2025 -- selbst verifizieren)
+
+| Objekttyp | Marktuebliche Dauer | Interpretation bei Ueberschreitung |
+|---|---|---|
+| Wohnungen (Verkauf) | Ca. 39-46 Tage | Ab ca. 120 Tagen: Verhandlungspotenzial |
+| Haeuser (Verkauf) | Ca. 47-55 Tage | Ab ca. 120-160 Tagen: deutliches Verhandlungspotenzial |
+| Neubauprojekte (Bautraeger) | 150-180 Tage (mehrere Einheiten je Inserat, verzerrt) | Gesondert bewerten |
+| Vermietung | Meist deutlich kuerzer; verlaengert sich mit Preis und schwacher Lage | Lange Mietvermarktung = Preis oder Lage passt nicht |
+
+Ab ca. 150 Tagen Vermarktungsdauer reagieren Eigentuemer typischerweise mit Preisreduktion oder Vermarktungspause -- beides sind Ansprech-Signale fuer die Akquise. Achtung: Eine Preisreduktion allein heisst nicht "guenstig"; der reduzierte Preis kann immer noch ueber Markt liegen.
+
+### Energieeffizienzklasse als Verhandlungshebel (Verkauf)
+
+| Energieklasse | Typischer Verhandlungsspielraum (Groessenordnung, selbst verifizieren) |
+|---|---|
+| A/B (gut) | Ca. 1-3% (Goodwill) |
+| C/D | Moderat steigend |
+| E und schlechter | Deutlich groesser; Objekte stehen laenger, weniger Wettbewerb |
+
+Akquise-Sweet-Spot: Objekte mit maessiger Effizienzklasse (z.B. E), die mit einfachen Massnahmen (Daemmung Kellerdecke / oberste Geschossdecke) eine Klasse besser werden -- geringer Nachfragewettbewerb im Einkauf, ueberschaubare Kosten, besseres Profil im Bestand. In der Vermietung wirkt die Effizienzklasse indirekt: Mieter rechnen mit der Warmmiete -- hohe Nebenkosten druecken die durchsetzbare Kaltmiete.
+
+### Bieterverfahren in schwachen Lagen
+
+Stark reduzierte Einstiegspreise mit Bieterverfahren sind in schwachen Lagen ein Schnaeppchen-Kanal: Das Verfahren endet dort selten am Marktwert, weil alle Bieter den Lageabschlag einpreisen. Vorher zwingend pruefen: Ist die Vermietbarkeit real gegeben (Testanzeige, Leerstand im Ort)?
 
 ---
 
