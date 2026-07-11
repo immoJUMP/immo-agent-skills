@@ -1,6 +1,6 @@
 ---
 name: marktanalyse
-description: "Standort- und Marktbewertung fuer Wohnimmobilien. Bewertet Makro- und Mikrolage, recherchiert Marktdaten (Mieten, Kaufpreise, Bevoelkerung) und liefert Zukunftseinschaetzung. Nutze diesen Skill wenn du einen Standort systematisch bewerten willst, Vergleichsdaten brauchst oder eine Standortanalyse fuers Bankkonzept erstellst."
+description: "Standort- und Marktbewertung fuer Wohnimmobilien. Klassifiziert die Makrolage (A/B/C/D), prueft Mikrolage und Potenziallagen, recherchiert Marktdaten (Mieten, Kaufpreise, Bevoelkerung, Leerstand, Angebotsdichte) und gleicht den Standort mit Suchprofil und Strategie ab (Cashflow vs. Wertsteigerung). Nutze diesen Skill wenn du einen Standort systematisch bewerten oder festlegen willst, Vergleichsdaten brauchst, ein Suchprofil auf Standort-Fit pruefst oder eine Standortanalyse fuers Bankkonzept erstellst."
 ---
 
 # Marktanalyse -- Standort- und Marktbewertung fuer Wohnimmobilien
@@ -46,6 +46,22 @@ Du nutzt aktiv Websuche, um aktuelle Marktdaten, Mietspiegel und Bevoelkerungspr
 | **Vergleichsobjekte** | Bekannte Verkaeufe oder Angebote in der Naehe | MFH Nebenstrasse: 1.400 EUR/qm, Bj. 1958 |
 | **Budget-Rahmen** | Fuer Einordnung der Marktueblichkeit | 1,5-2,5 Mio EUR |
 
+### Suchprofil-Canvas (stark empfohlen)
+
+Ein Standort ist nie absolut gut oder schlecht -- er passt zu einer Strategie oder nicht. Wenn der Nutzer ein Suchprofil hat, bewerte den Standort explizit gegen dieses Profil. Wenn nicht, frage die wichtigsten Felder ab oder kennzeichne die Analyse als strategie-neutral:
+
+| Feld | Beschreibung | Beispiel |
+|------|-------------|---------|
+| **Zielstandort / Radius** | Stadt oder Region, typisch ca. 1 Stunde um Wohn-/Arbeitsort | Umkreis 1 h um Berlin |
+| **Assetklasse** | ETW, MFH (ab ca. 6 WE interessant), WGH (Gewerbeanteil < 30%, sonst Gewerbefinanzierung) | MFH 6-20 WE |
+| **Zustand / Potenzialart** | Under-Rent, Sanierung, Umnutzung, Problemloesung -- keine fertig entwickelten Hochglanzobjekte (dort steckt die Marge des Verkaeufers) | Unsaniert mit Mietpotenzial |
+| **Mietstrategie** | Buy-and-Hold, Aufteilen, Fix-and-Flip, Sondervermietung | Buy-and-Hold |
+| **Zielrendite** | Brutto-Zielrendite nach Entwicklung, mit Zeithorizont | 8% BMR nach Entwicklung in 4 Jahren |
+| **Max-Kaufpreis** | Budget-Obergrenze inkl. Sanierung | 3 Mio EUR |
+| **Ausschlusskriterien** | z.B. Erbbaurecht < 40 Jahre Restlaufzeit, Gewerbeanteil > 30%, kein OEPNV | Kein Erbbau unter 40 J |
+
+**Warum das wichtig ist:** Ein klares Suchprofil ist Positionierung -- es macht die Analyse scharf und dient spaeter als Akquise-Asset gegenueber Bank und Makler. Der eigene Wohnort ist dabei kein Investitionskriterium; er darf zufaellig passen, sollte aber nie automatisch Zielmarkt sein.
+
 ---
 
 ## Auftrag
@@ -74,6 +90,10 @@ Recherchiere und bewerte die uebergeordnete Lage:
 - Kaufpreisentwicklung der letzten 5 Jahre
 - Leerstandsquote (CBRE-empirica oder Zensus)
 - Bautaetigkeit: Fertigstellungen vs. Bedarf (Wohnungsmangel oder Ueberangebot?)
+- Angebotsdichte / Dealflow: Wieviele zum Suchprofil passende Objekte stehen aktuell in den Portalen? Faustwert: 50-100 passende Angebote im Zielmarkt als Untergrenze fuer belastbaren Dealflow. Zu wenig Angebot = kein Lern- und Verhandlungsmarkt; sehr viel Angebot = mehr Verhandlungsmacht fuer Kaeufer.
+- Durchschnittliche Vermarktungsdauer der Angebote (Marktliquiditaets-Indikator; Groessenordnung ausgeglichener Markt: Wohnungen ca. 40 Tage, Haeuser ca. 50 Tage -- Stand ca. 2025, selbst verifizieren)
+
+**Marktkontext (Groessenordnungen, selbst verifizieren):** Deutschland hat ein strukturelles Unterangebot an Wohnraum (Bedarf mehrere hunderttausend WE/Jahr, Fertigstellungen deutlich darunter); eine als gesund geltende Leerstandsquote von ca. 3% wird in vielen Maerkten unterschritten. Mieten steigen daher vielerorts deutlich staerker als Kaufpreise. Wichtig: Es gibt nicht DEN Immobilienmarkt, sondern lauter Teilmaerkte -- die Analyse gilt immer nur fuer den konkreten Teilmarkt.
 
 **1.3 Lage-Kategorie bestimmen**
 
@@ -85,6 +105,34 @@ Recherchiere und bewerte die uebergeordnete Lage:
 | Leerstandsquote | < 2% | 2-4% | 4-7% | > 7% |
 | Mietpreistrend (5J) | Stark steigend (>15%) | Steigend (5-15%) | Stabil (+/- 5%) | Fallend (< -5%) |
 
+Qualitativ dahinter stehen die **Nachfragekreise**: A-Standorte ziehen regionale, nationale und internationale Nachfrage an (Mieter UND Kaeufer), B-Standorte sind regionale Oberzentren mit solider Infrastruktur und oft Universitaet, C-Standorte haben rein regionale Nachfrage, D-Standorte nur lokale. Je kleiner der Nachfragekreis, desto duenner der Exit-Markt.
+
+**1.4 Strategie-Fit der Lage-Kategorie**
+
+Die Lageklasse ist kein Kaufurteil, sondern ein strategischer Filter. Hoehere Rendite = hoeheres Lagerisiko -- der Markt bezahlt das Risiko ueber die Anfangsrendite:
+
+| Lage | Typisches Profil | Passende Strategie | Cashflow-Erwartung |
+|------|------------------|--------------------|--------------------|
+| **A** | Teuer, sicher, liquide, Wertsteigerungsfantasie | Vermoegensaufbau, Altersvorsorge, Inflationsschutz | Negativ bis neutral akzeptabel; 3-6 Jahre bis cash-neutral vertretbar, wenn Pfad zur Positivitaet klar ist |
+| **B** | Ausgewogen: solide Nachfrage, moderate Preise | Ausgewogener Mix aus Cashflow und Wertsteigerung | Zeitnah cash-neutral, mittelfristig positiv |
+| **C** | "C wie Cash": guenstiger Einkauf, hoehere Anfangsrendite, wenig Wertsteigerung | Cashflow-Strategie, konservativ kalkulieren (keine Wertsteigerung einpreisen) | Spaetestens nach ca. 3 Jahren (naechste Mieterhoehungsrunde) cash-neutral |
+| **D** | Sehr kleiner Ort, Sonderfall | Nur mit lokaler Spezialkenntnis, Handwerker-Netzwerk und reiner Cashflow-Logik | Muss ab Tag 1 deutlich cashflow-positiv sein -- sonst Finger weg |
+
+**D-Lage-Risiken explizit benennen** (gilt abgeschwaecht auch fuer schwache C-Lagen):
+- Kaum Wertsteigerung -> kaum Nachbeleihungspotenzial fuer die Bank -> Folgekaeufe brauchen mehr Eigenkapital
+- Sanierungskosten sind so hoch wie in A-Lagen, treffen aber auf niedrige Objektwerte: 500 EUR/qm Sanierung koennen den halben Kaufpreis ausmachen
+- Duenner Exit-Markt: wenige Kaeufer, lange Vermarktungszeiten, Verkauf oft nur mit Abschlag
+- Mieterklientel und Leerstandsrisiko erfordern aktive Bewirtschaftung vor Ort
+- Ueberschuesse aus dem Cashflow muessen als Ruecklage angespart werden, weil die Bank spaeter kaum nachbeleiht
+
+**Mindestgroessen als Daumenregeln** (Orientierungswerte, gegen Speckguertel-Effekte abwaegen):
+- Zukunftssicherheit allgemein: ab ca. 50.000 Einwohner ohne Sonderbegruendung
+- Buy-and-Hold: ab ca. 10.000 Einwohner vertretbar, wenn Mikrolage, Arbeitsmarkt und Cashflow stimmen
+- Fix-and-Flip / Verkauf an Eigennutzer: ab ca. 40.000 Einwohner (braucht liquiden Kaeufermarkt)
+- Kleinere Orte nur mit Naehe (< 30-45 Min) zu einer Stadt mit 200.000-300.000+ Einwohnern oder klarer Sonderstory (Uni, Klinikum, Grossarbeitgeber, Infrastrukturprojekt)
+
+**Aufwertungs-Indikatoren fuer B-/C-Staedte** (Signale, dass ein Standort sich nach oben entwickelt): Universitaet/Fachhochschule, spezialisiertes Klinikum, ICE-/Bahnanschluss neu oder geplant, Grossansiedlungen, touristische Grossprojekte, Zuzugsdruck aus einer teuren Nachbarmetropole (Suchende erweitern ihren Radius aus Not, nicht aus Praeferenz).
+
 **Websuche ausfuehren fuer:**
 - "[Stadt] Bevoelkerungsentwicklung Prognose 2040"
 - "[Stadt] Mietspiegel 2024 2025"
@@ -92,10 +140,16 @@ Recherchiere und bewerte die uebergeordnete Lage:
 - "[Stadt] Arbeitsmarkt Arbeitgeber"
 - "[Stadt] Immobilienmarktbericht"
 - "[Stadt] Wohnungsmarkt Neubau Fertigstellungen"
+- "[Stadt] Prognos Zukunftsatlas Ranking"
+- "[Stadt] MFH kaufen" auf ImmoScout24 / Immowelt / Immonet / Kleinanzeigen (Angebotsdichte zaehlen, nicht nur Preise lesen)
 
 ### Schritt 2: Mikrolage-Analyse (Stadtteil / Quartier)
 
-Bewerte die unmittelbare Umgebung des Objekts:
+Bewerte die unmittelbare Umgebung des Objekts. Grundregel: **Je schwaecher die Makrolage, desto wichtiger die Mikrolage.** In B-/C-Staedten entscheidet oft die Strassenseite, die Hausnummer oder das Viertel mehr als das Stadtlabel -- entscheidend ist die **Potenziallage innerhalb des Ortes**, nicht das A/B/C/D-Etikett der Stadt.
+
+**2.0 Zielgruppen-Fit zuerst**
+
+Vor dem Scoring die Frage beantworten: Welche Zielgruppe soll hier wohnen (Studenten, Familien, Senioren, Pendler, Fachkraefte) -- und wuerde diese Zielgruppe hier wohnen WOLLEN? Nachfragetreiber in der Mikrolage: Uni/FH, Kliniken, Gewerbeparks, Grossbaustellen, Bahnhofsnaehe. Zielgruppen-Beispiele: Senioren zahlen fuer barrierearme Wohnungen mit Arzt/Apotheke/Einkauf fusslaeufig einen Mietaufschlag (Groessenordnung +5-8%, selbst verifizieren); kleine Wohnungen nahe Uni/OEPNV sind praktisch immer vermietbar. Eine objektiv "gute" Mikrolage ohne Fit zur geplanten Zielgruppe ist trotzdem die falsche.
 
 **2.1 Infrastruktur-Scoring**
 
@@ -123,12 +177,30 @@ Bewerte jeden Faktor mit 1-5 Punkten:
 | 40-60% | Durchschnittliche Mikrolage | Marktuebliche Vermietung, etwas hoehere Fluktuation |
 | < 40% | Schwache Mikrolage | Vermietungsschwierigkeiten, hoehere Leerstands-Risiken |
 
+**2.3 Potenziallage erkennen**
+
+Eine Potenziallage ist ein Viertel, das besser wird, bevor die Preise es abbilden. Indikatoren: staedtische Quartiersprojekte, neue Cafes/Gastronomie, aktive Bautraeger und Sanierungstaetigkeit in den Nachbarstrassen, Ausstrahlung eines angrenzenden gefragten Viertels, geplante Verkehrsanbindung. Standortvorurteile ("Ruhrgebiet", "sozialer Brennpunkt") koennen Einkaufschancen sein -- aber nur, wenn Fakten (Daten + Vor-Ort-Eindruck) das Vorurteil widerlegen, nicht als Hoffnung.
+
+**2.4 Vor-Ort-Pruefsystematik (Begehung)**
+
+Schreibtischanalyse reduziert Blindflug, ersetzt aber keine Feldarbeit. Wenn eine Begehung moeglich ist (sonst als Konfidenz-Abzug kennzeichnen):
+
+| Pruefpunkt | Worauf achten |
+|-----------|---------------|
+| **Systematische Begehung** | Gegend ablaufen: Klingelschilder (Fluktuation, Namensvielfalt), Briefkaesten (ueberquellend = Leerstand/Verwahrlosung), Zustand der Nachbarhaeuser, Atmosphaere zu verschiedenen Tageszeiten |
+| **Leerstandsindizien** | Zugehaengte Fenster, verwitterte Rolllaeden, "Zu vermieten"-Schilder, die lange haengen |
+| **Laermquellen** | Bahnlinie, Autobahn, Flugschneise, Gewerbe, Kneipenmeile -- zusaetzlich Laermkarte des Bundeslands pruefen |
+| **Parken / Mobilitaet** | Parkdruck am Abend, OEPNV-Takt, Bahnhof-/Autobahnnaehe, Fahrradinfrastruktur |
+| **Anwohner und Gewerbe sprechen** | Cafes, Kioske, Friseure, lokale Makler, Hausverwalter: Wer zieht her, wer zieht weg, was gilt als gute/schlechte Strasse? Das ist Marktforschung, nicht Bauchgefuehl zweiter Klasse |
+| **Testanzeige** | Fiktives Mietinserat mit Zielausstattung und Zielmiete schalten: Anzahl und Qualitaet der Anfragen validieren Nachfrage und Preisakzeptanz VOR dem Kauf |
+
 **Websuche ausfuehren fuer:**
 - "[Stadtteil] [Stadt] Bewertung Wohnlage"
 - "[Stadtteil] [Stadt] Kriminalitaetsstatistik"
 - "[Stadtteil] [Stadt] Stadtentwicklung Projekte"
 - "[PLZ] Immobilienscout24 Mietspiegel"
-- "[Adresse] Google Maps" (Umgebungsanalyse)
+- "[Adresse] Google Maps / Google Earth" (Umgebungsanalyse, Dachlandschaft, Gewerbenaehe)
+- "Laermkarte [Bundesland] [Stadt]"
 
 ### Schritt 3: Mietspiegel-Recherche
 
@@ -205,6 +277,19 @@ Kaufpreis-Abweichung = (Angebotspreis/qm - Vergleichs-Durchschnitt/qm) / Verglei
 Miet-Abweichung = (Ist-Miete/qm - Marktmiete/qm) / Marktmiete/qm * 100
 ```
 
+**5.4 Rueckwaertsrechnung: Was darf der qm am Standort kosten?**
+
+Aus Zielrendite und realistischer Marktmiete den maximalen Einstand (Kaufpreis + Sanierung) ableiten:
+```
+Max-Faktor = 100 / Zielrendite-in-%          (z.B. 8% Ziel -> Faktor 12,5)
+Max-Einstand/qm = Marktmiete/qm * 12 * Max-Faktor   (z.B. 10 EUR * 12 * 12,5 = 1.500 EUR/qm inkl. Sanierung)
+```
+Immer mit dem absoluten qm-Preis plausibilisieren (Faktor allein kann taeuschen): Jede Region hat eine erfahrbare qm-Preis-Schallgrenze fuer Bestand -- die Comparables aus 5.1 liefern sie.
+
+**5.5 Vermarktungsdauer als Marktsignal**
+
+Bei den Vergleichsangeboten die Angebotsdauer pruefen (Portal-Historie oder Aggregator-Tools wie ImmoMetrica). Groessenordnungen (Stand ca. 2025, selbst verifizieren): Wohnungen ca. 40 Tage, Haeuser ca. 50 Tage marktueblich; Objekte mit 120-160+ Tagen Vermarktungsdauer haben deutliches Verhandlungspotenzial. Viele Langstehende im Zielmarkt = Kaeufermarkt-Signal fuer die Standortbewertung. Fuer eine bankennahe Vorab-Einwertung eignen sich Bewertungstools auf Basis echter Transaktionsdaten (z.B. gutachterbasierte Tracker) -- als Indikator nutzen, nie als Ersatz fuer Ortskenntnis.
+
 **Websuche ausfuehren fuer:**
 - "[Stadt] [Stadtteil] Mehrfamilienhaus kaufen"
 - "[Stadt] [Stadtteil] Wohnung mieten [Zimmeranzahl]"
@@ -222,9 +307,10 @@ Bewerte die Mietentwicklung:
 - Vergleich mit Inflation (reales Mietwachstum?)
 
 **6.2 Prognose-Faktoren**
-- Neubaupipeline: Wieviele Wohnungen werden in den naechsten 2-5 Jahren fertiggestellt?
+- Neubaupipeline: Wieviele Wohnungen werden in den naechsten 2-5 Jahren fertiggestellt? (Neubau braucht 2-5+ Jahre Vorlauf -- die Pipeline von heute ist das Angebot von uebermorgen)
 - Nachfrage-Treiber: Universitaet, Arbeitgeber-Ansiedlung, Infrastrukturprojekte
 - Regulierung: Mietpreisbremse, Kappungsgrenze, Milieuschutz
+- Megatrend-Fit des Standorts: alternde Bevoelkerung (barrierearme Wohnungen, Nahversorgung fusslaeufig), Urbanisierung (kleine Einheiten, OEPNV statt Stellplatz), Zuwanderung (Nachfrage auch im unteren Segment), Homeoffice (Arbeitszimmer-Faehigkeit, Internetausbau) -- Standorte, die mehrere Trends bedienen, haben robustere Mietnachfrage
 
 **6.3 Einschaetzung der kuenftigen Mietentwicklung**
 
@@ -247,6 +333,23 @@ Fuehre alle Teilanalysen zusammen:
 | Marktliquiditaet (Exit-Faehigkeit) | 15% | ? | ? |
 
 **Gesamt-Standort-Score: Gewichtete Summe / 10 * 100 = Prozent**
+
+**7.1 Strategie-Fit und Entscheidungsregeln (Wenn/Dann)**
+
+Wenn ein Suchprofil vorliegt, den Score explizit gegen die Strategie spiegeln:
+
+| Wenn... | Dann... |
+|---------|---------|
+| Strategie = Cashflow UND Lage = A/B mit Faktor > 25 | Warnen: Standort passt nicht zur Strategie -- Cashflow dort strukturell negativ |
+| Strategie = Vermoegensaufbau/Altersvorsorge UND Lage = C/D | Warnen: Wertsteigerung unwahrscheinlich, Exit duenn -- nur mit bewusster Cashflow-Umwidmung |
+| Lage = D UND Objekt nicht ab Tag 1 deutlich cashflow-positiv | Abraten (D-Lage traegt sich nur ueber sofortigen Cashflow) |
+| Lage = C UND cash-neutral erst nach > 3 Jahren erreichbar | Warnen und Mieterhoehungspfad konkret pruefen (Kappungsgrenze!) |
+| Dealflow < ca. 50 passende Angebote im Zielmarkt | Suchradius oder Suchprofil erweitern, sonst fehlt Lern- und Verhandlungsmasse |
+| Makro stark, aber Mikrolage-Score < 40% | Objektlage schlaegt Stadtlabel: abwerten, Potenziallagen-Indizien pruefen |
+| Makro schwach, aber klare Potenziallage + Aufwertungs-Indikatoren | Als Chance kennzeichnen, aber konservativ ohne Wertsteigerung kalkulieren |
+| Alle Kernkriterien erfuellt | Empfehlung "aktiv akquirieren" statt weiter analysieren |
+
+**Analyse muss in einer Entscheidung enden:** beobachten / testen (z.B. Testanzeige, Besichtigungen) / aktiv akquirieren. Endlose Standortanalyse ist Ausweichverhalten -- Tools und Tabellen kaufen keine Immobilien. Wer einen Standort waehlt, sollte ihn mindestens 3-6 Monate konsequent bearbeiten, bevor er die Strategie wechselt; Marktgefuehl, Dealflow und Netzwerk entstehen erst durch Fokus.
 
 ---
 
@@ -414,6 +517,25 @@ Stadt Dortmund Statistikportal
 
 ---
 
+## Datenquellen und Tools fuer die Standortrecherche
+
+| Quelle / Tool | Wofuer | Hinweis |
+|---------------|--------|---------|
+| Bertelsmann Wegweiser Kommune | Bevoelkerungsprognose, Demografie je Kommune | Kostenlos, kommunenscharf |
+| Prognos Zukunftsatlas | Zukunftsfaehigkeits-Ranking deutscher Kreise/Staedte | Gut fuer Makro-Ersteinordnung |
+| Zensus / CBRE-empirica | Leerstandsquoten | Stichtagsdaten, Alter pruefen |
+| Statistikportal der Stadt / Statistisches Landesamt | Einwohner, Wanderungssaldo, Arbeitsmarkt | Primaerquelle vor Sekundaerquellen |
+| BORIS [Bundesland] | Bodenrichtwerte | Erste Preis-Orientierung, da man Grund und Boden kauft |
+| Gutachterausschuss (Marktbericht) | Echte Transaktionsdaten statt Angebotspreise | Oft kostenpflichtig, aber belastbarste Quelle |
+| ImmoScout24 / Immowelt / Immonet / Kleinanzeigen | Angebotsdichte, Angebotsmieten, Comparables | Angebotspreise sind Wunschpreise -- Verhandlungsspielraum einrechnen |
+| Aggregator-Tools (z.B. ImmoMetrica) | Vermarktungsdauer-Filter, Preisreduktions-Historie | Langstehende Objekte = Verhandlungssignal |
+| Bewertungstools auf Transaktionsdatenbasis (gutachtergestuetzt) | Bankennahe Vorab-Einwertung | Indikator, kein Ersatz fuer Ortskenntnis |
+| Laermkarten der Bundeslaender | Laermbelastung Schiene/Strasse/Flug | Pflicht bei Bahn-/Autobahnnaehe |
+| Google Maps / Earth / Street View | Remote-Mikrolage: Distanzen, Umfeld, Gebaeudezustand | Street-View-Aufnahmedatum beachten |
+| Mietspiegel der Stadt | Rechtlich belastbare Vergleichsmiete | Qualifiziert vs. einfach unterscheiden |
+
+---
+
 ## Qualitaetspruefung
 
 Vor Abgabe der Analyse pruefe:
@@ -450,6 +572,9 @@ Vor Abgabe der Analyse pruefe:
 | **Grosses Neubaugebiet in Planung (> 500 WE)** | Mietdruck durch neues Angebot | Bauantraege und Bebauungsplaene pruefen |
 | **Laermbelastung (Flughafen, Autobahn, Schiene)** | Eingeschraenkte Vermietbarkeit | Laermkarte des Landes pruefen |
 | **Gentrifizierungs-Hotspot mit Milieuschutz** | Umwandlungsverbot, Mieterhoehungsbremse | Milieuschutz-Satzung der Stadt pruefen |
+| **Ort < 10.000 EW ohne Speckguertel-Anbindung** | Zukunftssicherheit fraglich, Exit sehr duenn | Pendeldistanz zur naechsten 200k+-Stadt pruefen |
+| **Wirtschaft haengt an einer Branche / einem Arbeitgeber** | Klumpenrisiko fuer die gesamte Mietnachfrage | Arbeitgeber-Mix und Branchenstruktur recherchieren |
+| **Sehr wenige passende Angebote im Portal (< 50)** | Kein belastbarer Dealflow, kein Marktlernen moeglich | Angebotszaehlung ueber 4-8 Wochen beobachten |
 
 ---
 
@@ -490,7 +615,7 @@ Vor Abgabe der Analyse pruefe:
 
 ### Verwandte Skills
 
-- `skills/deal-screener/SKILL.md` -- Vorgelagertes Schnell-Screening des Deals
-- `skills/bierdeckel-kalkulation/SKILL.md` -- Rendite-Kalkulation nach der Marktanalyse
+- `skills/deal-screener/SKILL.md` -- Vorgelagertes Schnell-Screening des Deals (Suchprofil-Canvas von hier als Ankaufskriterien uebergeben)
+- `skills/bierdeckel-kalkulation/SKILL.md` -- Rendite-Kalkulation nach der Marktanalyse (Max-Einstand/qm aus Schritt 5.4 als Kaufpreisgrenze uebergeben)
 - `skills/mieterhoehung/SKILL.md` -- Vertiefte Mieterhoehungsstrategie basierend auf Mietspiegel-Daten
 - `skills/bankenpitch/SKILL.md` -- Standortanalyse als Teil der Bankenpraesentation
