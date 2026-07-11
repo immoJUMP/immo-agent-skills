@@ -32,6 +32,31 @@ Dieser Skill vereint Analyse und Praesentation -- du gibst die Basisdaten ein, d
 
 ---
 
+## Banklogik: Wogegen das Konzept bestehen muss
+
+Die Praesentation richtet sich nicht nur an den Berater, sondern an die gesamte interne Entscheidungskette. Wer diese Logik versteht, baut jede Sektion als Antwort auf eine interne Prueffrage.
+
+| Instanz | Rolle | Was das Konzept liefern muss |
+|---------|-------|------------------------------|
+| **Markt (Berater/Vertrieb)** | Verkauft den Deal intern, will abschliessen | Klare Story, saubere KPIs, ein Dokument das er 1:1 weiterreichen kann |
+| **Marktfolge (Risiko)** | Prueft unabhaengig, entscheidet mit | Proaktiv beantwortete Risikofragen, belegte Zahlen, Stresstests |
+| **Kreditausschuss/Vorstand** | Ab Grosskredit-Schwelle | Entscheidungsvorlage mit "Wir bieten / Wir wuenschen" |
+
+**Zwei getrennte Pruefungen, beide muessen bestehen:**
+
+| Dimension | Frage der Bank | Nachweis im Konzept |
+|-----------|----------------|---------------------|
+| **Kreditfaehigkeit** (harte Fakten) | Traegt der Cashflow den Kapitaldienst? | Haushaltsrechnung, DSCR in jeder Phase, Phasen-Cashflow, Stresstest |
+| **Kreditwuerdigkeit** (Verhalten/Historie) | Ist der Kreditnehmer verlaesslich? | Trackrecord, saubere Kontenfuehrung, vollstaendige Unterlagen, Schufa |
+
+**Beleihungswert ist nicht Kaufpreis:** Die Bank rechnet mit eigenem, konservativem Wert (Verkehrswert -> Beleihungswert -> Beleihungsgrenze). Es gilt das Niederwertprinzip: Liegt der Bankwert unter dem Kaufpreis, zaehlt fuer die Bankrechnung der niedrigere Wert -- die Differenz muss durch EK oder Zusatzsicherheiten gedeckt werden. Deshalb die Ertragswert-Tabelle (Schritt 9) immer konservativ herleiten.
+
+**Zins ist zerlegbar:** Refinanzierungskosten + Eigenmittelkosten + Risikokosten + Verwaltung + Marge. Der einzige Baustein, den der Investor beeinflusst, sind die Risikokosten -- jede Sektion, die Risiko nachweisbar senkt (DSCR-Puffer, LTV, Trackrecord, Sicherheiten), ist ein Zinsargument.
+
+**Interner Qualitaetsmassstab vor jeder Anfrage:** "Wuerde ich mir als Banker auf Basis dieser Unterlagen selbst Geld geben?" Wenn nein: nachbessern, nicht einreichen.
+
+---
+
 ## Was du bereitstellen musst
 
 ### Pflichtangaben
@@ -220,6 +245,24 @@ Definiere fuer jede Stufe JNKM, Delta zum Vorgaenger, Rendite und DSCR:
 - Beleihungsauslauf (BLA) berechnen: Bankdarlehen / Beleihungswert
 - Eigenleistungen als EK-Ersatz: Block 1 (Barmittel) + Block 2 (marktueblich bewertete Eigenleistungen) = EK-Quote
 - Annuitaet berechnen (Zins + Tilgung, ggf. tilgungsfreie Anlaufphase)
+- **Kaufpreis, Nebenkosten und Sanierung in EINEM Antrag strukturieren:** Nachfinanzierungen sind fuer Banken ein Warnsignal, oft teurer und koennen steuerlich anders behandelt werden (Pruefbedarf: Steuerberatung). Sanierungsbudget mit Puffer, Abrufplan und Nachweislogik einplanen -- inkl. bereitstellungszinsfreier Zeit fuer den Modernisierungsanteil.
+- Kreditnehmerstruktur (privat, GbR, GmbH) VOR dem Notartermin mit Bank und Steuerberater festlegen -- ein spaeterer Wechsel ist teuer bis unmoeglich (Pruefbedarf: Steuer-/Rechtsberatung)
+
+#### Wenn/Dann: Finanzierungsstruktur je Strategie
+
+Die Struktur wird rueckwaerts aus der Strategie gebaut (halten, entwickeln, refinanzieren, verkaufen) -- nicht aus dem billigsten Zinsangebot:
+
+| Wenn (Strategie/Situation) | Dann (Strukturempfehlung) |
+|----------------------------|---------------------------|
+| Buy-and-Hold, langfristig halten | Lange Zinsbindung (10-20 J.), moderate Tilgung (1,5-2,5%), Sondertilgungsrecht als Option statt hoher Pflichttilgung |
+| Value-Add mit geplanter Nachbeleihung | Tilgungsfreie Anlaufphase, Zinsbindung an Stabilisierungszeitpunkt koppeln, Nachbewertung vorab mit der Bank besprechen |
+| Fix & Flip / kurze Haltedauer | Variable Finanzierung (z.B. Euribor-gebunden) oder kurze Zinsbindung; kurze Laufzeit der Bank OFFEN kommunizieren und ggf. hoeheren Zins/Gebuehr anbieten -- die Bank muss Ertrag sehen |
+| Knappe Liquiditaet, Wachstum geplant | Niedrige Anfangstilgung + hohes Sondertilgungsrecht (Flexibilitaet statt Pflicht); tilgungsfreie Jahre nur, wenn die freie Liquiditaet investiert statt konsumiert wird |
+| Sicherheitsorientiert, keine weiteren Kaeufe | Hoehere Tilgung (3%+), lange Zinsbindung, Volltilger pruefen |
+| Zinsbindungsende in 12-60 Monaten (Bestand) | Prolongation als Strategieentscheidung behandeln: Halten, Verkaufen, Nachbeleihen, Bankwechsel oder Forward-Darlehen (Forwardaufschlag vs. Zinssicherheit abwaegen) |
+| Kleiner Modernisierungsbaustein (ca. 10-50k) | Blankodarlehen ohne Grundschuld pruefen -- schneller, aber teurer |
+
+> **Merksatz:** Zu hohe Tilgung kann weitere Ankaeufe blockieren -- Tilgung ist Vermoegensaufbau, aber Liquiditaet ist Wachstumskraft. Zu niedrige Tilgung erhoeht Restschuld- und Anschlusszinsrisiko. Beides gegen die Strategie abwaegen, nicht moralisch bewerten.
 
 ### Schritt 5: Phasen-Cashflow berechnen
 
@@ -253,6 +296,8 @@ Fuer jede Phase berechne: JNKM, Kapitaldienst/Monat, DSCR, Cashflow/Monat.
 - Optimistisch: Volle Marktmiete, geringer Leerstand
 
 **Stresstest:** DSCR bei +2% Zinsanstieg nach Zinsbindungsende
+
+**Anschlusszins-Szenarien:** Restschuld zum Zinsbindungsende berechnen und Kapitaldienst bei Anschlusszins-Annahmen von 2% / 4% / 6% / 8% zeigen. Hintergrund: Banken stressen das Anschlussrisiko intern teils mit fiktiv hoher Annuitaet (bis zu 8%) -- wer dieses Szenario proaktiv zeigt, nimmt der Marktfolge die kritischste Frage ab. (Pruefbedarf: bankinterne Stressannahmen sind institutsspezifisch.)
 
 ### Schritt 7: Exit-Szenarien und stille Reserven
 
@@ -300,6 +345,8 @@ Nutze die Ergebnisse der Analysemethodik und baue daraus die 13 Sektionen. Jede 
 - **Werdegang als Timeline:** Jahreszahl + Meilenstein
 - **Trackrecord-Highlight:** Bestes Vergleichsobjekt mit JNKM-Steigerung, DSCR, LTV, Leerstand
 - **Stille Reserven & Sicherheiten:** Freie Grundschulden, nachrangig beleihbar
+- **Strategiephasen + Ankaufsprofil:** Status quo -> Zielbild in Etappen erklaeren (macht Wachstum plausibel); Ankaufsprofil (Objektart, Region, Groessenordnung) nennen -- das positioniert den Investor als systematischen Bestandshalter, nicht als Zufallskaeufer
+- **Stilregel:** Einfachheit schlaegt Show -- klare Sprache und saubere Struktur statt Hochglanz-Optik. Diese Sektion ist die eingebettete Investorenbroschuere; als eigenstaendiges, jaehrlich aktualisiertes Dokument wiederverwendbar (besonders wertvoll bei mehreren Banken oder groesseren Volumina)
 
 ### Sektion 3: Projektuebersicht
 
@@ -380,6 +427,7 @@ Nutze die Ergebnisse der Analysemethodik und baue daraus die 13 Sektionen. Jede 
 
 - **"Wir bieten"-Box** mit 5-6 Checkmark-Items
 - **"Wir wuenschen"-Tabelle:** Darlehensart, Betrag/Zins/Tilgung/Laufzeit, KfW, Sondertilgung, Sicherheit
+- **Auszahlungslogik mitdenken:** Abrufplan fuer Sanierungsanteil, bereitstellungszinsfreie Zeit, Nachweise fuer Modernisierungsabrufe -- viele Finanzierungen scheitern nicht an der Zusage, sondern an der Auszahlungsphase
 - **4 Footer-KPIs:** DSCR (min), LTV, JNKM SOLL, EK-Quote
 - **Zusammenfassung** als abschliessendes Argument (der "Closing Pitch")
 
@@ -878,6 +926,23 @@ Diese Praesentation kann als PDF exportiert oder in Gamma.app als designte Praes
 
 ---
 
+## Ab 1 Mio. Kreditvolumen: Was sich aendert
+
+Bankinterne Abteilungen haben Volumenschwellen -- je nach Institut liegt die Grenze des Privatkundenbereichs bei ca. 500.000, 750.000 oder 1 Mio. EUR Gesamtvolumen. Darueber wechselt der Deal in Gewerbe-/Firmenkundenbetreuung mit Rating statt einfachem Scoring. (Pruefbedarf: Schwellen sind institutsspezifisch.)
+
+| Dimension | Unter der Schwelle | Ueber der Schwelle |
+|-----------|--------------------|--------------------|
+| Pruefung | Scoring + Haushaltsrechnung | Rating, Portfolio-Analyse, Kapitaldienstfaehigkeit auf Gesamtengagement |
+| Ansprechpartner | Privatkundenberater | Firmenkunden-/Gewerbekundenberater, Marktfolge intensiver eingebunden |
+| Dokument | Finanzierungskonzept je Objekt | Konzept + Investorenbroschuere + jaehrliches Strategiegespraech (Rueckblick, Portfolioentwicklung, Ausblick) |
+| Verhalten | Punktuelle Anfragen | Laufendes Track-Record-Spiel: puenktliche Raten, keine ungenehmigten Ueberziehungen, schnelle vollstaendige Unterlagen, Portfolio-Zahlen jederzeit abrufbar |
+
+- **Nicht geschlossen fragen** ("Kann ich mehr als 1 Mio. bekommen?"), sondern die Bank strategisch mitnehmen: Zielbild und Wachstumsplan im Strategiegespraech vorstellen und die Skalierungsfaehigkeit indirekt klaeren.
+- **Kontenfuehrung ist Ratingsignal:** Ungenehmigte Ueberziehungen, spaete Ausgleiche und verspaetete Unterlagen verschlechtern das Rating -- unabhaengig vom Objekt.
+- **Bei Entwicklungsprojekten** (Umbau, Aufstockung, Nutzungsaenderung) reicht das Standardkonzept nicht: Dann eine Projektentwicklungsstudie beilegen mit sechs Teilen -- (1) Vorstellung Investor, (2) Zustandsanalyse (Markt, Standort, Grundstueck, Rechte, Altlasten), (3) SWOT, (4) Projektidee, (5) Wirtschaftlichkeit mit Belegen (Angebote, Architektenwerte), (6) Finanzierung/Struktur/Exit. Ziel: der Marktfolge Arbeit abnehmen, Risiken offen benennen statt schoenrechnen.
+
+---
+
 ## Qualitaetspruefung
 
 Pruefe die Praesentation gegen diese Kriterien:
@@ -920,7 +985,10 @@ Pruefe die Praesentation gegen diese Kriterien:
 | Sanierungskosten nicht durch Angebote belegt | MITTEL | Handwerkerangebote oder Kostenschaetzungen einholen |
 | Sanierungskosten > 30% des Kaufpreises ohne KfW | HOCH | KfW-Foerderfaehigkeit pruefen, Sanierung in Phasen aufteilen |
 | Keine Liquiditaetsreserve und kein laufendes Einkommen | KRITISCH | Bank wird ohne Sicherheitsnetz nicht finanzieren |
-| Grundbuch belastet (Vormerkungen, Wegerechte, Altlasten) | HOCH | Klaeren vor Banktermin, ggf. im Kaufvertrag regeln |
+| Grundbuch belastet (Vormerkung, Niessbrauch, Wohnrecht, Reallast, Wegerecht, Insolvenz-/Sanierungsvermerk, Altlasten) | HOCH | Grundbuch als Finanzierungs-Due-Diligence VOR Banktermin klaeren, ggf. im Kaufvertrag regeln (Loeschung, Rangruecktritt) |
+| EK-Herkunft unklar oder nicht belegbar (fremde Mittel, Bargeld ohne Historie) | HOCH | Herkunft lueckenlos dokumentieren (Kontoauszuege, Schenkungsvertrag) -- unklare Herkunft killt Finanzierungen spaet im Prozess |
+| Nachfinanzierungsbedarf absehbar (Sanierung nicht im Antrag) | HOCH | Kaufpreis + Nebenkosten + Sanierung in einem Antrag strukturieren; Nachfinanzierung ist teurer und ein Warnsignal |
+| Ungenehmigte Ueberziehungen / Zahlungsstoerungen in den letzten Monaten | HOCH | Konten vor Einreichung 3 Monate sauber fuehren -- Kontenfuehrung ist Kreditwuerdigkeitssignal |
 | Negative Cashflow-Prognose ueber > 3 Jahre | KRITISCH | Finanzierungsstruktur ueberarbeiten (mehr tilgungsfrei, weniger Tilgung) |
 | Leerstand > 30% ohne klare Ursache | HOCH | Leerstandsgruende analysieren, Vermietbarkeit pruefen |
 | DSCR-Matrix zeigt grosse rote Flaeche | MITTEL | Mieterhoehungsstrategie ueberpruefen, Zinsbindung verlaengern |
@@ -949,6 +1017,8 @@ Pruefe die Praesentation gegen diese Kriterien:
 | Ertragswert-Faktor | Konservativen Faktor (15-16) fuer B-/C-Standorte, hoeheren Faktor (17-20) fuer A-Standorte |
 
 > **Wichtig:** Fehlende Daten immer transparent kennzeichnen. Banken schaetzen Ehrlichkeit mehr als Luecken zu kaschieren. Eine ehrliche Praesentation mit "wird nachgereicht" ist besser als eine vollstaendige Praesentation mit falschen Zahlen.
+
+> **Pruefbedarf:** Bankregeln, Volumenschwellen, Beleihungslogik, Stressannahmen und Konditionen sind institutsspezifisch und aendern sich -- vor Einreichung mit der konkreten Bank abgleichen. Steuerwirkung von Zins/Tilgung, Kreditnehmerstruktur (privat/GbR/GmbH) und Nachfinanzierungen mit dem Steuerberater klaeren. Dieses Konzept ersetzt keine Finanz-, Steuer- oder Rechtsberatung.
 
 ---
 
