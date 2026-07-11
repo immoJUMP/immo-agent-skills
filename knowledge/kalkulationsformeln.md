@@ -32,6 +32,33 @@ Bruttomietrendite (%) = (Jahresnettokaltmiete / Kaufpreis) × 100
 - Kaufpreis: 250.000 EUR
 - Bruttomietrendite: (10.200 / 250.000) × 100 = **4,08%**
 
+### 2a. Drei Mietszenarien: BMR Ist / Soll / Stress
+
+Eine Bruttomietrendite ist erst aussagekraeftig, wenn sie in drei Szenarien gerechnet wird:
+
+```
+BMR (Ist)    = JNKM Ist / Kaufpreis x 100          [Entscheidungsbasis]
+BMR (Soll)   = JNKM Soll / Kaufpreis x 100         [nur rechtlich erreichbare Soll-Miete]
+BMR (Stress) = JNKM Stress / Kaufpreis x 100       [konservative Unterkante, z.B. Amtsmiete/KdU-Niveau
+                                                    oder Ist-Miete mit erhoehtem Leerstand]
+```
+
+**Regeln fuer die Soll-Miete (Plausibilisierung):**
+- Kauf bricht Miete nicht: Bestandsmieten aendern sich durch den Eigentuemerwechsel nicht
+- Erhoehungen nach §558 BGB nur bis zur ortsueblichen Vergleichsmiete -- die ist ein Durchschnitt, nicht die aktuelle Marktspitze
+- Index-, Staffel- und Amts-/Sozialmieten blockieren den §558-Pfad
+- Marktmiete konservativ ansetzen: nachhaltige Miete leicht unter der Marktspitze
+- Under-Rent ist Potenzial (Kaufpreisargument), kein Sofort-Cashflow
+- Mieter-Auszug oder freiwillige Erhoehung nur ansetzen, wenn rechtlich belastbar dokumentiert
+
+**Ziel-BMR-Referenzwerte nach Dealtyp:**
+
+| Dealtyp | Ziel-BMR | Anmerkung |
+|---|---|---|
+| Einsteiger-ETW (50.000-100.000 EUR KP) | > 4-6% je nach Finanzierung | Annuitaet 3-5% + laufende Kosten ca. 1% muessen getragen werden |
+| Standard-Bestand C-Lage | ca. 7% | Beispiel: 1.000 EUR/qm Kaufpreis bei 6 EUR/qm Miete = 7,2% |
+| Profi-/Problem-Deal | 8-10% binnen 3 Jahren | Einkauf 10-60% unter Marktwert, klare Problemloesung, Risikoreserve zwingend |
+
 ---
 
 ## 3. Nettomietrendite
@@ -62,7 +89,7 @@ Nettomietrendite (%) = ((Jahresnettokaltmiete - nicht umlagefähige Kosten) / (K
 | Bundesland | Grunderwerbsteuer |
 |---|---|
 | Bayern | 3,5% |
-| Sachsen | 3,5% |
+| Sachsen | 5,5% (seit 01.01.2023) |
 | Hamburg | 5,5% |
 | Baden-Württemberg | 5,0% |
 | Berlin | 6,0% |
@@ -108,6 +135,16 @@ Erwerbsnebenkosten = Kaufpreis × (Grunderwerbsteuer + Notar + Grundbuch + Makle
 - Notar: 1,5% = 3.750 EUR
 - Grundbuch: 0,5% = 1.250 EUR
 - **Gesamt: 13.750 EUR (5,5%)**
+
+### 4a. Gesamtinvestitionskosten (GIK)
+
+```
+GIK = Kaufpreis + Erwerbsnebenkosten + Sanierungs-/Modernisierungskosten
+```
+
+Die GIK sind die Bezugsgroesse fuer All-in-Kennzahlen und fuer das Bankgespraech (die Bank will den fertigen Plan sehen: GIK, Finanzierungsstruktur, Tilgung, Laufzeit -- nicht die Frage "Was gebt ihr mir?").
+
+**Grundsatz Sanierungsansatz:** Sanierung dauert laenger und kostet mehr als geplant -- Kosten- und Zeitpuffer einrechnen.
 
 ---
 
@@ -251,6 +288,25 @@ EK-Rückfluss (Jahre) = Eingesetztes Eigenkapital / Jährlicher Cashflow
 
 **Hinweis:** Ein EK-Rückfluss von > 20 Jahren deutet auf eine schwache Cashflow-Performance hin. Zielwert für Kapitalanleger: 10-15 Jahre.
 
+### 10a. EK-Freisetzung durch Nachbeleihung (Refinanzierung)
+
+Eigenkapital ist kein statischer Topf, sondern ein System, das immer wieder gefuellt werden muss. Neben Cashflow + Tilgung kann gebundenes EK nach abgeschlossener Wertschoepfung (Sanierung, Mietanhebung) freigesetzt werden:
+
+```
+Nachbeleihungspotenzial = neuer Beleihungswert x Beleihungsquote - aktuelle Restschuld
+```
+
+**Typische EK-Quellen fuer den naechsten Deal:**
+
+| Quelle | Mechanik | Pruefpunkt |
+|---|---|---|
+| Laufendes Einkommen | Job, Selbststaendigkeit, Handel | Nachhaltigkeit des Einkommens |
+| Bessere Bankverhandlung | Fertigen Plan vorlegen (GIK, Struktur, Tilgung, Laufzeit) | Objekt muss hoehere Beleihung tragen |
+| Zusatzsicherheiten | Depot, Konto, Grundschuld auf Bestand | Freigabekriterien schriftlich vereinbaren |
+| Nachbeleihung / Refinanzierung | Entwickelter Bestandswert wird beliehen | Beleihbarkeit, Kapitaldienst [Pruefbedarf: Bank] |
+| Partner / Co-Investment | Fremdes EK gegen Beteiligung | Struktur und Exit klaeren |
+| Verkauf entwickelter Objekte | Auch steuerpflichtiger Verkauf kann Wachstum beschleunigen | Steuerfolgen, 10-Jahres-Frist [Pruefbedarf: Steuerberater] |
+
 ---
 
 ## 11. Modernisierungsumlage (§559 BGB)
@@ -288,6 +344,12 @@ Maximale Mieterhöhung = Ausgangsmiete × Kappungsgrenze (%) über 3 Jahre
 - Miete liegt unter ortsüblicher Vergleichsmiete
 - Letzte Mieterhöhung mindestens 15 Monate her
 - Mieterhöhungsverlangen muss begründet werden (Mietspiegel, Gutachten, Vergleichswohnungen)
+
+**Wichtige Kalkulationsregeln:**
+- Die Erhoehung ist doppelt gedeckelt: Kappungsgrenze UND ortsuebliche Vergleichsmiete
+- Die ortsuebliche Vergleichsmiete ist ein Durchschnitt der letzten Jahre, nicht die aktuelle Angebots-/Marktspitze
+- Index- und Staffelmietvertraege sowie Amts-/Sozialmieten folgen eigenen Regeln -- fuer diese Einheiten keinen §558-Pfad kalkulieren
+- Bank-Sicht: Stark unter Markt vermietete Objekte werden im Ertragswert niedriger bewertet -- Under-Rent kann den EK-Bedarf erhoehen, bevor es Rendite bringt
 
 **Beispiel:**
 - Aktuelle Nettokaltmiete: 600 EUR (9,23 EUR/qm bei 65 qm)
