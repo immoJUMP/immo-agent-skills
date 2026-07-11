@@ -48,9 +48,19 @@ description: "Erstellt professionelle, rechtskonforme Vermietungsinserate fuer I
 
 Du bist ein erfahrener Immobilienvermarkter, der professionelle, rechtskonforme Vermietungsinserate fuer den deutschen Wohnungsmarkt erstellt. Generiere ein Inserat, das alle gesetzlichen Pflichtangaben enthaelt (GEG/EnEV, AGG), auf den grossen Portalen (ImmoScout24, Immowelt) veroeffentlicht werden kann und die Wohnung sachlich und ansprechend praesentiert. Vermeide uebertriebene Superlative und jede Form von Diskriminierung.
 
+Das Inserat ist der erste Schritt des Neuvermietungs-Funnels: Zielmiete -> rechtliche Grenzen -> Expose/Inserat -> Anfragen qualifizieren -> Besichtigung -> Bewerberpruefung -> Vertrag. Dieser Skill deckt die ersten drei Schritte ab; die Bewerberpruefung uebernimmt `skills/mietnomaden-praevention/SKILL.md`.
+
+**Pruefbedarf-Hinweis:** Mietpreisbremse-Gebiete, GEG-Pflichten und AGG-Rechtsprechung aendern sich -- vor Veroeffentlichung aktuellen Stand pruefen (Landesverordnung, Kommune).
+
 ---
 
 ## Strategie
+
+0. **Zielgruppe und Zielmiete festlegen** -- Vor jedem Text:
+   - Zielgruppe der Wohnung bestimmen (Single/Paar, Familie, Senioren, Studenten, Pendler, Expats) -- sie bestimmt Tonalitaet, hervorgehobene Merkmale und Kanalwahl
+   - **Warmmiete ist die Budgetgroesse:** Mieter entscheiden nach monatlicher Gesamtbelastung, nicht nach Kaltmiete. Warmmiete im Inserat klar ausweisen, NK-Vorauszahlung realistisch ansetzen (zu niedrige VZ raecht sich mit Nachzahlungskonflikt, siehe `skills/nebenkosten-pruefer/SKILL.md`)
+   - Zielmiete marktnah statt maximal ansetzen: ueberhoehte Mieten ziehen riskante Bewerber an, weil solvente Mieter Alternativen finden -- marktnahe Miete = breiter, solventer Bewerberpool und kuerzerer Leerstand
+   - Bei unsicherer Marktmiete: Testanzeige 5 Tage laufen lassen; mehr als 10 qualifizierte Anfragen sind ein gutes Signal fuer Miethoehe und Nachfrage
 
 1. **Pflichtangaben nach GEG pruefen** -- Folgende Energieausweis-Daten MUESSEN im Inserat stehen (§87 GEG, ehemals EnEV §16a):
    - Art des Energieausweises: Verbrauchsausweis oder Bedarfsausweis
@@ -119,6 +129,28 @@ Du bist ein erfahrener Immobilienvermarkter, der professionelle, rechtskonforme 
     - Kaution innerhalb des gesetzlichen Rahmens?
     - Mietpreisbremse (falls aktiv) eingehalten?
     - Keine irrefuehrenden Angaben (Wohnflaeche, Zustand)?
+
+---
+
+## Sonderstrategie: Moeblierte Vermietung und Kurzzeitvermietung
+
+Falls der Nutzer moebliert oder auf Zeit vermieten will, weicht Inserat-Logik und Rechtsrahmen ab:
+
+**Moeblierte Vermietung (auf Zeit):**
+- Funktioniert vor allem bei 1-2 Zimmern (ca. 25-50 qm) in Ballungsraeumen und Staedten ab ca. 40.000 Einwohnern mit temporaerer Nachfrage
+- Zielgruppen: Expats, Fachkraefte, Zeitarbeit, Studenten, Klinik-/Projektmitarbeiter, Monteure -- Zielgruppe bestimmt Ausstattung, Ansprache und Kanal ("Moeblierung beginnt mit Zielgruppe, nicht mit Moebelkauf")
+- Mikrolage-Argumente ins Inserat: OEPNV, Einkauf, Uni/Klinik/Arbeitgeber-Naehe -- wichtiger als Stellplatz
+- Ausstattungs-Minimum: komplett ausgestattete Kueche, Bett, Kleiderschrank, Schreibtisch, Internet, Smart-TV, Inventarliste als Vertragsanlage
+- Wirtschaftlichkeit: Zielaufschlag mindestens ca. +50% gegenueber unmoeblierter, unbefristeter Marktmiete -- sonst tragen Moeblierung, Abnutzung und Mehraufwand die Rendite nicht
+- Vertrag: Mietvertrag zum voruebergehenden Gebrauch, Befristungsgrund liegt beim Mieter (z.B. Projekt, Studium), typisch ca. 6-12 Monate; bei Verlaengerung besser neuer Vertrag als Nachtrag (Pruefbedarf: Vertragsgestaltung anwaltlich pruefen)
+- Rechtsgrenze: Moeblierungszuschlag ist kein Freifahrtschein bei der Mietpreisbremse -- Zuschlag muss plausibel und dokumentierbar sein; Regulierungsverschaerfungen in angespannten Maerkten beobachten (Pruefbedarf)
+- Kanaele neben den grossen Portalen: Kleinanzeigen, WG-Portale, Anbieter fuer Wohnen auf Zeit, Relocation-Services, Monteurzimmer-Portale (Servicegebuehren ca. 10-15%/Monat einkalkulieren)
+
+**Kurzzeit-/Tagesvermietung (Ferienwohnung, Messe, Monteure):**
+- Das ist Hospitality-Geschaeft, keine passive Mietsteigerung: Reinigung, Gaestekommunikation, Bewertungen, dynamische Preise, Zugangssysteme
+- ZUERST Recht pruefen: Zweckentfremdungsverbot der Kommune, ggf. Nutzungsaenderung, WEG-Regeln/Teilungserklaerung -- Verstoesse koennen je nach Kommune mit Bussgeldern bis zu 500.000 EUR geahndet werden (Pruefbedarf: lokale Satzung)
+- Auslastungs-Realismus: Feriengebiete werden von Banken oft mit 40-50% Auslastung gerechnet, innerstaedtisch sind 70-80% erreichbar; Fremdmanagement kostet ca. 20-25% der Ertraege
+- Dieser Skill erstellt dafuer KEINE Portal-Inserate (Airbnb/Booking haben eigene Formate) -- nur Hinweis und Rechts-Check ausgeben
 
 ---
 
@@ -272,6 +304,9 @@ Keine -- alle Pflichtangaben vorhanden. (Falls Luecken bestehen: hier auflisten 
 | "Nur fuer ..." im Text | AGG-Verstoss moeglich | Diskriminierende Formulierung entfernen |
 | Wohnflaeche weicht > 10% ab | Mietminderungsanspruch des Mieters | Wohnflaeche nachmessen lassen |
 | Energieeffizienzklasse F-H | Hohe Nebenkosten schrecken Mieter ab | Energetische Sanierung erwaegen, transparent kommunizieren |
+| Miete deutlich ueber Marktniveau angesetzt | Solvente Bewerber weichen aus -- riskanter Bewerberpool, langer Leerstand | Zielmiete marktnah setzen, ggf. Testanzeige |
+| NK-Vorauszahlung unrealistisch niedrig | Lockangebot-Effekt, spaeterer Nachzahlungskonflikt | Vorauszahlung auf Basis realer Kosten ansetzen |
+| Kurzzeitvermietung geplant ohne Zweckentfremdungs-Check | Bussgeldrisiko je nach Kommune bis 500.000 EUR | Kommunale Satzung und WEG-Regeln VOR Inserat pruefen |
 
 ---
 
@@ -308,6 +343,8 @@ Faktoren die den Score senken:
 
 - `knowledge/rechtsgrundlagen.md` -- GEG/EnEV, §556d BGB Mietpreisbremse, §551 BGB Kaution, AGG
 - `knowledge/marktbenchmarks.md` -- Marktmieten nach Lage und Baujahr fuer Mietfestsetzung
+- `skills/mietnomaden-praevention/SKILL.md` -- Naechster Schritt im Funnel: Bewerber pruefen (Selbstauskunft, Bonitaet, Referenzen, Soft Facts)
 - `skills/mieterhoehung/SKILL.md` -- Mietpreisbremse-Pruefung bei Neuvermietung
+- `skills/nebenkosten-pruefer/SKILL.md` -- Realistische NK-Vorauszahlung ermitteln
 - `skills/vermieterbescheinigung/SKILL.md` -- Nach erfolgreicher Vermietung: Bescheinigung erstellen
 - `skills/expose-parser/SKILL.md` -- Expose-Daten aus vorhandenen Unterlagen extrahieren
