@@ -1,6 +1,6 @@
 ---
 name: beleg-sortierer
-description: "Klassifiziert und sortiert Belege fuer Wohnimmobilien-Portfolios. Unterscheidet Erhaltungsaufwand vs. Herstellungskosten, ordnet Kostenarten zu und erstellt ein sauberes Paket fuer den Steuerberater. Nutze diesen Skill wenn du unsortierte Belege hast oder Handwerkerrechnungen klassifizieren willst."
+description: "Klassifiziert und sortiert Belege fuer Wohnimmobilien-Portfolios nach steuerlicher Wirkung: sofort abziehbarer Erhaltungsaufwand vs. Herstellungskosten vs. anschaffungsnahe Herstellungskosten (15%-Grenze), inkl. Anlage-V-Zuordnung und Objekt-Zuordnung. Nutze diesen Skill wenn du unsortierte Belege hast, Handwerkerrechnungen steuerlich einordnen willst oder die 15%-Grenze nach einem Kauf ueberwachen musst."
 ---
 
 # Beleg-Sortierer
@@ -27,8 +27,10 @@ Stelle folgende Informationen bereit:
 | `belege` | Ja | Ein oder mehrere Belege (PDF, Scan, Foto) |
 | `objekte` | Ja | Liste der eigenen Objekte mit Adresse und Einheiten |
 | `steuerjahr` | Ja | Zuordnungsjahr (z.B. 2025) |
-| `anschaffungskosten_gebaeude` | Empfohlen | Gebaeude-Anschaffungskosten pro Objekt (fuer 15%-Grenze) |
-| `bisherige_erhaltungsaufwendungen` | Empfohlen | Bereits gebuchte Erhaltungsaufwendungen der letzten 3 Jahre pro Objekt |
+| `anschaffungskosten_gebaeude` | Empfohlen | Gebaeude-Anschaffungskosten pro Objekt inkl. anteiliger Kaufnebenkosten (fuer 15%-Grenze) |
+| `uebergang_nutzen_lasten` | Empfohlen | Datum Uebergang Besitz/Nutzen/Lasten pro Objekt -- Startpunkt der 3-Jahres-Frist |
+| `bisherige_erhaltungsaufwendungen` | Empfohlen | Bereits gebuchte Erhaltungsaufwendungen der letzten 3 Jahre pro Objekt (netto) |
+| `zuschuesse` | Optional | Erhaltene/beantragte Foerderungen (KfW, BAFA) und Versicherungserstattungen pro Massnahme |
 | `bekannte_lieferanten` | Optional | Liste bekannter Handwerker/Dienstleister mit Zuordnung |
 
 ---
@@ -68,16 +70,95 @@ Du bist ein erfahrener Buchhalter fuer Wohnimmobilien-Portfolios in Deutschland.
    - Bei objektuebergreifenden Kosten: Verteilungsschluessel vorschlagen
 
 4. **Steuerliche Klassifizierung**
+
+   Alle Regeln in diesem Abschnitt sind Einordnungshilfen -- die endgueltige steuerliche
+   Behandlung immer mit dem Steuerberater validieren.
+
+   **Die fuenf Kategorien:**
+
    - **Erhaltungsaufwand** (sofort absetzbar als Werbungskosten):
-     Reparaturen, Instandhaltung, Erneuerung vorhandener Teile in zeitgemaesser Form
+     Reparaturen, Instandhaltung, Erneuerung vorhandener Teile in zeitgemaesser Form.
+     Bei groesseren Betraegen: Wahlrecht zur gleichmaessigen Verteilung auf 2-5 Jahre
+     (§82b EStDV, nur Wohngebaeude im Privatvermoegen) -- sinnvoll, um Progressionsspitzen
+     mehrerer Jahre zu kappen statt ein Jahr auf null zu fahren. Als Option vermerken.
    - **Herstellungskosten** (Abschreibung ueber Nutzungsdauer):
-     Erweiterung, wesentliche Verbesserung ueber den urspruenglichen Zustand hinaus, Neubau
+     Erweiterung (Anbau, Aufstockung, Vergroesserung der nutzbaren Flaeche, Substanzmehrung)
+     oder Standardhebung. **Standardhebungs-Pruefanker (BFH-Rechtsprechung):** Werden bei
+     mindestens 3 der 4 zentralen Ausstattungsmerkmale (Heizung, Sanitaer, Elektro, Fenster)
+     innerhalb eines 5-Jahres-Betrachtungszeitraums deutlich verbessert, droht Standardhebung
+     -- auch bei "Sanierung in Raten".
+     **Bagatellgrenze:** Einzelmassnahmen bis 4.000 EUR (netto) koennen auf Antrag als sofort
+     abziehbare Werbungskosten behandelt werden -- zaehlen dann aber in die 15%-Grenze.
    - **Anschaffungsnahe Herstellungskosten** (§6 Abs.1 Nr.1a EStG):
-     Wenn Erhaltungsaufwendungen in den ersten 3 Jahren nach Anschaffung 15% der Gebaeude-Anschaffungskosten uebersteigen (ohne USt, ohne jaehrlich anfallende Kosten)
-   - **Anschaffungskosten** (Teil der Bemessungsgrundlage):
-     Grunderwerbsteuer, Notar, Grundbuch, Makler bei Erwerb
+     Wenn Instandsetzungs-/Modernisierungskosten (netto, ohne USt) innerhalb von 3 Jahren
+     ab Uebergang Besitz/Nutzen/Lasten 15% der Gebaeude-Anschaffungskosten uebersteigen.
+     Details siehe eigener Abschnitt "15%-Grenze im Detail".
+   - **Anschaffungskosten** (Teil der AfA-Bemessungsgrundlage):
+     Grunderwerbsteuer, Notar, Grundbuch, Makler bei Erwerb. Ausserdem: Baumassnahmen
+     **vor erstmaliger Nutzung** bzw. zur Herstellung der Funktionstuechtigkeit -- z.B.
+     Sanierung einer beim Kauf leerstehenden Wohnung vor Erstvermietung kann als
+     Anschaffungskosten eingestuft werden (Abgrenzung strittig, tendenziell nur echte
+     Baumassnahmen mit Bauantrag/Bauanzeige; mit Steuerberater validieren).
+     Achtung: Auch so klassifizierte Kosten verbrauchen die 15%-Grenze mit.
    - **Nicht abzugsfaehig**:
-     Private Anteile, Tilgung, Bewirtungskosten ohne Geschaeftsbezug
+     Private Anteile, Tilgung, Bewirtungskosten ohne Geschaeftsbezug,
+     Einzahlungen in die WEG-Instandhaltungsruecklage (erst die Entnahme/Verwendung
+     durch die WEG ist abziehbar, nicht die Einzahlung).
+
+   **Entscheidungsbaum fuer Handwerker-/Baubelege:**
+
+   1. Bewegliches Wirtschaftsgut (Einbaukueche, Geraete, Moebel)? -> Eigene AfA, zaehlt
+      NICHT in die 15%-Grenze des Gebaeudes. Einbaukueche = einheitliches Wirtschaftsgut,
+      Regel-Nutzungsdauer 10 Jahre; einzelne Haushaltsgeraete bis 800 EUR netto als
+      geringwertige Wirtschaftsgueter sofort abziehbar.
+   2. Erweiterung der nutzbaren Flaeche oder Substanzmehrung? -> Herstellungskosten
+      (zaehlen NICHT in die 15%-Grenze; unter 4.000 EUR netto Sofortabzugs-Antrag moeglich,
+      dann zaehlen sie rein).
+   3. Eines der 4 zentralen Ausstattungsmerkmale (Heizung/Sanitaer/Elektro/Fenster) und schon
+      2 weitere davon in den letzten 5 Jahren modernisiert? -> Standardhebungs-Verdacht, als
+      Herstellungskosten-Risiko markieren, Steuerberater-Ruecksprache.
+   4. Objekt vor weniger als 3 Jahren erworben (ab Nutzen-/Lastenwechsel)? -> In
+      15%-Grenzen-Tracking aufnehmen (Netto-Betrag).
+   5. Sonst -> Erhaltungsaufwand, sofort abziehbar (ggf. §82b-Verteilung als Option).
+
+   **Strahlwirkung beachten:** Bautechnisch mit einer Herstellungsmassnahme verzahnte
+   Begleitarbeiten teilen deren steuerliches Schicksal (z.B. Malerarbeiten im Zuge einer
+   Dachaufstockung). Nicht verzahnte Arbeiten bleiben Erhaltungsaufwand. Praxis-Tipp fuer
+   den Nutzer: Handwerkerrechnungen nach Massnahmen getrennt ausstellen lassen -- gemischte
+   Rechnungen als "Aufteilung noetig" markieren.
+
+4b. **15%-Grenze im Detail** (§6 Abs.1 Nr.1a EStG -- alle Punkte mit Steuerberater validieren)
+
+   **Grundmechanik:**
+   - Bemessungsgrundlage: Gebaeudeanteil der Anschaffungskosten INKL. anteiliger
+     Kaufnebenkosten (Nebenkosten im gleichen Verhaeltnis Grund/Gebaeude aufteilen).
+   - Vergleichswert: Netto-Sanierungskosten (ohne USt). Faustregel: 15% netto entsprechen
+     ca. 17,85% brutto bei 19% USt.
+   - Fristbeginn: Uebergang Besitz/Nutzen/Lasten (nicht Notartermin, nicht Kaufpreiszahlung).
+   - Fristende-Logik: Es zaehlt jede Massnahme, die innerhalb der 3 Jahre BEGONNEN wurde --
+     nicht Rechnungs- oder Zahlungsdatum.
+   - Folge bei Ueberschreiten: Saemtliche erfasste Kosten werden rueckwirkend zu
+     anschaffungsnahen Herstellungskosten -- nur noch ueber die Gebaeude-AfA abschreibbar
+     (ggf. verkuerzbar per Restnutzungsdauer-Gutachten).
+
+   **Was zaehlt rein, was nicht:**
+
+   | Zaehlt in die 15%-Grenze | Zaehlt NICHT rein |
+   |--------------------------|-------------------|
+   | Instandsetzungs- und Modernisierungskosten (netto) | Jaehrlich anfallende Erhaltungsarbeiten (Wartung) |
+   | Auch als Anschaffungskosten eingestufte Renovierung (verbraucht Grenze mit) | Erweiterungen / Flaechenvergroesserung (echte HK) |
+   | Herstellungskosten unter 4.000 EUR bei Sofortabzugs-Antrag | Einbaukueche und andere selbststaendige bewegliche Wirtschaftsgueter |
+   | Entnahmen aus der WEG-Instandhaltungsruecklage fuer Sanierungen (WEG-Protokolle pruefen!) | Selbststaendige Nebengebaeude (freistehende Garagen, Huetten) inkl. deren Abriss |
+   | Bauabzugsteuer- und Reverse-Charge-Betraege auf Bauleistungen | Entruempelung / Entmuellung |
+   | Abriss alter Gebaeudeteile im Zuge der Modernisierung (z.B. Terrasse) | Beseitigung von Schaeden, die nachweislich erst NACH Anschaffung durch Dritte verursacht wurden (BFH IX R 6/16), inkl. mutwilliger Mieterschaeden |
+
+   **Korrekturposten:** Zuschuesse (KfW, BAFA) und Versicherungserstattungen werden von den
+   Kosten abgezogen -- sie schaffen Luft in der 15%-Grenze. Zufluss und Zuordnung dokumentieren.
+
+   **Umgehungs-Red-Flags** (nicht selbst empfehlen, nur erkennen und markieren):
+   - Sanierung vor dem Nutzen-/Lastenwechsel: Fristbeginn strittig, nur mit Steuerberater.
+   - Renovierung durch Mieter gegen Mietverrechnung: gilt als Mieterzuschuss (= Einnahme),
+     entlastet die Grenze nicht automatisch -- Steuerberater-Ruecksprache.
 
 5. **Namenskonvention anwenden**
    - Format: `YYYY-MM-DD_Dokumenttyp_BetragEUR`
@@ -89,12 +170,29 @@ Du bist ein erfahrener Buchhalter fuer Wohnimmobilien-Portfolios in Deutschland.
 
 6. **Werbungskosten-Kategorie zuweisen (Anlage V)**
    - AfA (Zeile 33-34)
-   - Schuldzinsen (Zeile 37)
-   - Erhaltungsaufwand (Zeile 39-40)
+   - Schuldzinsen (Zeile 37) -- auch Disagio (sofort im Zahlungsjahr, Deckelung beachten)
+     und Finanzierungsnebenkosten wie Notarkosten der Grundschuldbestellung
+   - Erhaltungsaufwand (Zeile 39-40) -- ggf. §82b-Verteilung auf 2-5 Jahre vermerken
    - Grundsteuer (Zeile 46)
    - Versicherungen (Zeile 47)
    - Verwaltungskosten (Zeile 48)
-   - Sonstige Werbungskosten (Zeile 49-50)
+   - Sonstige Werbungskosten (Zeile 49-50) -- Fahrtkosten, Fortbildung, Buerokosten
+
+   **Zeitliche Zuordnung:** Bei privater Vermietung gilt das Zufluss-/Abflussprinzip --
+   massgeblich ist das ZAHLUNGSdatum, nicht Rechnungs- oder Leistungsdatum. Belege
+   jahresuebergreifender Vorgaenge dem Jahr der Zahlung zuordnen.
+
+   **Typische Zuordnungsfehler vermeiden** (mit Steuerberater validieren):
+
+   | Fehler | Richtig |
+   |--------|---------|
+   | Grunderwerbsteuer als Werbungskosten gebucht | Grunderwerbsteuer = Anschaffungskosten (AfA); nur Grundsteuer ist sofort abziehbar |
+   | Hausgeld komplett als Werbungskosten | Zufuehrung zur Instandhaltungsruecklage herausrechnen -- erst die VERWENDUNG durch die WEG ist abziehbar (Eigentuemerabrechnung pruefen) |
+   | Notarkosten pauschal als Anschaffungskosten | Notarkosten der Grundschuldbestellung sind Finanzierungskosten (sofort abziehbar), Notarkosten des Kaufvertrags sind Anschaffungskosten |
+   | Fahrtkosten pauschal 30 Cent/km bei Dienstwagen | Bei Dienstwagen (1%-Regelung) keine km-Pauschale ansetzbar; beim Privat-PKW sind tatsaechliche km-Kosten moeglich (Verwaltungspraxis deckelt hohe Saetze) |
+   | Tilgung als Aufwand | Nur Zinsen sind Werbungskosten, Tilgung nie |
+   | Einbaukueche in Erhaltungsaufwand | Eigenes Wirtschaftsgut mit eigener AfA (Regel: 10 Jahre; gebrauchte Kueche: kuerzere Restnutzungsdauer begruendbar) |
+   | Kosten vor dem Kauf verworfen | Besichtigungsfahrten, Gutachten, Fortbildung koennen vorweggenommene Werbungskosten sein -- sammeln und kennzeichnen |
 
 7. **Warnsignale pruefen**
    - Stimmt die Adresse auf dem Beleg mit einem eigenen Objekt ueberein?
@@ -196,8 +294,12 @@ Vor der Ausgabe pruefen:
 - [ ] Steuerliche Klassifizierung ist begruendet (nicht nur benannt)
 - [ ] Dateiname folgt der Konvention YYYY-MM-DD_Typ_BetragEUR
 - [ ] Anlage-V-Zeile ist fuer jeden Beleg angegeben
-- [ ] 15%-Grenze fuer anschaffungsnahe Herstellungskosten ist geprueft (wenn Anschaffung < 3 Jahre)
+- [ ] 15%-Grenze fuer anschaffungsnahe Herstellungskosten ist geprueft (wenn Anschaffung < 3 Jahre ab Nutzen-/Lastenwechsel), Tracking mit NETTO-Betraegen
+- [ ] Die 4 zentralen Ausstattungsmerkmale (Heizung/Sanitaer/Elektro/Fenster) der letzten 5 Jahre sind gezaehlt (Standardhebungs-Check nach BFH)
+- [ ] Bewegliche Wirtschaftsgueter (Einbaukueche etc.) sind aus der 15%-Grenze herausgenommen
+- [ ] Zufluss-/Abflussprinzip: Belege sind dem Jahr der Zahlung zugeordnet
 - [ ] Alle Betraege sind rechnerisch korrekt (Netto + USt = Brutto)
+- [ ] Steuerlich strittige Einordnungen tragen den Hinweis "mit Steuerberater validieren"
 - [ ] Zusammenfassung nach Kategorie und Objekt stimmt mit Einzelbelegen ueberein
 
 ---
@@ -210,10 +312,17 @@ Vor der Ausgabe pruefen:
 | Doppelte Rechnungsnummer | Moegliches Duplikat | Mit Original vergleichen |
 | Ungewoehnlich hoher Betrag | Betrag > 200% des Durchschnitts fuer diese Kategorie | Einzelpruefung |
 | Fehlende Leistungsbeschreibung | Steuerliche Zuordnung unsicher | Beim Lieferanten nachfragen |
-| Leistungszeitraum passt nicht | Periodenabgrenzung erforderlich | Dem richtigen Jahr zuordnen |
-| 15%-Grenze nahe | Anschaffungsnahe Herstellungskosten drohen | Steuerberater informieren |
+| Leistungszeitraum passt nicht | Zufluss/Abfluss pruefen | Dem Jahr der Zahlung zuordnen |
+| 15%-Grenze nahe (> 10% kumuliert) | Anschaffungsnahe Herstellungskosten drohen | Steuerberater informieren, weitere Massnahmen vor Beauftragung pruefen |
+| 3 von 4 zentralen Ausstattungsmerkmalen in 5 Jahren | Standardhebung = Herstellungskosten droht | Steuerberater-Ruecksprache VOR weiterer Beauftragung |
+| Gemischte Rechnung (HK + Erhaltung) | Strahlwirkung moeglich | Aufteilung anfordern, getrennte Rechnungen empfehlen |
+| Rechnung auslaendischer Bauleister | Reverse-Charge-USt (Steuerschuld wechselt) | Steuerberater einbinden, Betrag zaehlt in 15%-Grenze |
+| Fehlende Freistellungsbescheinigung Bauleistung (§48b) | Bauabzugsteuer-Risiko (15% einbehalten) | Bescheinigung vom Handwerker anfordern |
+| Sanierungsbeleg vor Nutzen-/Lastenwechsel | Fristbeginn und Zuordnung strittig | Steuerberater-Ruecksprache |
+| WEG-Sonderumlage oder Ruecklagen-Entnahme fuer Sanierung | Zaehlt in die 15%-Grenze | WEG-Protokolle anfordern, in Tracking aufnehmen |
+| Zuschuss/Foerderung (KfW, BAFA) auf Massnahme | Kuerzt Kosten und 15%-Volumen | Zuschuss der Massnahme zuordnen, Behandlung mit Steuerberater klaeren |
 | USt-Ausweis fehlt | Vorsteuerabzug nicht moeglich | Korrigierte Rechnung anfordern |
-| Eigenleistung vermutet | Materialrechnung ohne Arbeitskosten | Als Eigenleistung kennzeichnen |
+| Eigenleistung vermutet | Materialrechnung ohne Arbeitskosten | Als Eigenleistung kennzeichnen (nur Material abziehbar) |
 
 ---
 
@@ -240,10 +349,21 @@ Vor der Ausgabe pruefen:
 
 ---
 
+## Grenzen des Skills
+
+Dieser Skill sortiert und markiert -- er ersetzt keine Steuerberatung. Jede steuerliche
+Einordnung (insbesondere 15%-Grenze, Standardhebung, Anschaffungskosten-Abgrenzung,
+§82b-Verteilung) ist eine Vorbereitung fuer das Steuerberater-Gespraech und muss dort
+validiert werden. Grenzwerte und Verwaltungsauffassungen koennen sich aendern.
+
+---
+
 ## Verwandte Wissensdatenbanken
 
 - `knowledge/rechtsgrundlagen.md` -- BGB-Mietrecht, steuerliche Grundlagen
 - `knowledge/checklisten.md` -- Belegpruefung, Jahresabschluss
 - `skills/datev-vorbereitung/SKILL.md` -- Naechster Schritt: Buchungssaetze erstellen
-
 - `skills/dokument-klassifizierer/SKILL.md` -- Dokumenttyp-Erkennung fuer unbekannte Belege
+- `skills/kaufvertrag-pruefung/SKILL.md` -- Kaufpreisaufteilung und Inventarausweis im Kaufvertrag (Basis fuer 15%-Grenze und AfA)
+- `skills/nebenkosten-pruefer/SKILL.md` -- Hausgeld-/Nebenkostenabrechnungen im Detail
+- `skills/ordner-architekt/SKILL.md` -- Ablagestruktur fuer das sortierte Belegpaket
