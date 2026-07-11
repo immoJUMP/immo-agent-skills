@@ -36,6 +36,8 @@ Stelle folgende Informationen bereit:
 
 Du bist ein erfahrener Immobilienanalyst. Extrahiere aus der uebergebenen Mietliste alle relevanten Daten pro Einheit in ein einheitliches, strukturiertes Format. Berechne Kennzahlen, pruefe die Datenqualitaet und weise auf Auffaelligkeiten hin. Die Ausgabe muss sofort fuer Deal-Screening, Bankenpitch und Steuererklaerung verwendbar sein.
 
+**Due-Diligence-Grundsatz bei Ankauf:** Kein Kauf vermieteter Objekte ohne Mietvertraege, vollstaendige Mietliste, Kautionsnachweis und Rueckstandsaufstellung. Die Mietliste des Verkaeufers ist eine Behauptung, kein Beweis -- Abgleich mit Mietvertraegen und Zahlungseingaengen (Kontoauszuege der letzten 6-12 Monate) empfehlen. Mietliste, Kautionen, Rueckstaende und bekannte Maengel sollten als Zusicherung in den Kaufvertrag aufgenommen werden, nicht nur muendlich geklaert (Pruefbedarf: Notar/Anwalt).
+
 ---
 
 ## Strategie
@@ -63,8 +65,8 @@ Du bist ein erfahrener Immobilienanalyst. Extrahiere aus der uebergebenen Mietli
    - **Mietbeginn:** Datum des Mietvertrags
    - **Letzte Mieterhoehung:** Datum und Betrag
    - **Befristung:** Befristungsende (falls vorhanden)
-   - **Kaution:** Hoehe der hinterlegten Kaution
-   - **Besonderheiten:** Staffelmiete, Indexmiete, Gewerbe-USt, Mietrueckstand, Eigennutzung
+   - **Kaution:** Hoehe der hinterlegten Kaution (max. 3 Nettokaltmieten zulaessig -- hoehere Werte flaggen)
+   - **Besonderheiten:** Staffelmiete, Indexmiete, Kuendigungsausschluss/-verzicht, Gewerbe-USt, Mietrueckstand, Eigennutzung, moeblierte Vermietung, befristeter Vertrag (voruebergehender Gebrauch), Zahlung durch Amt/Jobcenter (KdU)
 
 3. **Leerstand erfassen**
    - Leerstehende Einheiten identifizieren
@@ -80,6 +82,8 @@ Du bist ein erfahrener Immobilienanalyst. Extrahiere aus der uebergebenen Mietli
    - Leerstandsquote (Flaeche und Anzahl Einheiten)
    - Mietausfallwagnis (geschaetzt bei Mietrueckstand)
    - Mietpotenzial (Differenz Ist-Miete zu Marktmiete, wenn Mietspiegel vorhanden)
+   - Under-Rent-Vorab-Flag: Einheiten > 15% unter Durchschnitts- oder Mietspiegelmiete markieren (Detailbewertung inkl. Realisierbarkeit macht `skills/mietlisten-analyse/SKILL.md`)
+   - Kautionssumme gesamt (Soll vs. laut Liste hinterlegt -- Luecken sind bei Uebernahme ein Streitpunkt)
    - WALT (Weighted Average Lease Term) bei Gewerbemietern
 
 5. **Datenqualitaet pruefen**
@@ -199,6 +203,9 @@ Vor der Ausgabe pruefen:
 | Identische Mieten bei unterschiedlichen Groessen | Datenfehler wahrscheinlich | Quelldokument erneut pruefen |
 | Summe Einheiten ≠ Teilungserklaerung | Einheiten fehlen oder wurden zusammengelegt | Mit Teilungserklaerung abgleichen |
 | Gewerbemieter ohne Indexklausel | Mietanpassung eingeschraenkt | Mietvertrag pruefen |
+| Kaution fehlt oder > 3 Nettokaltmieten | Uebernahme-Streitpunkt bzw. unzulaessige Hoehe (§551 BGB) | Kautionsnachweis anfordern, Uebergabe im Kaufvertrag regeln |
+| Kuendigungsausschluss vermerkt | Einheit mittelfristig nicht frei verfuegbar | Laufzeit pruefen (ueblich bis ca. 2, max. ca. 4 Jahre -- Pruefbedarf) |
+| Moeblierte/befristete Vertraege in der Liste | Sonderlogik: Zuschlaege, Befristungsgrund, Rueckfallrisiko | Vertraege einsehen, in der Analyse gesondert bewerten |
 
 ---
 
@@ -232,7 +239,8 @@ Vor der Ausgabe pruefen:
 
 - `knowledge/marktbenchmarks.md` -- Vergleichsmieten nach Lage und Baujahr
 - `knowledge/kalkulationsformeln.md` -- Renditeberechnung auf Basis der Mietliste
+- `skills/mietlisten-analyse/SKILL.md` -- Schritt 2 der Kette: Under-Rent, Mietpreisbremse, Kappungsgrenze und Ertragswert-Korrektur (dieser Skill ist Schritt 1)
+- `skills/mieterhoehung/SKILL.md` -- Schritt 3 der Kette: Erhoehungsweg waehlen und umsetzen
 - `skills/deal-screener/SKILL.md` -- Deal-Screening mit extrahierten Mietdaten
-- `skills/mieterhoehung/SKILL.md` -- Mieterhoehungspotenzial berechnen
 - `skills/mahn-assistent/SKILL.md` -- Mietrueckstaende weiterverarbeiten
 
