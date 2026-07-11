@@ -1,5 +1,7 @@
 # Rechtsgrundlagen - Deutsches Immobilienrecht fuer Wohnimmobilien
 
+> **Rechtsstand-Hinweis (Pruefbedarf):** Mietrecht aendert sich laufend durch Gesetzesnovellen, Landesverordnungen (Mietpreisbremse, Kappungsgrenze, Zweckentfremdung) und BGH-Rechtsprechung. Diese Datei ist Arbeitsgrundlage, kein Rechtsrat -- vor formellen Schreiben, Kuendigungen oder Kaufentscheidungen aktuelle Rechtslage pruefen, im Zweifel Fachanwalt einbinden.
+
 ## 1. BGB Mietrecht (§535-§580a)
 
 ### Mietvertrag (§535 BGB)
@@ -30,6 +32,18 @@
 
 ## 2. Mieterhoehung (§558-§559 BGB)
 
+### Die fuenf Wege der Mietanpassung im Bestand (Uebersicht)
+
+| Weg | Grundlage | Kernvoraussetzung | Zustimmung Mieter? | Sperrt andere Wege? |
+|---|---|---|---|---|
+| Vergleichsmiete | §558 BGB | 15 Monate Sperrfrist, Begruendung, Kappungsgrenze | Ja (§558b, notfalls Klage) | Nein |
+| Modernisierungsumlage | §559 BGB | Modernisierung (nicht Instandhaltung), Ankuendigung §555c | Nein (Haertefall-Einwand moeglich) | Nein |
+| Indexmiete | §557b BGB | Indexklausel im Vertrag | Nein (Erklaerung) | Ja: keine §558-Erhoehung; §559 nur eingeschraenkt |
+| Staffelmiete | §557a BGB | Staffelvereinbarung im Vertrag | Nein (automatisch) | Ja: keine §558-Erhoehung waehrend Staffel |
+| Einvernehmliche Erhoehung | §557 Abs. 1 BGB (Vertragsfreiheit) | Einigung, idealerweise mit Gegenleistung (Modernisierung, Mieterwunsch) | Ja | Nein |
+
+Praxisregel: Erst den Weg bestimmen, dann rechnen. Die einvernehmliche Erhoehung ist oft der schnellste und konfliktaermste Weg -- Schriftform und ggf. Widerrufsbelehrung (bei Vereinbarung ausserhalb von Geschaeftsraeumen) beachten (Pruefbedarf).
+
 ### Mieterhoehung auf ortsuebliche Vergleichsmiete (§558 BGB)
 
 **Voraussetzungen:**
@@ -40,6 +54,8 @@
    - Mietdatenbank
    - Sachverstaendigengutachten
    - Drei Vergleichswohnungen
+
+**Ortsuebliche Vergleichsmiete:** Gebildet aus den ueblichen Entgelten fuer vergleichbaren Wohnraum, die in den letzten 6 Jahren vereinbart oder geaendert wurden (§558 Abs. 2 BGB; Betrachtungszeitraum wurde 2022 von 4 auf 6 Jahre erweitert -- Pruefbedarf: aktuelle Fassung).
 
 **Kappungsgrenze (§558 Abs. 3 BGB):**
 - Regelmaessig: Maximal 20% Erhoehung in 3 Jahren
@@ -126,6 +142,15 @@ Zulaessige Miete = ortsuebliche Vergleichsmiete + 10%
 - Mieter muss Verstoss gegen Mietpreisbremse schriftlich ruegen
 - Rueckzahlungsanspruch erst ab Zugang der Ruege (nicht rueckwirkend)
 - Seit 01.04.2020: Rueckforderung ab Ruegezeitpunkt fuer die Zukunft und 30 Monate rueckwirkend
+- **Konsequenz fuer Ankaufskalkulation:** Bestandsmieten oberhalb Vergleichsmiete + 10% in Verordnungsgebieten sind ohne dokumentierte Ausnahme keine nachhaltige Einnahme -- Rueckfall- und Rueckzahlungsrisiko einpreisen. Ausnahmen (Vormiete, Modernisierung, Neubau) muessen belegbar dokumentiert sein, sonst sind sie schwache Annahmen.
+
+### Moeblierungszuschlag
+- Moeblierung ist kein Freifahrtschein von der Mietpreisbremse: Die Grundmiete unterliegt weiter der Grenze, der Zuschlag muss plausibel und nachvollziehbar kalkuliert sein (z.B. aus Zeitwert der Moebel abgeleitet -- Pruefbedarf: keine gesetzlich fixierte Formel, Rechtsprechung beachten)
+- Regulierungsverschaerfungen fuer moeblierte Vermietung in angespannten Maerkten werden politisch diskutiert -- Entwicklung beobachten
+
+### Weitere Grenzen der Miethoehe (auch ausserhalb der Mietpreisbremse)
+- **Mietpreisueberhoehung (§5 WiStG):** Ordnungswidrigkeit, wenn die Miete die ortsuebliche Vergleichsmiete um mehr als ca. 20% uebersteigt und ein geringes Wohnungsangebot ausgenutzt wird (enge Anwendungsvoraussetzungen -- Pruefbedarf)
+- **Mietwucher (§291 StGB):** Straftatbestand bei auffaelligem Missverhaeltnis (Faustwert: mehr als ca. 50% ueber Vergleichsmiete) unter Ausbeutung einer Zwangslage (Pruefbedarf)
 
 ---
 
@@ -208,7 +233,7 @@ Bei Umwandlung von Miet- in Eigentumswohnungen gilt:
 ### Teilungserklaerung
 - Regelt die Aufteilung des Gebaeudes in Sonder- und Gemeinschaftseigentum
 - Enthaelt Gemeinschaftsordnung (Rechte und Pflichten)
-- **Sondereigentum:** Wohnung, nicht tragende Innenwände, Innenseite der Eingangstuer, Bodenbelaege, sanitaere Installationen ab Abzweig
+- **Sondereigentum:** Wohnung, nicht tragende Innenwaende, Innenseite der Eingangstuer, Bodenbelaege, sanitaere Installationen ab Abzweig
 - **Gemeinschaftseigentum:** Tragende Waende, Dach, Fassade, Treppenhaus, Leitungen bis zum Abzweig, Fenster (Aussenseite), Balkone (tragend)
 
 ### Eigentuemerversammlung
@@ -391,7 +416,7 @@ Bei Umwandlung von Miet- in Eigentumswohnungen gilt:
 
 **Ausuebung:**
 - Mieter muss Vorkaufsrecht innerhalb von 2 Monaten nach Mitteilung ausueben
-- Kaufvertrag zu den gleichen Bedingungen wie mit dem Drittkäufer
+- Kaufvertrag zu den gleichen Bedingungen wie mit dem Drittkaeufer
 - Mitteilungspflicht des Vermieters (§577 Abs. 2 BGB)
 
 **Ausnahmen:**
@@ -436,10 +461,31 @@ Bei Umwandlung von Miet- in Eigentumswohnungen gilt:
 
 ---
 
-## 12. Zusammenfassung wichtiger Fristen
+## 12. Sondervermietung: Moebliert und Kurzzeit
+
+### Moeblierte Vermietung auf Zeit
+- **Vertragstyp:** Mietvertrag ueber Wohnraum zum nur voruebergehenden Gebrauch (§549 Abs. 2 Nr. 1 BGB) -- dann gelten viele Mieterschutzvorschriften (u.a. Mietpreisbremse, Kuendigungsschutz) nicht (Pruefbedarf: enge Auslegung durch Gerichte)
+- **Befristungsgrund:** Der voruebergehende Gebrauch muss beim MIETER liegen und dokumentiert sein (Projekt, Studium, Entsendung); typische Laufzeit ca. 6-12 Monate
+- **Verlaengerung:** Besser neuer Vertrag mit neuem Befristungsgrund als Nachtrag -- Kettenverlaengerungen gefaehrden die Sonderlogik
+- **Inventarliste** als Vertragsanlage (Beweissicherung, Kautionsabrechnung)
+- **Wirtschaftlichkeit:** Zielaufschlag mind. ca. +50% gegenueber unmoeblierter, unbefristeter Marktmiete, sonst tragen Moebel, Abnutzung und Mehraufwand die Rendite nicht
+
+### Kurzzeit-/Ferienvermietung
+- **Zweckentfremdungsverbot:** Viele Kommunen verbieten oder genehmigungspflichten die Nutzung von Wohnraum als Ferienwohnung; Bussgelder je nach Satzung bis zu 500.000 EUR (Pruefbedarf: kommunale Satzung)
+- **Nutzungsaenderung:** Baurechtlich kann eine Genehmigung erforderlich sein
+- **WEG:** Teilungserklaerung und Gemeinschaftsordnung koennen Kurzzeitvermietung einschraenken -- vor Ankauf pruefen
+- **Charakter:** Beherbergungsbetrieb (Hospitality), nicht passive Vermietung -- ggf. gewerbliche/steuerliche Folgen pruefen (USt, Gewerblichkeit)
+- **Kalkulations-Faustwerte:** Banken rechnen in Feriengebieten oft mit 40-50% Auslastung; innerstaedtisch 70-80% erreichbar; Fremdmanagement ca. 20-25% der Ertraege
+
+---
+
+## 13. Zusammenfassung wichtiger Fristen
 
 | Sachverhalt | Frist | Rechtsgrundlage |
 |---|---|---|
+| Mietzahlung faellig | Bis 3. Werktag des Monats (im Voraus) | §556b Abs. 1 BGB |
+| Wohnungsgeberbestaetigung nach Einzug | 2 Wochen | §19 BMG |
+| Mietpreisbremse-Ruege: Rueckforderung | 30 Monate rueckwirkend ab Ruege | §556g BGB |
 | Kuendigungsfrist Mieter | 3 Monate | §573c BGB |
 | Kuendigungsfrist Vermieter (< 5 J.) | 3 Monate | §573c BGB |
 | Kuendigungsfrist Vermieter (5-8 J.) | 6 Monate | §573c BGB |
