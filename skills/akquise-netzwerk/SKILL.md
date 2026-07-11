@@ -1,6 +1,6 @@
 ---
 name: akquise-netzwerk
-description: "Erstellt einen systematischen Off-Market-Akquiseplan mit Kanal-Bewertung, den 3-4 besten Kanaelen fuer 90 Tage und konkretem Wochenplan. Nutze diesen Skill wenn du weniger abhaengig von Portalen werden, ein Deal-Netzwerk aufbauen oder wissen willst welche Kanaele zu deiner Buybox passen."
+description: "Erstellt einen systematischen Off-Market-Akquiseplan mit Kanal-Bewertung, den 3-4 besten Kanaelen fuer 90 Tage, Tippgeber-System, Follow-up-Rhythmen und konkretem Wochenplan. Nutze diesen Skill wenn du weniger abhaengig von Portalen werden, ein Deal-Netzwerk oder Tippgeber-Netzwerk aufbauen oder wissen willst welche Kanaele zu deiner Buybox passen."
 ---
 
 # Akquise-Netzwerk -- Systematischer Off-Market-Akquiseplan fuer Wohnimmobilien
@@ -17,6 +17,10 @@ Du lieferst keine allgemeinen Tipps. Du priorisierst Kanaele anhand von Strategi
 - **Echte Off-Market-Kanaele:** Beziehungskanaele, bei denen Angebote vor oeffentlicher Vermarktung entstehen
 - **Semi-Off-Market-Kanaele:** Sonder- und Netzwerk-Situationen mit reduzierter Konkurrenz
 - **Wettbewerbsarme On-Market-Kanaele:** Oeffentlich sichtbare Quellen, die trotzdem sinnvoll sein koennen
+
+Dabei denkst du in Marktstufen: **On-Market** (oeffentlich gelistet), **Vor-Markt** (Angebot liegt beim Makler, ist aber noch nicht oeffentlich -- oft die realistischste Chance), **Vor-Vor-Markt** (Makler oder Netzwerk weiss frueh von einer Verkaufsabsicht) und **echtes Off-Market** (Angebot entsteht ganz ausserhalb oeffentlicher Vermarktung). Viele Investoren jagen "Off-Market" und uebersehen, dass der Vor-Markt ueber gepflegte Maklerbeziehungen deutlich leichter zugaenglich ist.
+
+**Grundregel:** Off-Market ist kein Kanal, sondern ein Beziehungsstatus. Er folgt fast immer aus sauber gelaufenen On-Market-Deals: Wer bei oeffentlichen Angeboten schnell, verlaesslich und fair abwickelt, bekommt die naechsten Angebote vor allen anderen. Keine Off-Market-Erwartung ohne funktionierenden On-Market-Prozess.
 
 Wichtig: Du gibst keine aggressiven oder grenzwertigen Akquise-Hacks aus. Keine falschen Identitaeten, keine Umgehung von Datenschutz oder Berufsgeheimnissen, keine vollmundigen Finanzierungsbehauptungen ohne Substanz.
 
@@ -136,6 +140,20 @@ Bevor du Kanaele priorisierst, filtere ungeeignete Kanaele heraus.
 | **Kein Marketingbudget > 300 EUR/Monat** | Online-Ads-Funnel nicht als Kernkanal empfehlen |
 | **Einsteiger ohne Ankaufprozess** | ZVG und komplexe Distressed-Deals nicht unter die Top-3 nehmen |
 | **Keine ehrliche Kaufstory** | Kanal nicht empfehlen, bis Buybox und Finanzierungsstory sauber sind |
+| **Kein funktionierender On-Market-Prozess** | Off-Market-Kanaele nicht als Kernkanal empfehlen -- erst Portalprozess, Reaktionsdisziplin und Abschlussfaehigkeit beweisen |
+
+### Off-Market-Grundausstattung (vor Kanalstart pruefen)
+
+Bevor Beziehungskanaele ernsthaft bespielt werden, muss folgendes Paket stehen -- sonst verpuffen die ersten wertvollen Kontakte:
+
+| Baustein | Zweck |
+|----------|-------|
+| **Ankaufsprofil als 1-seitiges PDF (Onepager)** | Weiterleitbar an Eigentuemer; in 60 Sekunden verstehbar |
+| **Bonitaets-/Finanzierungsnachweis** | Belegt Abschlussfaehigkeit ohne vollmundige Behauptungen |
+| **Reaktionsprozess mit SLA** | Erstrueckmeldung auf jede Zuleitung innerhalb 24h, indikatives Feedback in 2-5 Tagen |
+| **24h-Ersteinschaetzung** | Faehigkeit, binnen 24h ein "grundsaetzlich ja, vorbehaltlich Pruefung" oder ein sauberes Nein zu geben |
+| **Optional: Landingpage + Visitenkarten** | Vertrauensanker fuer Netzwerkkontakte und Tippgeber |
+| **CRM/Tracking** | Jeder Kontakt mit letztem und naechstem Touchpoint |
 
 ---
 
@@ -151,6 +169,8 @@ Bewerte Kanaele danach, welche Verkaeufer-Motive sie realistisch erschliessen.
 | **Liquiditaetsdruck / Sondersituation** | Insolvenz, ZVG, spezialisierte Makler |
 | **Selbst initiierter diskreter Verkauf** | Online-Funnel, Makler, Nischenportale |
 | **Frust mit Verwaltung / Mietern / Technik** | Verwalter, Handwerker, Referrals |
+
+**Typische Verkaeufertypen als Zielhypothesen:** Senioren (Objekt zu gross, Pflege, Nachlassregelung), Erben und Erbengemeinschaften, Scheidung/Trennung, Liquiditaetsdruck, ueberforderte Bestandshalter, beruflich Umziehende, Marktantester ("mal schauen, was es bringt") und Bautraeger/Profis mit Portfolio-Bereinigung. Wichtig: Bei vielen dieser Typen ist der Preis NICHT das Hauptmotiv -- Zeit, Sicherheit, Entlastung, Diskretion oder "gute Haende" fuer Objekt und Mieter wiegen oft schwerer. Kanaele und Ansprache darauf ausrichten.
 
 ---
 
@@ -315,6 +335,8 @@ Wenn ein Kanal nur mit grenzwertigem Verhalten funktionieren wuerde, stufe ihn h
 3. Kurze, unaufdringliche Selbstvorstellung vorbereiten.
 4. Kontakte in CRM erfassen und nachfassen.
 
+**Erweiterte Praesenzformate:** Neben Eigentuemervereinen wirken auch Bankveranstaltungen, Immobilienmessen, Stadtfeste, lokales Sponsoring (Verein, Event) und sichtbare Social-Media-Praesenz als "bunter Hund"-Prinzip: Ziel ist, dass moeglichst viele lokale Kontakte wissen, wer du bist und was du kaufst -- damit sie bei passenden Objekten zuerst an dich denken. Das ist ein Long Game: Kontinuitaet schlaegt Aktionismus, es gibt keinen Knopf fuer Dealflow.
+
 ---
 
 ### Kanal 6: Direktanschreiben an definierte Eigentuemercluster
@@ -376,6 +398,8 @@ Wenn ein Kanal nur mit grenzwertigem Verhalten funktionieren wuerde, stufe ihn h
 - Hausmeister mit langem Gebaeudebezug
 
 **Compliance-Hinweis:** Immer "Bitte leiten Sie mein Profil weiter, wenn es passt". Nie "Nennen Sie mir Ihre Kunden, die verkaufen wollen".
+
+**Sensible Spezialkontakte:** Notare, Anwaelte, Steuerberater und Bestatter sehen Verkaufsanlaesse frueh, unterliegen aber Berufsgeheimnis und hoher Vertrauenserwartung. Hier gilt verschaerft: nur Profilweitergabe anbieten, extrem zurueckhaltend auftreten, keinerlei Drucksituationen (Trauerfall, Trennung) ausnutzen. Bei Zweifel: Kanal weglassen -- ein Reputationsschaden in diesen Kreisen ist kaum reparabel.
 
 **Erstschritte:**
 1. 10 moegliche Multiplikatoren identifizieren.
@@ -473,6 +497,37 @@ Wenn ein Kanal nur mit grenzwertigem Verhalten funktionieren wuerde, stufe ihn h
 2. Nach Segmenten clustern: Deals, Finanzierung, Technik, Verwaltung.
 3. Quartals-Update mit klarer Buybox schicken.
 4. Empfehlungen messbar tracken.
+
+---
+
+## Tippgeber-Systematik und Skalierungsstufen
+
+Ab einem gewissen Dealflow-Ziel reicht Eigenakquise nicht mehr. Dann wird das Netzwerk in Rollen strukturiert:
+
+| Rolle | Leistung | Typische Verguetung (Pruefbedarf: Makler-/Tippgeberrecht und Steuer) |
+|-------|----------|------------------------------------------------------------------|
+| **Tippgeber** | Nennt Hinweis auf verkaufsbereiten Eigentuemer | Pauschale oder kleiner Prozentsatz, nur erfolgsabhaengig nach notariellem Kauf, schriftlich fixiert |
+| **Tippgeber Plus / Akquisiteur Light** | Hinweis plus Vorqualifizierung (Fotos, Eckdaten, Verkaufsgrund) | Hoehere Pauschale oder gestaffelter Prozentsatz |
+| **Akquisiteur im Auftrag** | Screening, Besichtigung, Unterlagen, Vorkalkulation, Verhandlungsvorbereitung | Groessenordnung 1-2% vom Kaufpreis oder Gewinnbeteiligung bei Handelsdeals |
+
+**Prozessregeln fuer delegierte Akquise:**
+- **Deal Call als Format:** 20-30 Minuten pro Objekt mit fester Vorlage -- Fotos, Eckdaten, Kalkulationsparameter, offene Rueckfragen, naechste Schritte. So wird jedes vorgestellte Objekt zur Lernschleife.
+- **Verantwortung stufenweise:** Besichtigungen frueh delegieren; Angebote und LOIs nur mit expliziter Freigabe des Investors, erst bei nachgewiesenem Reifegrad eigenstaendig.
+- **Jede Zuleitung beantworten:** Wer Tipps ignoriert oder Rueckmeldungen schuldig bleibt, verliert Tippgeber dauerhaft. Response-SLA gilt fuer JEDE Quelle.
+- **Keine Vollmachten oder Kaufzusagen ohne klare schriftliche Grenzen** -- schlechte LOIs im Namen des Investors schaedigen die Reputation im ganzen Markt.
+
+## Follow-up-Rhythmen und Response-SLAs
+
+Beziehungskanaele sterben nicht an schlechten Erstkontakten, sondern an fehlender Pflege. Standardrhythmen:
+
+| Kontakttyp | Pflege-Rhythmus | Format |
+|------------|-----------------|--------|
+| A-Makler | Alle 6-8 Wochen | Kurzer Anruf/WhatsApp, Feedback zu Angeboten IMMER |
+| Hausverwalter | Alle 8-10 Wochen | Professionelles Nachfassen, kein Druck |
+| Handwerker / Hausmeister | Quartalsweise | Persoenlich, mit konkreten Beispielobjekten |
+| Multiplikatoren (Bank, StB, Anwalt) | Halbjaehrlich | Update-Mail mit Buybox + Onepager |
+| Empfehlungsnetzwerk / Bestandskontakte | Quartalsweise | Quartals-Update mit Buybox und ggf. Erfolgsbeispiel |
+| Eingehende Zuleitungen (alle Kanaele) | Erstreaktion < 24h, Einschaetzung < 5 Tage | Auch Absagen begruenden -- saubere Absagen sind Beziehungspflege |
 
 ---
 
@@ -621,6 +676,10 @@ Akquise ohne Tracking ist Beschaeftigung. Fuer jeden empfohlenen Kanal muss der 
 | **Kosten pro qualifiziertem Lead** | Nur fuer bezahlte Kanaele zwingend |
 | **Antwortquote** | Besonders relevant fuer Direktanschreiben und Funnel |
 
+### Pipeline und CRM-Minimalfelder
+
+Jeder Lead durchlaeuft eine Pipeline: `neu -> kontaktiert -> Rueckfrage -> Unterlagen -> besichtigt -> LOI -> reserviert -> Notar -> gekauft / verloren`. Pro Kontakt mindestens erfassen: Quelle/Kanal, Kontaktperson, Beziehungstiefe (kalt/bekannt/aktiv/VIP), letzter Touchpoint, naechster Touchpoint mit Datum, Suchprofil geteilt (ja/nein), Verkaeufermotiv-Hypothese, Dealpotenzial und Verlustgrund bei Absage. Ohne Wiedervorlage-Datum ist ein Kontakt kein Kontakt, sondern eine Erinnerungsluecke.
+
 ### Kill-, Hold- und Scale-Regeln
 
 | Ergebnis nach 60-90 Tagen | Reaktion |
@@ -643,6 +702,8 @@ Akquise ohne Tracking ist Beschaeftigung. Fuer jeden empfohlenen Kanal muss der 
 | **Nur unqualifizierte Hinweise** | Kanal falsch gebrieft | Kaufkriterien und Beispiele nachschaerfen |
 | **Viel Aufwand vor Ort ohne Folgeprozess** | Mikromarkt produziert nur Beobachtung, keine Akquise | Direktanschreiben oder Verwalterprozess anschliessen |
 | **Funnel generiert Leads, aber keine Gespraeche** | Antwortzeit oder Positionierung schwach | Follow-up-Prozess reparieren |
+| **Druck, Ungeduld oder Overpacing im Netzwerkaufbau** | Beziehungskanaele brauchen Zeit; wer jede Begegnung sofort pitcht, verbrennt Kontakte | Frequenz senken, Mehrwert vor Anfrage, Long-Game akzeptieren |
+| **Zuleitungen bleiben unbeantwortet liegen** | Tippgeber und Makler hoeren auf zu liefern | 24h-Response-SLA einfuehren und einhalten |
 
 ### Akquise-Dealbreaker
 
@@ -714,7 +775,9 @@ Vor Abgabe des Plans pruefe:
 ### Verwandte Skills
 
 - `skills/makler-coach/SKILL.md` -- Vertiefung fuer Makler als Kernkanal
+- `skills/akquise-agent/SKILL.md` -- On-Market-Massensuche mit Pipeline und Follow-up (Pflichtbasis, bevor Off-Market skaliert wird)
 - `skills/verhandlungs-assistent/SKILL.md` -- Verhandlung nach Lead und Due Diligence
 - `skills/deal-screener/SKILL.md` -- Schnellbewertung eines akquirierten Deals
-- `skills/bierdeckel-kalkulation/SKILL.md` -- schnelle Kalkulation fuer Erstfeedback
+- `skills/bierdeckel-kalkulation/SKILL.md` -- schnelle Kalkulation fuer Erstfeedback (24h-Ersteinschaetzung)
+- `skills/besichtigung-prep/SKILL.md` -- Besichtigungsvorbereitung fuer qualifizierte Leads
 - `skills/bankgespraech-coach/SKILL.md` -- Finanzierung als Glaubwuerdigkeitshebel vorbereiten
