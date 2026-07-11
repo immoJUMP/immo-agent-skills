@@ -72,6 +72,22 @@ Gesamtscore = (Bausubstanz×2 + Mietstruktur + Rechtliche Situation + Energetisc
 - Hausschwamm (Serpula lacrymans)
 - Kontaminierter Boden / Altlasten
 
+### Baujahresklassen als Risiko-Hypothesen
+
+Das Baujahr lenkt die Pruefung -- es ersetzt keine Einzelfallbewertung, besonders nach Modernisierungen:
+
+| Baujahrsklasse | Typische Risiken und Kostenfallen |
+|---|---|
+| Bis 1919 (Gruenderzeit) | Feuchte, Putz/Risse, Holzbalkendecken (Statik, Schwamm), Schallschutz; Chance: Raumhoehen bis 4 m, Flair |
+| 1919-1949 | Schall-/Waermeschutz, Feuchte, korrodierte Stahlteile, Holzdecken/Brandschutz |
+| 1950-1979 (ca. 39% Bestand) | Flachdach (Hochrisiko), Waermebruecken, Heiznischen, Asbest (ab ca. 1956), Blei-Leitungen (fruehe Nachkriegsjahre), Materialknappheits-Qualitaet |
+| 1980-1989 | Fenster, Balkone (Betonsanierung), Asbestkleber/-platten, haustechnische Zyklen |
+| 1990-1999 | Heizung am Zyklusende, energetischer Standard; Asbest-Generalverdacht bis einschl. 1992 |
+| Ab 2000 | Bauausfuehrungs-/Abdichtungsfehler, Gewaehrleistungsfragen |
+| Alle Epochen | Illegale Ausbauten und Statikeingriffe -- Bauakte mit gebauter Realitaet abgleichen |
+
+**Elektrik als eigenes Sicherheitsrisiko:** > 40 Jahre alte Elektrik ist Erneuerungsfall (Brand-, Haftungs-, Versicherungsrisiko). Sicherungskasten als Startpunkt: FI-Schalter, Stromkreisanzahl, Beschriftung. E-Check-Faustregel: ca. alle 4 Jahre. Bestandsschutz ist fragil -- Eingriffe koennen Erneuerungspflichten ausloesen. Kostenkorridor: ca. 80-120 EUR/qm (Wohnung), bis ca. 150 EUR/qm (Haus).
+
 ---
 
 ## Kategorie 2: Mietstruktur
@@ -132,6 +148,17 @@ Gesamtscore = (Bausubstanz×2 + Mietstruktur + Rechtliche Situation + Energetisc
 - Laufende Zwangsversteigerung durch andere Glaeubiger
 - Fehlende Abgeschlossenheitsbescheinigung bei WEG
 - Massive Baumassnahmen ohne Genehmigung (Schwarzbau)
+
+### Grundbuch-Leselogik (Pruefreihenfolge)
+
+1. **Bestandsverzeichnis:** Objektidentitaet -- Flurstueck, Lage, Groesse gegen Expose und Kataster abgleichen
+2. **Abteilung I:** Eigentuemer = Verkaeufer? Erbengemeinschaft/GbR/GmbH als Sonderfall
+3. **Abteilung II:** Rechte und Lasten -- die stillen Dealbreaker. Zu jedem Eintrag die Rechteurkunde (Eintragungsbewilligung) anfordern; der Eintrag allein regelt keine Details, und Rechte koennen Kostenpflichten tragen (z.B. Wege-Unterhaltung)
+4. **Abteilung III:** Grundpfandrechte -- Lastenfreistellung, Abloesebetraege und Bankfreigabe-Timing klaeren
+
+**Nicht im Grundbuch, aber Pflichtpruefung:** Baulastenverzeichnis (Bauaufsicht), Altlastenverzeichnis, Bauakte (Bauamt). Gebaut ist nicht automatisch genehmigt -- fehlende oder unvollstaendige Bauakte ist ein Warnsignal, das zusaetzliche Pruefung und Risikoabschlag rechtfertigt.
+
+*Pruefbedarf: Auslegung von Eintraegen und Genehmigungslage final mit Notar, Anwalt bzw. Bauamt klaeren.*
 
 ---
 
@@ -293,6 +320,23 @@ Gesamtscore = (Bausubstanz×2 + Mietstruktur + Rechtliche Situation + Energetisc
 - WEG blockiert notwendige Sanierungen
 - Sofortige behoerdliche Auflagen (z.B. Brandschutz)
 
+### Sanierungskosten-Faustregeln (Erstbild -- final nur ueber Angebote)
+
+| Gewerk / Massnahme | Faustregel |
+|---|---|
+| Rueckbau/Entkernung | ca. 20 EUR/qm Wohnflaeche |
+| Entsorgung | ca. 10 EUR/qm Wohnflaeche |
+| Elektro komplett | 80-120 EUR/qm (Wohnung), bis ca. 150 EUR/qm (Haus) |
+| Fenster | 250-300 EUR/qm Fensterflaeche |
+| Wandflaeche (Maler/Putz) | Wohnflaeche x 3,5 bis 4 |
+| Puffer | 10-20% auf die Gesamtsumme -- Pflicht, keine Option |
+
+**Kalkulationsregeln:**
+- Immer gewerkebasiert kalkulieren (Rueckbau, Entsorgung, Elektro, Fenster, Waende, Bad, Boden...), nie als eine Bauchzahl
+- Zwischen kosmetischer Renovierung, technischer Sanierung und energetischer Massnahme unterscheiden
+- Ausstattungsstandards vorab definieren (z.B. Basis/Mittel/Premium) statt Einzelfallentscheidungen
+- Abnahme und Fotodokumentation je Gewerk sind Pflicht -- ohne Doku sind Maengel und Gewaehrleistung nicht steuerbar; keine Schlusszahlung ohne dokumentierte Abnahme
+
 ---
 
 ## Kategorie 9: Verwaltungskomplexitaet
@@ -324,6 +368,15 @@ Gesamtscore = (Bausubstanz×2 + Mietstruktur + Rechtliche Situation + Energetisc
 - Laufende Beschlussanfechtungsklagen
 - Hausverwaltung verweigert Unterlagenherausgabe
 - Verwalterlose WEG mit massivem Sanierungsstau
+
+### WEG-Governance-Fakten fuer die Pruefung
+
+- Wer eine ETW kauft, kauft die Gemeinschaft mit: Verwalter, Beschluesse, Ruecklagen und andere Eigentuemer bestimmen die Handlungsspielraeume
+- Teilungserklaerung inkl. Nachtraege ist Pflichtlektuere: Miteigentumsanteile, Stimmrechte, Kostenverteilung, Gemeinschaftsordnung
+- Verwalterbestellung: max. 5 Jahre; Verwaltervertrag zuerst auf geschuldeten Leistungsumfang pruefen, dann Performance bewerten
+- Einladungsfrist Eigentuemerversammlung: i.d.R. 3 Wochen; Beschluesse koennen auch bei geringer Teilnahme wirksam gefasst werden -- Stimmrecht (persoenlich, Vollmacht, Weisung) immer wahrnehmen, sonst entscheiden andere ueber Sonderumlagen
+- Beschlussanfechtung: Frist laeuft ab Beschluss, nicht erst ab Protokollzugang (Fristen anwaltlich pruefen)
+- Wohngeldabrechnung muss trennen: umlagefaehige Kosten / nicht umlagefaehige Kosten / Ruecklagenzufuehrung -- Vermischung ist ein Warnsignal fuer Verwaltungsqualitaet
 
 ---
 
@@ -380,3 +433,22 @@ Gesamtscore = (Bausubstanz×2 + Mietstruktur + Rechtliche Situation + Energetisc
 **Ergebnis: Gutes Investment mit kalkulierbaren Risiken**
 
 Handlungsempfehlung: Kauf empfehlenswert, aber Ruecklagen fuer Dach und Heizung einplanen. Energetische Sanierung als Wertsteigerungsmassnahme pruefen.
+
+---
+
+## Wenn/Dann-Entscheidungsregeln (Deal-Gates)
+
+Diese Regeln gelten quer ueber alle Kategorien -- sie verhindern, dass Begeisterung die Pruefung ersetzt:
+
+| Wenn | Dann |
+|---|---|
+| Preisangebot geplant | Erst technische Risiko-Tags vergeben (Baujahrsklasse, Huelle, Heizung, Elektrik, Feuchte) -- kein Angebot ohne Risikobild |
+| Ausbau-/Umnutzungspotenzial eingepreist | Bauakte, Genehmigungslage und Statik pruefen -- sonst Potenzial mit 0 ansetzen |
+| Sanierungskosten in der Kalkulation | Nur gewerkebasiert mit 10-20% Puffer akzeptieren |
+| Wohnflaeche geht in Kalkulation ein | Flaechenquelle und WoFlV-Plausibilitaet dokumentieren -- keine Flaechenannahme ohne Quelle |
+| Heizungstausch absehbar | Huelle, Heizlast und GEG-Pflichten mitpruefen (Energieberater) -- Heizung nie isoliert entscheiden |
+| Fenstertausch geplant | Lueftungskonzept mitdenken -- dichte Fenster ohne Lueftungslogik = Schimmelrisiko |
+| Schwamm-, Statik- oder Schadstoffverdacht | Fachgutachten VOR Angebot -- keine Eigenbewertung |
+| Bauakte fehlt oder unvollstaendig | Zusaetzliche Pruefung + Risikoabschlag im Preis |
+| Energetische Massnahme geplant | Variantenvergleich (Pflicht-Minimum / wirtschaftliches Optimum / Foerderstandard) + Expertenpruefung |
+| Handwerker-Schlusszahlung faellig | Nur nach dokumentierter Abnahme mit Fotodoku |
