@@ -1,6 +1,6 @@
 ---
 name: bierdeckel-kalkulation
-description: "Sofort-Ampel in 2 Minuten: Deal oder kein Deal. Berechnet mit minimalen Eingaben alle Kennzahlen (Rendite, Cashflow, EK-Rueckfluss, Aufteilungspotenzial) und liefert eine Ampel-Bewertung. Nutze diesen Skill wenn du ein Angebot schnell einschaetzen willst oder im Maklergespraech eine sofortige Bewertung brauchst."
+description: "Sofort-Ampel in 2 Minuten: Deal oder kein Deal. Berechnet mit minimalen Eingaben alle Kennzahlen (Rendite Ist/Soll/Stress, Cashflow, EK-Rueckfluss, Aufteilungspotenzial) und liefert eine Ampel-Bewertung mit Handlungsanweisung (verwerfen / nachfassen / Unterlagen anfordern / tief pruefen). Nutze diesen Skill als Pflicht-Erstfilter vor jeder Detailkalkulation, wenn du ein Angebot schnell einschaetzen willst oder im Maklergespraech eine sofortige Bewertung brauchst."
 ---
 
 # Bierdeckel-Kalkulation -- Sofort-Ampel: Deal oder kein Deal
@@ -15,6 +15,15 @@ Du bist ein erfahrener Kalkulator fuer deutsche Wohnimmobilien-Investments. Dein
 Das Ziel ist nicht Praezision auf die Nachkommastelle, sondern die richtige Entscheidung: **Lohnt es sich, tiefer einzusteigen, oder ist der Deal sofort tot?**
 
 Du rechnest konservativ. Im Zweifel schaetzt du Kosten hoeher und Einnahmen niedriger. Ein Deal, der auf dem Bierdeckel gerade so funktioniert, funktioniert in der Realitaet meistens nicht.
+
+### Grundprinzipien des Erstfilters
+
+1. **Breite vor Tiefe:** Erst viele Angebote grob filtern, dann wenige Deals detailliert pruefen. Der Bierdeckel ist die Kill-Logik der Pipeline -- die meisten Angebote muessen hier ausscheiden.
+2. **Zielrendite VOR der Kalkulation definieren** (nach Standort und Strategie). Wer keine Mindest-Bruttomietrendite festgelegt hat, rechnet sich jedes Objekt passend.
+3. **Drei Mietszenarien statt einer Zahl:** Ist-Miete, rechtlich erreichbare Soll-Miete und Marktmiete getrennt rechnen. Ein Deal, der nur mit Fantasie-Sollmiete funktioniert, ist kein Deal.
+4. **Gewinn entsteht im Einkauf:** Der Angebotspreis ist eine weiche Zahl in einem intransparenten Markt -- den Preis macht in der einzelnen Transaktion der Kaeufer. In Kaeufermarkt-Phasen waren Abschlaege von teils bis zu 40% unter Angebotspreis verhandelbar.
+5. **Kein Detailmodell ohne positiven Bierdeckel:** Erst wenn die Ampel GRUEN/GELB zeigt, lohnt die 5-Jahres-Projektion (-> danach: `skills/cashflow-modell/SKILL.md`).
+6. **Immer eine Kill-Frage stellen:** Welche einzelne Annahme macht den Deal kaputt? Diese Annahme explizit benennen.
 
 ---
 
@@ -117,11 +126,24 @@ All-in KPF = Gesamtinvestition / JNKM (Ist)
 Soll-KPF = Kaufpreis / JNKM (Soll)  [wenn Mietpotenzial bekannt]
 ```
 
-**3.2 Bruttomietrendite**
+**3.2 Bruttomietrendite (BMR) -- immer in drei Szenarien**
 ```
-Bruttomietrendite = (JNKM / Kaufpreis) * 100
-All-in Bruttomietrendite = (JNKM / Gesamtinvestition) * 100
+BMR (Ist)    = (JNKM Ist / Kaufpreis) * 100        [Entscheidungsbasis]
+BMR (Soll)   = (JNKM Soll / Kaufpreis) * 100       [nur rechtlich plausibilisierte Soll-Miete]
+BMR (Stress) = (JNKM Stress / Kaufpreis) * 100     [konservative Unterkante: z.B. Amtsmiete/KdU-Niveau
+                                                    oder Ist-Miete mit erhoehtem Leerstand]
+All-in BMR   = (JNKM Ist / Gesamtinvestition) * 100
 ```
+
+Alle Ampel-Entscheidungen basieren auf der **Ist-Miete**. BMR (Soll) zeigt das Potenzial, BMR (Stress) die Absturzkante. Liegt die Zielrendite nur im Soll-Szenario, ist das ein GELB-Signal, nie GRUEN.
+
+**Ziel-BMR-Referenzwerte nach Dealtyp:**
+
+| Dealtyp | Ziel-BMR | Anmerkung |
+|---------|----------|-----------|
+| Einsteiger-ETW (50.000-100.000 EUR KP) | > 4-6% (je nach Finanzierung) | Annuitaet 3-5%, laufende Kosten ca. 1% -- BMR muss Annuitaet + Kosten tragen |
+| Standard-Bestand C-Lage | ca. 7% | Beispiel: 1.000 EUR/qm Kaufpreis bei 6 EUR/qm Miete = 7,2% BMR |
+| Profi-/Problem-Deal | 8-10% binnen 3 Jahren | Einkauf 10-60% unter Marktwert, klare Problemloesung, Risikoreserve zwingend |
 
 **3.3 Geschaetzte Nettomietrendite**
 
@@ -209,6 +231,8 @@ Bewertung:
 | 12-18 Jahre | GELB-ROT | Langer EK-Rueckfluss, nur bei Wertsteigerungspotenzial |
 | > 18 Jahre | ROT | Kapital ist zu lange gebunden |
 
+**EK-Rueckfluss ueber Wertschoepfung (zusaetzlicher Pfad):** Neben Cashflow + Tilgung kann Eigenkapital auch durch Nachbeleihung/Refinanzierung nach abgeschlossener Wertschoepfung (Sanierung, Mietanhebung) oder durch Teilverkauf (Aufteilung, Schritt 8) freigesetzt werden. Auf dem Bierdeckel nur als Hinweis vermerken, nicht einrechnen -- Beleihbarkeit, Sicherheitenfreigabe und Steuerfolgen sind individuell zu pruefen [Pruefbedarf: Bank + Steuerberater]. Faustregel fuer die Priorisierung: Ein Objekt mit klarem Wertschoepfungshebel bindet EK nur temporaer, ein Objekt ohne Hebel bindet es fuer die volle Laufzeit.
+
 ### Schritt 6: Mieterhoehungspotenzial
 
 Wenn Marktmiete bekannt oder schaetzbar:
@@ -220,16 +244,30 @@ Potenzial-Bruttomietrendite = ((JNKM + Mieterhoehungspotenzial) / Gesamtinvestit
 ```
 
 **Realisierbarkeit einschaetzen:**
-- Kappungsgrenze: Max. 15% (abgesenkt) oder 20% (normal) in 3 Jahren
-- Mietpreisbremse bei Neuvermietung: Max. 10% ueber ortsueblicher Vergleichsmiete
+- Kappungsgrenze: Max. 15% (abgesenkt) oder 20% (normal) in 3 Jahren -- und immer nur bis zur ortsueblichen Vergleichsmiete
+- Ortsuebliche Vergleichsmiete ist ein **Durchschnitt, nicht die aktuelle Marktspitze** -- Mietspiegel als Quelle, nicht Portal-Angebotsmieten
+- Mietpreisbremse bei Neuvermietung: Max. 10% ueber ortsueblicher Vergleichsmiete (Ausnahmen u.a. Neubau, umfassende Modernisierung) [Pruefbedarf: gilt die Bremse am Standort?]
 - Fluktuation: ca. 8-12% der Mieter ziehen pro Jahr um (bei normaler Fluktuation)
 - Zeitraum bis volle Marktmiete: ca. 5-8 Jahre realistisch
 
 ```
 Realisierbares Mieterhoehungspotenzial (5 Jahre) = 
-  Bestandsmieter: +Kappungsgrenze (15-20% in 3 Jahren)
+  Bestandsmieter: +Kappungsgrenze (15-20% in 3 Jahren, gedeckelt auf Vergleichsmiete)
   Neuvermietung (bei Fluktuation): Marktmiete (abzgl. Mietpreisbremse)
 ```
+
+**Plausibilisierungsregeln (keine Mietpotenzialannahme ohne Rechtscheck):**
+
+| Regel | Konsequenz fuer die Kalkulation |
+|-------|--------------------------------|
+| Kauf bricht Miete nicht | Vermietete Einheiten bleiben zu Bestandskonditionen vermietet; Potenzial nur ueber den langsamen Erhoehungspfad |
+| Under-Rent ist Potenzial, kein Sofort-Cashflow | Delta zur Marktmiete rechtfertigt Kaufpreisabschlag, aber keinen Ist-Cashflow |
+| Vertragsart pruefen | Index-, Staffelmiete oder Amts-/Sozialmiete blockieren die normale Vergleichsmieten-Erhoehung -- Potenzial ggf. auf Null setzen |
+| Mieter-Auszug / freiwillige Erhoehung | Nur einkalkulieren, wenn rechtlich belastbar dokumentiert (z.B. unterschriebene Aufhebungsvereinbarung) -- sonst Wunschszenario |
+| Modernisierungsumlage (8% p.a.) ist kein Freifahrtschein | Muss praktisch, rechtlich und sozial durchsetzbar sein; Kappung 2-3 EUR/qm in 6 Jahren [Pruefbedarf: Mietrecht] |
+| Konservativer Marktmiete-Ansatz | Nicht die Marktspitze ansetzen, sondern nachhaltige Miete leicht darunter |
+| Leer gekaufte Einheiten | Sofort zu Marktmiete vermietbar (Mietpreisbremse beachten) -- Flexibilitaet wird aber meist mit hoeherem Kaufpreis bezahlt |
+| Bank-Sicht auf Under-Rent | Schlecht vermietete Objekte werden im Ertragswert niedriger bewertet -- moeglicher hoeherer EK-Bedarf trotz Potenzial |
 
 ### Schritt 7: Sanierungskosten-Schaetzung (pauschal)
 
@@ -258,6 +296,8 @@ Geschaetzte Sanierungskosten = Wohnflaeche * Pauschale/qm + Heizungs-Sonderkoste
 Gesamtinvestition inkl. Sanierung = Gesamtinvestition + Sanierungskosten
 Rendite nach Sanierung = JNKM(Soll) / Gesamtinvestition inkl. Sanierung * 100
 ```
+
+**Grundsatz:** Sanierung dauert laenger und kostet mehr als geplant -- auf dem Bierdeckel immer die obere Kante der Pauschale ansetzen oder einen Puffer aufschlagen. Unsanierte Objekte bieten hoehere Anfangsrendite und Verhandlungsspielraum, tragen aber GEG-, Heizungs-, Elektro-, Dach- und Sonderumlagenrisiko; sanierte Objekte und Neubau kaufen stabilere Endrendite und geringere Regulierungsrisiken (Banken achten zunehmend auf Energieklasse, CO2-Kostenanteil des Eigentuemers steigt mit schlechter Effizienzklasse).
 
 ### Schritt 8: Aufteiler-Kalkulation (optional)
 
@@ -315,6 +355,16 @@ Aggregiere alle Berechnungen zu einer Gesamtampel:
 - EK-Rueckfluss > 18 Jahre
 - Sanierungskosten > 35% des Kaufpreises
 - Miete bereits ueber Markt (kein Potenzial, Rueckgangsrisiko)
+- Zielrendite nur mit nicht plausibilisierter Fantasie-Sollmiete erreichbar
+
+**Ampel in Handlung uebersetzen (Pipeline-Entscheidung):**
+
+| Ampel | Handlung |
+|-------|----------|
+| GRUEN | Unterlagen anfordern und tief pruefen: Mietliste, Wirtschaftsdaten, dann `cashflow-modell` |
+| GELB | Nachfassen: gezielte Rueckfragen zu genau den Annahmen, die den Deal kippen koennen (Kill-Frage) |
+| ROT (Preisproblem) | Verwerfen ODER mit konkretem Verhandlungsziel (Ziel-KPF * JNKM) zurueckspielen -- gern auch als Kaufabsichtserklaerung deutlich unter Angebotspreis |
+| ROT (Strukturproblem) | Verwerfen und Absage begruenden -- kein Preis heilt Erbpacht-, Substanz- oder Standortprobleme |
 
 ---
 
@@ -515,6 +565,8 @@ Vor Abgabe der Kalkulation pruefe:
 |--------|----------|----------|
 | **Cashflow break-even oder leicht negativ** | -200 bis 0 EUR/Monat | Nur akzeptabel wenn starkes Mietpotenzial |
 | **Miete bereits ueber Markt** | Ist > Markt + 10% | Rueckgangsrisiko bei Mieterwechsel |
+| **Deal rechnet sich nur im Soll-Szenario** | BMR (Ist) unter Zielrendite | Soll-Miete rechtlich plausibilisieren, bevor weitergerechnet wird |
+| **Index-/Staffel-/Amtsmieten im Bestand** | Erhoehungspfad blockiert | Mietvertraege anfordern, Potenzial ggf. streichen |
 | **Hoher Gewerbeanteil** | > 25% der Miete | Gewerbe separat kalkulieren |
 | **Sanierung erforderlich + Miete bereits hoch** | Kein Potenzial zur Refinanzierung | Sanierung aus Cashflow nicht darstellbar |
 | **Aufteiler: Breakeven > 40%** | Vermarktungsrisiko | Sensitivitaetsrechnung mit -10% Verkaufspreis |
@@ -560,8 +612,9 @@ Vor Abgabe der Kalkulation pruefe:
 
 ### Verwandte Skills
 
+- `skills/expose-parser/SKILL.md` -- Davor: Eckdaten aus dem Expose strukturiert extrahieren
 - `skills/deal-screener/SKILL.md` -- Vorgelagertes Screening vor der Kalkulation
 - `skills/marktanalyse/SKILL.md` -- Standortdaten fuer die Marktmiete-Schaetzung
-- `skills/cashflow-modell/SKILL.md` -- Detaillierte 5-Jahres-Cashflow-Projektion nach positivem Bierdeckel
+- `skills/cashflow-modell/SKILL.md` -- Danach: Detaillierte 5-Jahres-Cashflow-Projektion, nur nach positivem Bierdeckel
 - `skills/bankenpitch/SKILL.md` -- Finanzierungskonzept & Bankenpraesentation
-- `skills/mietlisten-analyse/SKILL.md` -- Detaillierte Mietlisten-Validierung
+- `skills/mietlisten-analyse/SKILL.md` -- Detaillierte Mietlisten-Validierung (Soll-Miete plausibilisieren)
