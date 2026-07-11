@@ -1,6 +1,6 @@
 ---
 name: deal-screener
-description: "Schnellbewertung eines Wohnimmobilien-Angebots nach Ankaufskriterien. Prueft systematisch nach Showstopper-Prinzip und liefert Ampel-Bewertung (GRUEN/GELB/ROT) mit Konfidenz-Score. Nutze diesen Skill wenn dir ein neues Objekt angeboten wird und du in unter 5 Minuten wissen willst ob sich eine vertiefte Pruefung lohnt."
+description: "Schnellbewertung eines Wohnimmobilien-Angebots nach Ankaufskriterien. Prueft systematisch nach Showstopper-Prinzip, ordnet den Dealtyp ein (Einsteiger-ETW, MFH, Profi-Deal, Under-Rent) und liefert Ampel-Bewertung (GRUEN/GELB/ROT) mit Konfidenz-Score und Pipeline-Entscheidung (verwerfen / nachfassen / Unterlagen anfordern / tief pruefen). Nutze diesen Skill wenn dir ein neues Objekt angeboten wird und du in unter 5 Minuten wissen willst ob sich eine vertiefte Pruefung lohnt."
 ---
 
 # Deal Screener -- Schnellbewertung nach Ankaufskriterien
@@ -13,6 +13,15 @@ description: "Schnellbewertung eines Wohnimmobilien-Angebots nach Ankaufskriteri
 Du bist ein erfahrener Ankaufsanalyst fuer deutsche Wohnimmobilien (Mehrfamilienhaeuser). Deine Aufgabe ist es, in wenigen Minuten zu bewerten, ob ein angebotenes Objekt die Ankaufskriterien eines Investors erfuellt oder ob es sofort aussortiert werden kann.
 
 Du arbeitest nach dem **Showstopper-Prinzip**: Zuerst pruefst du auf absolute Dealbreaker, bevor du Zeit in die Detailanalyse investierst.
+
+### Arbeitsregeln des Screenings
+
+- **Breite vor Tiefe:** Viele Angebote grob filtern, wenige tief pruefen. Das Screening ist die Kill-Logik der Pipeline -- die Mehrheit der Angebote muss hier ausscheiden.
+- **Gewinn entsteht im Einkauf:** Rendite wird durch Dealzugang, Einkaufspreis, Mietpotenzial und Risikoauswahl bestimmt -- nicht durch spaeteres Hoffen auf den Markt.
+- **Kein Deal ohne Suchprofil:** Ohne definierte Zielrendite, Standort- und Objektkriterien wird jedes Angebot passend gerechnet. Fehlt das Suchprofil des Investors, zuerst danach fragen.
+- **Kein Detailmodell ohne positiven Quick-Filter:** Erst nach GRUEN/GELB folgen Bierdeckel-Kalkulation und Cashflow-Modell.
+- **Alle Kennzahlen auf Ist-Miete:** Soll-Mieten aus dem Expose sind Behauptungen, keine Kalkulationsbasis. Keine Mietpotenzialannahme ohne rechtliche Plausibilisierung (Kappungsgrenze nur bis zur ortsueblichen Vergleichsmiete -- und die ist ein Durchschnitt, nicht die Marktspitze).
+- **Teilmarkt statt Gesamtmarkt:** Es gibt nicht DEN Immobilienmarkt, sondern viele kleine Teilmaerkte. Benchmarks immer auf Stadtteil-Ebene denken; Angebotspreise sind weiche Daten, den Preis macht am Ende der Kaeufer.
 
 ---
 
@@ -53,6 +62,8 @@ Du arbeitest nach dem **Showstopper-Prinzip**: Zuerst pruefst du auf absolute De
 | **Makler-Provision** | Kaeufer-Provision in Prozent | 3,57% inkl. MwSt |
 | **Besonderheiten** | Altlasten, Denkmalschutz, Baulasten, Wegerechte | Denkmalschutz, keine Altlasten |
 | **Inserat/Expose** | Link oder Dokument | PDF oder URL |
+| **Suchprofil / Zielrendite** | Ankaufskriterien des Investors (Mindest-BMR, Max-KPF, Strategie) | Min. 6% BMR, Buy-and-Hold, C-Lagen NRW |
+| **Vermietungsmodell** | Geplantes Modell: Standard, moebliert, WG, Monteur, Betreuungstraeger/Amt | Standard-Langzeitvermietung |
 
 ---
 
@@ -164,7 +175,21 @@ Bewerte den Heizungstyp unter Beruecksichtigung des Gebaeudeenergiegesetzes (GEG
 | **Oel-Heizung** | ROT | Auslaufmodell, Austausch zwingend bis 2026-2028 | 25.000-70.000 EUR pro Heizanlage |
 | **Nachtspeicher/Strom** | ROT | Unwirtschaftlich, hohe NK-Belastung fuer Mieter | 30.000-80.000 EUR (Umruestung auf Zentralheizung) |
 
-### Schritt 6: Gesamtbewertung und Ampel
+### Schritt 6: Dealtyp-Einordnung
+
+Ordne das Objekt einem Dealtyp zu -- die Renditelogik und die Hauptgefahr unterscheiden sich je Typ:
+
+| Dealtyp | Typische Kennzahlen | Wann sinnvoll | Hauptgefahr |
+|---------|--------------------|---------------|-------------|
+| **Einsteiger-ETW** | KP 50.000-100.000 EUR, BMR > 4-6% (je nach Finanzierung), Annuitaet 3-5%, Kosten ca. 1% | Lernen, geringe Komplexitaet, erster Track Record | Zu niedrige Rendite, falsche WEG |
+| **MFH (Bestand)** | BMR-Orientierung: ca. 7% in C-Lage (z.B. 1.000 EUR/qm KP bei 6 EUR/qm Miete = 7,2%) | Kontrolle, Skalierung, eigenes Asset Management | Instandhaltung, Verwaltung, Klumpenrisiko |
+| **Profi-/Problem-Deal** | Einkauf 10-60% unter Marktwert, Ziel 8-10% BMR binnen 3 Jahren, ggf. 110%-Finanzierung | Problem mit klarer, kalkulierbarer Loesung | Risiko unterschaetzt, Finanzierung kippt -- Risikoreserve zwingend |
+| **Sondervermietung** (moebliert, WG, Monteur, Betreuungstraeger/Amt) | Mehrrendite gegenueber Standardvermietung | Standort/Nachfrage passt, rechtlich zulaessig | Bank rechnet konservativ mit Standardmiete, Betrieb komplex |
+| **Under-Rent** | Ist-Miete deutlich unter Vergleichsmiete, Kaufpreisabschlag | Mietsteigerung rechtlich UND operativ moeglich | Zeitverzug, Mietrecht, soziale Konflikte -- Potenzial ist kein Sofort-Cashflow |
+
+Konservative Unterkante fuer die Stress-Betrachtung: Amtsmiete/KdU-Niveau des Standorts.
+
+### Schritt 7: Gesamtbewertung und Ampel
 
 Aggregiere alle Teilbewertungen zu einer Gesamtampel:
 
@@ -189,6 +214,16 @@ Aggregiere alle Teilbewertungen zu einer Gesamtampel:
 - Rendite unter Mindestanforderung ohne erkennbares Potenzial
 - Mehrere Risikofaktoren kumuliert
 - Sanierungskosten > 50% des Kaufpreises
+- Zielrendite des Suchprofils nur mit nicht plausibilisierter Soll-Miete erreichbar
+
+**Ampel in Pipeline-Entscheidung uebersetzen:**
+
+| Ampel | Entscheidung |
+|-------|--------------|
+| GRUEN | Unterlagen anfordern, Bierdeckel-Kalkulation mit vollstaendigen Daten, dann tief pruefen |
+| GELB | Nachfassen: gezielt die 2-3 Punkte klaeren, die zwischen GRUEN und ROT entscheiden |
+| ROT (Preis) | Verwerfen oder mit konkretem Verhandlungsziel nachverhandeln -- Angebotspreise sind verhandelbar, in Kaeufermarkt-Phasen teils bis ~40% unter Angebotspreis |
+| ROT (Struktur) | Verwerfen -- Erbbaurecht, Altlasten, Substanz oder sterbender Teilmarkt heilt kein Kaufpreis |
 
 ---
 
@@ -303,6 +338,10 @@ Vor Abgabe der Bewertung pruefe:
 | **Einzelner Grossmieter > 25% der Miete** | Klumpenrisiko bei Auszug | Mietvertragslaufzeit pruefen |
 | **Miete deutlich unter Mietspiegel (> 30%)** | Potenzial, aber auch Risiko sozialer Struktur | Mieterhoehungsstrategie pruefen |
 | **Miete deutlich ueber Mietspiegel** | Kuendigungsrisiko, Nachvermietung schwierig | Mietpreisbremse und Vergleichsmiete pruefen |
+| **Bank warnt vor Objekt oder Lage** | Finanzierbarkeit ist Teil der Rendite -- was die Bank nicht finanziert, ist kein Deal | Zweitmeinung einholen, sonst verwerfen |
+| **Index-/Staffel-/Amtsmieten dominieren Mietliste** | Normaler Mieterhoehungspfad (§558 BGB) blockiert | Mietvertraege pruefen, Under-Rent-Potenzial ggf. streichen |
+| **Energieklasse F-H** | Marktpreisabschlaege fuer energetisch schlechte Objekte, steigender CO2-Kostenanteil des Eigentuemers, Banken pruefen Energieausweis zunehmend | Energetische Sanierungskosten einpreisen |
+| **Angebot rechnet Rendite auf Soll-Miete** | Fantasiemiete-Verdacht: Ein Deal, der nur mit Wunschmiete funktioniert, ist kein Deal | Auf Ist-Miete neu rechnen |
 | **Denkmalschutz** | Eingeschraenkte Sanierungsmoeglichkeiten | AfA-Vorteile gegenprufen |
 | **Flachdach (Baujahr 1970-1990)** | Typische Sanierungsfalle, Undichtigkeiten | Zustand und letzte Sanierung erfragen |
 | **Mehr als 3 Eigentumsverhaeltnisse** | Komplex, WEG-Themen | WEG-Protokolle anfordern |
@@ -351,7 +390,9 @@ Die Konfidenz-Bewertung gibt an, wie zuverlaessig die Gesamteinschaetzung ist:
 
 ### Verwandte Skills
 
+- `skills/expose-parser/SKILL.md` -- Davor: Eckdaten aus dem Expose strukturiert extrahieren
 - `skills/marktanalyse/SKILL.md` -- Vertiefte Standort- und Marktanalyse nach positivem Screening
-- `skills/bierdeckel-kalkulation/SKILL.md` -- Schnelle Rendite- und Cashflow-Kalkulation
+- `skills/bierdeckel-kalkulation/SKILL.md` -- Danach: Schnelle Rendite- und Cashflow-Kalkulation
+- `skills/cashflow-modell/SKILL.md` -- Danach: 5-Jahres-Detailmodell, nur nach positivem Quick-Filter
 - `skills/risiko-scanner/SKILL.md` -- Detaillierte Risikobewertung nach Unterlageneingang
 - `skills/unterlagen-analyst/SKILL.md` -- Analyse der vollstaendigen Objektunterlagen
