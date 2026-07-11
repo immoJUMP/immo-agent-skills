@@ -1,6 +1,6 @@
 ---
 name: dokument-klassifizierer
-description: "Erkennt Dokumenttypen (Grundbuch, Mietvertrag, Energieausweis etc.), extrahiert Metadaten und schlaegt korrekte Ablage vor. Nutze diesen Skill wenn du unsortierte Dokumente hast, Uebergabe-Unterlagen bekommst oder Scans/Fotos digitalisierst."
+description: "Erkennt Dokumenttypen (Grundbuch, Mietvertrag, Energieausweis, Steuerbescheide, Gutachten etc.), extrahiert Metadaten inkl. steuerlich relevanter Felder (Kaufpreisaufteilung, Nutzen-/Lastenwechsel, Ruecklagen) und schlaegt korrekte Ablage vor. Nutze diesen Skill wenn du unsortierte Dokumente hast, Uebergabe-Unterlagen bekommst oder Scans/Fotos digitalisierst."
 ---
 
 # Dokument-Klassifizierer
@@ -58,6 +58,8 @@ Du bist ein erfahrener Dokumentenmanager fuer Immobilienportfolios. Analysiere d
    | `grundriss` | Raumaufteilung, Massstab, Flaechenangaben |
    | `flurkarte` | Katasteramt, Flurstueck, Gemarkung |
    | `baugenehmigung` | Bauaufsichtsbehoerde, Genehmigungsbescheid |
+   | `wertgutachten` | Sachverstaendiger, Verkehrswert, Bewertungsstichtag |
+   | `restnutzungsdauer_gutachten` | Sachverstaendiger, wirtschaftliche Restnutzungsdauer in Jahren, Gebaeudezustand -- Gutachter-Qualifikation (oeffentlich bestellt/vereidigt oder DIN EN ISO/IEC 17024) miterfassen, entscheidet ueber Anerkennung beim Finanzamt |
 
    **Verwaltungsunterlagen:**
    | Typ | Typische Merkmale |
@@ -82,10 +84,15 @@ Du bist ein erfahrener Dokumentenmanager fuer Immobilienportfolios. Analysiere d
    | Typ | Typische Merkmale |
    |-----|-------------------|
    | `zinsbescheinigung` | Bank, Darlehensnummer, Jahreszinsen, Tilgung |
+   | `darlehensvertrag` | Bank, Darlehenssumme, Zinssatz, Zinsbindung, Disagio, Verwendungszweck |
    | `grundsteuerbescheid` | Finanzamt, Einheitswert/Grundsteuerwert, Hebesatz, Jahresbetrag |
+   | `grunderwerbsteuerbescheid` | Finanzamt, Kaufvorgang, Bemessungsgrundlage, Steuersatz des Bundeslands |
+   | `foerderbescheid` | KfW/BAFA/Landesbank, Foerderprogramm, Zuschusshoehe, gefoerderte Massnahme |
    | `versicherungspolice` | Versicherungsgesellschaft, Versicherungsnummer, Deckungssumme, Praemie |
+   | `versicherungsabrechnung` | Schadennummer, Erstattungsbetrag, Schadenursache, Schadendatum |
    | `rechnung` | Rechnungsnummer, Leistungsbeschreibung, Betrag, USt |
    | `handwerkerangebot` | Angebotsnummer, Leistungsbeschreibung, Positionen, Angebotssumme |
+   | `freistellungsbescheinigung_48b` | Finanzamt, Bauleistender, Gueltigkeitszeitraum (§48b EStG) |
 
    **Behoerdliche Unterlagen:**
    | Typ | Typische Merkmale |
@@ -101,6 +108,21 @@ Du bist ein erfahrener Dokumentenmanager fuer Immobilienportfolios. Analysiere d
    - Finanzielle Daten (Betrag, Miete, Kaufpreis, Praemie)
    - Fristen und Termine (Kuendigungsfrist, Gueltigkeitsdauer, Abrechnungszeitraum)
    - Referenznummern (Aktenzeichen, Rechnungsnummer, Vertragsnummer)
+   - **Steuerlich relevante Felder** (wenn im Dokument enthalten):
+     - Kaufvertrag: Datum Uebergang Besitz/Nutzen/Lasten (Startpunkt fuer AfA-Beginn,
+       3-Jahres-Frist der 15%-Grenze und 10-Jahres-Frist), Kaufpreisaufteilung
+       Grund/Gebaeude, separat ausgewiesenes Inventar (Einbaukueche, Moebel --
+       nur mit Ausweis im Vertrag separat abschreibbar)
+     - Hausgeldabrechnung: Zufuehrung zur UND Entnahme aus der Instandhaltungsruecklage
+       getrennt erfassen (nur die Verwendung ist Werbungskosten; Entnahmen fuer
+       Sanierungen zaehlen in die 15%-Grenze)
+     - Zinsbescheinigung/Darlehensvertrag: Zins vs. Tilgung, Disagio, Verwendungszweck
+     - Rechnung: Netto/USt/Brutto, Leistungsbeginn (fuer 15%-Grenzen-Fristlogik),
+       Gewerk (Fenster/Elektro/Sanitaer/Heizung fuer Standardhebungs-Check)
+     - Foerderbescheid/Versicherungsabrechnung: Zuordnung zur Massnahme (kuerzt Kosten
+       und 15%-Volumen)
+     - Protokoll Eigentuemerversammlung: Beschluesse zu Sonderumlagen und
+       Sanierungsmassnahmen (steuerlich relevant fuer 15%-Grenze der Eigentuemer)
 
 3. **Objekt-Zuordnung**
    - Adresse im Dokument mit Objektliste abgleichen
@@ -121,6 +143,25 @@ Du bist ein erfahrener Dokumentenmanager fuer Immobilienportfolios. Analysiere d
    - Ist das Dokument aktuell oder veraltet?
    - Sind alle Pflichtangaben enthalten?
    - Ist der Scan lesbar (bei digitalisierten Dokumenten)?
+
+6. **Steuerliche Relevanz kennzeichnen**
+
+   Fuer Dokumente mit Steuerbezug einen Relevanz-Hinweis in den Bericht aufnehmen
+   (Einordnung ist Vorbereitung, keine Steuerberatung -- mit Steuerberater validieren):
+
+   | Dokumenttyp | Steuerlicher Hinweis |
+   |-------------|----------------------|
+   | `kaufvertrag` | Kaufpreisaufteilung und Inventarausweis pruefen -- Basis fuer AfA und 15%-Grenze; Nutzen-/Lastenwechsel startet die Fristen |
+   | `rechnung` (Handwerker) | An beleg-sortierer uebergeben: Erhaltungsaufwand vs. Herstellungskosten, 15%-Grenzen-Tracking, betroffenes Ausstattungsmerkmal (Heizung/Sanitaer/Elektro/Fenster) fuer Standardhebungs-Check erfassen |
+   | `grundsteuerbescheid` | Sofort abziehbare Werbungskosten (Anlage V) |
+   | `grunderwerbsteuerbescheid` | Anschaffungskosten (AfA-Bemessung), NICHT sofort abziehbar |
+   | `zinsbescheinigung` | Nur Zinsanteil ist Werbungskosten, Tilgung nie |
+   | `hausgeldabrechnung` | Ruecklagen-Zufuehrung nicht abziehbar; Ruecklagen-Verwendung abziehbar und ggf. 15%-relevant |
+   | `restnutzungsdauer_gutachten` | Kann AfA erhoehen; Anerkennung haengt an Gutachter-Qualifikation -- Steuerberater einbinden |
+   | `foerderbescheid` | Zuschuss kuerzt Kosten/AfA-Basis und schafft Luft in der 15%-Grenze -- Behandlung mit Steuerberater klaeren |
+   | `versicherungsabrechnung` | Erstattung gegen Aufwendungen rechnen; Schaeden durch Dritte nach Kauf ggf. nicht 15%-relevant |
+   | `protokoll_eigentuemerversammlung` | Sonderumlagen-/Sanierungsbeschluesse fuer 15%-Grenze vormerken |
+   | `freistellungsbescheinigung_48b` | Fehlt sie beim Bauleister, droht Bauabzugsteuer -- Gueltigkeit pruefen |
 
 ---
 
@@ -204,7 +245,8 @@ Falls die extrahierten Daten fuer einen Folge-Skill (z.B. `beleg-sortierer`, `un
 Vor der Ausgabe pruefen:
 
 - [ ] Dokumenttyp ist eindeutig bestimmt (nicht geraten)
-- [ ] Alle erkennbaren Metadaten sind extrahiert
+- [ ] Alle erkennbaren Metadaten sind extrahiert (inkl. steuerlich relevanter Felder wie Nutzen-/Lastenwechsel, Kaufpreisaufteilung, Ruecklagen-Positionen)
+- [ ] Steuerliche Relevanz ist gekennzeichnet und traegt den Hinweis "mit Steuerberater validieren"
 - [ ] Objekt-Zuordnung ist begruendet
 - [ ] Dateiname folgt der Namenskonvention
 - [ ] Vollstaendigkeitspruefung ist durchgefuehrt
@@ -255,7 +297,10 @@ Vor der Ausgabe pruefen:
 
 - `knowledge/checklisten.md` -- Dokumenten-Checklisten fuer Ankauf, Verwaltung, Vermietung
 - `knowledge/rechtsgrundlagen.md` -- Rechtliche Anforderungen an Dokumente
-- `skills/beleg-sortierer/SKILL.md` -- Weiterverarbeitung von Rechnungen und Belegen
+- `skills/beleg-sortierer/SKILL.md` -- Weiterverarbeitung von Rechnungen und Belegen (steuerliche Klassifizierung, 15%-Grenze)
+- `skills/datev-vorbereitung/SKILL.md` -- Buchungssaetze aus klassifizierten Finanzdokumenten
+- `skills/kaufvertrag-pruefung/SKILL.md` -- Tiefenpruefung von Kaufvertraegen (inkl. Kaufpreisaufteilung, Inventar)
+- `skills/nebenkosten-pruefer/SKILL.md` -- Tiefenpruefung von Nebenkosten-/Hausgeldabrechnungen
 - `skills/mietlisten-parser/SKILL.md` -- Spezial-Skill fuer Mietlisten
 - `skills/expose-parser/SKILL.md` -- Spezial-Skill fuer Exposes
 - `skills/unterlagen-analyst/SKILL.md` -- Analyse von Ankaufsunterlagen
