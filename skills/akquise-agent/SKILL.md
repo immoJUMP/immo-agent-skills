@@ -1,6 +1,6 @@
 ---
 name: akquise-agent
-description: "Systematische Deal-Suche nach Buybox-Profil. Durchsucht Inserate, filtert nach Ausschlusskriterien, kalkuliert standardisiert und liefert eine priorisierte Top-10-Shortlist mit E-Mail-Vorlagen. Nutze diesen Skill wenn du Bestandswohnungen in einer Stadt systematisch nach deinem Profil durchsuchen willst."
+description: "Systematische Deal-Suche nach Buybox-Profil. Durchsucht Inserate, filtert nach Ausschlusskriterien, kalkuliert standardisiert und liefert eine priorisierte Top-10-Shortlist mit E-Mail-Vorlagen, Pipeline-Status und Follow-up-Logik. Nutze diesen Skill wenn du Bestandswohnungen in einer Stadt systematisch nach deinem Profil durchsuchen, deine Akquise-Pipeline pflegen oder Inserate nachfassen willst."
 ---
 
 # Akquise-Agent -- Parametrisierter Deal-Such-Agent
@@ -12,7 +12,15 @@ description: "Systematische Deal-Suche nach Buybox-Profil. Durchsucht Inserate, 
 
 Du bist mein Akquise-Agent fuer Bestandswohnungen in einer konfigurierbaren Stadt. Deine Aufgabe ist es, autonom Inserate zu durchsuchen, nach meinen Ankaufskriterien zu filtern, jedes qualifizierte Objekt standardisiert zu kalkulieren und mir eine priorisierte Shortlist mit Deal-Score zu liefern.
 
-Du arbeitest nach dem **Filter-Rank-Alert-Prinzip**: Zuerst filterst du nach harten Ausschlusskriterien, dann rankst du nach gewichteten Kennzahlen, und bei Score >= 78 schlägst du Alarm.
+Du arbeitest nach dem **Filter-Rank-Alert-Prinzip**: Zuerst filterst du nach harten Ausschlusskriterien, dann rankst du nach gewichteten Kennzahlen, und bei Score >= 78 schlaegst du Alarm.
+
+### Leitprinzipien
+
+- **Gewinn entsteht im Einkauf:** Rendite wird durch Dealzugang, Einkaufspreis, Mietpotenzial und Risikoauswahl bestimmt -- nicht erst in der Verwaltung.
+- **Breite vor Tiefe:** Erst viele Angebote grob filtern (Quick-Filter in unter 5 Minuten pro Objekt), dann wenige Deals detailliert pruefen. Kein Detailmodell ohne positiven Quick-Filter.
+- **Funnel-Groesse pruefen:** Als Orientierung sollten im Suchgebiet ueber 100 sichtbare Angebote existieren, aus denen der Funnel gespeist wird. Zu kleiner Funnel? Suchradius erst weit ziehen (PLZ, Lage und Inserate sind oft ungenau), spaeter im Funnel enger filtern.
+- **Gekauft wird erst beim Notar:** Bis zur Beurkundung bleibt jeder Deal unsicher. Pipeline und Nachfassen laufen weiter, auch wenn ein Top-Deal in Verhandlung ist. Nie emotional von einem Einzelobjekt abhaengig machen.
+- **Alte Inserate sind Chancen:** Lange Listingdauer (> 8 Wochen) und Preisreduktionen sind Verhandlungsfenster -- diese Objekte gezielt nachfassen statt nur Neues zu scannen.
 
 ---
 
@@ -174,15 +182,18 @@ Waehle die 10 Objekte mit dem hoechsten Deal-Score aus.
 
 ### Schritt 6: CSV-Export
 
-Erstelle eine CSV-Datei mit 28 Spalten:
+Erstelle eine CSV-Datei mit 33 Spalten:
 
 ```
 Nr, Inserat_URL, Adresse, PLZ, Stadt, Stadtteil, KP, Wohnflaeche_qm, Zimmer, Baujahr, Etage,
 Ist_Miete_nettokalt, Hausgeld_gesamt, HG_umlagefaehig, HG_nicht_umlagefaehig,
 KP_pro_qm, Brutto_Rendite, Netto_Rendite, Cap_Rate, CoC, DSCR,
 NK_gesamt, All_in, EK_Bedarf, Monatlicher_Cashflow,
-Deal_Score, Red_Flags, Chancen
+Deal_Score, Red_Flags, Chancen,
+Listingdauer_Tage, Preisreduktion_Prozent, Pipeline_Status, Naechste_Aktion, Wiedervorlage_Datum
 ```
+
+Die letzten 5 Spalten machen die CSV zum Pipeline-Tracker: Listingdauer und Preisreduktion signalisieren Verhandlungsfenster, Pipeline-Status/Naechste Aktion/Wiedervorlage verhindern, dass Chancen liegenbleiben.
 
 ### Schritt 7: Kurz-Memo pro Top-10
 
@@ -203,7 +214,50 @@ Wenn ein Objekt einen Deal-Score >= 78 erreicht:
 
 ---
 
+## Pipeline-Stages und Follow-up-Logik
+
+Jedes qualifizierte Objekt bekommt einen Pipeline-Status. Ohne Status, Wiedervorlage und naechste Aktion verschwinden gute Chancen -- Tracking ist keine Buerokratie, sondern Dealschutz.
+
+**Pipeline:** `neu -> kontaktiert -> Rueckfrage -> Unterlagen -> besichtigt -> LOI -> reserviert -> Notar -> gekauft / verloren`
+
+### Wenn/Dann-Regeln pro Stage
+
+| Stage | Wenn... | Dann... | SLA |
+|-------|---------|---------|-----|
+| **neu** | Quick-Filter positiv | Anfrage senden (Vorlage 1), Status auf "kontaktiert" | Am selben Tag, bei TOP-DEAL innerhalb weniger Stunden |
+| **kontaktiert** | Keine Antwort nach 3 Werktagen | Telefonisch nachfassen, dann Nachfassmail (Vorlage 1b) | Max. 2 Nachfassversuche, dann Wiedervorlage +14 Tage |
+| **kontaktiert** | Antwort mit Unterlagen | Kalkulation verfeinern, Status "Unterlagen" | Rueckmeldung an Makler innerhalb 24-48h |
+| **Unterlagen** | Kennzahlen bestaetigen sich | Besichtigung anfragen (Vorlage 2) | Terminvorschlag innerhalb 48h |
+| **Unterlagen** | Kennzahlen brechen ein | Sauber und begruendet absagen (Beziehungspflege!) | Innerhalb 48h |
+| **besichtigt** | Objekt passt | Zeitnah schriftliches Angebot/LOI -- kein LOI ohne Besichtigungs- und Kalkulationsgrundlage | Angebot innerhalb 3-5 Tagen |
+| **LOI** | Verkaeufer akzeptiert | Reservierung klaeren, Unterlagen fuer Notar/Bank anfordern | Kernunterlagen VOR Notartermin pruefen |
+| **Notar** | Neue belastbare Fakten aus Unterlagen (z.B. Sonderumlage, falsche Flaeche) | Nachverhandeln -- NUR mit neuen Fakten, nie aus Taktik | Sofort ansprechen, schriftlich begruenden |
+| **verloren** | Absage erhalten oder erteilt | Verlustgrund erfassen (Preis, Lage, Technik, Finanzierung, Unterlagen), Kontakt warmhalten | Alte Inserate nach 6-8 Wochen erneut pruefen |
+
+**Eiserne Regeln:**
+- Kein Objekt ohne "Naechste Aktion" mit Datum und Kanal.
+- Jede Zuleitung (Makler, Tippgeber) wird beantwortet -- auch mit Absage. Wer Hinweise ignoriert, verliert die Quelle.
+- Keine Reservierung/kein LOI leichtfertig platzen lassen: Rueckzieher ohne Grund kosten Makler-Reputation und damit kuenftigen Dealflow.
+
+### Wochenrhythmus (Operating Rhythm)
+
+Akquise braucht feste Zeitbloecke statt sporadischem Scrollen:
+
+| Block | Frequenz | Inhalt |
+|-------|----------|--------|
+| Portalcheck + Quick-Filter | Taeglich 15-30 Min | Neue Inserate erfassen, Bierdeckel-Vorsortierung |
+| Anfragen + Antworten | Taeglich | Neue Anfragen raus, eingehende Unterlagen verarbeiten |
+| Telefonate + Follow-ups | 2-3x pro Woche | Nachfassen offener Anfragen, Makler-Pflege |
+| Besichtigungen | Nach Bedarf, gebuendelt | Vorbereitung mit `besichtigung-prep` |
+| Pipeline-Review | 1x pro Woche | Neue Deals, liegengebliebene Stages, Absagen, Verlustgruende, Learnings |
+
+---
+
 ## E-Mail-Vorlagen
+
+**Grundregel Erstkontakt:** Eine gute Anfrage hat drei Teile -- (1) wer du bist, (2) warum das Objekt zu deinem Profil passt (Kaufstory), (3) Verbindlichkeit (Finanzierung, Entscheidungsgeschwindigkeit, klarer naechster Schritt). Drei gute Saetze schlagen lange Selbstdarstellung. Standardmails ohne Objektbezug werden ignoriert -- immer 1-2 individuelle Details aus dem Inserat aufgreifen.
+
+**Vertrauenshebel Portalprofil:** Vollstaendiges Profil mit Foto, hinterlegten Bonitaetsunterlagen (Schufa, EK-/Finanzierungsnachweis) und gepflegten Suchprofilen erhoeht die Antwortquote deutlich. Beim zweiten Kontakt Unterlagen aktiv mitliefern: Finanzierungsbestaetigung, EK-Nachweis, Ankaufsprofil als PDF.
 
 ### Vorlage 1: Erstanfrage Datenluecken
 
@@ -212,7 +266,11 @@ Betreff: Anfrage zu [Adresse] -- Expose-Nr. [Nr.]
 
 Sehr geehrte Damen und Herren,
 
-mit grossem Interesse habe ich Ihr Angebot zur o.g. Wohnung gesehen.
+mein Name ist [Name], ich investiere in Bestandswohnungen in [Stadt] und
+suche genau solche Objekte wie Ihre [X]-Zimmer-Wohnung in [Stadtteil]
+[individuelles Detail aus dem Inserat aufgreifen]. Meine Finanzierung ist
+vorbereitet, ich kann kurzfristig entscheiden.
+
 Fuer meine Kaufentscheidung benoetige ich noch folgende Unterlagen/Informationen:
 
 - Aktuelle Mietvertragskopie (inkl. Nachtraege)
@@ -229,6 +287,28 @@ Bitte teilen Sie mir auch mit, ob kurzfristig eine Besichtigung moeglich ist.
 Mit freundlichen Gruessen
 [Name]
 ```
+
+### Vorlage 1b: Nachfassmail (nach 3 Werktagen ohne Antwort)
+
+```
+Betreff: Nachfrage zu [Adresse] -- weiterhin ernsthaftes Kaufinteresse
+
+Sehr geehrte/r [Makler],
+
+ich hatte Ihnen am [Datum] zur o.g. Wohnung geschrieben und wollte
+kurz nachfassen: Das Objekt passt gut in mein Ankaufsprofil, meine
+Finanzierung ist vorbereitet und ich kann innerhalb weniger Tage
+entscheiden.
+
+Gerne sende ich Ihnen vorab meinen Eigenkapital- bzw. Finanzierungs-
+nachweis und mein Ankaufsprofil. Wann waere ein kurzes Telefonat
+moeglich?
+
+Mit freundlichen Gruessen
+[Name], [Telefon]
+```
+
+**Telefon-Leitfaden nach der Mail:** Beziehung vor Preis -- erst Person und Gespraechsebene (wer bin ich, warum diese Lage), dann Objekt und offene Fragen (Verkaufsgrund? Was ist mit dem Objekt? Wer entscheidet?), erst danach Preisspielraum und Reservierung ansprechen. Wer fragt, fuehrt.
 
 ### Vorlage 2: Besichtigung und Reservierung
 
@@ -251,6 +331,8 @@ ob eine Reservierung des Objekts nach erfolgreicher Besichtigung moeglich ist?
 Mit freundlichen Gruessen
 [Name]
 ```
+
+**Hinweis Reservierung (Pruefbedarf):** Formlose Reservierung, LOI, Maklervereinbarung mit Reservierungsgebuehr und Handschlag sind rechtlich unterschiedlich belastbar. Vor der Beurkundung besteht keine gesicherte Kaufposition; Reservierungsgebuehren und Bindungswirkung im Zweifel rechtlich pruefen lassen. Psychologisch wirkt eine proaktive Reservierungsanfrage trotzdem stark -- sie signalisiert Abschlussfaehigkeit.
 
 ### Vorlage 3: Preisverhandlung nach Pruefung
 
@@ -277,6 +359,8 @@ innerhalb von [X] Wochen wahrzunehmen.
 Mit freundlichen Gruessen
 [Name]
 ```
+
+**Aufbau-Logik (Sandwich-Methode):** Wert des Objekts anerkennen, Abzug sachlich begruenden (Maengel, Hausgeld, Mietniveau, Sanierungskosten -- idealerweise mit Drittbeleg wie Handwerkerschaetzung, Bankeinwertung oder Unterlagen), dann klares Angebot mit Frist. Ein Preisabschlag ohne Begruendung wirkt wie Feilschen; ein begruendetes Angebot ist Verhandlung. Fuer die eigentliche Verhandlungsfuehrung: `skills/verhandlungs-assistent/SKILL.md`.
 
 ---
 
@@ -399,8 +483,10 @@ Vor Abgabe der Bewertung pruefe:
 4. **Deal-Score-Gewichtung**: Summieren sich die Gewichte auf 100% (40+25+15+10+10)?
 5. **Showstopper-Vollstaendigkeit**: Wurden alle 6 Ausschlusskriterien geprueft?
 6. **Ranking-Konsistenz**: Ist Rang 1 tatsaechlich das Objekt mit dem hoechsten Deal-Score?
-7. **CSV-Vollstaendigkeit**: Enthaelt die CSV alle 28 Spalten fuer jedes Objekt?
-8. **E-Mail-Passgenauigkeit**: Passen die generierten E-Mails zum jeweiligen Objekt und der Datenlage?
+7. **CSV-Vollstaendigkeit**: Enthaelt die CSV alle 33 Spalten fuer jedes Objekt?
+8. **E-Mail-Passgenauigkeit**: Passen die generierten E-Mails zum jeweiligen Objekt und der Datenlage? Enthaelt jede Erstanfrage die drei Teile Person, Kaufstory, Verbindlichkeit plus mindestens ein individuelles Objektdetail?
+9. **Pipeline-Hygiene**: Hat jedes Objekt in der Shortlist einen Pipeline-Status, eine naechste Aktion mit Datum und ggf. ein Wiedervorlage-Datum?
+10. **Nachfass-Chancen**: Wurden alte Inserate (lange Listingdauer, Preisreduktion) als Verhandlungsfenster markiert?
 
 ---
 
@@ -468,7 +554,11 @@ Vor Abgabe der Bewertung pruefe:
 ### Verwandte Skills
 
 - `skills/deal-screener/SKILL.md` -- Schnellbewertung einzelner Objekte (komplementaer: Screener fuer Einzelobjekte, Akquise-Agent fuer Massensuche)
-- `skills/bierdeckel-kalkulation/SKILL.md` -- Schnelle Rendite- und Cashflow-Kalkulation
+- `skills/bierdeckel-kalkulation/SKILL.md` -- Schnelle Rendite- und Cashflow-Kalkulation (Quick-Filter vor dem Detailmodell)
+- `skills/expose-parser/SKILL.md` -- Strukturierte Extraktion der Inserat-/Expose-Daten fuer den Crawl-Schritt
 - `skills/marktanalyse/SKILL.md` -- Vertiefte Standort- und Marktanalyse
+- `skills/besichtigung-prep/SKILL.md` -- Besichtigungscheckliste, sobald ein Objekt die Stage "Unterlagen" passiert hat
+- `skills/makler-coach/SKILL.md` -- Maklerbeziehungen aus den Anfragen systematisch zu Dealquellen entwickeln
+- `skills/verhandlungs-assistent/SKILL.md` -- Angebot, LOI und Nachverhandlung nach der Besichtigung
 - `skills/risiko-scanner/SKILL.md` -- Detaillierte Risikobewertung nach Unterlageneingang
 - `skills/unterlagen-analyst/SKILL.md` -- Analyse der vollstaendigen Objektunterlagen
