@@ -1,6 +1,6 @@
 ---
 name: besichtigung-prep
-description: "Erstellt eine massgeschneiderte Besichtigungs-Checkliste basierend auf der Dokumentenanalyse. Nutze diesen Skill wenn du Unterlagen bereits analysiert hast und dich auf die Vor-Ort-Besichtigung vorbereitest, keinen Pruefpunkt vergessen willst oder gezielte Fragen zu Unstimmigkeiten brauchst."
+description: "Erstellt eine massgeschneiderte Besichtigungs-Checkliste basierend auf der Dokumentenanalyse -- mit baujahrspezifischen Pruefschwerpunkten, Pflichtfoto-Liste und gezielten Fragen an Makler, Mieter und Verwalter. Nutze diesen Skill wenn du Unterlagen bereits analysiert hast und dich auf die Vor-Ort-Besichtigung vorbereitest, keinen Pruefpunkt vergessen willst oder gezielte Fragen zu Unstimmigkeiten brauchst."
 ---
 
 # Besichtigung-Prep
@@ -66,6 +66,20 @@ Fuer jede gefundene Inkonsistenz formuliere eine konkrete Frage an den Verkaeufe
 
 ### Schritt 3: Physische Besichtigungs-Checkliste erstellen
 
+**Grundprinzip:** Das Baujahr ist die erste Risiko-Hypothese. Es lenkt, wo du genauer hinschaust -- ersetzt aber keine Einzelfallpruefung, besonders wenn zwischenzeitlich modernisiert wurde.
+
+#### Baujahresklassen: Pruefschwerpunkte nach Epoche
+
+| Baujahr | Typische Bauweise | Pruefschwerpunkte vor Ort |
+|---------|-------------------|---------------------------|
+| Bis 1919 (Gruenderzeit) | Vollziegel, Holzbalkendecken, Deckenhoehen bis 4 m, Stuck | Feuchte (Keller/Sockel), Putz und Risse, Zustand Holzbalkendecken, Schallschutz |
+| 1919-1949 | Schlichter, leichtere Baustoffe, kleinere Raeume, erste Baeder | Schall-/Waermeschutz, Feuchte, korrodierte Stahlteile, Holzdecken und Brandschutz |
+| 1950-1979 | Nachkriegsmoderne, Stahlbeton, Flachdaecher, grosse Fenster | Flachdach (Hochrisiko-Bauteil!), Waermebruecken, Heiznischen, Asbest (ab ca. 1956), Blei-Leitungen bei fruehen Nachkriegsbauten |
+| 1980-1989 | Massiver, erste Waermeschutzverordnung, Familiengrundrisse | Fenster, Balkone (Betonsanierung), Asbest weiter pruefen (Kleber, Platten), haustechnische Zyklen |
+| 1990-1999 | Verschaerfter Waermeschutz, Kunststofffenster, 2-fach-Verglasung | Heizungszyklus (Anlage oft am Lebensende), energetischer Standard; Asbest-Generalverdacht bis einschl. 1992 |
+| Ab 2000 | Energieeffizient, hohe Schall-/Waermeschutzanforderungen | Bauausfuehrung und Abdichtung (Ausfuehrungsfehler), Gewaehrleistungsfragen |
+| Alle Epochen | -- | Illegale Ausbauten und Statikeingriffe: gebaute Realitaet gegen Bauakte abgleichen |
+
 #### A: Aussenbereich (vor dem Betreten)
 | Pruefpunkt | Worauf achten | Warum wichtig |
 |-----------|---------------|---------------|
@@ -73,6 +87,7 @@ Fuer jede gefundene Inkonsistenz formuliere eine konkrete Frage an den Verkaeufe
 | Dach | Fehlende Ziegel, Durchhaenge, Moosbewuchs, Blecheinfassungen | Undichtigkeiten, Alter der Eindeckung |
 | Fenster | Alter, Verglasung (2-fach/3-fach), Dichtungen, Beschlaege | Energieverlust, Austauschkosten |
 | Balkone | Betonabplatzungen, Gelaender-Zustand, Abdichtung | Sicherheit, Betonsanierung teuer |
+| Entwaesserung | Dachrinnen, Fallrohre, Sockelzone, Drainage-Hinweise | Haeufig uebersehener Feuchtetreiber -- defekte Entwaesserung durchfeuchtet Fassade und Keller |
 | Eingangstuer/Briefkasten | Zustand, Klingelanlage, Namensschilder vs. Mietliste | Leerstand erkennen, Verwaltungsqualitaet |
 | Muelltonnen-Bereich | Ordnung, richtige Tonnen vorhanden | Mieterstruktur-Indikator |
 | Hof/Garten | Pflege, Zustand Wege, Parkplaetze | Verwaltungsqualitaet |
@@ -91,9 +106,10 @@ Fuer jede gefundene Inkonsistenz formuliere eine konkrete Frage an den Verkaeufe
 | Pruefpunkt | Worauf achten | Warum wichtig |
 |-----------|---------------|---------------|
 | Feuchtigkeit | Nasse Waende, Salzausblueruhungen, Schimmel, muffiger Geruch | Abdichtung, Gesundheit, Sanierungskosten |
-| Leitungen | Wasserrohre (Material: Blei? Kupfer? Kunststoff?), Zustand | Strang-Sanierung 80-150 EUR/qm |
+| Leitungen | Wasserrohre (Material: Blei? Kupfer? Kunststoff?), Zustand; Blei-Verdacht besonders bei Baujahr bis ca. 1960 | Strang-Sanierung 80-150 EUR/qm; Bleileitungen = Pflicht-Austausch |
+| Holzbauteile | Schwamm-/Rotteverdacht (Holzbalken, Kellertreppe, verbautes Holz) | Schwamm und Holzrotte sind rote Flaggen -- sofort Fachpruefung (Holzschutz-Sachverstaendiger) |
 | Abwasser | Gussrohre (Alter?), Kunststoff, Rueckstauklappe vorhanden? | Strang-Sanierung, Rueckstauschaden |
-| Elektrik | Hauptverteilung, Zaehlerkaesten, Sicherungstyp, Alter | Elektrosanierung 60-100 EUR/qm |
+| Elektrik | Sicherungskasten als Startpunkt: FI-Schalter vorhanden? Anzahl Stromkreise, Beschriftung, Sicherungstyp, Alter. Elektrik > 40 Jahre = Erneuerungsfall. Letzter E-Check (Faustregel: ca. alle 4 Jahre)? | Brand-, Haftungs- und Versicherungsrisiko; Elektrosanierung ca. 80-120 EUR/qm (Wohnung), bis ca. 150 EUR/qm (Haus). Achtung: Bestandsschutz ist fragil -- Eingriffe koennen Erneuerungspflichten ausloesen |
 | Heizung | Typ, Baujahr, Zustand, letzte Wartung | Austauschkosten 50.000-120.000 EUR |
 | Warmwasserbereitung | Zentral, dezentral, Speicher, Durchlauferhitzer | Kosten, Legionellenpruefung |
 | Kellerdecke | Daemmung vorhanden? | Energieverlust, einfache Massnahme |
@@ -117,6 +133,24 @@ Fuer jede gefundene Inkonsistenz formuliere eine konkrete Frage an den Verkaeufe
 | Elektrik | Steckdosen-Anzahl, FI-Schalter, Schaltertyp (Alter) | Sicherheit, Modernisierungsbedarf |
 | Heizkoerper | Typ, Thermostatventile, Einzelraumregelung | GEG-Anforderung, Komfort |
 | Raumgefuehl | Helligkeit, Schnitt, Hoehe, Geruch | Vermietbarkeit |
+| Wohnflaeche | Plausibilitaet gegen Expose/TE pruefen: Dachschraegen (1-2 m Hoehe zaehlen nur 50%, unter 1 m gar nicht), Balkon/Terrasse (i.d.R. 25%, max. 50%), Technik-/Heiz-/Abstellraeume zaehlen nicht | Flaechenfehler kippen Kaufpreis/qm, Miete/qm und Rendite -- WoFlV-Berechnung anfordern |
+
+#### Pflichtfoto-Liste (bei jeder Besichtigung)
+
+Ohne diese Fotos ist die Nachbereitung und jede spaetere Kostenschaetzung wertlos:
+
+| Nr. | Pflichtfoto | Wofuer |
+|-----|-------------|--------|
+| 1 | Sicherungskasten (offen, alle Reihen) | Elektro-Risikoeinschaetzung, Alter, FI |
+| 2 | Heizung inkl. Typenschild (Hersteller, Baujahr, Leistung) | GEG-Check, Restlebensdauer, Austauschkosten |
+| 3 | Kelleraussenwaende und -boden (alle Seiten) | Feuchte, Salzausblueruhungen, Abdichtung |
+| 4 | Wasser-/Abwasserleitungen im Keller (Material erkennbar) | Strangsanierungs-Bedarf, Blei-Verdacht |
+| 5 | Dach von aussen + Dachboden innen (falls zugaenglich) | Eindeckung, Undichtigkeiten, Daemmung |
+| 6 | Fassade alle 4 Seiten inkl. Sockelzone | Risse, Feuchte, Daemmzustand |
+| 7 | Fenster im Detail (Rahmen, Dichtung, Glasabstandhalter mit Baujahr) | Alter, Verglasung, Austauschbedarf |
+| 8 | Jedes Bad komplett | Sanierungskosten-Kalkulation |
+| 9 | Alle Maengel/Schaeden einzeln | Verhandlung, Beweissicherung |
+| 10 | Zaehlerstaende und Zaehleranlage | Uebergabe, Einzelzaehler-Frage |
 
 ### Schritt 4: Mieter-bezogene Fragen an den Verkaeufer
 - Wie ist die Zahlungsmoral der Mieter insgesamt?
@@ -127,6 +161,15 @@ Fuer jede gefundene Inkonsistenz formuliere eine konkrete Frage an den Verkaeufe
 - Wie viele Mieter-Wechsel gab es in den letzten 3 Jahren? Warum?
 - Gibt es Mieter, die verwandt oder bekannt mit dem Verkaeufer sind?
 
+**Fragen an den Makler (Verkaufslogik und Verhandlungsposition):**
+- Warum verkauft der Eigentuemer? (Motivation = Verhandlungshebel)
+- Wie lange ist das Objekt schon am Markt? Gab es Preisanpassungen?
+- Wie viele Interessenten/Besichtigungen gab es bisher? Liegen Angebote vor?
+- Welche Unterlagen fehlen noch und bis wann sind sie lieferbar?
+- Ist der Verkaeufer offen fuer eine Reservierung gegen zuegigen LOI?
+
+**Timing-Tipp:** Ersten oder letzten Besichtigungsslot nehmen -- mehr Gespraechszeit mit Makler/Verkaeufer und bessere Praesenz als in der Masse.
+
 ### Schritt 5: Fragen zur Eigentuemergemeinschaft (bei WEG)
 - Wie ist das Verhaeltnis zwischen den Eigentuemern?
 - Gibt es wiederkehrende Streitpunkte auf den Versammlungen?
@@ -135,6 +178,9 @@ Fuer jede gefundene Inkonsistenz formuliere eine konkrete Frage an den Verkaeufe
 - Sind Sonderumlagen beschlossen oder in Diskussion?
 - Besteht ein langfristiger Instandhaltungsplan?
 - Wie zufrieden sind Sie mit der Hausverwaltung?
+- Wie lange laeuft der Verwaltervertrag noch, und was schuldet der Verwalter laut Vertrag? (Bestellung max. 5 Jahre)
+- Wird in der Wohngeldabrechnung sauber getrennt: umlagefaehige Kosten / nicht umlagefaehige Kosten / Ruecklagenzufuehrung?
+- Gibt es Nachtraege zur Teilungserklaerung? Wurden alle beschlossen und eingetragen?
 
 ### Schritt 6: Red Flags waehrend der Besichtigung
 
@@ -161,6 +207,16 @@ Fuer jede gefundene Inkonsistenz formuliere eine konkrete Frage an den Verkaeufe
 - Schule/Kita in der Naehe? (wichtig fuer Familienmieter)
 - Laermsituation: Strasse, Bahn, Gewerbe, Flughafen
 - Google Maps Bewertungen fuer die Adresse / Nachbarn checken
+
+### Schritt 8: Nachbereitung binnen 24 Stunden
+
+Die Besichtigung ist der Start der Due Diligence, kein Schautermin. Jede Besichtigung muss innerhalb von 24 Stunden in eine von drei Aktionen muenden:
+
+| Ergebnis | Aktion binnen 24h |
+|----------|--------------------|
+| Objekt passt, offene Punkte klein | LOI mit Preis und Bedingungen strukturiert nachschieben -- Schnelligkeit gewinnt Deals, aber keine Zusage ohne Substanz |
+| Offene Risiken, Objekt interessant | Konkrete Nachforderungsliste an Makler/Verkaeufer (Unterlagen, Gutachten, Zugang zu Keller/Dach/Wohnungen) |
+| K.o.-Kriterium bestaetigt | Saubere, begruendete Absage -- haelt die Maklerbeziehung fuer den naechsten Deal intakt |
 
 ---
 
@@ -301,7 +357,9 @@ Vor Ausgabe des Ergebnisses pruefe:
 | Statische Auffaelligkeiten (Risse > 5mm, Durchbiegungen) | Statiker beauftragen VOR Angebot |
 | Mieter berichten von ungeloesten Maengeln | Maengelliste vom Verwalter anfordern |
 | Verkaeufer weicht bei konkreten Fragen aus | Erhoehte Vorsicht, alle Angaben schriftlich belegen lassen |
-| Asbest-Verdacht (Baujahr 1960-1993, Eternit-Platten, Nachtspeicher) | Schadstoff-Gutachten beauftragen |
+| Asbest-Verdacht (Baujahr ca. 1956 bis einschl. 1992 Generalverdacht; Eternit-Platten, Kleber, Nachtspeicher) | Schadstoff-Gutachten beauftragen |
+| Schwamm-/Rotteverdacht an Holzbauteilen | Holzschutz-Sachverstaendigen beauftragen VOR Angebot |
+| Ausbauten (DG, Souterrain, Anbau) ohne erkennbare Genehmigung | Bauakte beim Bauamt einsehen -- gebaut ist nicht automatisch genehmigt |
 
 ---
 
