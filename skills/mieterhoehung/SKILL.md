@@ -1,6 +1,6 @@
 ---
 name: mieterhoehung
-description: "Portfolioweite Mieterhoehungsanalyse: Ist-Miete vs. Mietspiegel, Kappungsgrenze, Mietpreisbremse, Modernisierungsumlage nach Paragraph 559 BGB und rechtssichere Mieterhoehungsschreiben. Nutze diesen Skill wenn du systematisch das Mieterhoehungspotenzial ermitteln willst."
+description: "Portfolioweite Mieterhoehungsanalyse ueber alle 5 Erhoehungswege: Vergleichsmiete (Par. 558 BGB), Modernisierungsumlage (Par. 559), Indexmiete, Staffelmiete und einvernehmliche Erhoehung. Prueft Kappungsgrenze, Sperrfristen, Mietpreisbremse und erstellt rechtssichere Mieterhoehungsschreiben plus Gespraechsstrategie. Nutze diesen Skill wenn du Mieterhoehungspotenzial ermitteln, den richtigen Erhoehungsweg waehlen oder Erhoehungsschreiben erstellen willst."
 ---
 
 # Mieterhoehung -- Strategie, Potenzialanalyse und Schreiben
@@ -36,6 +36,33 @@ description: "Portfolioweite Mieterhoehungsanalyse: Ist-Miete vs. Mietspiegel, K
 ## Auftrag
 
 Du bist ein erfahrener Immobilienoekonom und Mietrechtsexperte. Analysiere das gesamte Portfolio auf Mieterhoehungspotenzial, priorisiere die Einheiten nach ROI und erstelle rechtssichere Mieterhoehungsschreiben. Beachte dabei alle gesetzlichen Vorgaben: §558 BGB (Mieterhoehung bis Vergleichsmiete), §558a BGB (formelle Anforderungen), §559 BGB (Modernisierungsumlage), §556d BGB (Mietpreisbremse), sowie Kappungsgrenze und Sperrfristen.
+
+**Pruefbedarf-Hinweis:** Mietrecht aendert sich laufend (Gesetzesnovellen, Landesverordnungen, BGH-Rechtsprechung). Jede mietrechtliche Aussage in diesem Skill ist als Arbeitsgrundlage zu verstehen -- vor Versand formeller Schreiben aktuelle Rechtslage pruefen, im Zweifel Fachanwalt fuer Mietrecht oder Hausverwaltung einbinden. Diesen Hinweis auch im Ergebnisbericht ausgeben.
+
+---
+
+## Die 5 Erhoehungswege im Bestand (Entscheidungsbaum)
+
+Mieterhoehung ist kein Bauchthema, sondern ein Entscheidungsbaum: Rechtsgrundlage, Frist und Begruendung entscheiden. Formfehler oder die falsche Strategie kosten Zeit, Geld und die Mieterbeziehung. Vor jeder Erhoehung ZUERST den Weg bestimmen:
+
+| Weg | Rechtsgrundlage | Voraussetzung | Grenze | Zustimmung Mieter noetig? |
+|-----|-----------------|---------------|--------|---------------------------|
+| 1. Vergleichsmiete | §558 BGB | Miete unter ortsueblicher Vergleichsmiete, 15 Monate Sperrfrist, Begruendung (Mietspiegel / 3 Vergleichswohnungen / Gutachten) | Kappungsgrenze 20% bzw. 15% in 3 Jahren; Vergleichsmiete basiert auf den Mieten der letzten 6 Jahre (Pruefbedarf: aktueller Betrachtungszeitraum) | Ja (§558b BGB, notfalls Zustimmungsklage) |
+| 2. Modernisierungsumlage | §559 BGB | Durchgefuehrte Modernisierung (nicht Instandhaltung), 3 Monate vorher angekuendigt (§555c BGB) | 8% der Modernisierungskosten p.a.; Kappung 3 EUR/qm (bzw. 2 EUR/qm bei Ausgangsmiete < 7 EUR/qm) in 6 Jahren | Nein (einseitige Erklaerung, Haertefall-Einwand moeglich) |
+| 3. Indexmiete | §557b BGB | Indexklausel im Mietvertrag (Schriftform), Kopplung an Verbraucherpreisindex | Nur bei Indexsteigerung; sperrt §558-Erhoehung; Modernisierungsumlage nur eingeschraenkt | Nein (Erklaerung in Textform mit Indexangabe) |
+| 4. Staffelmiete | §557a BGB | Staffelvereinbarung im Mietvertrag (Schriftform), min. 1 Jahr zwischen Staffeln | Feste Stufen; sperrt §558-Erhoehung waehrend der Laufzeit | Nein (Erhoehung tritt automatisch ein) |
+| 5. Einvernehmliche Erhoehung | Vertragsfreiheit (§557 Abs. 1 BGB) | Einigung mit dem Mieter, idealerweise verbunden mit Gegenleistung (Modernisierung, Mieterwunsch, Mangelbeseitigung) | Keine Kappungsgrenze, aber Angemessenheit und faire Kommunikation; Schriftform und ggf. Widerrufsbelehrung beachten (Pruefbedarf) | Ja (per Definition) |
+
+**Wenn/Dann-Entscheidungsregeln:**
+
+| Wenn | Dann |
+|------|------|
+| Indexmiete oder laufende Staffel im Vertrag | Weg 1 (§558) ist gesperrt -- nur Index-/Staffellogik anwenden |
+| Modernisierung durchgefuehrt oder geplant | Weg 2 pruefen; bei Kosten bis 10.000 EUR/Wohnung vereinfachtes Verfahren §559c (pauschal 30% Instandhaltungsabzug) |
+| Miete weit unter Markt UND langjaehriger, kooperativer Mieter | Weg 5 zuerst versuchen: Gespraech mit Gegenleistung (z.B. Bad-Modernisierung, Wunscherfuellung) -- oft schneller, konfliktaermer und ohne Kappungsstreit |
+| Miete unter Markt, kein Sonderweg, Sperrfrist abgelaufen | Weg 1 mit Mietspiegel-Begruendung |
+| Mieter zahlt unpuenktlich oder Konflikt laeuft | Erst Konflikt loesen, dann erhoehen -- Erhoehung im Konflikt provoziert Widerspruch und Klage |
+| Neuvermietung steht an | Nicht dieser Skill: Mietpreisbremse-Logik in `skills/inserat-generator/SKILL.md` und `skills/mietlisten-analyse/SKILL.md` |
 
 ---
 
@@ -79,33 +106,43 @@ Du bist ein erfahrener Immobilienoekonom und Mietrechtsexperte. Analysiere das g
    - Seit 2019: Kappungsgrenze Modernisierungsumlage: max. 3 EUR/qm innerhalb von 6 Jahren (bei Ausgangsmiete < 7 EUR/qm: max. 2 EUR/qm)
    - Nur wertverbessernde Massnahmen und Energieeinsparung (nicht: Instandhaltungsanteil abziehen)
    - Instandhaltungsanteil herausrechnen (typisch: 30-50% bei kombinierten Massnahmen)
+   - Foerdermittel abziehen
+   - Vereinfachtes Verfahren (§559c BGB): bei Kosten bis 10.000 EUR pro Wohnung pauschal 30% Instandhaltungsabzug, vereinfachte Berechnung und Ankuendigung
    - Ankuendigung 3 Monate vor Beginn der Massnahme erforderlich (§555c BGB)
+   - Haertefall-Einwand des Mieters moeglich (§559 Abs. 4 BGB)
 
 7. **Staffelmiete / Indexmiete analysieren** -- Sonderregelungen:
    - Staffelmiete (§557a BGB): Feste Erhoehungsstufen im Vertrag. Keine zusaetzliche Erhoehung nach §558 moeglich.
    - Indexmiete (§557b BGB): Kopplung an Verbraucherpreisindex. Erhoehung nur bei Indexsteigerung, Berechnung: (neuer Index / alter Index - 1) x aktuelle Miete.
    - Pruefen: Ist eine Umstellung sinnvoll? (z.B. bei stark steigenden Mietspiegeln: Staffelmiete kann nachteilig sein)
 
-8. **Potenzialanalyse pro Einheit** -- Fuer jede Einheit berechnen:
+8. **Einvernehmliche Erhoehung pruefen (Weg 5)** -- Vor jedem formellen Verlangen bewerten, ob eine Einigung der bessere Weg ist:
+   - Kandidaten: langjaehrige Mieter deutlich unter Markt, Mieter mit offenen Wuenschen (neues Bad, Balkonsanierung, Haustier-Erlaubnis), frisch uebernommene Bestaende nach Kauf
+   - Mechanik: Gegenleistung anbieten (Modernisierung, Mangelbeseitigung, Wunscherfuellung) und dafuer moderate Erhoehung vereinbaren -- Win-win statt Konfrontation
+   - Marktmiete als Anker im Gespraech nutzen, nie als Drohung -- Druck zerstoert Vertrauen und erzeugt langfristige Verwaltungskosten
+   - Formalien: Vereinbarung schriftlich fixieren; bei Vereinbarungen ausserhalb von Geschaeftsraeumen (z.B. an der Wohnungstuer) Widerrufsrecht des Mieters beachten -- fehlende oder falsche Widerrufsbelehrung kann lange Widerrufsfristen ausloesen (Pruefbedarf: rechtssichere Vorlage verwenden)
+   - Faustregel: Der Ertrag einer maximalen Erhoehung ist schnell aufgezehrt durch Rechtsstreit, Fluktuation und Leerstand -- Erhoehungshoehe gegen Beziehungskosten abwaegen
+
+9. **Potenzialanalyse pro Einheit** -- Fuer jede Einheit berechnen:
    - Delta: Vergleichsmiete (EUR/qm) minus Ist-Miete (EUR/qm)
    - Erhoehungspotenzial EUR/Monat: Delta x Wohnflaeche
    - Erhoehungspotenzial EUR/Jahr: Monatswert x 12
    - Durch Kappungsgrenze begrenztes Potenzial (was ist JETZT moeglich?)
    - Fruehester Erhoehungszeitpunkt (Sperrfrist beachten)
 
-9. **Prioritaetenliste erstellen** -- Einheiten sortieren nach:
+10. **Prioritaetenliste erstellen** -- Einheiten sortieren nach:
    - Hoechstes Delta EUR/Monat (groesster finanzieller Effekt zuerst)
    - Sofort umsetzbar (Sperrfrist abgelaufen, keine Staffelmiete)
    - Geringes Streitrisiko (Erhoehung deutlich innerhalb Mietspiegel-Spanne)
    - Ergebnis: Rangliste mit Top-10 oder Top-20 Einheiten fuer sofortige Erhoehung
 
-10. **Portfolio-Gesamtpotenzial berechnen** -- Aggregation:
+11. **Portfolio-Gesamtpotenzial berechnen** -- Aggregation:
     - Summe aller Erhoehungspotenziale EUR/Jahr (gesamt)
     - Davon sofort umsetzbar (Sperrfrist abgelaufen)
     - Davon in den naechsten 12 Monaten umsetzbar
     - Beispiel: 100 Einheiten x 50 EUR/Monat Durchschnitt = 60.000 EUR/Jahr
 
-11. **Mieterhoehungsschreiben generieren** -- Formelle Anforderungen (§558a BGB):
+12. **Mieterhoehungsschreiben generieren** -- Formelle Anforderungen (§558a BGB):
     - Schriftform (Textform genuegt, §558a Abs. 1 BGB)
     - Begruendung: Verweis auf qualifizierten Mietspiegel ODER mindestens 3 Vergleichswohnungen ODER Sachverstaendigengutachten
     - Konkrete Angabe der neuen Miete (EUR/qm und EUR gesamt)
@@ -114,11 +151,33 @@ Du bist ein erfahrener Immobilienoekonom und Mietrechtsexperte. Analysiere das g
     - Hinweis auf Zustimmungspflicht und Klagemoeglichkeit (§558b BGB)
     - Hoeflich und sachlich formuliert
 
-12. **Timeline erstellen** -- Wann kann die naechste Erhoehung je Einheit erfolgen?
+13. **Timeline erstellen** -- Wann kann die naechste Erhoehung je Einheit erfolgen?
     - Fruehester Zugang des Schreibens
     - Zustimmungsfrist (2 Monate nach Zugang)
     - Wirksamkeit der neuen Miete (3. Monat nach Zugang)
     - Naechste Erhoehung moeglich (15 Monate nach dieser Erhoehung)
+
+---
+
+## Mieterkommunikation: fair und rechtssicher
+
+Der Mieter ist Kunde und Vertragspartner zugleich -- Konflikt ist Ultima Ratio, nicht Standardwerkzeug. Gute Kommunikation entscheidet ueber die Zustimmungsquote:
+
+**Gespraechsleitfaden vor dem formellen Schreiben (empfohlen bei Erhoehungen > 10% oder sensiblen Mietern):**
+1. Anlass transparent machen: gestiegene Kosten, Marktentwicklung, durchgefuehrte/geplante Verbesserungen
+2. Marktmiete als sachlichen Anker nennen (Mietspiegel-Wert), nie als Drohung
+3. Wuensche und Maengel des Mieters aktiv abfragen -- oft Basis fuer einvernehmliche Loesung (Weg 5)
+4. Zeit zur Ueberlegung geben, keine Unterschrift an der Tuer fordern (Widerrufsrisiko, Vertrauensschaden)
+5. Ergebnis schriftlich bestaetigen, danach ggf. formelles Verlangen nach §558a nachziehen
+
+**Typische Konfliktpfade und Eskalationsstufen:**
+
+| Stufe | Situation | Reaktion |
+|-------|-----------|----------|
+| 1 | Mieter reagiert nicht auf Erhoehungsverlangen | Freundliche Erinnerung vor Fristablauf, Gespraechsangebot |
+| 2 | Mieter widerspricht mit Sachargumenten (Einordnung, Wohnwertmerkmale) | Argumente ernsthaft pruefen -- Mietspiegel-Einordnung ist oft angreifbar; ggf. Verlangen anpassen |
+| 3 | Mieter verweigert ohne Begruendung | Zustimmungsklage binnen 3 Monaten nach Ablauf der Zustimmungsfrist (§558b Abs. 2 BGB) -- vorher Kosten/Nutzen und Prozessrisiko abwaegen (Anwalt) |
+| 4 | Mieter kuendigt nach Erhoehung | Sonderkuendigungsrecht beachten; Leerstands- und Neuvermietungskosten gegen Erhoehungsertrag rechnen |
 
 ---
 
@@ -263,6 +322,9 @@ Keine. (Falls vorhanden: jede Luecke auflisten mit Auswirkung auf die Bewertung.
 
 ## Qualitaetspruefung
 
+- [ ] Erhoehungsweg korrekt gewaehlt (Entscheidungsbaum der 5 Wege durchlaufen, Sperrwirkung Index/Staffel geprueft)
+- [ ] Einvernehmliche Loesung (Weg 5) bei geeigneten Einheiten als Alternative genannt
+- [ ] Pruefbedarf-Hinweis (aktuelle Rechtslage / Anwalt) im Bericht enthalten
 - [ ] Mietspiegel-Einordnung plausibel (Baujahr, Lage, Ausstattung korrekt zugeordnet)
 - [ ] Kappungsgrenze korrekt berechnet (Miete vor 3 Jahren als Basis, 15% oder 20%)
 - [ ] Sperrfrist korrekt berechnet (15 Monate ab letzter Erhoehung)
@@ -287,6 +349,9 @@ Keine. (Falls vorhanden: jede Luecke auflisten mit Auswirkung auf die Bewertung.
 | Mietpreisbremse aktiv + Neuvermietung | Miete max. Vergleichsmiete + 10% | Vormiete oder Ausnahmetatbestand pruefen |
 | Mietspiegel aelter als 2 Jahre | Veralteter Mietspiegel, angreifbar | Aktuellen Mietspiegel recherchieren oder Vergleichswohnungen nutzen |
 | Hohe Fluktuation nach Erhoehungen | Mieter kuendigen nach Erhoehung | Erhoehung moderat halten, Leerstandskosten gegenueberstellen |
+| Laufender Konflikt / Mangelanzeige offen | Erhoehung im Konflikt provoziert Widerspruch und Klage | Erst Mangel beheben bzw. Konflikt loesen, dann erhoehen |
+| Erhoehung nur an der Wohnungstuer vereinbart | Widerrufsrisiko bei Haustuervereinbarungen, Formmangel | Schriftliche Vereinbarung mit korrekter Widerrufsbelehrung (Pruefbedarf: Anwalt/Vorlage) |
+| Mieter mit Transferleistungsbezug (KdU) | Amt zahlt nur bis lokale Angemessenheitsgrenze -- Erhoehung kann Zahlungsausfall ausloesen | KdU-Grenze der Kommune pruefen, Erhoehung ggf. darunter halten |
 
 ---
 
@@ -324,5 +389,8 @@ Faktoren die den Score senken:
 - `knowledge/rechtsgrundlagen.md` -- §558, §558a, §559, §556d, §557a, §557b BGB: Mieterhoehungsrecht komplett
 - `knowledge/marktbenchmarks.md` -- Benchmarks fuer Mieten nach Baujahr, Lage, Zustand
 - `knowledge/kalkulationsformeln.md` -- Renditekennzahlen zur Bewertung des Erhoehungseffekts
+- `skills/mietlisten-parser/SKILL.md` -- Schritt 1 der Kette: Mietliste in strukturierte Daten ueberfuehren
+- `skills/mietlisten-analyse/SKILL.md` -- Schritt 2 der Kette: Under-Rent erkennen und Potenzial quantifizieren (dieser Skill ist Schritt 3: Umsetzung)
 - `skills/inserat-generator/SKILL.md` -- Bei Neuvermietung nach Kuendigung: Mietpreisbremse beachten
+- `skills/energieausweis-check/SKILL.md` -- Energetische Modernisierung als Basis fuer §559-Umlage
 - `skills/wochen-jourfixe/SKILL.md` -- Mieterhoehungsfristen im Wochen-Report tracken
