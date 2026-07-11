@@ -6,11 +6,15 @@
 
 **Grunddaten und Eigentum:**
 - [ ] Aktueller Grundbuchauszug (nicht aelter als 3 Monate)
+- [ ] Rechteurkunden (Eintragungsbewilligungen) zu allen Abt.-II-Eintraegen -- der Eintrag allein regelt die Details nicht
 - [ ] Teilungserklaerung (bei WEG) inkl. aller Nachtraege und Aenderungen
 - [ ] Gemeinschaftsordnung
 - [ ] Aufteilungsplan mit Sondereigentumseinheiten
 - [ ] Abgeschlossenheitsbescheinigung
-- [ ] Lageplan / Flurkarte
+- [ ] Lageplan / Flurkarte (Flurstueck mit Grundbuch-Bestandsverzeichnis abgleichen)
+- [ ] Bauakte / Baugenehmigungen (Bauamt) -- gebaut ist nicht automatisch genehmigt; bei Ausbauten/Umnutzung zwingend
+- [ ] Baulastenverzeichnis (Bauaufsicht -- steht NICHT im Grundbuch)
+- [ ] Altlastenauskunft
 
 **Bau und Zustand:**
 - [ ] Grundrisse (alle Geschosse, Keller, Dach)
@@ -50,6 +54,19 @@
 
 ## 2. Besichtigungs-Checkliste: Was vor Ort pruefen?
 
+### Baujahresklassen: Wo du je Epoche genauer hinschaust
+
+Das Baujahr ist die erste Risiko-Hypothese -- es lenkt die Pruefung, ersetzt aber keine Einzelfallbewertung (besonders nach Modernisierungen):
+
+| Baujahr | Typisch | Pruefschwerpunkte |
+|---------|---------|-------------------|
+| Bis 1919 | Vollziegel, Holzbalkendecken, Deckenhoehen bis 4 m | Feuchte, Putz/Risse, Holzbalken (Schwamm!), Schallschutz |
+| 1919-1949 | Leichtere Baustoffe, kleinere Raeume, erste Baeder | Schall-/Waermeschutz, Feuchte, korrodierte Stahlteile, Holzdecken/Brandschutz |
+| 1950-1979 | Stahlbeton, Flachdaecher, grosse Fenster (ca. 39% des Bestands) | Flachdach, Waermebruecken, Heiznischen, Asbest (ab ca. 1956), Blei-Leitungen (fruehe Nachkriegsjahre) |
+| 1980-1989 | Erste Waermeschutzverordnung | Fenster, Balkone (Betonsanierung), Asbestkleber/-platten |
+| 1990-1999 | Verschaerfter Waermeschutz, Kunststofffenster | Heizung am Zyklusende, energetischer Standard; Asbest-Generalverdacht bis einschl. 1992 |
+| Ab 2000 | Energieeffizienzstandards | Bauausfuehrung, Abdichtung, Gewaehrleistung |
+
 ### Aussenbereich (10 Minuten)
 
 **Umgebung:**
@@ -64,7 +81,8 @@
 **Gebaeude aussen:**
 - [ ] Fassadenzustand (Risse, Abplatzungen, Feuchtigkeit, Algen)
 - [ ] Daemmung vorhanden? Zustand?
-- [ ] Dachzustand (Ziegel, Rinnen, Fallrohre) - von der Strasse beurteilbar?
+- [ ] Dachzustand (Ziegel, Rinnen, Fallrohre) - von der Strasse beurteilbar? Flachdach = Hochrisiko-Bauteil, genauer pruefen
+- [ ] Entwaesserung komplett: Dachrinnen, Fallrohre, Sockelzone, Drainage-Hinweise (haeufig uebersehener Feuchtetreiber)
 - [ ] Fenster (Alter, Material, Verglasung, Zustand der Dichtungen)
 - [ ] Balkon/Terrasse (Bodenbelag, Gelaender, Abdichtung)
 - [ ] Eingangstuer und Schliesssystem
@@ -82,7 +100,10 @@
 - [ ] Waschkueche/Trockenraum
 - [ ] Aufzug (Baujahr, letzte Pruefung, Zustand)
 - [ ] Tiefgarage / Stellplaetze
-- [ ] Heizungsraum (Heizungstyp, Alter, Wartungszustand)
+- [ ] Heizungsraum (Heizungstyp, Alter laut Typenschild, Wartungszustand, hydraulischer Abgleich, Leitungsdaemmung)
+- [ ] Wasser-/Abwasserleitungen im Keller: Material erkennen (Blei? Kupfer? Kunststoff? Guss?) -- Blei-Verdacht v.a. bis ca. 1960
+- [ ] Sicherungskasten oeffnen: FI-Schalter vorhanden? Anzahl Stromkreise, Beschriftung, Sicherungstyp. Elektrik > 40 Jahre = Erneuerungsfall; letzter E-Check (Faustregel ca. alle 4 Jahre)?
+- [ ] Holzbauteile auf Schwamm/Rotte pruefen (rote Flagge -- sofort Fachgutachten)
 - [ ] Zaehler (Strom, Gas, Wasser - Einzelzaehler vorhanden?)
 - [ ] Brandschutzeinrichtungen (Feuerloescher, Fluchtweg-Beschilderung)
 
@@ -124,12 +145,30 @@
 
 ### Fotos und Dokumentation
 
+**Pflichtfotos (ohne sie ist keine Kostenschaetzung moeglich):**
+- [ ] Sicherungskasten offen (alle Reihen)
+- [ ] Heizung inkl. Typenschild (Hersteller, Baujahr, Leistung)
+- [ ] Kelleraussenwaende und -boden (alle Seiten, Feuchte/Salzausblueruhungen)
+- [ ] Wasser-/Abwasserleitungen (Material erkennbar)
+- [ ] Dach aussen + Dachboden innen (falls zugaenglich)
+- [ ] Fassade alle 4 Seiten inkl. Sockelzone
+- [ ] Fenster im Detail (Rahmen, Dichtung, Glasabstandhalter mit Baujahr)
+- [ ] Jedes Bad komplett
+
+**Weitere Dokumentation:**
 - [ ] Alle Raeume fotografieren
 - [ ] Maengel und Schaeden detailliert fotografieren
 - [ ] Zaehlerstaende notieren
 - [ ] Heizungstyp und Baujahr notieren
 - [ ] Energieausweis-Daten notieren
 - [ ] Gesamteindruck und Bauchgefuehl notieren
+
+### Nachbereitung binnen 24 Stunden
+
+Jede Besichtigung muendet in genau eine Aktion:
+- [ ] LOI mit Preis und Bedingungen nachschieben (wenn Objekt passt -- Schnelligkeit gewinnt, aber keine Zusage ohne Substanz), ODER
+- [ ] Nachforderungsliste an Makler/Verkaeufer senden (fehlende Unterlagen, Gutachten, Zugaenge), ODER
+- [ ] Saubere, begruendete Absage (haelt die Maklerbeziehung intakt)
 
 ---
 
@@ -300,12 +339,15 @@
 ### A. Rechtliche Due Diligence
 
 **Grundbuch:**
+- [ ] Bestandsverzeichnis: Flurstueck, Lage und Groesse stimmen mit Expose und Kataster/Flurkarte ueberein? (Objektidentitaet)
 - [ ] Abteilung I: Eigentuemer korrekt? Erbengemeinschaft? GbR?
-- [ ] Abteilung II: Lasten und Beschraenkungen (Wegerechte, Leitungsrechte, Niessbbrauch, Wohnrecht, Vormerkungen, Baulasten)
-- [ ] Abteilung III: Grundschulden/Hypotheken (Werden bei Verkauf geloescht?)
-- [ ] Altlasten im Grundbuch oder Baulastenverzeichnis?
+- [ ] Abteilung II: Lasten und Beschraenkungen (Wegerechte, Leitungsrechte, Niessbbrauch, Wohnrecht, Vormerkungen) -- hier stehen die stillen Dealbreaker
+- [ ] Rechteurkunden (Eintragungsbewilligungen) zu Abt.-II-Eintraegen angefordert? Rechte koennen Kostenpflichten tragen (z.B. Wege-Unterhaltung)
+- [ ] Abteilung III: Grundschulden/Hypotheken (Werden bei Verkauf geloescht? Lastenfreistellung und Bankfreigabe-Timing?)
+- [ ] Altlasten im Altlastenverzeichnis? Baulasten im Baulastenverzeichnis? (Beides steht NICHT im Grundbuch)
 
 **Baurecht:**
+- [ ] Bauakte eingesehen? Gebaut ist nicht automatisch genehmigt -- reale Nutzung (DG, Souterrain, Anbauten) mit Genehmigungslage abgleichen. Fehlende Bauakte = Warnsignal mit Risikoabschlag
 - [ ] Baugenehmigungen vorhanden? Fuer alle Um-/Anbauten?
 - [ ] Nutzungsaenderungen genehmigt?
 - [ ] Bebauungsplan pruefen (Nutzungsart, GRZ, GFZ, Geschossigkeit)
@@ -322,16 +364,19 @@
 - [ ] Mietminderungen laufend?
 
 **WEG-Recht:**
-- [ ] Teilungserklaerung auf Sondernutzungsrechte pruefen
+- [ ] Teilungserklaerung auf Sondernutzungsrechte, Miteigentumsanteile, Stimmrechte und Kostenverteilung pruefen (Pflichtlektuere inkl. aller Nachtraege)
 - [ ] Oeffnungsklauseln in der Gemeinschaftsordnung?
 - [ ] Beschlusssammlung auf relevante Beschluesse pruefen
-- [ ] Angefochtene Beschluesse?
-- [ ] Verwaltervertrag: Laufzeit, Kuendigungsmoeglichkeit
+- [ ] Angefochtene Beschluesse? (Anfechtungsfrist laeuft ab Beschluss, nicht erst ab Protokoll)
+- [ ] Verwaltervertrag: Laufzeit (Bestellung max. 5 Jahre), Leistungsumfang, Kuendigungsmoeglichkeit -- erst pruefen, was der Verwalter schuldet, bevor Performance bewertet wird
+- [ ] Wohngeldabrechnung sauber getrennt: umlagefaehig / nicht umlagefaehig / Ruecklagenzufuehrung?
+- [ ] Bewusstsein: Beschluesse (auch Sonderumlagen) koennen bei geringer Teilnahme wirksam gefasst werden -- Stimmrechtswahrnehmung einplanen (persoenlich, Vollmacht, Weisung); Einladungsfrist ETV i.d.R. 3 Wochen
 
 ### B. Technische Due Diligence
 
 **Gebaeude:**
-- [ ] Baujahr und Bausubstanz (Massiv, Fertigbau, Fachwerk?)
+- [ ] Baujahr und Bausubstanz (Massiv, Fertigbau, Fachwerk?) -- baujahrstypische Risiken als Pruefhypothesen nutzen (siehe Baujahresklassen-Tabelle oben)
+- [ ] Wohnflaeche nach WoFlV plausibilisiert? Dachschraegen 1-2 m Hoehe nur 50%, unter 1 m 0%; Balkon/Terrasse i.d.R. 25%, max. 50%; Technik-/Heiz-/Aussenabstellraeume zaehlen nicht. Flaechenquelle dokumentieren -- keine Flaechenannahme ohne Quelle
 - [ ] Letzte Sanierungsmassnahmen (wann? was? Qualitaet?)
 - [ ] Dachzustand und Restlebensdauer
 - [ ] Fassade und Daemmzustand
@@ -377,7 +422,7 @@
 - [ ] Finanzierbarkeit pruefen (Eigenkapitalbedarf, Beleihungsauslauf)
 - [ ] Steuerliche Auswirkungen berechnen (AfA, Zinsabzug, Cashflow nach Steuern)
 - [ ] EK-Rendite und EK-Rueckfluss berechnen
-- [ ] Sanierungskosten einpreisen
+- [ ] Sanierungskosten einpreisen -- gewerkebasiert (Rueckbau, Entsorgung, Elektro, Fenster, Waende, Bad, Boden) statt Pauschalzahl, plus 10-20% Puffer
 - [ ] Best/Worst/Base-Case-Szenarien rechnen
 - [ ] DSCR berechnen
 - [ ] Sensitivitaetsanalyse (Zinsaenderung, Mietausfall, Leerstand)
