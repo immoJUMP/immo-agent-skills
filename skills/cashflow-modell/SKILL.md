@@ -1,6 +1,6 @@
 ---
 name: cashflow-modell
-description: "Erstellt eine 5-Jahres-Cashflow-Projektion mit drei Szenarien (Best/Base/Worst Case) und Break-even-Analyse. Nutze diesen Skill wenn du wissen willst wann der Deal cashflow-positiv wird, Szenarien durchspielen oder eine Projektion fuers Bankkonzept brauchst."
+description: "Erstellt eine 5-Jahres-Cashflow-Projektion mit drei Szenarien (Best/Base/Worst Case), Break-even-Analyse und Sensitivitaeten (Zins, Leerstand, Miete, Instandhaltung). Nutze diesen Skill nach positivem Quick-Filter (Bierdeckel), wenn du wissen willst wann der Deal cashflow-positiv wird, Szenarien durchspielen oder eine Projektion fuers Bankkonzept brauchst."
 ---
 
 # Cashflow-Modell -- 5-Jahres-Cashflow-Projektion mit Szenarien
@@ -8,6 +8,15 @@ description: "Erstellt eine 5-Jahres-Cashflow-Projektion mit drei Szenarien (Bes
 Erstellt eine detaillierte 5-Jahres-Cashflow-Projektion fuer eine Wohnimmobilie mit drei Szenarien (Best Case, Base Case, Worst Case). Modelliert Mieterhoehungsrunden, Leerstandsrisiken, Instandhaltungskosten und Zinssensitivitaet. Beantwortet die zentrale Frage: "Wann bin ich Cashflow-positiv?"
 
 > **Praxis-Insight:** Banken und erfahrene Investoren unterscheiden zwischen "der Deal sieht auf dem Papier gut aus" und "der Investor hat durchgerechnet, was passiert wenn es anders laeuft". Dieses Modell zeigt beides -- und genau das ueberzeugt Banken, auch bei 100%-Finanzierungen.
+
+### Modellierungsprinzipien
+
+1. **Kein Detailmodell ohne positiven Quick-Filter:** Dieses Modell folgt auf einen positiven Bierdeckel (`skills/bierdeckel-kalkulation/SKILL.md`). Nicht jedes Angebot verdient eine Vollkalkulation.
+2. **Szenarien schlagen Scheingenauigkeit:** Eine Rendite-Einzelzahl ist Scheinsicherheit. Variiere Preis, Zins, Tilgung, Miete und Sanierungskosten -- das Ergebnis ist eine Entscheidungsbandbreite, keine Punktlandung.
+3. **Kipp-Annahme benennen:** Identifiziere explizit, welche einzelne Annahme den groessten Einfluss auf den Deal hat und ab welchem Wert der Deal kippt (Ausstiegsschwelle). Eine gute Kalkulation zeigt nicht nur, was zu verdienen ist, sondern wann auszusteigen ist.
+4. **Bankfaehigkeit ist Teil der Rendite:** Der Deal muss nicht nur rechnerisch, sondern auch finanzierbar sein. DSCR und Darstellbarkeit fuer die Bank gehoeren zum Ergebnis (Bank-Onepager -> `skills/bankenpitch/SKILL.md`).
+5. **Cashflow vor und nach Steuern strikt trennen:** Steuer kann helfen, aber der Deal muss operativ (vor Steuern) plausibel bleiben.
+6. **Annahmen-Register pflichtig:** Jede Kalkulationsversion wird mit allen Annahmen dokumentiert -- insbesondere die Version, die einem Kaufangebot/LOI oder Bankgespraech zugrunde liegt.
 
 ---
 
@@ -126,6 +135,16 @@ Erstelle eine vollstaendige 5-Jahres-Cashflow-Projektion mit:
 - Fluktuation einrechnen: Bei Auszug zu Marktmiete neu vermieten (ca. 10% Fluktuation p.a.)
 - Indexierung fuer Mietsteigerung p.a. (organisches Wachstum ueber Mietspiegel)
 
+**Miet-Ansatzregeln (nur rechtlich erreichbare Mieten modellieren):**
+
+- Zielmiete konservativ: nicht die Marktspitze, sondern nachhaltige Miete leicht darunter ansetzen
+- §558-Erhoehungen nur bis zur ortsueblichen Vergleichsmiete -- die ist ein Durchschnitt, nicht die aktuelle Angebotsmiete der Portale
+- Kauf bricht Miete nicht: Bestandsmieter behalten Vertrag und Konditionen; Under-Rent-Potenzial nur ueber den zeitlich gestreckten Erhoehungs- und Fluktuationspfad heben (kein Sofort-Cashflow)
+- Vertragsart pruefen: Index-, Staffel- und Amts-/Sozialmieten blockieren den §558-Pfad -- fuer diese Einheiten keine Vergleichsmieten-Erhoehung modellieren
+- Mieter-Auszug oder freiwillige Mieterhoehung nur modellieren, wenn rechtlich belastbar dokumentiert (z.B. unterschriebene Aufhebungsvereinbarung) -- sonst ist es ein Wunschszenario
+- Konservative Unterkante fuer den Worst Case: Amtsmiete/KdU-Niveau des Standorts
+- [Pruefbedarf: Mietpreisbremse am Standort, Kappungsgrenze 15% vs. 20%, lokaler Mietspiegel]
+
 ### Schritt 2: Kosten-Entwicklung modellieren
 
 - **Nicht umlagefaehige Kosten:** Verwaltung, Instandhaltungsruecklage (Anteil Eigentuemer), Leerstandskosten
@@ -163,7 +182,9 @@ Erstelle eine vollstaendige 5-Jahres-Cashflow-Projektion mit:
 
 - **Best Case:** Zielmieten erreicht, minimaler Leerstand (2%), keine unerwarteten Kosten, Zinsniveau stabil
 - **Base Case:** Mieterhoehungen zu 80% umgesetzt, moderater Leerstand (4%), normale Instandhaltung, Zinsanstieg +1%
-- **Worst Case:** Mieterhoehungen verzoegert/reduziert, hoher Leerstand (8%), Sonderumlage in Jahr 3, Zinsanstieg +2%
+- **Worst Case:** Mieterhoehungen verzoegert/reduziert (Mietansatz Richtung KdU-/Amtsmieten-Unterkante), hoher Leerstand (8%), Sonderumlage in Jahr 3, Zinsanstieg +2%
+
+Bei geplanter Modernisierung gilt im Worst Case der Grundsatz: **Sanierung dauert laenger und kostet mehr** -- Kostenpuffer auf das Modernisierungsbudget und Zeitverzug (spaeterer Start der Zielmieten, laengerer Leerstand) einrechnen. Die Zinswende 2022 (10-Jahres-Bauzins grob von ~1% auf ~4%) zeigt, dass der Zins-Stress kein theoretisches Szenario ist -- Zinsbindung entsprechend waehlen.
 
 ### Schritt 7: Auszugsgeld-Rechner (wenn relevant)
 
@@ -180,6 +201,19 @@ Erstelle eine vollstaendige 5-Jahres-Cashflow-Projektion mit:
 - **Variable 3: Mietsteigerung** -- Was passiert bei 0%, 1%, 2%, 3% p.a.?
 - **Variable 4: Instandhaltungskosten** -- Was passiert bei +50%, +100% der geplanten Kosten?
 - Ergebnis als Matrix: Welche Kombination fuehrt zu negativem Cashflow?
+
+### Schritt 9: Vermoegensaufbau und EK-Perspektive getrennt ausweisen
+
+Liquiditaet und Vermoegensaufbau sind zwei verschiedene Fragen -- beide beantworten, nicht vermischen:
+
+```
+Vermoegensaufbau p.a. = Cashflow nach Steuern + Tilgung + (konservative) Wertsteigerung
+EK-Rendite = Vermoegensaufbau p.a. / eingesetztes Eigenkapital * 100
+```
+
+- Ein Deal kann liquiditaetsnegativ und trotzdem vermoegensbildend sein -- dann muss die Liquiditaetsluecke aus Reserven tragbar sein
+- **Refinanzierungs-Perspektive (optional):** Nach abgeschlossener Wertschoepfung (Sanierung + Mietanhebung) kann Nachbeleihung des gestiegenen Objektwerts gebundenes EK fuer das naechste Investment freisetzen. Als Ausblick ausweisen, nicht als Cashflow einrechnen. Beleihbarkeit, Sicherheitenfreigabe und Steuerfolgen individuell klaeren [Pruefbedarf: Bank + Steuerberater]
+- Auch ein (ggf. steuerpflichtiger) Verkauf nach Entwicklung kann der schnellere EK-Hebel sein als jahrelanges Halten -- im Fazit als Alternative benennen, wenn der laufende Cashflow schwach ist
 
 ---
 
@@ -201,6 +235,10 @@ Erstelle eine vollstaendige 5-Jahres-Cashflow-Projektion mit:
 | EK-Rendite (Cash-on-Cash) | n/a (0 EK) | n/a (0 EK) | n/a (0 EK) |
 
 **Kernaussage:** [z.B. "Das Objekt wird im Base Case ab Monat 14 cashflow-positiv. Selbst im Worst Case bleibt der negative Cashflow auf unter 12.000 EUR begrenzt und ist durch Liquiditaetsreserven abdeckbar."]
+
+**Kipp-Annahme:** [Die eine Annahme mit dem groessten Einfluss und ihr Kippwert, z.B. "Der Deal steht und faellt mit der Anschlussfinanzierung: ab 5,50% Zins nach Zinsbindungsende wird der Cashflow negativ."]
+
+**Annahmen-Register:** [Tabelle aller getroffenen Annahmen mit Quelle/Status (belegt / Benchmark / geschaetzt) -- diese Version ist die Referenz fuer LOI und Bankgespraech.]
 
 ---
 
@@ -379,6 +417,8 @@ Pruefe das Modell gegen diese Kriterien:
 | Worst Case fuehrt zu > 50.000 EUR kumuliertem Verlust | HOCH | Liquiditaetsreserve pruefen, ggf. mehr EK einbringen |
 | Zinssensitivitaet: +1% Zins macht Deal negativ | HOCH | Laengere Zinsbindung waehlen oder Deal ueberdenken |
 | Mieterhoehungen nur durch Modernisierung moeglich (Bestandsmieten am Mietspiegel) | MITTEL | Realistisch einschaetzen, ob Modernisierung wirtschaftlich ist |
+| Zielmieten setzen Mieter-Auszug voraus, der nicht dokumentiert ist | HOCH | Wunschszenario -- Modell auf Bestandsmieten zurueckrechnen |
+| Index-/Staffel-/Amtsmieten im Bestand, aber §558-Erhoehungen modelliert | KRITISCH | Modellfehler -- Erhoehungspfad fuer diese Einheiten streichen |
 | Auszugsgeld-ROI < 15% | NIEDRIG | Auszugsgeld vermeiden, auf natuerliche Fluktuation warten |
 
 ---
@@ -414,4 +454,6 @@ Pruefe das Modell gegen diese Kriterien:
 - `knowledge/kalkulationsformeln.md` -- Renditekennzahlen, Cashflow-Formeln, AfA-Saetze
 - `knowledge/rechtsgrundlagen.md` -- §558 BGB (Mieterhoehung), §559 BGB (Modernisierungsumlage), Kappungsgrenze, anschaffungsnahe Herstellungskosten
 - `knowledge/marktbenchmarks.md` -- Instandhaltungskosten nach Baujahr, Verwaltungskosten-Benchmarks
-- `skills/bankenpitch/SKILL.md` -- Finanzierungskonzept & Bankenpraesentation mit integrierter Cashflow-Darstellung
+- `skills/bierdeckel-kalkulation/SKILL.md` -- Davor: Quick-Filter, der ueber die Vollkalkulation entscheidet
+- `skills/mietlisten-analyse/SKILL.md` -- Davor: Mietliste validieren und Soll-Miete plausibilisieren
+- `skills/bankenpitch/SKILL.md` -- Danach: Finanzierungskonzept & Bankenpraesentation mit integrierter Cashflow-Darstellung
