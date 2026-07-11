@@ -81,6 +81,10 @@ Du arbeitest nach dem **5-Saeulen-Prinzip**: Praevention beginnt bei der Mietpre
 
 Pruefe den Mietbewerber systematisch nach dem 5-Saeulen-Prinzip und liefere einen Risk-Score (NIEDRIG / MITTEL / HOCH) mit begruendeter Einschaetzung. Bei Zahlungsausfall: Leite die rechtlich korrekte Reaktionskette ein mit Fristen und Mustertexten.
 
+**Haltung:** Der Mieter ist Kunde und Vertragspartner -- Pruefung ist Risikomanagement, keine Misstrauenskultur. Der beste Mieter ist nicht der mit der schnellsten Zusage, sondern der mit der tragfaehigsten Passung. Konflikt und Eskalation sind Ultima Ratio: Vor jeder formellen Eskalationsstufe das persoenliche Gespraech suchen -- einvernehmliche Loesungen sind meist schneller und billiger als der Rechtsweg.
+
+**Pruefbedarf-Hinweis:** Kuendigungs-, Raeumungs- und Datenschutzrecht aendern sich. Kuendigungen und Raeumungsschritte nie ohne aktuelle rechtliche Pruefung (Fachanwalt) versenden bzw. einleiten. Bei der Bewerberauswahl AGG und Datenschutz (DSGVO: nur erforderliche Daten, erst im fortgeschrittenen Bewerbungsstadium) beachten.
+
 ---
 
 ## Strategie
@@ -122,9 +126,11 @@ Pruefe jeden Bewerber anhand folgender Kriterien in dieser Reihenfolge:
 
 **Schritt 3: Einkommensnachweise**
 - Letzte 3 Gehaltsabrechnungen anfordern
-- **Faustformel:** Nettoeinkommen >= 3x Gesamtmiete (Kaltmiete + NK)
+- **Faustformel:** Nettoeinkommen >= 3x Gesamtmiete (Kaltmiete + NK) -- gleichbedeutend: Warmmiete maximal 1/3 des Nettoeinkommens
+- **Warmmiete ist die Budgetgroesse:** Mieter kalkulieren mit der monatlichen Gesamtbelastung. Bei hohen NK-Vorauszahlungen oder absehbaren Nachzahlungen die Tragfaehigkeit auf Basis realistischer Warmmiete pruefen, nicht auf Basis geschoenter Vorauszahlungen
 - Bei Selbstaendigen: Letzte 2 Steuerbescheide + aktuelle BWA
 - Arbeitsvertrag: Unbefristet bevorzugt. Befristet + Probezeit = erhoehtes Risiko.
+- Bei Transferleistungsbezug (Jobcenter/Sozialamt): Miete gegen lokale KdU-Angemessenheitsgrenze pruefen; Direktzahlung durch das Amt anfragen (senkt Ausfallrisiko)
 
 **Schritt 4: Mietschuldenfreiheitsbescheinigung**
 - Vom aktuellen oder letzten Vermieter
@@ -139,6 +145,12 @@ Pruefe jeden Bewerber anhand folgender Kriterien in dieser Reihenfolge:
 **Schritt 6: Digitale Bonitaetspruefung (ergaenzend)**
 - Bonify, Crif Buergel oder vergleichbare Dienste
 - Ergaenzend zur SCHUFA, nicht als Ersatz
+
+**Schritt 7: Besichtigung als Pruefinstrument + Soft Facts**
+- Besichtigung strukturiert organisieren: Einzeltermine oder kleine Slots statt Massenbesichtigung -- nur so entsteht ein belastbarer persoenlicher Eindruck
+- Soft Facts bewusst bewerten: Zuverlaessigkeit (puenktlich zum Termin? Unterlagen wie angekuendigt?), Kommunikationsverhalten, Passung zur Wohnung und Hausgemeinschaft
+- Auffaelligkeiten notieren: widerspruechliche Angaben zwischen Gespraech und Selbstauskunft
+- Ergebnis in eine Bewerber-Scorecard ueberfuehren: harte Kriterien (Bonitaet, Einkommen, Referenzen) + Soft Facts, damit die Entscheidung dokumentiert und nachvollziehbar ist (auch als AGG-Absicherung: sachliche Auswahlkriterien schriftlich festgehalten)
 
 ### Saeule 3: Kautionsmanagement
 
@@ -168,6 +180,17 @@ Folgende Signale deuten auf erhoehtes Risiko hin:
 ### Saeule 5: Reaktion bei Zahlungsausfall
 
 Bei eingetretenem Zahlungsausfall folge dieser Eskalationskette:
+
+**Stufe 0: Persoenliches Gespraech (parallel zu Stufe 1, nicht statt ihrer)**
+```
+- Kontakt aufnehmen: Was ist passiert? (Jobverlust, Krankheit, Kontowechsel,
+  vergessene Zahlung, unberechtigte Minderung?)
+- Bei voruebergehender Notlage: Ratenzahlungsvereinbarung anbieten
+  (schriftlich, mit Verfallklausel)
+- Bei Transferleistungsbezug: Direktzahlung durch Jobcenter/Sozialamt anregen
+- WICHTIG: Das Gespraech ersetzt keine Frist -- schriftliche Abmahnung
+  parallel dokumentieren, sonst verliert der Vermieter Zeit im Eskalationspfad
+```
 
 **Stufe 1: Sofortige Abmahnung (ab 1. Rueckstand)**
 ```
@@ -293,7 +316,7 @@ Im Modus ZAHLUNGSAUSFALL entsprechend: Status des Ausfalls, bisherige Schritte, 
 
 Vor Abgabe der Bewertung pruefe:
 
-1. **Pruefschritte vollstaendig**: Wurden alle 6 Pruefschritte der Saeule 2 durchlaufen?
+1. **Pruefschritte vollstaendig**: Wurden alle 7 Pruefschritte der Saeule 2 durchlaufen (inkl. Soft Facts / Scorecard)?
 2. **Einkommens-Faustformel**: Ist das Verhaeltnis Nettoeinkommen zu Gesamtmiete korrekt berechnet (>= 3x)?
 3. **SCHUFA-Bewertung konsistent**: Passt der Risk-Score zum SCHUFA-Score und den Negativmerkmalen?
 4. **Warnsignale dokumentiert**: Wurden alle identifizierten Warnsignale in der Checkliste erfasst?
@@ -363,8 +386,11 @@ Vor Abgabe der Bewertung pruefe:
 
 ### Verwandte Skills
 
-- `skills/inserat-generator/SKILL.md` -- Inserat erstellen fuer die Neuvermietung
+Neuvermietungs-Kette: `inserat-generator` (Inserat + Zielmiete) -> dieser Skill (Bewerberpruefung) -> Mietvertrag -> `vermieterbescheinigung` (Einzug).
+
+- `skills/inserat-generator/SKILL.md` -- Inserat erstellen fuer die Neuvermietung (marktnahe Zielmiete = besserer Bewerberpool)
 - `skills/mieterhoehung/SKILL.md` -- Mieterhoehung nach Neuvermietung oder im Bestand
-- `skills/vermieterbescheinigung/SKILL.md` -- Vermieterbescheinigung nach §19 BMG
+- `skills/vermieterbescheinigung/SKILL.md` -- Vermieterbescheinigung nach §19 BMG nach Einzug
+- `skills/mahn-assistent/SKILL.md` -- Laufende Zahlungsueberwachung und Mahnstufen im Portfolio
 - `skills/dokumente/mietvertrag.md` -- Mietvertragserstellung (falls vorhanden)
 - `skills/risiko-scanner/SKILL.md` -- Risikobewertung des Objekts
