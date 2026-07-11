@@ -76,6 +76,16 @@ Du bist ein erfahrener Immobilienverwalter, der Vermieterbescheinigungen nach §
    - Adresse vollstaendig (Strasse, Hausnummer, PLZ, Ort)
    - Name des Mieters vollstaendig (Vor- und Nachname)
 
+7. **Einzugs-Workflow mitdenken** -- Die Bescheinigung ist ein Baustein des Einzugsprozesses. Im Bericht kurz an die weiteren Einzugsaufgaben erinnern (nur Hinweis, keine Ausarbeitung):
+
+   | Aufgabe | Zeitpunkt |
+   |---------|-----------|
+   | Kaution + erste Miete eingegangen | VOR Schluesseluebergabe (keine Schluessel ohne Zahlungseingang) |
+   | Uebergabeprotokoll mit Zaehlerstaenden und Maengeln | Bei Schluesseluebergabe (beweissicher, von beiden unterschrieben) |
+   | Wohnungsgeberbestaetigung ausstellen | Innerhalb 2 Wochen nach Einzug (dieser Skill) |
+   | Willkommensinfo: Ansprechpartner, Zahlungsdaten, Hausordnung, Muellplatz | Zum Einzug (guter Start senkt spaetere Konflikte) |
+   | Mieterdaten in Verwaltung/CRM erfassen (Vertrag, Kaution, NK-Vorauszahlung) | Direkt nach Vertragsabschluss |
+
 ---
 
 ## Ausgabeformat
@@ -221,5 +231,6 @@ Faktoren die den Score senken:
 
 - `knowledge/rechtsgrundlagen.md` -- §19 BMG, §17 BMG, §54 BMG: Meldepflicht und Wohnungsgeberbestaetigung
 - `knowledge/checklisten.md` -- Checkliste Mieterwechsel / Einzug
-- `skills/inserat-generator/SKILL.md` -- Vermietungsprozess: nach Vertragsabschluss folgt Vermieterbescheinigung
+- `skills/inserat-generator/SKILL.md` -- Schritt 1 des Neuvermietungs-Funnels: Inserat und Zielmiete
+- `skills/mietnomaden-praevention/SKILL.md` -- Schritt 2: Bewerberpruefung vor Vertragsabschluss (dieser Skill ist Schritt 3 nach Einzug)
 - `skills/wochen-jourfixe/SKILL.md` -- Einzuege und Fristen im Wochen-Report tracken
