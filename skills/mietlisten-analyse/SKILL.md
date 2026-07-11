@@ -1,6 +1,6 @@
 ---
 name: mietlisten-analyse
-description: "Analysiert Mietlisten: Ist-Mieten gegen Mietspiegel, Erhoehungspotenzial unter Beruecksichtigung von Kappungsgrenze und Mietpreisbremse, Leerstandsanalyse und Anomalie-Erkennung. Nutze diesen Skill wenn du eine Mietaufstellung eines MFH erhalten hast und das Potenzial quantifizieren willst."
+description: "Analysiert Mietlisten: Ist-Mieten gegen Mietspiegel, Under-Rent-Erkennung mit Realisierbarkeits-Score, Erhoehungspotenzial unter Kappungsgrenze und Mietpreisbremse, Leerstandsanalyse, Anomalie-Erkennung und realistische Ertragswert-Korrektur fuer die Ankaufskalkulation. Nutze diesen Skill wenn du eine Mietaufstellung eines MFH erhalten hast und das Potenzial belastbar quantifizieren willst."
 ---
 
 # Mietlisten-Analyse
@@ -52,6 +52,10 @@ description: "Analysiert Mietlisten: Ist-Mieten gegen Mietspiegel, Erhoehungspot
 ## Auftrag
 
 Du bist ein spezialisierter Mietrechtsexperte und Analyst fuer deutsche Wohnimmobilien. Analysiere die Mietliste systematisch, vergleiche Ist-Mieten mit der ortsueblichen Vergleichsmiete, berechne das Mieterhoehungspotenzial unter Beruecksichtigung aller rechtlichen Grenzen (Kappungsgrenze, Mietpreisbremse) und identifiziere Anomalien und Risiken.
+
+**Grundsatz Ankaufskalkulation:** Marktmiete ist nicht immer Vertragsmiete. Kein Deal darf auf ungeprueften Zielmieten beruhen -- die kalkulierte Zielmiete muss rechtlich erreichbar (Erhoehungsweg, Kappung, Mietpreisbremse) UND menschlich realistisch (Mieterstruktur, Zeithorizont) sein. Niemals mit dem Auszug eines Bestandsmieters kalkulieren.
+
+**Pruefbedarf-Hinweis:** Mietrechtliche Grenzen (Mietpreisbremse-Gebiete, Kappungsgrenzen, Betrachtungszeitraeume) sind orts- und zeitabhaengig und aendern sich. Vor Kaufentscheidung oder Erhoehungsaktion aktuelle Landesverordnung und Rechtslage pruefen, im Zweifel Fachanwalt einbinden. Diesen Hinweis im Bericht ausgeben.
 
 ---
 
@@ -154,6 +158,24 @@ Mietspiegel: 7.20 EUR/qm
 Maximalmiete bei Neuvermietung: 7.20 * 1.10 = 7.92 EUR/qm
 ```
 
+**Ruege-Risiko bei ueberhoehten Bestandsmieten:** Verstoesst eine laufende Miete gegen die Mietpreisbremse, kann der Mieter ruegen und Rueckzahlung verlangen (bis zu 30 Monate rueckwirkend ab Ruege -- Pruefbedarf: aktuelle Rechtslage). Konsequenz fuer die Analyse: Mieten > Vergleichsmiete + 10% in Verordnungsgebieten NICHT als nachhaltige Einnahme in den Ertragswert uebernehmen, sondern auf das zulaessige Niveau korrigieren -- ausser eine dokumentierte Ausnahme liegt vor (Vormiete, Modernisierung, Neubau nach 01.10.2014). Ausnahmen ohne Dokumentation sind schwache Annahmen: Nachweise vom Verkaeufer anfordern.
+
+**Moeblierte Vermietung in der Mietliste:** Moeblierungszuschlag ist kein Freifahrtschein -- der Zuschlag muss plausibel und dokumentierbar sein (Pruefbedarf). Hohe Mieten moeblierter Einheiten daher nicht 1:1 als unmoeblierte Marktmiete fortschreiben. Faustwert fuer die Plausibilisierung: professionelle moeblierte Vermietung zielt auf ca. +50% gegenueber unmoeblierter Marktmiete; liegt die Ist-Miete deutlich darueber, Rueckfallrisiko einkalkulieren.
+
+#### 3d: Under-Rent-Realisierbarkeit bewerten (Under-Rent-Score)
+
+Under-Rent (Miete unter rechtlich/marktseitig plausibler Zielmiete) ist ein Werthebel -- aber nur, wenn die Anpassung rechtlich UND menschlich machbar ist. Pro Under-Rent-Einheit bewerten:
+
+| Faktor | Guenstig (Potenzial realisierbar) | Unguenstig (Potenzial nur auf dem Papier) |
+|--------|-----------------------------------|-------------------------------------------|
+| Vertragstyp | Standardvertrag ohne Index/Staffel | Indexmiete/Staffel sperrt §558-Erhoehung |
+| Kappungsabstand | Erhoehung in 1-2 Schritten erreichbar | Marktniveau erst in 6-9 Jahren erreichbar |
+| Mietdauer | Mittlere Mietdauer, marktuebliche Historie | Mieter > 15-25 Jahre, nie erhoeht -- sozial und praktisch schwer |
+| Mieterprofil | Solvente Mieter, gute Zahlungshistorie | Transferleistungsbezug: KdU-Angemessenheitsgrenze der Kommune deckelt tragfaehige Miete |
+| Beziehungslage | Kooperativ, Wuensche offen (einvernehmliche Erhoehung moeglich) | Konflikt, offene Maengel, Anwalt involviert |
+
+Empfehlung im Bericht: Mietergespraeche vor Ankauf fuehren (mit Zustimmung des Verkaeufers) -- Mieter kennen das Objekt besser als das Expose: Maengel, Hausgemeinschaft, Auszugsabsicht und Zahlungsrealitaet werden sichtbar. Ergebnis als Under-Rent-Score (HOCH/MITTEL/NIEDRIG realisierbar) je Einheit ausweisen.
+
 #### 3c: Staffelmiete / Indexmiete identifizieren
 
 | Mietart | Merkmale | Potenzial | Risiko |
@@ -232,7 +254,7 @@ Suche systematisch nach folgenden Auffaelligkeiten:
 - Bei Abweichung > 5%: Nachberechnung empfehlen
 - Bei Abweichung > 10%: Mieter hat Minderungsanspruch -- Mieteinnahme-Risiko
 
-### Schritt 7: Ertragswert und Rendite berechnen
+### Schritt 7: Ertragswert und Rendite berechnen (realistische Korrektur)
 
 ```
 Ist-Miete Kalt (jaehrlich):           X EUR
@@ -249,6 +271,19 @@ Bruttomietrendite Soll:  Soll-Miete (nach Erhoehung) / Kaufpreis * 100
 Kaufpreisfaktor Ist:     Kaufpreis / Ist-Miete
 Kaufpreisfaktor Soll:    Kaufpreis / Soll-Miete
 ```
+
+**Korrekturregeln fuer belastbare Soll-Miete (Wenn/Dann):**
+
+| Wenn | Dann in der Ertragswert-Rechnung |
+|------|----------------------------------|
+| Ist-Miete > Vergleichsmiete + 10% im Verordnungsgebiet ohne dokumentierte Ausnahme | Auf zulaessiges Niveau kappen (Ruege-/Rueckfallrisiko) |
+| Under-Rent-Score NIEDRIG (Index/Staffel, 25-Jahre-Mieter, KdU-Deckel) | Potenzial dieser Einheiten NICHT in Jahr 1-3 einrechnen |
+| Under-Rent-Score MITTEL | Nur den kappungskonformen ersten Erhoehungsschritt einrechnen |
+| Potenzial haengt an Mieterwechsel | Auf 0 setzen -- nie mit Auszug kalkulieren |
+| Moeblierte Einheit deutlich ueber Markt | Rueckfall auf unmoeblierte Marktmiete als Szenario rechnen |
+| Leerstand mit Sanierungsbedarf | Sanierungskosten und Vermietungsdauer gegen Marktmiete stellen |
+
+Ergebnis: Zwei Soll-Mieten ausweisen -- "theoretisches Potenzial" (Mietspiegel-Delta) und "realistisch erreichbar" (nach Korrekturregeln). Die Kaufentscheidung basiert NUR auf der zweiten Zahl.
 
 ---
 
@@ -302,7 +337,8 @@ Liefere die Ergebnisse in folgendem Format:
 **Erhoehungspotenzial WE 01:** Zielmiete 7,20 EUR/qm, max. Erhoehung Jahr 1:
 0,90 EUR/qm (Kappungsgrenze 20%), Marktmiete erreicht in 6 Jahren,
 Mehreinnahmen 780 EUR/Jahr. Mietpreisbremse greift: max. Neuvermietungsmiete
-7,92 EUR/qm.
+7,92 EUR/qm. **Under-Rent-Score: MITTEL** (Standardvertrag, Mieter 8 Jahre,
+kooperativ -- einvernehmliche Erhoehung pruefen).
 
 ## Mietspiegel-Vergleich
 
@@ -419,6 +455,10 @@ Vor Ausgabe des Ergebnisses pruefe:
 - [ ] Wohnflaechen-Abgleich mit Teilungserklaerung durchgefuehrt (falls vorhanden)
 - [ ] Finanzielle Zusammenfassung ist konsistent mit Einzelwerten
 - [ ] Keine Verwechslung Kaltmiete / Warmmiete
+- [ ] Under-Rent-Score je Einheit vergeben und in Soll-Miete-Korrektur eingeflossen
+- [ ] "Theoretisches Potenzial" und "realistisch erreichbar" getrennt ausgewiesen
+- [ ] Kein Potenzial auf Mieterwechsel oder ungepruefte Ausnahmen gebaut
+- [ ] Pruefbedarf-Hinweis (Rechtslage orts-/zeitabhaengig) im Bericht enthalten
 
 ---
 
@@ -434,6 +474,9 @@ Vor Ausgabe des Ergebnisses pruefe:
 | Alle Mieten weit unter Markt + alte Mieter | MITTEL | Potenzial vorhanden aber nur langsam realisierbar |
 | Wohnflaechen-Abweichung > 10% bei einzelnen Einheiten | MITTEL | Mietminderungsanspruch des Mieters |
 | Viele befristete Mietvertraege ohne klaren Grund | MITTEL | Befristung moeglicherweise unwirksam |
+| Verkaeufer begruendet hohe Miete mit nicht dokumentierter Ausnahme (Vormiete, Modernisierung) | MITTEL | Nachweise anfordern -- Ausnahme ohne Dokumentation nicht in Kalkulation uebernehmen |
+| Viele Mieter mit Transferleistungsbezug + Mieten nahe KdU-Grenze | MITTEL | Erhoehungspotenzial durch kommunale Angemessenheitsgrenzen gedeckelt |
+| Moeblierte Einheiten > +50% ueber unmoeblierter Marktmiete | MITTEL | Zuschlag auf Plausibilitaet pruefen, Rueckfallszenario rechnen |
 | Indexmiete in Niedriginflationsphase | NIEDRIG | Miete steigt langsamer als bei freier Miete |
 
 ---
@@ -468,5 +511,7 @@ Vor Ausgabe des Ergebnisses pruefe:
 - `knowledge/risikobewertung.md` -- Mieterrisiken im Gesamtkontext
 - `skills/unterlagen-analyst/SKILL.md` -- Gesamtanalyse inkl. Mietlisten-Abgleich
 - `skills/risiko-scanner/SKILL.md` -- Kategorien 2 (Mietstruktur) und 6 (Mieterrisiken)
-- `skills/mieterhoehung/SKILL.md` -- Mieterhoehungsstrategie und Umsetzung
-- `skills/mietlisten-parser/SKILL.md` -- PDF-Mietlisten in strukturierte Daten konvertieren
+- `skills/mietlisten-parser/SKILL.md` -- Schritt 1 der Kette: Mietliste in strukturierte Daten konvertieren (dieser Skill ist Schritt 2)
+- `skills/mieterhoehung/SKILL.md` -- Schritt 3 der Kette: Erhoehungsweg waehlen, Schreiben und Gespraechsstrategie umsetzen
+- `skills/mietnomaden-praevention/SKILL.md` -- Bei Rueckstaenden/Anomalien: Mieterpruefung und Reaktionskette
+- `skills/besichtigung-prep/SKILL.md` -- Mietergespraeche vor Ankauf vorbereiten (Under-Rent-Verifikation)
