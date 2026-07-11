@@ -63,20 +63,25 @@ Du bist ein erfahrener Due-Diligence-Analyst fuer deutsche Wohnimmobilien (MFH).
 
 **Standard-Checkliste fuer vollstaendige Objektpruefung:**
 1. Expose / Objektbeschreibung
-2. Grundbuchauszug (Abt. I, II, III)
-3. Teilungserklaerung inkl. Nachtraege
-4. Aufteilungsplan
+2. Grundbuchauszug (Bestandsverzeichnis, Abt. I, II, III)
+3. Teilungserklaerung inkl. aller Nachtraege + Gemeinschaftsordnung
+4. Aufteilungsplan + Abgeschlossenheitsbescheinigung
 5. Mietliste (aktuell, idealerweise mit Historie)
 6. Wirtschaftsplan (aktuelles Jahr)
 7. Hausgeldabrechnung (letzte 2 Jahre)
-8. Protokolle Eigentuemmerversammlung (letzte 3 Jahre)
+8. Protokolle Eigentuemmerversammlung (letzte 3 Jahre) + Beschlusssammlung
 9. Energieausweis
 10. Baulastenverzeichnis
 11. Altlastenverzeichnis
-12. Wohnflaechenberechnung
+12. Wohnflaechenberechnung (nach WoFlV, mit Quellenangabe)
 13. Grundrisse
 14. Fotos (Aussen, Gemeinschaftsflaechen, Wohnungen)
 15. Instandhaltungsruecklage (Kontostand + Entwicklung)
+16. Bauakte / Baugenehmigungen (bei Ausbauten, Umnutzung, DG/Souterrain zwingend)
+17. Verwaltervertrag (Laufzeit, Leistungsumfang, Kosten)
+18. Rechteurkunden zu Abt.-II-Eintraegen (Eintragungsbewilligungen)
+
+**Unterlagenstatus pro Dokument fuehren:** angefordert / erhalten / geprueft / kritisch. Was nicht in den Unterlagen steht, ist keine Sicherheit -- Verkaufsaussagen ohne Dokument bleiben Annahmen.
 
 ### Schritt 2: Kerndaten extrahieren und normalisieren
 Extrahiere aus allen Dokumenten die folgenden Kerndaten und fuehre sie in einer einheitlichen Struktur zusammen:
@@ -88,10 +93,28 @@ Extrahiere aus allen Dokumenten die folgenden Kerndaten und fuehre sie in einer 
 - **Kosten:** Hausgeld/Verwalterkosten, nicht umlagefaehige Kosten, Instandhaltungsruecklage
 - **Energie:** Energieklasse, Heizungstyp, Baujahr Heizung, primaerer Energietraeger
 
+### Schritt 2b: Grundbuch systematisch lesen
+
+Das Grundbuch ist Objekt-ID, Eigentumsnachweis und Belastungspruefung in einem -- nicht nur Notaraufgabe:
+
+| Teil | Was steht drin | Worauf pruefen |
+|------|----------------|----------------|
+| Bestandsverzeichnis | Flurstueck, Lage, Groesse | Objektidentitaet: Stimmen Flurstueck und Flaeche mit Expose und Kataster/Flurkarte ueberein? |
+| Abteilung I | Eigentuemer, Erwerbsgrund | Verkaeufer = Eigentuemer? Erbengemeinschaft/GbR/GmbH als Sonderfall |
+| Abteilung II | Lasten und Beschraenkungen: Wegerechte, Wohnrechte, Niesbrauch, Dienstbarkeiten, Reallasten, Vormerkungen | Hier stehen die stillen Dealbreaker. Zu JEDEM Eintrag die Rechteurkunde (Eintragungsbewilligung) anfordern -- der Eintrag allein reicht nicht, die Bewilligung regelt die Details. Rechte koennen Kostenpflichten tragen (z.B. Wege-Unterhaltung) |
+| Abteilung III | Grundschulden, Hypotheken | Loeschung/Lastenfreistellung im Kaufprozess geregelt? Abloesebetraege? |
+
+**Ergaenzende Registerpruefung (nicht im Grundbuch!):**
+- **Baulastenverzeichnis** (Bauaufsicht): Abstandsflaechen, Stellplatz-, Zufahrtsbaulasten
+- **Altlastenverzeichnis:** Bodenkontamination
+- **Bauakte** (Bauamt): Gebaut ist nicht automatisch genehmigt. Reale Nutzung (DG-Ausbau, Souterrain-Wohnung, Anbauten, Nutzungsaenderungen) mit Genehmigungslage abgleichen. Fehlende oder unvollstaendige Bauakte = Warnsignal mit Risikoabschlag
+
+*Pruefbedarf: Auslegung von Grundbucheintraegen und Genehmigungslage final mit Notar, Anwalt bzw. Bauamt klaeren.*
+
 ### Schritt 3: Dokumentenuebergreifender Abgleich
 Vergleiche systematisch die Angaben zwischen Dokumenten und identifiziere Abweichungen:
 
-- **Flaechen:** Stimmt die Wohnflaeche im Expose mit der Teilungserklaerung und der Mietliste ueberein?
+- **Flaechen:** Stimmt die Wohnflaeche im Expose mit der Teilungserklaerung und der Mietliste ueberein? Flaechenquelle klaeren (WoFlV-Berechnung? Architektenplan? Schaetzung?). WoFlV-Fallstricke: Dachschraegen 1-2 m Hoehe zaehlen nur 50%, unter 1 m gar nicht; Balkon/Terrasse i.d.R. 25%, max. 50%; Technik-, Heiz- und Aussenabstellraeume zaehlen nicht. Besondere Vorsicht bei DG, Souterrain, Balkonen und Altbau -- Flaechenfehler kippen Kaufpreis/qm, Miete/qm und Rendite
 - **Mieten:** Passt die Ist-Miete laut Mietliste zum Expose? Gibt es Einheiten, die im Expose auftauchen aber nicht in der Mietliste?
 - **Einheiten:** Stimmt die Anzahl Einheiten in allen Dokumenten ueberein?
 - **Eigentuemer:** Ist der Verkaeufer identisch mit dem Eigentuemer laut Grundbuch?
@@ -112,6 +135,17 @@ Fuer jede gefundene Auffaelligkeit dokumentiere:
 - Instandhaltungsruecklage unter 5 EUR/qm (Sonderumlagen-Risiko)
 - Grundbuch-Belastungen die im Expose nicht erwaehnt werden
 - Mietvertraege mit unueblichen Klauseln (z.B. lebenslanges Wohnrecht)
+- Ausgebaute/bewohnte Flaechen (DG, Souterrain), die in Aufteilungsplan oder Bauakte nicht auftauchen
+- Energieausweis-Kennwert unplausibel zu Baujahr und Zustand (hohe Fehlerquote bei Ausweisen -- plausibilisieren)
+- Baujahrsklasse vs. Sanierungsangaben: Passt der behauptete Sanierungsstand zu den baujahrstypischen Risiken (z.B. Asbest-Generalverdacht bis einschl. 1992, Blei-Leitungen bei fruehen Nachkriegsbauten, Elektrik > 40 Jahre)?
+
+**WEG-spezifische Red Flags (Protokolle, Ruecklage, Verwaltung):**
+- ETV-Protokolle: diskutierte aber verschobene Sanierungen, Klageandrohungen, blockierte oder angefochtene Beschluesse, wiederkehrende Streitthemen
+- Sonderumlagen: beschlossen aber noch nicht gezahlt (wer zahlt -- Kaeufer oder Verkaeufer?), oder absehbar wegen leerer Ruecklage
+- Wohngeldabrechnung vermischt umlagefaehige Kosten, nicht umlagefaehige Kosten und Ruecklagenzufuehrung (Warnsignal Verwaltungsqualitaet)
+- Verwaltervertrag: ausgelaufen, gekuendigt oder kein Verwalter bestellt (Bestellung max. 5 Jahre)
+- Teilungserklaerungs-Nachtraege, die beschlossen aber nie eingetragen wurden
+- Hausgeld-Rueckstaende anderer Eigentuemer (Liquiditaetsrisiko der Gemeinschaft)
 
 ### Schritt 5: Risikobewertung erstellen
 Kategorisiere jeden Fund in eine Risikostufe:
@@ -270,6 +304,8 @@ Folgende Funde sind potenzielle Dealbreaker und muessen prominent hervorgehoben 
 | Hausgeld-Rueckstaende des Voreigentueuers | Haftungsuebergang auf Kaeufer moeglich |
 | Rueckstaende in der Instandhaltungsruecklage | Sonderumlagen absehbar |
 | Beschluesse ueber Sondersanierung in ETV-Protokollen | Nicht eingepreiste Kosten |
+| Bauakte fehlt bei Objekt mit Ausbauten/Umnutzung | Legalisierungs- oder Rueckbaurisiko nicht ausschliessbar -- Risikoabschlag |
+| Wohnflaeche ohne belastbare Quelle (keine WoFlV-Berechnung) | Kaufpreis/qm und Mietkalkulation stehen auf Annahmen |
 
 ---
 
