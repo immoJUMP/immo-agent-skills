@@ -1,6 +1,6 @@
 ---
 name: selbstauskunft
-description: "Erstellt strukturierte Bonitaetsunterlagen fuer die Bank: Selbstauskunft im Zwei-Spalten-Format, Dokumenten-Checkliste und Optimierungshinweise. Nutze diesen Skill wenn du ein Bankgespraech vorbereitest, pruefen willst ob dein Unterlagenpaket vollstaendig ist oder als Selbststaendiger die erweiterte Liste brauchst."
+description: "Erstellt strukturierte Bonitaetsunterlagen fuer die Bank: Selbstauskunft im Zwei-Spalten-Format, Haushaltsrechnung nach Banklogik, Dokumenten-Checkliste sowie Schufa- und Bonitaets-Optimierung. Nutze diesen Skill wenn du ein Bankgespraech oder eine Finanzierungsanfrage vorbereitest, pruefen willst ob dein Unterlagenpaket vollstaendig und bankfaehig ist, oder als Selbststaendiger die erweiterte Liste brauchst."
 ---
 
 # Selbstauskunft -- Strukturierte Bonitaetsunterlagen fuer die Bank
@@ -13,6 +13,8 @@ description: "Erstellt strukturierte Bonitaetsunterlagen fuer die Bank: Selbstau
 Du bist ein erfahrener Finanzierungsberater und erstellst ein vollstaendiges Selbstauskunft-Paket fuer die Bankvorlage. Deine Aufgabe ist es, alle erforderlichen Daten strukturiert zu erfassen, die Selbstauskunft im Bankformat zu befuellen, eine Dokumenten-Checkliste mit Status zu erstellen und das Paket so aufzubereiten, dass die Bank effizient pruefen kann.
 
 Du differenzierst zwischen **Angestellten** (12 Dokumente) und **Selbstaendigen** (20+ Dokumente), da Banken bei Selbstaendigen wesentlich hoehere Anforderungen an die Unterlagen stellen.
+
+**Banklogik dahinter:** Die Bank prueft mit diesem Paket zwei getrennte Dinge -- die **Kreditfaehigkeit** (harte Fakten: traegt die Haushaltsrechnung den Kapitaldienst?) und die **Kreditwuerdigkeit** (Verhalten und Historie: Schufa, Kontenfuehrung, Puenktlichkeit, Dokumentenqualitaet). Beide muessen bestehen. Die Selbstauskunft ist ausserdem nur Paket 1 von 2: Zum vollstaendigen Bankantrag gehoert immer auch das **Objektpaket** (siehe Schritt 3a). Und: Vollstaendigkeit ist selbst ein Bonitaetssignal -- troepfchenweise Nachlieferung kostet Vertrauen und Bearbeitungszeit. Wer das Paket VOR der Objektsuche fertig hat, kann bei einem Deal in Tagen statt Wochen liefern.
 
 ---
 
@@ -117,6 +119,23 @@ Alle Dokumente der Angestellten-Liste PLUS:
 | 23 | **Berufliche Versicherungsnachweise** | Berufshaftpflicht, Betriebshaftpflicht, Vermoegens-Schadenhaftpflicht | Empfohlen |
 | 24 | **Gesellschaftsvertrag** | Bei GbR, GmbH, UG: Gesellschaftsvertrag mit Beteiligungsquoten | Bedingt |
 
+#### Paket 2: Objektunterlagen (gehoeren zu jedem Finanzierungsantrag)
+
+Die Bank bewertet Bonitaet und Objekt IMMER zusammen. Das Objektpaket parallel vorbereiten (Detailaufbereitung: siehe Skill bankenpitch):
+
+| Nr. | Dokument | Hinweis |
+|-----|----------|---------|
+| O1 | Expose / Objektbeschreibung mit Fotos | |
+| O2 | Aktueller Grundbuchauszug | Abteilung II pruefen: Vormerkungen, Niessbrauch, Wohnrecht, Reallasten -- Findings VOR Antrag klaeren |
+| O3 | Mietvertraege / Mietliste mit Ist-Mieten | Bei Leerstand: Vermietungsplan |
+| O4 | Wohnflaechenberechnung / Grundrisse / Lageplan | |
+| O5 | Energieausweis | |
+| O6 | Kalkulation (Kaufpreis, Nebenkosten, ggf. Sanierung, Cashflow) | Siehe Skills bierdeckel-kalkulation und cashflow-modell |
+| O7 | Kaufvertragsentwurf (Notarentwurf) | Sobald vorhanden |
+| O8 | Bei ETW: Teilungserklaerung, Protokolle Eigentuemerversammlung, Wirtschaftsplan, Hausgeldabrechnung | |
+
+**Lieferregel:** Beide Pakete als EIN vollstaendiges, sauber benanntes ZIP per E-Mail (oder Bankportal) -- nicht per USB-Stick, Cloud-Link oder in mehreren Einzelmails. Ein Rutsch, ein Ordner, klare Dateinamen.
+
 ### Schritt 2: Selbstauskunft-Formular befuellen
 
 Das Formular hat zwei Spalten: **Vollmachtgeber (Person 1)** und **Partner / Kinder (Person 2+)**.
@@ -162,6 +181,8 @@ Das Formular hat zwei Spalten: **Vollmachtgeber (Person 1)** und **Partner / Kin
 | Unterhaltseinkuenfte | [Eingabe] | [Eingabe] |
 | Sonstige Einkuenfte | [Eingabe] | [Eingabe] |
 | **Summe Einnahmen** | **[Berechnet]** | **[Berechnet]** |
+
+> **Banklogik Mieteinnahmen:** Die Bank rechnet in der Haushaltsrechnung meist nicht mit 100% der Kaltmiete, sondern setzt nur einen Teil an (haeufig 70-80%; der Rest ist Pauschale fuer Bewirtschaftung, Instandhaltung und Mietausfall). Der Ansatz ist institutsspezifisch -- im Bankgespraech erfragen und die eigene Kalkulation konservativ darauf ausrichten. Leerstehende Einheiten werden oft mit 0 EUR angesetzt.
 
 #### Block D: Ausgaben (monatlich)
 
@@ -221,8 +242,25 @@ Pruefe das Paket auf Vollstaendigkeit und gib Optimierungshinweise:
 | **Luecken in Kontoauszuegen** | 3 Monate lueckenlos, keine uebermalten/geschwaerzten Stellen. IBAN sichtbar |
 | **Probezeit-Problematik** | Bei Probezeit: Bank finanziert ggf. nicht oder nur mit Aufschlag. Arbeitgeberbestaetigung anfordern |
 | **Selbstaendige: Einkommensermittlung** | Bank nimmt Durchschnitt der letzten 2-3 Jahre (nicht das beste Jahr). Negativer Trend = Ablehnung |
+| **EK-Herkunft lueckenlos belegen** | Jede EK-Quelle mit Nachweis (Kontoauszuege, Depotverkauf, Schenkungsvertrag). Unklare Herkunft loest Geldwaesche-Rueckfragen aus und killt Finanzierungen spaet im Prozess |
+| **Konsumkredite vor Antrag abloesen** | Konsumschulden sind fuer die Bank ein Stoersignal -- sie belasten Haushaltsrechnung UND Vertrauen. Kleine Ratenkredite (Auto, Moebel, 0%-Finanzierungen) nach Moeglichkeit vor Antragstellung tilgen |
+| **Komplett statt troepfchenweise** | Alles in einem Rutsch als ZIP per E-Mail liefern. Jede Nachlieferung = neue Wartezeit + Vertrauensverlust |
+| **Ab mehreren Objekten: Investorenbroschuere** | Wiederverwendbares Dokument mit Person, Track Record, Portfolio, Strategie und Ankaufsprofil beilegen -- positioniert dich als systematischen Investor statt Einzelkaeufer (siehe Skill bankenpitch, Sektion Unternehmensprofil) |
 
-### Schritt 5: Qualitaetssicherung und Vollstaendigkeit
+### Schritt 5: Schufa und Kontenfuehrung optimieren
+
+Die Selbstauskunft ist nur so stark wie das Scoring dahinter. Vor der Bankanfrage:
+
+| Massnahme | Details |
+|-----------|---------|
+| **Eigenauskunft ziehen** | Kostenlose Datenkopie (Art. 15 DSGVO) bei der SCHUFA anfordern. Fehler, veraltete Adressen und laengst erledigte Eintraege korrigieren/loeschen lassen |
+| **Zielscore kennen** | Basisscore 98+ ist das Ziel fuer Investoren. Werte unter ca. 90-92 sind bei vielen Banken faktisch eine Ablehnungsgrenze (institutsabhaengig -- Pruefbedarf) |
+| **Ungenutzte Kreditrahmen schliessen** | Nicht genutzte Kreditkarten, Rahmenkredite und alte Dispolinien kuendigen -- eingeraeumte Linien zaehlen als potenzielle Verschuldung |
+| **Kreditanfragen steuern** | Immer "Konditionsanfrage" (schufa-neutral) statt "Kreditanfrage" stellen lassen. Mehrere Kreditanfragen in kurzer Zeit druecken den Score |
+| **Konten 3 Monate sauber fuehren** | Keine ungenehmigten Ueberziehungen, keine Ruecklastschriften, kein Dauerdispo -- die Kontoauszuege im Paket sind fuer die Bank ein direktes Kreditwuerdigkeitssignal |
+| **Timing** | Schufa-Bereinigung braucht Wochen -- fruehzeitig starten, nicht erst beim konkreten Deal |
+
+### Schritt 6: Qualitaetssicherung und Vollstaendigkeit
 
 Pruefe vor Abgabe:
 - Alle Felder der Selbstauskunft befuellt (keine leeren Felder ohne "entfaellt"-Vermerk)
@@ -322,6 +360,8 @@ Vor Abgabe der Bewertung pruefe:
 6. **Lueckenlosigkeit**: Sind Kontoauszuege lueckenlos fuer 3 Monate? Gehaltsabrechnungen lueckenlos?
 7. **Aktualitaet**: Sind BWA/SuSa nicht aelter als 2 Monate (bei Selbstaendigen)?
 8. **Partner-Einbindung**: Wenn Partner Mitdarlehensnehmer: Wurden Partner-Daten vollstaendig erfasst?
+9. **Schufa & Konten**: Wurde Schritt 5 durchlaufen (Eigenauskunft, ungenutzte Kreditrahmen, saubere Kontenfuehrung, nur Konditionsanfragen)?
+10. **Objektpaket**: Ist das Objektpaket (O1-O8) parallel vorbereitet und die Lieferung als EIN ZIP geplant?
 
 ---
 
@@ -336,6 +376,8 @@ Vor Abgabe der Bewertung pruefe:
 | **Probezeit ohne Arbeitgeberbestaetigung** | Bank sieht Einkommensrisiko | Arbeitgeber-Bestaetigung oder Buergschaft |
 | **Selbstaendigkeit < 2 Jahre** | Zu kurze Track-Record | Spezialbanken oder Buergschaftsbank anfragen |
 | **EK-Quote < 5%** | 110%-Finanzierung bei den meisten Banken nicht moeglich | Mehr EK beschaffen (Schenkung, Bauspar-Zuteilung) |
+| **SCHUFA-Score unter ca. 90-92** | Bei vielen Banken faktische Ablehnungsgrenze (institutsabhaengig) | Eigenauskunft bereinigen, Kreditrahmen schliessen, Timing verschieben (siehe Schritt 5) |
+| **Ungenehmigte Ueberziehungen / Ruecklastschriften in den Kontoauszuegen** | Direktes Kreditwuerdigkeitssignal -- die Bank liest die 3 Monate Auszuege genau | Konten bereinigen, 3 saubere Monate abwarten |
 
 ### Warnsignale (Bank wird genauer pruefen)
 
@@ -346,6 +388,8 @@ Vor Abgabe der Bewertung pruefe:
 | **Leerstand in Bestandsobjekten** | Reduziert anrechenbare Mieteinnahmen | Nachvermietung vor Bankantrag |
 | **Grosse Schwankungen beim Einkommen (Selbst.)** | Einkommensrisiko | Durchschnitt der 3 Jahre stabil? Trend positiv? |
 | **Schenkung als EK ohne Nachweis** | Bank akzeptiert Schenkung nur mit Vertrag/Kontoauszug | Schenkungsvertrag + Kontobeleg |
+| **Viele kleine Konsumkredite / 0%-Finanzierungen** | Stoersignal: belastet Haushaltsrechnung und Scoring | Vor Antrag abloesen oder buendeln |
+| **Mehrere Kreditanfragen in kurzer Zeit** | Score-Verschlechterung durch Anfrage-Merkmale | Nur Konditionsanfragen stellen lassen, SCHUFA-Abfrage erst bei Commitment |
 
 ---
 
@@ -364,6 +408,8 @@ Vor Abgabe der Bewertung pruefe:
 **Basis-Konfidenz bei Kerndokumenten (Ausweis, Gehalt, Selbstauskunft):** 70%  
 **Maximale Konfidenz bei allen Dokumenten:** 95%  
 **Unter 55% Konfidenz:** Warnung ausgeben, dass die Bankvorlage nicht vollstaendig ist und mit Ablehnung gerechnet werden muss.
+
+> **Pruefbedarf:** Lebenshaltungspauschalen, Mieteinnahmen-Anrechnungssaetze, Schufa-Grenzwerte und Dokumentenanforderungen sind institutsspezifisch und aendern sich -- vor Einreichung mit der konkreten Bank abgleichen. Steuerliche Fragen (EK-Herkunft, Schenkung, Rechtsform) mit dem Steuerberater klaeren.
 
 ---
 
@@ -385,7 +431,8 @@ Vor Abgabe der Bewertung pruefe:
 
 ### Verwandte Skills
 
-- `skills/bankenpitch/SKILL.md` -- Finanzierungskonzept & Bankenpraesentation fuer das Bankgespraech
+- `skills/bankenpitch/SKILL.md` -- Finanzierungskonzept & Bankenpraesentation (das Objektpaket zur Selbstauskunft)
+- `skills/bankgespraech-coach/SKILL.md` -- Gespraechsvorbereitung, Bankentypen-Auswahl und Bankerfragen fuer den Termin
 - `skills/cashflow-modell/SKILL.md` -- Detailliertes Cashflow-Modell fuer das Objekt
 - `skills/kaufvertrag-pruefung/SKILL.md` -- Kaufvertragspruefung nach Finanzierungszusage
 - `skills/bierdeckel-kalkulation/SKILL.md` -- Schnelle Rendite-Kalkulation fuer die Erstbewertung
