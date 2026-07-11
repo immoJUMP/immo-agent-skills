@@ -68,16 +68,24 @@ Bewerte jede Kategorie nach folgendem Schema:
 #### Kategorie 1: Bausubstanz (Gewichtung: 15%)
 
 **Pruefpunkte:**
-- Baujahr und typische Schwachstellen der Baujahrsklasse
-  - Vor 1949: Fundament, Holzbalkendecken, Feuchtigkeit, Leitungen
-  - 1950-1969: Betonqualitaet, Flachdach-Probleme, Asbest
-  - 1970-1989: Waermebruecken, Einrohrheizung, Elektrik
-  - 1990-2005: Meist solide, auf Verarbeitungsqualitaet achten
-  - Ab 2006: EnEV-konform, auf Baumängel in der Gewaehrleistung pruefen
+- Baujahr als erste Risiko-Hypothese (lenkt die Pruefung, ersetzt sie nicht):
+
+| Baujahrsklasse | Typische Bauweise | Typische Risiken und Kostenfallen |
+|----------------|-------------------|-----------------------------------|
+| Bis 1919 | Vollziegel, Holzbalkendecken, Deckenhoehen bis 4 m | Feuchte, Putz/Risse, Holzbalkendecken (Statik, Schwamm), Schallschutz |
+| 1919-1949 | Leichtere Baustoffe, kleinere Raeume, erste Baeder | Schall-/Waermeschutz, Feuchte, korrodierte Stahlteile, Holzdecken/Brandschutz |
+| 1950-1979 | Stahlbeton, Flachdaecher, grosse Fenster (groesster Bestandsanteil, ca. 39%) | Flachdach (Hochrisiko), Waermebruecken, Heiznischen, Asbest (ab ca. 1956), Blei-Leitungen (fruehe Nachkriegsjahre), Materialknappheits-Qualitaet |
+| 1980-1989 | Erste Waermeschutzverordnung, massiver | Fenster, Balkone (Betonsanierung), Asbestkleber/-platten, haustechnische Zyklen |
+| 1990-1999 | Verschaerfter Waermeschutz, Kunststofffenster, 2-fach-Verglasung | Heizung am Ende des Lebenszyklus, energetischer Standard; Asbest-Generalverdacht bis einschl. 1992 |
+| Ab 2000 | Energieeffizienzstandards, hoher Schall-/Waermeschutz | Bauausfuehrungs-/Abdichtungsfehler, Gewaehrleistungsfragen |
+
+- Elektrik als eigenes Sicherheitsrisiko: > 40 Jahre = Erneuerungsfall; FI-Schalter, Stromkreisanzahl, E-Check-Historie (Faustregel ca. alle 4 Jahre); Bestandsschutz fragil
 - Letzte Kernsanierung (Dach, Fassade, Leitungen, Heizung, Fenster)
 - Zustandshinweise aus Fotos, Expose oder Gutachten
 - Instandhaltungsstau abschaetzen (EUR/qm nach Baujahr und letzter Sanierung)
-- Typische Schadensbilder: Feuchtigkeit Keller, Risse in Fassade, Dachundichtigkeiten
+- Typische Schadensbilder: Feuchtigkeit Keller, Risse in Fassade, Dachundichtigkeiten, defekte Entwaesserung (Rinnen, Fallrohre, Sockel, Drainage) als Feuchtetreiber
+- Rote Flaggen mit Pflicht-Expertenpruefung: Schwamm/Holzrotte, Statikeingriffe, Schadstoffverdacht
+- Wohnflaechen-Plausibilitaet: Flaechenquelle pruefen (Expose vs. TE vs. WoFlV-Berechnung); Dachschraegen 1-2 m nur 50%, unter 1 m 0%, Balkon/Terrasse i.d.R. 25% -- Flaechenfehler kippen Kaufpreis/qm und Rendite
 
 **Benchmark Instandhaltungsstau nach Baujahr (ohne Kernsanierung):**
 | Baujahr | Erwarteter Stau (EUR/qm) | Bewertung |
@@ -108,15 +116,20 @@ Bewerte jede Kategorie nach folgendem Schema:
 
 #### Kategorie 3: Rechtliche Risiken (Gewichtung: 12%)
 
-**Pruefpunkte:**
-- **Grundbuch Abt. II:** Dienstbarkeiten, Wegerechte, Vorkaufsrechte, Niesbrauch, Wohnrecht
-- **Grundbuch Abt. III:** Grundschulden, Hypotheken (muessen im Kaufvertrag geloescht werden)
+**Pruefpunkte -- Grundbuch systematisch lesen:**
+- **Bestandsverzeichnis:** Objektidentitaet klaeren -- Flurstueck, Lage und Flaechenbezug muessen mit Expose und Kataster uebereinstimmen
+- **Grundbuch Abt. I:** Eigentuemer = Verkaeufer? Erbengemeinschaft, GbR, GmbH als Sonderfaelle
+- **Grundbuch Abt. II:** Dienstbarkeiten, Wegerechte, Vorkaufsrechte, Niesbrauch, Wohnrecht, Reallasten -- hier stehen die stillen Dealbreaker, die im Expose nicht auftauchen. Wichtig: Der Eintrag allein reicht nicht -- die Rechteurkunde (Eintragungsbewilligung) anfordern, denn sie regelt die Details. Rechte koennen Kostenpflichten tragen (z.B. Unterhaltung eines Weges)
+- **Grundbuch Abt. III:** Grundschulden, Hypotheken (muessen im Kaufvertrag geloescht/freigestellt werden; Abloesebetraege und Bankfreigabe-Timing klaeren)
 - **Erbbaurecht:** Laufzeit, Erbbauzins, Anpassungsklauseln, Heimfallregelung
-- **Baulasten:** Abstandsflaechen, Stellplaetze, Zufahrtsrechte
+- **Baulasten:** Abstandsflaechen, Stellplaetze, Zufahrtsrechte -- stehen NICHT im Grundbuch, separates Baulastenverzeichnis anfordern
+- **Bauakte:** Gebaut ist nicht automatisch genehmigt. Reale Nutzung (DG-Ausbau, Souterrain-Wohnung, Anbauten, Nutzungsaenderung) gegen Genehmigungslage abgleichen. Fehlende Bauakte = Warnsignal, das zusaetzliche Pruefung und Risikoabschlag rechtfertigt
 - **Denkmalschutz:** Einzel- oder Ensembledenkmal, Auflagen
 - **Bebauungsplan:** Nutzungsart, GFZ, GRZ, Erweiterungsmoeglichkeiten
 - **Laufende Rechtsstreitigkeiten:** Mietrecht, WEG, Nachbarn, Baurecht
-- **Teilungserklaerung:** Aenderungsvorbehalte, Sondernutzungsrechte, Oeffnungsklauseln
+- **Teilungserklaerung:** Aenderungsvorbehalte, Sondernutzungsrechte, Oeffnungsklauseln, alle Nachtraege vorhanden und eingetragen?
+
+*Pruefbedarf: Grundbuch- und Baurechtsfragen final mit Notar, Anwalt bzw. Bauamt klaeren.*
 
 #### Kategorie 4: Energetische Risiken (Gewichtung: 10%)
 
@@ -199,26 +212,38 @@ Bewerte jede Kategorie nach folgendem Schema:
 - Zuverlaessigkeit der Kostenschaetzung (Pauschal vs. Gutachten)
 - Typische Kostenueberschreitungen: +20-50% bei Altbausanierung einplanen
 
-**Sanierungskosten-Benchmarks (grob):**
-| Massnahme | Kosten EUR/qm Wohnflaeche |
-|-----------|---------------------------|
-| Dach neu | 80-150 |
-| Fassadendaemmung WDVS | 100-180 |
-| Fenster austauschen | 50-80 |
-| Heizung neu (Gesamtanlage) | 50-120 |
-| Strang-Sanierung (Wasser/Abwasser) | 80-150 |
-| Elektrik komplett | 60-100 |
-| Vollsanierung Altbau | 800-1.500 |
+**Sanierungskosten-Benchmarks (grob, Faustregeln -- final nur ueber Angebote und Vor-Ort-Pruefung):**
+| Massnahme | Kosten (Faustregel) |
+|-----------|---------------------|
+| Rueckbau/Entkernung | ca. 20 EUR/qm Wohnflaeche |
+| Entsorgung | ca. 10 EUR/qm Wohnflaeche |
+| Dach neu | 80-150 EUR/qm Wohnflaeche |
+| Fassadendaemmung WDVS | 100-180 EUR/qm Wohnflaeche |
+| Fenster austauschen | 250-300 EUR/qm Fensterflaeche |
+| Heizung neu (Gesamtanlage) | 50-120 EUR/qm Wohnflaeche |
+| Strang-Sanierung (Wasser/Abwasser) | 80-150 EUR/qm Wohnflaeche |
+| Elektrik komplett | 80-120 EUR/qm (Wohnung), bis ca. 150 EUR/qm (Haus) |
+| Vollsanierung Altbau | 800-1.500 EUR/qm Wohnflaeche |
+
+**Kalkulationsregeln:**
+- Gewerkebasiert kalkulieren (Rueckbau, Entsorgung, Elektro, Fenster, Waende, Bad, Boden...), nie als eine Bauchzahl
+- Wandflaeche grob = Wohnflaeche x 3,5 bis 4 (fuer Maler-/Putzarbeiten)
+- Puffer 10-20% ist Pflicht -- kein Luxus, sondern Risikokosten
+- Zwischen kosmetischer Renovierung, technischer Sanierung und energetischer Massnahme unterscheiden
+- Ausstattungsstandard vorab definieren (z.B. Basis/Mittel/Premium) statt Einzelfallentscheidungen
 
 #### Kategorie 9: Verwaltungsrisiken (Gewichtung: 5%)
 
 **Pruefpunkte:**
-- **WEG-Verwaltung:** Qualitaet des Verwalters, Verwaltervertrag-Laufzeit
-- **ETV-Protokolle:** Streitigkeiten, Klageandrohungen, blockierte Beschluesse
+- **WEG-Verwaltung:** Qualitaet des Verwalters, Verwaltervertrag-Laufzeit (Bestellung max. 5 Jahre); zuerst pruefen, was der Verwalter laut Vertrag ueberhaupt schuldet, bevor die Performance bewertet wird
+- **ETV-Protokolle (letzte 3-5 Jahre):** Streitigkeiten, Klageandrohungen, blockierte Beschluesse, verschobene Instandhaltung, diskutierte Sonderumlagen
+- **Governance-Mechanik verstehen:** Einladungsfrist zur ETV i.d.R. 3 Wochen; Beschluesse koennen auch bei geringer Teilnahme wirksam gefasst werden -- wer sein Stimmrecht (persoenlich, Vollmacht, Weisung) nicht nutzt, laesst andere ueber Sonderumlagen entscheiden. Anfechtungsfrist laeuft ab Beschluss, nicht erst ab Protokollzugang (Fristen anwaltlich pruefen)
+- **Wohngeldabrechnung:** Sauber getrennt in umlagefaehige Kosten, nicht umlagefaehige Kosten und Ruecklagenzufuehrung? Vermischung = Warnsignal fuer Verwaltungsqualitaet
 - **Eigentuemerstruktur:** Anteil Selbstnutzer vs. Kapitalanleger (Interessenkonflikte)
 - **Instandhaltungsmanagement:** Werden Massnahmen rechtzeitig beschlossen und umgesetzt?
 - **Hausgeld-Rueckstaende:** Anderer Eigentuemer mit Zahlungsrueckstaenden?
 - **Verwalter-Wechselrisiko:** Kuendigung angekuendigt? Kein Verwalter bestellt?
+- **Teilungserklaerung inkl. Nachtraege:** Miteigentumsanteile, Stimmrechte und Kostenverteilung regeln die Handlungsfaehigkeit -- Pflichtlektuere, nicht Formalie
 
 #### Kategorie 10: Marktrisiken (Gewichtung: 5%)
 
@@ -245,6 +270,19 @@ Bewerte jede Kategorie nach folgendem Schema:
 - Fuer jedes HOCH-Risiko: konkrete Massnahme zur Risikominimierung
 - Fuer jedes MITTEL-Risiko: Pruefschritt oder Verhandlungsansatz
 - Kaufpreisanpassung berechnen: Summe aller quantifizierten Risiken
+
+### Wenn/Dann-Entscheidungsregeln (im Bericht durchsetzen)
+
+| Wenn | Dann |
+|------|------|
+| Kein Preisangebot ohne grobe technische Risiko-Tags | Erst Baujahrsklasse, Huelle, Heizung, Elektrik, Feuchte taggen, dann Preis nennen |
+| Ausbau-/Umnutzungspotenzial eingepreist | Bauakte, Genehmigungslage und Statik pruefen, sonst Potenzial auf 0 setzen |
+| Sanierungskosten in der Kalkulation | Nur gewerkebasiert mit 10-20% Puffer akzeptieren, Pauschalzahlen zurueckweisen |
+| Wohnflaeche geht in Kaufpreis-/Mietkalkulation ein | Flaechenquelle und WoFlV-Plausibilitaet dokumentieren, sonst Konfidenz senken |
+| Heizungstausch absehbar | Nicht isoliert bewerten: Huelle, Heizlast und GEG-Pflichten mitpruefen (Energieberater) |
+| Fenstertausch geplant | Lueftungskonzept mitdenken -- neue dichte Fenster ohne Lueftungslogik = Schimmelrisiko |
+| Schwamm, Statik oder Schadstoffverdacht | Immer Fachgutachten VOR Angebot, keine Eigenbewertung |
+| Bauakte fehlt oder unvollstaendig | Zusaetzliche Pruefung + Risikoabschlag im Preis |
 
 ---
 
@@ -407,3 +445,5 @@ Vor Ausgabe des Ergebnisses pruefe:
 - `skills/unterlagen-analyst/SKILL.md` -- Liefert die Datenbasis fuer diesen Scan
 - `skills/energieausweis-check/SKILL.md` -- Vertiefung Kategorie 4
 - `skills/mietlisten-analyse/SKILL.md` -- Vertiefung Kategorien 2 und 6
+- `skills/besichtigung-prep/SKILL.md` -- HOCH/MITTEL-Funde vor Ort verifizieren
+- `skills/kaufvertrag-pruefung/SKILL.md` -- Rechtliche Funde vertraglich absichern
