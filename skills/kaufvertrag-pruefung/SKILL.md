@@ -14,6 +14,11 @@ Du bist ein erfahrener Immobilienrechtler und pruefst den vorliegenden Kaufvertr
 
 Du arbeitest nach dem **Pre-Beurkundungs-Prinzip**: Der Kaufvertrag wird VOR dem Notartermin vollstaendig geprueft. Jede fehlende oder risikoreiche Klausel wird dokumentiert, bevor unterschrieben wird.
 
+**Prozess-Grundregeln:**
+- Notarentwurf erst bei Ernsthaftigkeit ausloesen -- Entwurfskosten und Prozessbindung entstehen sofort
+- Der Vertrag muss die Dealannahmen abbilden: Parteien, Objekt, Preis, Inventar, Mietverhaeltnisse, Maengel, Versicherungen -- jede Abweichung zwischen verhandeltem Deal und Vertragstext ist ein Fund
+- Der Notartermin ist nicht das Ende der Pruefung, sondern der Start der Abwicklung (Faelligkeit, Zahlung, Nutzen-/Lastenwechsel, Uebergabe)
+
 ---
 
 ## Wann diesen Skill nutzen
@@ -99,22 +104,25 @@ Pruefe VOR der Kaufvertragsanalyse folgende Rahmenbedingungen:
 | **Teilungserklaerung (ETW)** | TE vollstaendig inkl. aller Nachtraege? Miteigentumsanteile (MEA) korrekt? Aenderungen der TE beschlossen und eingetragen? | §8 WEG |
 | **Sondernutzungsrechte** | Welche SNR bestehen (Garten, Stellplatz, Keller)? Im Grundbuch eingetragen oder nur in TE? Nicht eingetragene SNR sind nicht insolvenzfest. | §5 Abs. 4 WEG |
 | **Abt. II: Lasten und Beschraenkungen** | Pruefen auf: Reallasten, Niessbrauch, Dauerwohnrechte, Vorkaufsrechte, Sanierungsvermerke, Insolvenzvermerke. ALLES muss geloescht sein oder bewusst uebernommen werden. | §§1030 ff., 1093, 1105 BGB |
+| **Rechteurkunden zu Abt.-II-Eintraegen** | Bei bewusst uebernommenen Rechten (z.B. Wegerecht): Eintragungsbewilligung anfordern -- der Grundbucheintrag allein regelt die Details nicht. Rechte koennen laufende Kostenpflichten enthalten (z.B. Wege-Unterhaltung). | §§873, 874 BGB |
 | **Abt. III: Grundpfandrechte** | Bestehende Grundschulden/Hypotheken des Verkaeufers. Muessen im Zuge des Verkaufs geloescht werden (Loeschungsbewilligung). Abloesebetraege klaeren. | §§1113 ff. BGB |
 
 ### Punkt 3: Kaufgegenstand
 
 | Pruefpunkt | Details |
 |------------|---------|
-| **Mitgekauftes Inventar** | Was ist im Kaufpreis enthalten? Einbaukueche (EBK), Markisen, Einbauschraenke, Gartenhaus? Separat auflisten fuer GrESt-Ersparnis. |
+| **Mitgekauftes Inventar** | Was ist im Kaufpreis enthalten? Einbaukueche (EBK), Markisen, Einbauschraenke, Gartenhaus? Als Inventarliste mit realistischen Einzelwerten in den Vertrag oder als Anlage aufnehmen -- Basis fuer GrESt-Ersparnis und eigene Abschreibung. |
 | **Zubehoer** | Heizungsanlage, Briefkasten, Muelltonnenstellplatz -- sind diese vertraglich geregelt? |
 | **Stellplatz** | Im Sondereigentum (eigenes Grundbuchblatt) oder Sondernutzungsrecht? Tiefgarage vs. Aussenstellplatz. |
+| **Wohnflaeche** | Wird eine Wohnflaeche genannt oder zugesichert? Quelle pruefen (WoFlV-Berechnung vs. Expose-Angabe). Flaechenfehler wirken auf Kaufpreis/qm, Mietkalkulation und spaetere Streitrisiken. |
 
 ### Punkt 4: Kaufpreis
 
 | Pruefpunkt | Details | Steuerliche Relevanz |
 |------------|---------|---------------------|
-| **Aufschluesselung Grund & Boden vs. Gebaeude** | Unbedingt im Vertrag aufschluesseln lassen. Nur der Gebaeudeanteil ist AfA-faehig (§7 Abs. 4 EStG: 2% linear bei Baujahr ab 1925, 2,5% bei Baujahr vor 1925; ab 2023: 3% bei Neubau). | AfA-Bemessungsgrundlage |
-| **EBK / Mobiliar separat** | Einbaukueche und Inventar separat ausweisen. Dieser Anteil ist NICHT grunderwerbsteuerpflichtig (§2 GrEStG). Realistischer Wert ansetzen (Finanzamt prueft). | GrESt-Ersparnis |
+| **Aufschluesselung Grund & Boden vs. Gebaeude** | Unbedingt im Vertrag aufschluesseln lassen. Nur der Gebaeudeanteil ist AfA-faehig (§7 Abs. 4 EStG: 2% linear bei Baujahr ab 1925, 2,5% bei Baujahr vor 1925; ab 2023: 3% bei Neubau). Faustregel aus der Praxis: Eine gut begruendete Aufteilung kann den Gebaeudeanteil um ca. 5-10 Prozentpunkte gegenueber der Schema-Berechnung verschieben -- IMMER mit Steuerberater abstimmen (Pruefbedarf). | AfA-Bemessungsgrundlage |
+| **Plausibilisierung mit BMF-Arbeitshilfe** | Die BMF-Arbeitshilfe zur Kaufpreisaufteilung als Pruefanker nutzen: eigene Aufteilung damit testen. Weicht die Vertragsaufteilung stark ab, braucht es belastbare Begruendung (Zustand, Lage, Bodenrichtwert), sonst Anfechtungsrisiko durch das Finanzamt. | BMF-Arbeitshilfe, BFH IX R 26/19 |
+| **EBK / Mobiliar separat** | Einbaukueche und Inventar separat ausweisen. Dieser Anteil ist NICHT grunderwerbsteuerpflichtig (§2 GrEStG). Realistischer Wert ansetzen (Finanzamt prueft). Abschreibung des Inventars: neue Kuechen typischerweise ueber ca. 10 Jahre, gebrauchte entsprechend kuerzer (Restnutzungsdauer); Einzelgegenstaende unter 800 EUR netto als GWG sofort abschreibbar -- Details mit Steuerberater klaeren (Pruefbedarf). | GrESt-Ersparnis + AfA Inventar |
 | **Kaufpreisaufteilung plausibel?** | Bodenrichtwert als Kontrolle heranziehen (Gutachterausschuss). Finanzamt kann unangemessene Aufteilung anfechten (BFH-Urteil IX R 26/19). | BFH IX R 26/19 |
 
 ### Punkt 5: Kaufpreisfaelligkeit
@@ -123,6 +131,8 @@ Pruefe VOR der Kaufvertragsanalyse folgende Rahmenbedingungen:
 |------------|---------|-----------------|
 | **Auflassungsvormerkung** | Wird eine Vormerkung zu Gunsten des Kaeufers eingetragen? Standard und zwingend zum Schutz des Kaeufers vor Zwischenverfuegungen des Verkaeufers. | §883 BGB |
 | **Faelligkeitsvoraussetzungen** | Kaufpreis wird erst faellig, wenn: (1) Vormerkung eingetragen, (2) Vorkaufsrechtsverzicht der Gemeinde vorliegt, (3) Loeschungsbewilligungen fuer Abt. III vorliegen, (4) ggf. Genehmigungen (Sanierungsgebiet). | Notarvertrag |
+| **Zahlungsfrist nach Faelligkeitsmitteilung** | Wie viele Tage bleiben nach Faelligkeitsmitteilung bis zur Zahlung? Praxis-Richtwert: ca. 21 Tage sind ein realistischer Korridor fuer die Bankauszahlung -- kuerzere Fristen mit der finanzierenden Bank abstimmen. | Notarvertrag |
+| **Verkaeuferbank-Freigabe** | Bestehende Grundschulden des Verkaeufers: Liegt die Lastenfreistellung/Abloesezusage der Verkaeuferbank rechtzeitig vor? Dieses Timing kann Faelligkeit und Uebergabe verzoegern. | §875 BGB |
 | **Ruecktrittsrecht** | Ist ein Ruecktrittsrecht vereinbart, falls Faelligkeitsvoraussetzungen nicht innerhalb einer Frist erfuellt werden? Empfehlung: 6-8 Wochen Frist. | §323 BGB |
 
 ### Punkt 6: Besitzuebergang
@@ -270,7 +280,7 @@ Vor Abgabe der Bewertung pruefe:
 2. **Status-Konsistenz**: Ist der Gesamtstatus logisch? Bei >= 1 KRITISCH-Punkt muss Gesamtstatus KRITISCH oder mindestens WARNUNG sein.
 3. **Rechtsgrundlagen**: Sind alle BGB-Paragraphen korrekt zitiert? §444 BGB (Arglist), §446 BGB (Gefahr), §551 BGB (Kaution), §556 BGB (BK), §566 BGB (Kauf bricht nicht Miete), §577 BGB (Mieter-VKR).
 4. **Formulierungsvorschlaege**: Sind die Ergaenzungsvorschlaege rechtlich korrekt formuliert und praxistauglich?
-5. **Steuerliche Hinweise**: Wurde die AfA-Aufschluesselung (Grund/Boden vs. Gebaeude) und die GrESt-Optimierung (Inventar) geprueft?
+5. **Steuerliche Hinweise**: Wurde die AfA-Aufschluesselung (Grund/Boden vs. Gebaeude) mit BMF-Arbeitshilfe plausibilisiert und die GrESt-Optimierung (Inventarliste mit Einzelwerten) geprueft? Sind alle steuerlichen Empfehlungen mit Pruefbedarf (Steuerberater/Notar) markiert?
 6. **Vermietungs-Check**: Bei vermietetem Objekt: Wurden alle Punkte unter Punkt 8 (Verkaeufergarantien) geprueft?
 7. **Finanzierung**: Wurde der Finanzierungsvorbehalt und die Finanzierungsvollmacht geprueft?
 
