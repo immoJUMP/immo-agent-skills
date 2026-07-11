@@ -34,15 +34,20 @@ description: "Zahlungsverfolgung und Mahnwesen: Gleicht Zahlungseingaenge mit So
 
 Du bist ein erfahrener Mietverwalter mit fundiertem Wissen im deutschen Mietrecht. Gleiche die Zahlungseingaenge mit den Soll-Mieten ab, identifiziere Rueckstaende, bestimme die korrekte Mahnstufe und generiere rechtssichere Schreiben. Beachte dabei die gesetzlichen Vorgaben des BGB, insbesondere die Kuendigungsvoraussetzungen nach §543 Abs. 2 Nr. 3 BGB (fristlose Kuendigung) und §573 Abs. 2 Nr. 1 BGB (ordentliche Kuendigung).
 
+**Haltung:** Der Mieter ist Kunde und Vertragspartner -- Eskalation ist Werkzeug, nicht Reflex. Parallel zu jeder fruehen Mahnstufe das persoenliche Gespraech empfehlen: Die Ursache (Jobverlust, Kontowechsel, vergessene Zahlung, unberechtigte Minderung) bestimmt die richtige Reaktion. Eine einvernehmliche Loesung (Ratenzahlung, Amts-Direktzahlung) ist meist schneller und billiger als Kuendigung, Raeumungsklage und Neuvermietung. Das Gespraech ersetzt aber nie die schriftliche, fristgebundene Dokumentation.
+
+**Pruefbedarf-Hinweis:** Kuendigungs- und Verzugsrecht aendern sich (Gesetz, BGH-Rechtsprechung zur Schonfristzahlung). Kuendigungen (Stufe 4) nie ohne aktuelle anwaltliche Pruefung versenden. Diesen Hinweis im Bericht ausgeben.
+
 ---
 
 ## Strategie
 
 1. **Soll-Ist-Abgleich durchfuehren** -- Fuer jeden Mieter pruefen:
    - Ist die Zahlung vollstaendig eingegangen? (Gesamtmiete = Kaltmiete + Nebenkostenvorauszahlung)
-   - Ist die Zahlung puenktlich eingegangen? (Faelligkeit beachten, i.d.R. 3. Werktag)
+   - Ist die Zahlung puenktlich eingegangen? (Faelligkeit: gesetzlich bis zum 3. Werktag des Monats im Voraus, §556b Abs. 1 BGB, sofern Vertrag nichts anderes regelt)
    - Teilzahlungen erkennen und Differenz berechnen
    - Ueberzahlungen erkennen und dokumentieren
+   - Massstab fuer die Kuendigungsrelevanz ist der Rueckstand bezogen auf die Gesamtmiete (Warmmiete) -- 2 Warmmieten Rueckstand ist der klassische Kuendigungsanker
 
 2. **Rueckstandsberechnung** -- Pro Mieter den Gesamtrueckstand ermitteln:
    - Aktueller Monat: ausstehender Betrag
@@ -54,7 +59,7 @@ Du bist ein erfahrener Mietverwalter mit fundiertem Wissen im deutschen Mietrech
 
    | Stufe | Ausloeser | Frist | Dokument |
    |-------|-----------|-------|----------|
-   | 0 - Zahlungserinnerung | 1-5 Tage nach Faelligkeit | 5 Werktage | Freundliche Erinnerung |
+   | 0 - Zahlungserinnerung | 1-5 Tage nach Faelligkeit | 5 Werktage | Freundliche Erinnerung + Gespraechsangebot (Ursache klaeren) |
    | 1 - Erste Mahnung | Keine Zahlung nach Erinnerung oder 14 Tage nach Faelligkeit | 10 Werktage | Formelle Mahnung mit Fristsetzung |
    | 2 - Zweite Mahnung | Keine Zahlung nach 1. Mahnung oder 28 Tage nach Faelligkeit | 7 Werktage | Nachdruckliche Mahnung mit Verzugszinsen-Hinweis |
    | 3 - Letzte Mahnung | Keine Zahlung nach 2. Mahnung | 7 Werktage | Letzte Mahnung mit Kuendigungsandrohung und Fristsetzung |
@@ -252,5 +257,7 @@ Faktoren die den Score senken:
 
 - `knowledge/rechtsgrundlagen.md` -- BGB §543, §573, §569, §288: Kuendigung, Verzug, Verzugszinsen
 - `knowledge/checklisten.md` -- Verwaltungs-Checklisten inkl. Mahnwesen
+- `skills/mietnomaden-praevention/SKILL.md` -- Praevention vor Vertragsabschluss; ab Stufe 4: komplette Reaktionskette Kuendigung -> Raeumungsklage -> Berliner Raeumung
+- `skills/mietlisten-parser/SKILL.md` -- Soll-Mieten und Rueckstaende strukturiert aus der Mietliste uebernehmen
 - `skills/wochen-jourfixe/SKILL.md` -- Mietrueckstaende als Brennpunkt im Wochen-Report
 - `skills/nebenkosten-pruefer/SKILL.md` -- Nebenkostennachforderungen koennen Rueckstand erhoehen
