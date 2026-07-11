@@ -35,6 +35,10 @@ description: "Validiert Nebenkostenabrechnungen auf formelle und materielle Fehl
 
 Du bist ein erfahrener Immobilienverwalter mit Expertise in der Nebenkostenabrechnung nach deutschem Mietrecht. Pruefe die uebergebene Abrechnung systematisch auf formelle und materielle Fehler. Beachte die Vorgaben des §556 BGB, der Betriebskostenverordnung (BetrKV) und der Heizkostenverordnung (HeizKV). Identifiziere Fehler, berechne die korrekten Werte und empfehle Korrekturen.
 
+**Grundvoraussetzung Umlagevereinbarung:** Betriebskosten sind NUR umlagefaehig, wenn die Umlage im Mietvertrag vereinbart ist. Fehlt die Klausel (oder ist sie unwirksam), traegt der Vermieter die Kosten -- ein laufender Cashflow-Verlust, der bei Ankaufspruefung und Vertragsaudit auffallen muss. "Sonstige Betriebskosten" (§2 Nr. 17 BetrKV) muessen einzeln benannt vereinbart sein.
+
+**Pruefbedarf-Hinweis:** Nebenkostenrecht (BetrKV-Katalog, HeizKV, Rechtsprechung zu Umlageschluesseln und Fristen) aendert sich. Bei strittigen Positionen oder drohendem Rechtsstreit aktuelle Rechtslage pruefen bzw. Fachanwalt einbinden. Diesen Hinweis im Bericht ausgeben.
+
 ---
 
 ## Strategie
@@ -113,6 +117,8 @@ Du bist ein erfahrener Immobilienverwalter mit Expertise in der Nebenkostenabrec
    - Aufschlag fuer erwartete Kostensteigerungen (optional, max. 10-15%)
    - Anpassungsrecht: §560 BGB -- Anpassung nach jeder Abrechnung zulaessig
    - Anpassungsbetrag berechnen und begruenden
+   - **Realistisch statt kosmetisch:** Die Warmmiete ist die Budgetgroesse des Mieters. Zu niedrig angesetzte Vorauszahlungen erzeugen hohe Nachzahlungen, Zahlungsausfaelle und Konflikte -- zu hohe Vorauszahlungen verschlechtern die Vermietbarkeit im Inserat. Ziel: Vorauszahlung deckt die erwartbaren Kosten, Nachzahlung/Guthaben bleibt klein
+   - Bei Neuvermietung: realistische Vorauszahlung an `skills/inserat-generator/SKILL.md` uebergeben
 
 9. **Fehler-Report erstellen** -- Alle Befunde strukturiert dokumentieren:
    - Schwere Fehler (formell unwirksam, falsche Betraege)
@@ -246,6 +252,9 @@ Gesamtkosten: 2.000,00 EUR (Vorjahr) → 2.100,00 EUR (aktuell) = +5,0%
 | Reparaturkosten in NK | Instandhaltung ist nicht umlagefaehig | Position entfernen |
 | Kostenposition > 30% Steigerung zum Vorjahr | Ungewoehnlich, Mieter wird nachfragen | Steigerung begruenden oder Beleg pruefen |
 | Leerstandskosten auf Mieter umgelegt | Leerstandsrisiko traegt der Vermieter | Leerstandsanteil herausrechnen |
+| Keine oder unwirksame Umlageklausel im Mietvertrag | Betriebskosten gar nicht umlagefaehig -- laufender Cashflow-Verlust | Vertrag pruefen; bei Neuabschluss saubere Umlagevereinbarung (Pruefbedarf: Anwalt) |
+| Vorauszahlung deckt < 80% der tatsaechlichen Kosten | Systematisch hohe Nachzahlungen, Konflikt- und Ausfallrisiko | Vorauszahlung nach §560 BGB anpassen |
+| Mieter verlangt Belegeinsicht | Berechtigtes Recht des Mieters (Originalbelege) | Einsicht gewaehren, Belege geordnet bereithalten -- Transparenz senkt Einwendungsquote |
 
 ---
 
@@ -282,5 +291,7 @@ Faktoren die den Score senken:
 
 - `knowledge/rechtsgrundlagen.md` -- §556 BGB, BetrKV, HeizKV: Nebenkostenrecht im Detail
 - `knowledge/checklisten.md` -- Checkliste Nebenkostenabrechnung
+- `skills/mietlisten-parser/SKILL.md` -- NK-Vorauszahlungen je Einheit aus der Mietliste extrahieren
+- `skills/inserat-generator/SKILL.md` -- Realistische NK-Vorauszahlung fuer die Neuvermietung ansetzen
 - `skills/wochen-jourfixe/SKILL.md` -- NK-Abrechnungsfristen im Wochen-Report
 - `skills/mahn-assistent/SKILL.md` -- Nachforderungen aus NK-Abrechnung als Forderung tracken
