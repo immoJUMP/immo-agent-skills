@@ -192,6 +192,7 @@ immo-agent-skills/
 │   ├── akquise-netzwerk/SKILL.md  # Off-Market Akquiseplan
 │   ├── bankgespraech-coach/SKILL.md # Banktermin-Vorbereitung
 │   ├── makler-coach/SKILL.md      # Maklerbeziehungen aufbauen
+│   ├── roast-me/SKILL.md          # Kritisches Vorhaben-Interview vor der Umsetzung
 │   └── verhandlungs-assistent/SKILL.md # Preisverhandlung & Strategie
 │
 ├── knowledge/                     # Wissensdatenbanken (Kontext fuer Skills)
@@ -279,6 +280,12 @@ immo-agent-skills/
 | Skill | Beschreibung | Typischer Input |
 |-------|-------------|-----------------|
 | **Ordner-Architekt** | Baut/ordnet die Portfolio-Ablage als Grundlage fuer alle Folge-Skills -- im gefuehrten Gespraech mit Ist-Inventar, Bewertung & bestaetigungspflichtigem Umzugsplan | Zugriff auf Drive/Dropbox/lokalen Ordner |
+
+### Strategie & Entscheidung
+
+| Skill | Beschreibung | Typischer Input |
+|-------|-------------|-----------------|
+| **Roast Me** | Kritisches Vorhaben-Interview vor der Umsetzung: eine Frage nach der anderen, klare Empfehlungen mit Fakten/Annahmen/Einschaetzung getrennt, deckt Widersprueche auf und prueft, ob eine einfachere Alternative besser waere | Dein Vorhaben in 1-3 Saetzen |
 
 ---
 
