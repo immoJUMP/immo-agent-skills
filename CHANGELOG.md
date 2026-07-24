@@ -1,6 +1,49 @@
 # Aenderungsprotokoll
 
 Alle wesentlichen Aenderungen an diesem Projekt.
+## [1.8.0](https://github.com/immoJUMP/immo-agent-skills/compare/v1.7.0...v1.8.0) (2026-07-24)
+
+
+### Hinzugefuegt
+
+* **akquise-agent:** Pipeline-Stages, Response-SLAs und Wochenrhythmus ergaenzen ([3542778](https://github.com/immoJUMP/immo-agent-skills/commit/354277814d87729d1704e170be6c93c5415b36e9))
+* **akquise-netzwerk:** Marktstufen-Modell und Tippgeber-Systematik ergaenzen ([2aa6d7c](https://github.com/immoJUMP/immo-agent-skills/commit/2aa6d7cd84edc8b63539115a0dc3a9e453c9386c))
+* **bankenpitch:** Banklogik, Finanzierungsstruktur-Matrix und Grossvolumen-Regeln ergaenzen ([6848031](https://github.com/immoJUMP/immo-agent-skills/commit/6848031ce29419fc52f3389aa96da0ddbe3babbf))
+* **bankgespraech-coach:** Bankentypen, Bankerfragen-Katalog und Red-Flag-Tabelle ergaenzen ([d52a784](https://github.com/immoJUMP/immo-agent-skills/commit/d52a784244a22e4bfa3b661024105cd046aefe1a))
+* **beleg-sortierer:** 15-Prozent-Grenze im Detail und Zuordnungsfehler-Tabelle ergaenzen ([7cb10ad](https://github.com/immoJUMP/immo-agent-skills/commit/7cb10adcc7f65890914f9e07d39b1af44ae8b59e))
+* **besichtigung-prep:** Baujahresklassen-Pruefschwerpunkte und Pflichtfoto-Liste ergaenzen ([d49feee](https://github.com/immoJUMP/immo-agent-skills/commit/d49feee0fb556c85644ba13ad4db3773a9ba26aa))
+* **bierdeckel-kalkulation:** Ist-Soll-Stress-Mietlogik und Ziel-BMR-Referenztabelle ergaenzen ([45b41c9](https://github.com/immoJUMP/immo-agent-skills/commit/45b41c93894c561a8d16d412bb4c1c16690e2d04))
+* **cashflow-modell:** Modellierungsprinzipien und Annahmen-Register ergaenzen ([09c2166](https://github.com/immoJUMP/immo-agent-skills/commit/09c21662bd61f6715405bd3e1bc010675d3dfeaf))
+* **datev-vorbereitung:** AfA-Sonderfaelle und 2-Konten-Modell ergaenzen ([5a63d73](https://github.com/immoJUMP/immo-agent-skills/commit/5a63d73860c4a67c1df0bf040f92aaa0723309e4))
+* **deal-screener:** Dealtyp-Einordnung und Ampel-zu-Pipeline-Entscheidungstabelle ergaenzen ([d29f275](https://github.com/immoJUMP/immo-agent-skills/commit/d29f27531245e2ff7a13fe646498f6a594e58dd8))
+* **dokument-klassifizierer:** steuerlich relevante Dokumenttypen und Metadaten ergaenzen ([0fa00fd](https://github.com/immoJUMP/immo-agent-skills/commit/0fa00fd4528b54e1d48f2fc8275589d707ce0c8a))
+* **energieausweis-check:** Plausibilisierung und Heizungs-Systemregel ergaenzen ([24496cf](https://github.com/immoJUMP/immo-agent-skills/commit/24496cfcdc52cb2f69504f4a06658439a822a5c8))
+* **expose-parser:** Ist-Soll-Markt-Mietdaten-Trennung ergaenzen ([8da1f69](https://github.com/immoJUMP/immo-agent-skills/commit/8da1f69e1592d1550dae2835d2e78ffdf0eb3d2b))
+* **inserat-generator:** Zielmieten-Logik und Sondervermietungs-Strategien ergaenzen ([3387693](https://github.com/immoJUMP/immo-agent-skills/commit/338769332d3bea7dc03e4b4dbc86dbc92aa94900))
+* **kaufvertrag-pruefung:** Kaufpreisaufteilung und Zahlungsfrist-Richtwerte ergaenzen ([adbb816](https://github.com/immoJUMP/immo-agent-skills/commit/adbb81652070aead77df38303cafa47336ae33ba))
+* **knowledge:** Baujahresklassen-Risiken, Grundbuch-Pruefreihenfolge und Sanierungskosten-Faustregeln ergaenzen ([ae281a8](https://github.com/immoJUMP/immo-agent-skills/commit/ae281a82c59e612f6e249cdd0191408e933ee51e))
+* **knowledge:** Baujahresklassen, Grundbuch-Register und Nachbereitungs-Workflow in Checklisten ergaenzen ([f59de8b](https://github.com/immoJUMP/immo-agent-skills/commit/f59de8b937a16d720631d372147e0c5b920c533d))
+* **knowledge:** BMR-Referenzwerte und EK-Freisetzung ergaenzen, GrESt-Satz Sachsen korrigieren ([da7f5e6](https://github.com/immoJUMP/immo-agent-skills/commit/da7f5e63f6ea23e81d2c0e5c3942e19de3ac6203))
+* **knowledge:** Lagekriterien, Cashflow-Zeitachse und Vermarktungsdauer-Benchmarks ergaenzen ([e004633](https://github.com/immoJUMP/immo-agent-skills/commit/e0046334edfd2caaa32fc593e2af8482ddf0a250))
+* **knowledge:** Mietanpassungswege, Sondervermietung und Fristen-Uebersicht ergaenzen ([a75020d](https://github.com/immoJUMP/immo-agent-skills/commit/a75020d48a534a9b2af4f9aed02ca7d0d777847b))
+* **mahn-assistent:** Faelligkeitsregel und Gespraechsangebot vor Eskalation ergaenzen ([6a55f41](https://github.com/immoJUMP/immo-agent-skills/commit/6a55f41121014504636e469ba933e5bcac88873e))
+* **makler-coach:** Maklertypen-Tabelle und Verkaeuferzugang-Logik ergaenzen ([d05e5c1](https://github.com/immoJUMP/immo-agent-skills/commit/d05e5c16f32e3fa6bf7cfe30acd97aa7a81e12a9))
+* **marktanalyse:** Suchprofil-Canvas und Strategie-Fit je Lageklasse ergaenzen ([3354a08](https://github.com/immoJUMP/immo-agent-skills/commit/3354a0860ed64ea221acad390eb76212478bb8c8))
+* **mieterhoehung:** fuenf Erhoehungswege als Entscheidungsbaum ergaenzen ([fd7c32c](https://github.com/immoJUMP/immo-agent-skills/commit/fd7c32cfdde4de3bfbb3b2139ccc98737e1226a9))
+* **mietlisten-analyse:** Under-Rent-Realisierbarkeits-Score ergaenzen ([13c0cc3](https://github.com/immoJUMP/immo-agent-skills/commit/13c0cc306bd6939d5c5c896f6645624d7bdc5234))
+* **mietlisten-parser:** Kuendigungsausschluss- und Kautionsfelder ergaenzen ([d8d94fb](https://github.com/immoJUMP/immo-agent-skills/commit/d8d94fb0530e4800d6d60487ad0e31db288da5b6))
+* **mietnomaden-praevention:** Bewerber-Scorecard und Besichtigungsorganisation ergaenzen ([b7428b4](https://github.com/immoJUMP/immo-agent-skills/commit/b7428b46afbc3bd25e951b773fe008e001bb712f))
+* **nebenkosten-pruefer:** Umlagevereinbarung als Grundvoraussetzung ergaenzen ([4410897](https://github.com/immoJUMP/immo-agent-skills/commit/4410897daff2476cc08a793db26049b2d0e3be02))
+* **ordner-architekt:** fuenf Akten der Investorenpraxis und Fristen-Dokumente ergaenzen ([0dd439b](https://github.com/immoJUMP/immo-agent-skills/commit/0dd439b9435d839caa21f33cda3746fbbb21b699))
+* **prozess-designer:** Reifegrad-Stufen und Delegationsstufen-Tabelle ergaenzen ([4f63856](https://github.com/immoJUMP/immo-agent-skills/commit/4f638565cf912dfb3cc31e63db6a487fb2b0cec5))
+* **risiko-scanner:** Grundbuch-Leselogik und Kostenkennzahlen ergaenzen ([97666e7](https://github.com/immoJUMP/immo-agent-skills/commit/97666e76f75d3cdfd25c984894e43f2ebfd84a1c))
+* **roast-me:** kritisches Vorhaben-Interview als neuer Skill ([e2bd6b9](https://github.com/immoJUMP/immo-agent-skills/commit/e2bd6b96331f46e97c1ddc7277ce9417cc6d86d8))
+* **selbstauskunft:** Objektunterlagen-Paket und Schufa-Optimierung ergaenzen ([3fa8224](https://github.com/immoJUMP/immo-agent-skills/commit/3fa82246f331db754aaac66323c25931adb6019c))
+* **unterlagen-analyst:** Grundbuch-Leselogik und WEG-Red-Flags ergaenzen ([8fd6f21](https://github.com/immoJUMP/immo-agent-skills/commit/8fd6f21e0b109ed6d94d8686ee298d72332001ce))
+* **verhandlungs-assistent:** Verkaeufertypen-Matrix und Nachverhandlungs-Regeln ergaenzen ([9d86032](https://github.com/immoJUMP/immo-agent-skills/commit/9d860327e97f43d1d1f49fdf59981a07280a15ff))
+* **vermieterbescheinigung:** Einzugs-Workflow ergaenzen ([93aeccc](https://github.com/immoJUMP/immo-agent-skills/commit/93aeccce6412d0ba45f6ebea9ec92a23756c5cc3))
+* **wochen-jourfixe:** Wochen-KPIs und Fristenmonitor ergaenzen ([de15bfe](https://github.com/immoJUMP/immo-agent-skills/commit/de15bfeebcf051b2851e061730504eb461f0a0b9))
+
 ## [1.7.0](https://github.com/immoJUMP/immo-agent-skills/compare/v1.6.0...v1.7.0) (2026-06-18)
 
 
