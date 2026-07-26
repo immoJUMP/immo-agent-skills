@@ -2,6 +2,13 @@
 
 Alle wesentlichen Aenderungen an diesem Projekt.
 
+## [1.10.0](https://github.com/immoJUMP/immo-agent-skills/compare/v1.9.0...v1.10.0) (2026-07-26)
+
+
+### Hinzugefuegt
+
+* immo-agent-skills v1.9.0 ([b87dd70](https://github.com/immoJUMP/immo-agent-skills/commit/b87dd703339c8cfd43968f0d50ee5aa4a523d34d))
+
 ## [1.9.0] (2026-07-26)
 
 ### Geaendert
