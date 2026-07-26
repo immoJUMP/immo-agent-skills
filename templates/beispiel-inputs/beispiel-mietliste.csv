@@ -1,0 +1,9 @@
+einheit;mieter;wohnflaeche_qm;zimmer;kaltmiete_eur;nebenkosten_vz_eur;gesamtmiete_eur;mietbeginn;letzte_erhoehung;status
+EG links;Mueller, Hans;68,5;3;420,00;150,00;570,00;2018-03-01;2021-06-01;vermietet
+EG rechts;Schmidt, Maria;72,0;3;480,00;160,00;640,00;2020-01-15;;vermietet
+1.OG links;Weber, Thomas;68,5;3;380,00;150,00;530,00;2012-07-01;2019-01-01;vermietet
+1.OG rechts;Fischer, Anna;72,0;3;520,00;160,00;680,00;2023-09-01;;vermietet
+2.OG links;Wagner, Peter;55,0;2;350,00;120,00;470,00;2015-04-01;2020-03-01;vermietet
+2.OG rechts;;55,0;2;0,00;0,00;0,00;;;leer
+DG links;Koch, Sabine;45,0;2;380,00;100,00;480,00;2022-11-01;;vermietet
+DG rechts;Bauer, Klaus;45,0;2;280,00;100,00;380,00;2008-06-01;;vermietet

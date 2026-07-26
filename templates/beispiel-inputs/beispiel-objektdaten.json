@@ -1,0 +1,49 @@
+{
+  "objekt": {
+    "bezeichnung": "MFH Musterstrasse 42",
+    "adresse": {
+      "strasse": "Musterstrasse 42",
+      "plz": "50825",
+      "ort": "Koeln",
+      "stadtteil": "Ehrenfeld"
+    },
+    "baujahr": 1962,
+    "letzte_sanierung": 2005,
+    "wohnflaeche_qm": 481.0,
+    "grundstuecksflaeche_qm": 320.0,
+    "anzahl_einheiten": 8,
+    "anzahl_stellplaetze": 4,
+    "etagen": 4,
+    "heizungstyp": "Gas-Zentralheizung",
+    "heizung_baujahr": 2005,
+    "energieausweis": {
+      "typ": "Bedarfsausweis",
+      "kennwert_kwh_qm_a": 165,
+      "effizienzklasse": "E",
+      "gueltig_bis": "2028-03-15"
+    },
+    "zustand": "gepflegt, teilsaniert",
+    "denkmalschutz": false,
+    "erbbaurecht": false
+  },
+  "finanzen": {
+    "kaufpreis_eur": 850000,
+    "maklercourtage_prozent": 3.57,
+    "jahresnettokaltmiete_eur": 39480,
+    "kaufpreisfaktor": 21.5,
+    "bruttomietrendite_prozent": 4.64,
+    "hausgeld_monat_eur": 1800,
+    "instandhaltungsruecklage_monat_eur": 400,
+    "grundsteuer_jahr_eur": 1200
+  },
+  "einheiten": [
+    {"nr": "EG links", "typ": "3-Zimmer", "flaeche_qm": 68.5, "kaltmiete_eur": 420, "mieter": "Mueller", "seit": "2018-03-01"},
+    {"nr": "EG rechts", "typ": "3-Zimmer", "flaeche_qm": 72.0, "kaltmiete_eur": 480, "mieter": "Schmidt", "seit": "2020-01-15"},
+    {"nr": "1.OG links", "typ": "3-Zimmer", "flaeche_qm": 68.5, "kaltmiete_eur": 380, "mieter": "Weber", "seit": "2012-07-01"},
+    {"nr": "1.OG rechts", "typ": "3-Zimmer", "flaeche_qm": 72.0, "kaltmiete_eur": 520, "mieter": "Fischer", "seit": "2023-09-01"},
+    {"nr": "2.OG links", "typ": "2-Zimmer", "flaeche_qm": 55.0, "kaltmiete_eur": 350, "mieter": "Wagner", "seit": "2015-04-01"},
+    {"nr": "2.OG rechts", "typ": "2-Zimmer", "flaeche_qm": 55.0, "kaltmiete_eur": 0, "mieter": null, "seit": null},
+    {"nr": "DG links", "typ": "2-Zimmer", "flaeche_qm": 45.0, "kaltmiete_eur": 380, "mieter": "Koch", "seit": "2022-11-01"},
+    {"nr": "DG rechts", "typ": "2-Zimmer", "flaeche_qm": 45.0, "kaltmiete_eur": 280, "mieter": "Bauer", "seit": "2008-06-01"}
+  ]
+}

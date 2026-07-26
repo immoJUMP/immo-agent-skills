@@ -1,0 +1,163 @@
+immoJUMP Source Available License 1.0
+=====================================
+
+Copyright 2026 immoJUMP. Alle Rechte vorbehalten.
+
+Diese Lizenz gilt fuer alle Inhalte dieses Repositories ab Version 1.9.0.
+Fuer frueher veroeffentlichte Versionen siehe Abschnitt 5.
+
+
+1. GELTUNGSBEREICH
+------------------
+
+"Werk" bezeichnet saemtliche Inhalte dieses Repositories, insbesondere die
+Skill-Dateien (skills/), die Wissensdatenbanken (knowledge/), Vorlagen
+(templates/), Dokumentation (docs/) sowie alle Aenderungen und
+Weiterentwicklungen daran.
+
+"Lizenznehmer" bezeichnet die natuerliche oder juristische Person, die das
+Werk bezieht oder nutzt.
+
+"Eigener Geschaeftsbetrieb" bezeichnet den Betrieb des Lizenznehmers
+einschliesslich seiner Mitarbeiter und der von ihm beauftragten
+Dienstleister, soweit diese ausschliesslich fuer den Lizenznehmer taetig
+werden.
+
+
+2. EINGERAEUMTE RECHTE
+----------------------
+
+Der Lizenznehmer darf das Werk unentgeltlich, zeitlich unbefristet und
+weltweit:
+
+(a) im eigenen Geschaeftsbetrieb nutzen, auch zu gewerblichen Zwecken und
+    zur Erbringung von Dienstleistungen gegenueber eigenen Kunden;
+
+(b) mit beliebigen KI-Systemen, Sprachmodellen und Softwarewerkzeugen
+    einsetzen;
+
+(c) fuer die eigenen Zwecke anpassen, erweitern und veraendern;
+
+(d) innerhalb des eigenen Geschaeftsbetriebs an Mitarbeiter weitergeben;
+
+(e) Kopien zu Sicherungszwecken anfertigen.
+
+Die mit Hilfe des Werks erzeugten Arbeitsergebnisse (z. B. Exposes,
+Analysen, Kalkulationen, Schriftsaetze) stehen dem Lizenznehmer
+uneingeschraenkt und ohne Beschraenkung durch diese Lizenz zu. Er darf sie
+frei verwenden, veroeffentlichen und verwerten.
+
+
+3. UNTERSAGTE NUTZUNGEN
+-----------------------
+
+Ohne vorherige schriftliche Zustimmung von immoJUMP ist es untersagt:
+
+(a) das Werk oder Teile davon, veraendert oder unveraendert, oeffentlich
+    zugaenglich zu machen, zu verbreiten oder an Dritte ausserhalb des
+    eigenen Geschaeftsbetriebs weiterzugeben;
+
+(b) das Werk zu verkaufen, zu vermieten, zu verleihen, unterzulizenzieren
+    oder anderweitig entgeltlich oder unentgeltlich Dritten zu ueberlassen;
+
+(c) das Werk oder Teile davon in Schulungen, Seminaren, Kursen, Webinaren,
+    Coachings oder vergleichbaren Bildungsangeboten einzusetzen, die
+    Dritten angeboten werden -- unabhaengig davon, ob diese entgeltlich
+    oder unentgeltlich erfolgen;
+
+(d) das Werk in ein Produkt, eine Software oder einen Dienst einzubinden,
+    der Dritten angeboten oder zur Verfuegung gestellt wird;
+
+(e) das Werk als Trainings-, Feinabstimmungs- oder Referenzmaterial fuer
+    KI-Modelle zu verwenden, die Dritten angeboten oder zugaenglich
+    gemacht werden;
+
+(f) Urheberrechtsvermerke, Lizenzhinweise oder Herkunftsangaben zu
+    entfernen oder zu veraendern.
+
+Die Nutzung von Firmen-, Marken- und Produktnamen von immoJUMP wird durch
+diese Lizenz nicht gestattet.
+
+
+4. VORBEHALT DER RECHTE
+-----------------------
+
+Alle nicht ausdruecklich eingeraeumten Rechte verbleiben bei immoJUMP.
+Diese Lizenz begruendet keine Uebertragung von Eigentums- oder
+Urheberrechten am Werk.
+
+
+5. FRUEHERE FASSUNGEN
+---------------------
+
+Frueher veroeffentlichte Fassungen dieses Werks standen unter der Apache
+License 2.0. Fuer Kopien, die unter jener Lizenz bezogen wurden, gelten
+deren Bedingungen fort. Diese Lizenz entfaltet keine Rueckwirkung.
+
+
+6. KEINE GEWAEHRLEISTUNG
+------------------------
+
+Das Werk wird ohne jede Gewaehrleistung bereitgestellt, weder ausdruecklich
+noch stillschweigend. immoJUMP uebernimmt keine Gewaehr fuer Richtigkeit,
+Vollstaendigkeit, Aktualitaet oder Eignung fuer einen bestimmten Zweck.
+
+Das Werk stellt insbesondere keine Rechts-, Steuer-, Finanz- oder
+Anlageberatung dar. Es gilt ergaenzend der Haftungsausschluss in
+DISCLAIMER.md, der Bestandteil dieser Lizenz ist.
+
+
+7. HAFTUNGSBESCHRAENKUNG
+------------------------
+
+Die Haftung von immoJUMP ist auf Vorsatz und grobe Fahrlaessigkeit
+beschraenkt. Die Haftung fuer Schaeden aus der Verletzung des Lebens, des
+Koerpers oder der Gesundheit sowie die Haftung nach dem
+Produkthaftungsgesetz bleiben unberuehrt.
+
+
+8. BEENDIGUNG
+-------------
+
+Die eingeraeumten Rechte enden automatisch, wenn der Lizenznehmer gegen
+Abschnitt 3 verstoesst. In diesem Fall ist die Nutzung des Werks
+einzustellen und vorhandene Kopien sind zu loeschen. Weitergehende
+Ansprueche von immoJUMP bleiben unberuehrt.
+
+
+9. ABWEICHENDE LIZENZIERUNG
+---------------------------
+
+Wer das Werk ueber den Umfang dieser Lizenz hinaus nutzen moechte --
+insbesondere fuer Schulungen, zur Weiterverbreitung oder zur Einbindung in
+eigene Produkte -- kann eine gesonderte Lizenz erwerben.
+
+Anfragen an: skills@immojump.de
+
+
+10. ANWENDBARES RECHT
+---------------------
+
+Es gilt das Recht der Bundesrepublik Deutschland unter Ausschluss des
+UN-Kaufrechts. Sollten einzelne Bestimmungen unwirksam sein, bleibt die
+Wirksamkeit der uebrigen Bestimmungen unberuehrt.
+
+
+-------------------------------------------------------------------------
+
+SUMMARY IN ENGLISH (non-binding)
+
+This is a source-available license, not an open source license.
+
+You MAY use these skills within your own business, including commercially
+and for services to your own clients, adapt them for internal use, and
+freely use any output you generate with them.
+
+You MAY NOT redistribute, resell, sublicense, use them in training or
+educational offerings for third parties, embed them in products offered to
+others, or use them as training data for AI models offered to others.
+
+Earlier releases of this work were published under the Apache License 2.0.
+Copies obtained under those terms remain governed by them.
+
+For licensing beyond this scope: skills@immojump.de

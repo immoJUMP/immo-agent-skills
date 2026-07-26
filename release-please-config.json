@@ -1,0 +1,28 @@
+{
+  "$schema": "https://raw.githubusercontent.com/googleapis/release-please/main/schemas/config.json",
+  "release-type": "simple",
+  "include-component-in-tag": false,
+  "separate-pull-requests": false,
+  "packages": {
+    ".": {
+      "changelog-path": "CHANGELOG.md",
+      "extra-files": [
+        {
+          "type": "json",
+          "path": ".claude-plugin/plugin.json",
+          "jsonpath": "$.version"
+        }
+      ],
+      "changelog-sections": [
+        { "type": "feat",     "section": "Hinzugefuegt" },
+        { "type": "fix",      "section": "Behoben" },
+        { "type": "docs",     "section": "Dokumentation" },
+        { "type": "refactor", "section": "Geaendert" },
+        { "type": "style",    "section": "Styling" },
+        { "type": "test",     "section": "Tests" },
+        { "type": "chore",    "section": "Sonstiges", "hidden": false },
+        { "type": "perf",     "section": "Performance" }
+      ]
+    }
+  }
+}

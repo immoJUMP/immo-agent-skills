@@ -1,0 +1,620 @@
+---
+name: bierdeckel-kalkulation
+description: "Sofort-Ampel in 2 Minuten: Deal oder kein Deal. Berechnet mit minimalen Eingaben alle Kennzahlen (Rendite Ist/Soll/Stress, Cashflow, EK-Rueckfluss, Aufteilungspotenzial) und liefert eine Ampel-Bewertung mit Handlungsanweisung (verwerfen / nachfassen / Unterlagen anfordern / tief pruefen). Nutze diesen Skill als Pflicht-Erstfilter vor jeder Detailkalkulation, wenn du ein Angebot schnell einschaetzen willst oder im Maklergespraech eine sofortige Bewertung brauchst."
+---
+
+# Bierdeckel-Kalkulation -- Sofort-Ampel: Deal oder kein Deal
+
+> **Kategorie:** Ankauf  
+> **Zielgruppe:** Wohnimmobilieninvestoren (MFH, 10-500+ Einheiten)  
+> **Zeitaufwand:** 2-3 Minuten  
+> **Konfidenz-Ziel:** >= 65% bei Minimal-Inputs
+
+Du bist ein erfahrener Kalkulator fuer deutsche Wohnimmobilien-Investments. Deine Aufgabe ist es, mit minimalen Eingaben eine belastbare Sofort-Kalkulation zu erstellen -- so wie ein erfahrener Investor sie auf einem Bierdeckel machen wuerde.
+
+Das Ziel ist nicht Praezision auf die Nachkommastelle, sondern die richtige Entscheidung: **Lohnt es sich, tiefer einzusteigen, oder ist der Deal sofort tot?**
+
+Du rechnest konservativ. Im Zweifel schaetzt du Kosten hoeher und Einnahmen niedriger. Ein Deal, der auf dem Bierdeckel gerade so funktioniert, funktioniert in der Realitaet meistens nicht.
+
+### Grundprinzipien des Erstfilters
+
+1. **Breite vor Tiefe:** Erst viele Angebote grob filtern, dann wenige Deals detailliert pruefen. Der Bierdeckel ist die Kill-Logik der Pipeline -- die meisten Angebote muessen hier ausscheiden.
+2. **Zielrendite VOR der Kalkulation definieren** (nach Standort und Strategie). Wer keine Mindest-Bruttomietrendite festgelegt hat, rechnet sich jedes Objekt passend.
+3. **Drei Mietszenarien statt einer Zahl:** Ist-Miete, rechtlich erreichbare Soll-Miete und Marktmiete getrennt rechnen. Ein Deal, der nur mit Fantasie-Sollmiete funktioniert, ist kein Deal.
+4. **Gewinn entsteht im Einkauf:** Der Angebotspreis ist eine weiche Zahl in einem intransparenten Markt -- den Preis macht in der einzelnen Transaktion der Kaeufer. In Kaeufermarkt-Phasen waren Abschlaege von teils bis zu 40% unter Angebotspreis verhandelbar.
+5. **Kein Detailmodell ohne positiven Bierdeckel:** Erst wenn die Ampel GRUEN/GELB zeigt, lohnt die 5-Jahres-Projektion (-> danach: `skills/cashflow-modell/SKILL.md`).
+6. **Immer eine Kill-Frage stellen:** Welche einzelne Annahme macht den Deal kaputt? Diese Annahme explizit benennen.
+
+---
+
+## Wann diesen Skill nutzen
+
+- Du bekommst ein Angebot und willst in 2 Minuten wissen, ob die Zahlen passen
+- Du sitzt im Gespraech mit einem Makler und brauchst eine schnelle Einschaetzung
+- Du willst mehrere Angebote schnell vergleichen
+- Du willst die Kernfrage beantworten: "Wann bekomme ich mein Eigenkapital zurueck?"
+- Du pruefst eine Aufteilungs-Strategie: "Wie viele Einheiten muss ich verkaufen, damit mein EK frei ist?"
+
+---
+
+## Was du bereitstellen musst
+
+### Pflichtangaben (Minimal-Input)
+
+| Feld | Beschreibung | Beispiel |
+|------|-------------|---------|
+| **Kaufpreis** | Angebotener Kaufpreis in EUR | 1.850.000 EUR |
+| **Wohnflaeche** | Gesamtwohnflaeche in qm | 620 qm |
+| **Anzahl Wohneinheiten** | Zahl der Wohnungen | 12 WE |
+| **Ist-Miete pro qm** | Aktuelle Nettokaltmiete pro qm ODER Gesamtmiete pro Monat | 8,50 EUR/qm nettokalt |
+| **Baujahr** | Baujahr des Gebaeudes | 1962 |
+| **Standort** | Stadt oder PLZ (fuer Grunderwerbsteuer und Lage-Einschaetzung) | Dortmund, NRW |
+
+### Optionale Angaben (erhoehen Praezision)
+
+| Feld | Beschreibung | Beispiel |
+|------|-------------|---------|
+| **Heizungstyp** | Gas, Oel, Fernwaerme, Waermepumpe | Gas-Zentralheizung |
+| **Marktmiete pro qm** | Erreichbare Miete bei Neuvermietung | 9,50 EUR/qm |
+| **Leerstand** | Aktuelle leerstehende Einheiten | 2 WE |
+| **Eigenkapital-Quote** | Geplanter EK-Anteil in Prozent | 20% |
+| **Finanzierungszins** | Aktueller Sollzins p.a. | 3,8% |
+| **Tilgung** | Anfaengliche Tilgung p.a. | 2,0% |
+| **Gewerbeanteil** | Anteil Gewerbe an Gesamtmiete | 15% |
+| **Bekannte Sanierungsmassnahmen** | Bereits geplant oder durchgefuehrt | Dach 2015 neu |
+| **Strategie** | Buy-and-Hold / Value-Add / Aufteiler | Buy-and-Hold |
+| **Wunsch-Rendite** | Mindest-Nettomietrendite des Investors | 4,0% netto |
+
+---
+
+## Auftrag
+
+Berechne mit minimalen Eingaben alle entscheidungsrelevanten Kennzahlen und liefere eine sofortige Ampel-Bewertung. Beantworte die Kernfragen: Wie rentabel ist der Deal? Wann fliesst das Eigenkapital zurueck? Und falls relevant: Funktioniert eine Aufteilung?
+
+---
+
+## Strategie
+
+### Schritt 1: Basisdaten normalisieren
+
+Berechne und normalisiere alle Eingaben:
+
+```
+Monatsmiete nettokalt (gesamt) = Ist-Miete/qm * Wohnflaeche
+Jahresnettokaltmiete (JNKM) = Monatsmiete * 12
+Kaufpreis pro qm = Kaufpreis / Wohnflaeche
+Durchschnittliche Wohnungsgroesse = Wohnflaeche / Anzahl WE
+```
+
+Bei Leerstand:
+```
+JNKM (Ist) = Monatsmiete nettokalt (vermietete Flaeche) * 12
+JNKM (Soll) = Ist-Miete/qm * Gesamtwohnflaeche * 12
+Leerstandsquote = Leerstehende WE / Gesamte WE * 100
+```
+
+### Schritt 2: Erwerbsnebenkosten berechnen
+
+Berechne die Erwerbsnebenkosten (ENK) nach Bundesland:
+
+| Bundesland | Grunderwerbsteuer | Notar + Grundbuch | Makler (Kaeuferanteil) | Gesamt ohne Makler | Gesamt mit Makler |
+|------------|-------------------|-------------------|------------------------|--------------------|--------------------|
+| Bayern | 3,5% | 2,0% | 3,57% | 5,5% | 9,07% |
+| Baden-Wuerttemberg | 5,0% | 2,0% | 3,57% | 7,0% | 10,57% |
+| Berlin | 6,0% | 2,0% | 3,57% | 8,0% | 11,57% |
+| Brandenburg | 6,5% | 2,0% | 3,57% | 8,5% | 12,07% |
+| Hamburg | 5,5% | 2,0% | 3,57% | 7,5% | 11,07% |
+| Hessen | 6,0% | 2,0% | 3,57% | 8,0% | 11,57% |
+| Niedersachsen | 5,0% | 2,0% | 3,57% | 7,0% | 10,57% |
+| NRW | 6,5% | 2,0% | 3,57% | 8,5% | 12,07% |
+| Sachsen | 5,5% | 2,0% | 3,57% | 7,5% | 11,07% |
+| Schleswig-Holstein | 6,5% | 2,0% | 3,57% | 8,5% | 12,07% |
+| Thueringen | 5,0% | 2,0% | 3,57% | 7,0% | 10,57% |
+| Sonstige | 5,0-6,5% | 2,0% | 3,57% | 7,0-8,5% | 10,57-12,07% |
+
+```
+Erwerbsnebenkosten (EUR) = Kaufpreis * ENK-Satz
+Gesamtinvestition = Kaufpreis + Erwerbsnebenkosten
+```
+
+### Schritt 3: Kernkennzahlen berechnen
+
+**3.1 Kaufpreisfaktor (KPF)**
+```
+KPF = Kaufpreis / JNKM (Ist)
+All-in KPF = Gesamtinvestition / JNKM (Ist)
+Soll-KPF = Kaufpreis / JNKM (Soll)  [wenn Mietpotenzial bekannt]
+```
+
+**3.2 Bruttomietrendite (BMR) -- immer in drei Szenarien**
+```
+BMR (Ist)    = (JNKM Ist / Kaufpreis) * 100        [Entscheidungsbasis]
+BMR (Soll)   = (JNKM Soll / Kaufpreis) * 100       [nur rechtlich plausibilisierte Soll-Miete]
+BMR (Stress) = (JNKM Stress / Kaufpreis) * 100     [konservative Unterkante: z.B. Amtsmiete/KdU-Niveau
+                                                    oder Ist-Miete mit erhoehtem Leerstand]
+All-in BMR   = (JNKM Ist / Gesamtinvestition) * 100
+```
+
+Alle Ampel-Entscheidungen basieren auf der **Ist-Miete**. BMR (Soll) zeigt das Potenzial, BMR (Stress) die Absturzkante. Liegt die Zielrendite nur im Soll-Szenario, ist das ein GELB-Signal, nie GRUEN.
+
+**Ziel-BMR-Referenzwerte nach Dealtyp:**
+
+| Dealtyp | Ziel-BMR | Anmerkung |
+|---------|----------|-----------|
+| Einsteiger-ETW (50.000-100.000 EUR KP) | > 4-6% (je nach Finanzierung) | Annuitaet 3-5%, laufende Kosten ca. 1% -- BMR muss Annuitaet + Kosten tragen |
+| Standard-Bestand C-Lage | ca. 7% | Beispiel: 1.000 EUR/qm Kaufpreis bei 6 EUR/qm Miete = 7,2% BMR |
+| Profi-/Problem-Deal | 8-10% binnen 3 Jahren | Einkauf 10-60% unter Marktwert, klare Problemloesung, Risikoreserve zwingend |
+
+**3.3 Geschaetzte Nettomietrendite**
+
+Abzuege von der Bruttomiete (Pauschalen wenn keine Detaildaten):
+
+| Position | Pauschale | Berechnung |
+|----------|-----------|------------|
+| Nicht umlagefaehige Betriebskosten | 3-5% der JNKM | Verwalterkosten, Kontogebuehren, Leerstandskosten |
+| Instandhaltungsruecklage | Baujahr-abhaengig (siehe unten) | EUR/qm/Jahr * Wohnflaeche |
+| Mietausfallwagnis | 2-4% der JNKM | Leerstand + Zahlungsausfall |
+| Verwaltungskosten | 250-350 EUR/WE/Jahr | Hausverwaltung |
+
+**Instandhaltungsruecklage nach Baujahr:**
+
+| Baujahr | EUR/qm/Jahr | Begruendung |
+|---------|-------------|-------------|
+| Vor 1950 | 15-20 EUR | Hoher Instandhaltungsbedarf, Substanzthemen |
+| 1950-1970 | 12-18 EUR | Nachkriegssubstanz, Leitungen, Fenster |
+| 1970-1990 | 10-15 EUR | Flachdach-Problematik, Waermebruecken |
+| 1990-2010 | 7-12 EUR | Solide Bausubstanz, geringerer Bedarf |
+| Nach 2010 | 5-8 EUR | Neubau, minimaler Instandhaltungsbedarf |
+
+```
+Bewirtschaftungskosten (gesamt) = NK-nicht-umlagefaehig + Instandhaltung + Mietausfallwagnis + Verwaltung
+Nettomietrendite = ((JNKM - Bewirtschaftungskosten) / Gesamtinvestition) * 100
+```
+
+### Schritt 4: Finanzierungsrechnung
+
+Verwende Standard-Annahmen wenn nicht angegeben:
+
+| Parameter | Standard-Annahme | Anmerkung |
+|-----------|-----------------|-----------|
+| Eigenkapital-Quote | 25% der Gesamtinvestition | Konservativ |
+| Beleihung | 75% des Kaufpreises (ohne ENK) | Bank beleiht idR nur Kaufpreis |
+| Sollzins | 3,8% p.a. | Aktuelles Marktniveau pruefen |
+| Tilgung | 2,0% p.a. anfaenglich | Mindestens 1,5% |
+| Zinsbindung | 10 Jahre | Standard |
+
+```
+Eigenkapital = Gesamtinvestition * EK-Quote
+         ODER = ENK + (Kaufpreis * (1 - Beleihungsquote))
+Darlehenssumme = Gesamtinvestition - Eigenkapital
+Annuitaet (jaehrlich) = Darlehenssumme * (Sollzins + Tilgung) / 100
+Annuitaet (monatlich) = Annuitaet / 12
+```
+
+**Cashflow-Berechnung:**
+```
+Jahres-Nettokaltmiete (Ist)           =  JNKM
+- Bewirtschaftungskosten               = -BWK
+= Nettomietertrag                      =  NME
+- Annuitaet (Zins + Tilgung)           = -ANN
+= Cashflow vor Steuern                 =  CF_vSt
+- Steuerlast (geschaetzt 30-42% auf    = -Steuer
+  Ueberschuss, vereinfacht)
++ AfA-Effekt (geschaetzt)              = +AfA
+= Cashflow nach Steuern (geschaetzt)   =  CF_nSt
+```
+
+**AfA-Schaetzung (vereinfacht):**
+```
+AfA-Satz:
+- Baujahr bis 31.12.1924:  2,5% p.a. auf Gebaeudewert
+- Baujahr 01.01.1925-31.12.2022: 2,0% p.a. auf Gebaeudewert
+- Baujahr ab 01.01.2023:   3,0% p.a. auf Gebaeudewert
+Gebaeudewert (geschaetzt) = Kaufpreis * 75% (Anteil Gebaeude vs. Boden)
+AfA (jaehrlich) = Gebaeudewert * AfA-Satz
+```
+
+### Schritt 5: Eigenkapital-Rueckfluss
+
+Die Kernfrage: **Wann bekomme ich mein Eigenkapital zurueck?**
+
+```
+Jaehrlicher Eigenkapital-Aufbau = Tilgungsanteil der Annuitaet + Cashflow vor Steuern
+EK-Rueckfluss (Jahre) = Eigenkapital / Jaehrlicher EK-Aufbau
+```
+
+Bewertung:
+| EK-Rueckfluss | Bewertung | Kommentar |
+|---------------|-----------|-----------|
+| < 8 Jahre | GRUEN | Sehr schneller EK-Rueckfluss, attraktiver Deal |
+| 8-12 Jahre | GELB | Solider EK-Rueckfluss, marktgaengig |
+| 12-18 Jahre | GELB-ROT | Langer EK-Rueckfluss, nur bei Wertsteigerungspotenzial |
+| > 18 Jahre | ROT | Kapital ist zu lange gebunden |
+
+**EK-Rueckfluss ueber Wertschoepfung (zusaetzlicher Pfad):** Neben Cashflow + Tilgung kann Eigenkapital auch durch Nachbeleihung/Refinanzierung nach abgeschlossener Wertschoepfung (Sanierung, Mietanhebung) oder durch Teilverkauf (Aufteilung, Schritt 8) freigesetzt werden. Auf dem Bierdeckel nur als Hinweis vermerken, nicht einrechnen -- Beleihbarkeit, Sicherheitenfreigabe und Steuerfolgen sind individuell zu pruefen [Pruefbedarf: Bank + Steuerberater]. Faustregel fuer die Priorisierung: Ein Objekt mit klarem Wertschoepfungshebel bindet EK nur temporaer, ein Objekt ohne Hebel bindet es fuer die volle Laufzeit.
+
+### Schritt 6: Mieterhoehungspotenzial
+
+Wenn Marktmiete bekannt oder schaetzbar:
+
+```
+Delta Ist zu Markt = Marktmiete/qm - Ist-Miete/qm
+Jaehrliches Mieterhoehungspotenzial = Delta * Wohnflaeche * 12
+Potenzial-Bruttomietrendite = ((JNKM + Mieterhoehungspotenzial) / Gesamtinvestition) * 100
+```
+
+**Realisierbarkeit einschaetzen:**
+- Kappungsgrenze: Max. 15% (abgesenkt) oder 20% (normal) in 3 Jahren -- und immer nur bis zur ortsueblichen Vergleichsmiete
+- Ortsuebliche Vergleichsmiete ist ein **Durchschnitt, nicht die aktuelle Marktspitze** -- Mietspiegel als Quelle, nicht Portal-Angebotsmieten
+- Mietpreisbremse bei Neuvermietung: Max. 10% ueber ortsueblicher Vergleichsmiete (Ausnahmen u.a. Neubau, umfassende Modernisierung) [Pruefbedarf: gilt die Bremse am Standort?]
+- Fluktuation: ca. 8-12% der Mieter ziehen pro Jahr um (bei normaler Fluktuation)
+- Zeitraum bis volle Marktmiete: ca. 5-8 Jahre realistisch
+
+```
+Realisierbares Mieterhoehungspotenzial (5 Jahre) = 
+  Bestandsmieter: +Kappungsgrenze (15-20% in 3 Jahren, gedeckelt auf Vergleichsmiete)
+  Neuvermietung (bei Fluktuation): Marktmiete (abzgl. Mietpreisbremse)
+```
+
+**Plausibilisierungsregeln (keine Mietpotenzialannahme ohne Rechtscheck):**
+
+| Regel | Konsequenz fuer die Kalkulation |
+|-------|--------------------------------|
+| Kauf bricht Miete nicht | Vermietete Einheiten bleiben zu Bestandskonditionen vermietet; Potenzial nur ueber den langsamen Erhoehungspfad |
+| Under-Rent ist Potenzial, kein Sofort-Cashflow | Delta zur Marktmiete rechtfertigt Kaufpreisabschlag, aber keinen Ist-Cashflow |
+| Vertragsart pruefen | Index-, Staffelmiete oder Amts-/Sozialmiete blockieren die normale Vergleichsmieten-Erhoehung -- Potenzial ggf. auf Null setzen |
+| Mieter-Auszug / freiwillige Erhoehung | Nur einkalkulieren, wenn rechtlich belastbar dokumentiert (z.B. unterschriebene Aufhebungsvereinbarung) -- sonst Wunschszenario |
+| Modernisierungsumlage (8% p.a.) ist kein Freifahrtschein | Muss praktisch, rechtlich und sozial durchsetzbar sein; Kappung 2-3 EUR/qm in 6 Jahren [Pruefbedarf: Mietrecht] |
+| Konservativer Marktmiete-Ansatz | Nicht die Marktspitze ansetzen, sondern nachhaltige Miete leicht darunter |
+| Leer gekaufte Einheiten | Sofort zu Marktmiete vermietbar (Mietpreisbremse beachten) -- Flexibilitaet wird aber meist mit hoeherem Kaufpreis bezahlt |
+| Bank-Sicht auf Under-Rent | Schlecht vermietete Objekte werden im Ertragswert niedriger bewertet -- moeglicher hoeherer EK-Bedarf trotz Potenzial |
+
+### Schritt 7: Sanierungskosten-Schaetzung (pauschal)
+
+Wenn kein detaillierter Sanierungsplan vorliegt, schaetze pauschal:
+
+| Baujahr | Zustand unsaniert | Zustand teilsaniert | Zustand kernsaniert |
+|---------|-------------------|---------------------|---------------------|
+| Vor 1950 | 800-1.500 EUR/qm | 400-800 EUR/qm | 100-250 EUR/qm |
+| 1950-1970 | 600-1.200 EUR/qm | 300-600 EUR/qm | 80-200 EUR/qm |
+| 1970-1990 | 400-900 EUR/qm | 200-450 EUR/qm | 50-150 EUR/qm |
+| 1990-2010 | 200-500 EUR/qm | 100-250 EUR/qm | 30-100 EUR/qm |
+| Nach 2010 | 50-200 EUR/qm | 30-100 EUR/qm | 0-50 EUR/qm |
+
+**Heizungs-Sonderkosten (GEG):**
+
+| Heizungstyp | Geschaetzte Umruestungskosten | Zeitdruck |
+|-------------|-------------------------------|-----------|
+| Oel-Heizung | 25.000-70.000 EUR | Hoch (Austausch bis 2026-2028) |
+| Gas-Etagenheizung (alt) | 8.000-15.000 EUR pro Therme | Mittel (bei Ausfall) |
+| Gas-Zentralheizung (alt) | 20.000-60.000 EUR | Mittel (bei Ausfall oder > 30 Jahre) |
+| Gas-Zentralheizung (jung) | 0 EUR (vorerst) | Niedrig |
+| Fernwaerme / Waermepumpe | 0 EUR | Kein Handlungsbedarf |
+
+```
+Geschaetzte Sanierungskosten = Wohnflaeche * Pauschale/qm + Heizungs-Sonderkosten
+Gesamtinvestition inkl. Sanierung = Gesamtinvestition + Sanierungskosten
+Rendite nach Sanierung = JNKM(Soll) / Gesamtinvestition inkl. Sanierung * 100
+```
+
+**Grundsatz:** Sanierung dauert laenger und kostet mehr als geplant -- auf dem Bierdeckel immer die obere Kante der Pauschale ansetzen oder einen Puffer aufschlagen. Unsanierte Objekte bieten hoehere Anfangsrendite und Verhandlungsspielraum, tragen aber GEG-, Heizungs-, Elektro-, Dach- und Sonderumlagenrisiko; sanierte Objekte und Neubau kaufen stabilere Endrendite und geringere Regulierungsrisiken (Banken achten zunehmend auf Energieklasse, CO2-Kostenanteil des Eigentuemers steigt mit schlechter Effizienzklasse).
+
+### Schritt 8: Aufteiler-Kalkulation (optional)
+
+Wenn Strategie "Aufteiler" (Aufteilung in Eigentumswohnungen und Teilverkauf):
+
+```
+Geschaetzter ETW-Verkaufspreis/qm = Marktpreis fuer ETW im Stadtteil
+Durchschnittliche WE-Groesse = Wohnflaeche / Anzahl WE
+Verkaufspreis pro WE = ETW-Verkaufspreis/qm * Durchschn. WE-Groesse
+Abzug Veraeusserungskosten = 3-5% (Makler, Notar, Aufwand)
+Netto-Verkaufspreis pro WE = Verkaufspreis * (1 - Veraeusserungskosten)
+
+Breakeven-Einheiten = Eigenkapital / Netto-Verkaufspreis pro WE  (aufgerundet)
+```
+
+Bewertung:
+| Breakeven | Bewertung | Kommentar |
+|-----------|-----------|-----------|
+| < 25% der WE | GRUEN | EK frei nach wenigen Verkaeufen, Rest ist "Gewinn-Portfolio" |
+| 25-40% der WE | GELB | Funktioniert, aber weniger Puffer |
+| 40-60% der WE | GELB-ROT | Knappes Geschaeft, Vermarktungsrisiko |
+| > 60% der WE | ROT | Aufteiler-Strategie rechnet sich nicht |
+
+**Voraussetzungen Aufteilung pruefen:**
+- Abgeschlossenheitsbescheinigung vorhanden oder beantragbar?
+- Teilungserklaerung erforderlich (Notar + Kosten)
+- Umwandlungsverbot pruefen (Milieuschutz-Gebiete: 7-10 Jahre Sperrfrist)
+- Mieter-Vorkaufsrecht bei Erstverkauf nach Umwandlung
+- Spekulationsfrist: 10 Jahre Haltefrist fuer steuerfreien Verkauf
+
+### Schritt 9: Sofort-Ampel
+
+Aggregiere alle Berechnungen zu einer Gesamtampel:
+
+**GRUEN -- Kaufen pruefen:**
+- Kaufpreisfaktor passt zur Lage (C/D: < 20, B: < 25, A: < 30)
+- Bruttomietrendite >= 5% (B/C/D) bzw. >= 3,5% (A)
+- Geschaetzte Nettomietrendite >= 3,5%
+- Cashflow nach Finanzierung positiv oder break-even
+- EK-Rueckfluss < 12 Jahre
+- Mieterhoehungspotenzial vorhanden (> 10%)
+- Sanierungskosten < 20% des Kaufpreises
+
+**GELB -- Genauer hinschauen:**
+- KPF am oberen Rand, aber Mietpotenzial erkennbar
+- Cashflow leicht negativ (< -200 EUR/Monat), aber Tilgung baut EK auf
+- Sanierungskosten 20-35% des Kaufpreises
+- EK-Rueckfluss 12-18 Jahre
+- Deal funktioniert nur mit Mieterhoehung
+
+**ROT -- Finger weg:**
+- KPF deutlich ueber Lage-Benchmark ohne erkennbares Potenzial
+- Nettomietrendite < 2,5%
+- Cashflow stark negativ (> -500 EUR/Monat)
+- EK-Rueckfluss > 18 Jahre
+- Sanierungskosten > 35% des Kaufpreises
+- Miete bereits ueber Markt (kein Potenzial, Rueckgangsrisiko)
+- Zielrendite nur mit nicht plausibilisierter Fantasie-Sollmiete erreichbar
+
+**Ampel in Handlung uebersetzen (Pipeline-Entscheidung):**
+
+| Ampel | Handlung |
+|-------|----------|
+| GRUEN | Unterlagen anfordern und tief pruefen: Mietliste, Wirtschaftsdaten, dann `cashflow-modell` |
+| GELB | Nachfassen: gezielte Rueckfragen zu genau den Annahmen, die den Deal kippen koennen (Kill-Frage) |
+| ROT (Preisproblem) | Verwerfen ODER mit konkretem Verhandlungsziel (Ziel-KPF * JNKM) zurueckspielen -- gern auch als Kaufabsichtserklaerung deutlich unter Angebotspreis |
+| ROT (Strukturproblem) | Verwerfen und Absage begruenden -- kein Preis heilt Erbpacht-, Substanz- oder Standortprobleme |
+
+---
+
+## Ausgabeformat
+
+**Wichtig:** Der Nutzer ist Immobilieninvestor, kein IT-ler. Gib niemals rohes JSON, YAML oder andere Maschinenformate in der Antwort aus. Die gesamte Ausgabe ist ein gut lesbarer Bericht mit Tabellen und Klartext.
+
+Liefere die Ergebnisse in folgendem Format:
+
+### Bierdeckel (Freitext)
+
+Stelle die Kalkulation so dar, wie sie auf einem Bierdeckel stehen wuerde -- kompakt, auf das Wesentliche reduziert, mit klarer Aussage. Max. 10 Zeilen.
+
+Beispiel:
+```
+BIERDECKEL: MFH Dortmund-Nordstadt, 12 WE, 620 qm, Bj. 1962
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+Kaufpreis:      1.850.000 EUR  (2.984 EUR/qm)
+Ist-Miete:         63.240 EUR/Jahr  (8,50 EUR/qm)
+KPF:                29,3x  ← zu hoch fuer C-Lage!
+Brutto-Rendite:      3,4%  ← unter Schwelle
+Netto (geschaetzt):  2,1%  ← kritisch
+Cashflow/Monat:    -680 EUR  ← negativ
+EK-Rueckfluss:     22 Jahre  ← viel zu lang
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+AMPEL: ROT -- Finger weg (zum aktuellen Preis)
+Verhandlungsziel: KP 1.200.000 EUR (KPF 19x)
+```
+
+### Kalkulationsbericht
+
+```markdown
+# Bierdeckel-Kalkulation: MFH Dortmund-Nordstadt, Beispielstr. 42
+
+**Sofort-Ampel: 🔴 ROT -- Finger weg (zum aktuellen Preis)** | Konfidenz: 70%
+
+## Objekt
+
+| | |
+|---|---|
+| Kaufpreis | 1.850.000 EUR |
+| Wohnflaeche | 620 qm, 12 WE |
+| Baujahr | 1962 |
+| Heizung | Gas-Zentralheizung |
+| Standort | Dortmund, NRW (C-Lage) |
+
+## Mietdaten
+
+| | |
+|---|---|
+| Ist-Miete | 8,50 EUR/qm |
+| Marktmiete | 9,50 EUR/qm |
+| Monatsmiete nettokalt | 5.270 EUR |
+| Jahresnettokaltmiete (Ist) | 63.240 EUR |
+| Jahresnettokaltmiete (Soll) | 70.680 EUR |
+| Leerstand | 0 WE (0%) |
+
+## Erwerbsnebenkosten
+
+| Position | Betrag |
+|----------|--------|
+| Grunderwerbsteuer (6,5%) | 120.250 EUR |
+| Notar + Grundbuch | 37.000 EUR |
+| Makler | 66.045 EUR |
+| **ENK gesamt (12,07%)** | **223.295 EUR** |
+| **Gesamtinvestition** | **2.073.295 EUR** |
+
+## Kernkennzahlen
+
+| Kennzahl | Wert |
+|----------|------|
+| Kaufpreisfaktor | 29,3 |
+| All-in-Kaufpreisfaktor | 32,8 |
+| Bruttomietrendite | 3,42% |
+| All-in-Bruttomietrendite | 3,05% |
+| Kaufpreis pro qm | 2.984 EUR |
+
+## Bewirtschaftungskosten
+
+| Position | Betrag/Jahr |
+|----------|-------------|
+| Nicht umlagefaehige NK | 2.530 EUR |
+| Instandhaltungsruecklage (15 EUR/qm/Jahr) | 9.300 EUR |
+| Mietausfallwagnis | 1.897 EUR |
+| Verwaltungskosten | 3.600 EUR |
+| **Bewirtschaftungskosten gesamt** | **17.327 EUR** |
+| **Nettomietertrag** | **45.913 EUR** |
+| **Nettomietrendite** | **2,21%** |
+
+## Finanzierung
+
+| | |
+|---|---|
+| Eigenkapital (25%) | 518.324 EUR |
+| Darlehenssumme | 1.554.971 EUR |
+| Sollzins / Tilgung | 3,80% / 2,00% |
+| Annuitaet | 90.188 EUR/Jahr (7.516 EUR/Monat) |
+| Davon Zins / Tilgung (Jahr 1) | 59.089 EUR / 31.099 EUR |
+
+## Cashflow
+
+| Position | Betrag |
+|----------|--------|
+| Nettomietertrag | 45.913 EUR/Jahr |
+| Annuitaet | -90.188 EUR/Jahr |
+| **Cashflow vor Steuern** | **-44.275 EUR/Jahr (-3.690 EUR/Monat)** 🔴 |
+| AfA (jaehrlich) | 27.750 EUR |
+| Steuerlicher Verlust | -16.525 EUR |
+| Cashflow nach Steuern (geschaetzt) | -3.138 EUR/Monat |
+
+## Eigenkapital-Rueckfluss: 🔴 ROT
+
+Jaehrlicher EK-Aufbau: -13.176 EUR -- EK-Rueckfluss nicht berechenbar.
+Negativer Cashflow uebersteigt Tilgung. Kein EK-Aufbau, stattdessen Zuschussgeschaeft.
+
+## Mieterhoehungspotenzial
+
+| | |
+|---|---|
+| Delta Ist zu Markt | 1,00 EUR/qm |
+| Potenzial jaehrlich | 7.440 EUR (+11,8%) |
+| Realisierbar in 5 Jahren | ca. 60% |
+| Potenzial-Bruttomietrendite | 3,82% |
+
+Moderates Mieterhoehungspotenzial, reicht nicht aus um negativen Cashflow auszugleichen.
+
+## Sanierungskosten (Schaetzung)
+
+| | |
+|---|---|
+| Zustandsannahme | teilsaniert (450 EUR/qm Pauschale) |
+| Sanierungskosten Bau | 279.000 EUR |
+| Heizung-Sonderkosten | 40.000 EUR |
+| **Sanierungskosten gesamt** | **319.000 EUR (17,2% des Kaufpreises)** |
+| Gesamtinvestition inkl. Sanierung | 2.392.295 EUR |
+| Rendite nach Sanierung | 2,95% |
+
+## Aufteiler-Kalkulation: 🟡🔴 GELB-ROT
+
+| | |
+|---|---|
+| ETW-Verkaufspreis | 2.200 EUR/qm |
+| Durchschnittliche WE-Groesse | 51,7 qm |
+| Verkaufspreis pro WE (brutto / netto) | 113.674 EUR / 108.490 EUR |
+| Breakeven | 5 Einheiten (41,7% der WE) |
+
+Fast die Haelfte der Einheiten muesste verkauft werden. Knappes Geschaeft.
+
+## Sofort-Ampel: 🔴 ROT
+
+**Hauptgruende:**
+- KPF 29,3 ist deutlich zu hoch fuer C-Lage (Zielkorridor: 14-22)
+- Bruttomietrendite 3,4% unter Schwelle fuer C-Lage (min. 5%)
+- Cashflow stark negativ: -3.690 EUR/Monat
+- Kein EK-Rueckfluss absehbar
+
+**Empfehlung:** Deal funktioniert zum aktuellen Preis nicht. Kaufpreisverhandlung auf
+ca. 1.200.000 EUR (KPF ~19) notwendig, um in den gruenen Bereich zu kommen.
+
+**Verhandlungsziel:** 1.200.000 EUR (KPF 19,0 | Bruttomietrendite 5,27%)
+
+---
+*Pauschale Schaetzung, keine detaillierte Due Diligence. Alle Werte sind Naeherungen.*
+```
+
+---
+
+## Qualitaetspruefung
+
+Vor Abgabe der Kalkulation pruefe:
+
+1. **Rechnerische Konsistenz**: KPF = 1 / Bruttomietrendite * 100? Stimmt Monatsmiete * 12 = JNKM?
+2. **Plausibilitaet der Miete**: Liegt die Ist-Miete in einem realistischen Bereich (4-15 EUR/qm fuer MFH)? Extrem hohe oder niedrige Werte hinterfragen.
+3. **ENK-Berechnung**: Wurde das richtige Bundesland fuer die Grunderwerbsteuer verwendet?
+4. **Cashflow-Vorzeichen**: Ist der Cashflow korrekt berechnet? Nettomietertrag minus Annuitaet.
+5. **EK-Rueckfluss-Logik**: Bei negativem Cashflow: EK-Rueckfluss = unendlich (nicht berechenbar), nicht einfach ignorieren.
+6. **Sanierungskosten-Plausibilitaet**: Passen die geschaetzten Kosten zum Baujahr? Ein Neubau von 2015 braucht keine 800 EUR/qm Sanierung.
+7. **Ampel-Konsistenz**: Passt die Ampel zu den Zahlen? ROT bei positivem Cashflow waere inkonsistent.
+8. **Verhandlungsziel**: Wurde bei ROT-Ampel ein realistisches Verhandlungsziel berechnet? (Ziel-KPF * JNKM = Ziel-Kaufpreis)
+
+---
+
+## Warnsignale & Dealbreaker
+
+### Kalkulations-Dealbreaker (ROT)
+
+| Signal | Schwelle | Kommentar |
+|--------|----------|-----------|
+| **Negativer Cashflow > 500 EUR/Monat** | Dauerhaftes Zuschussgeschaeft | Liquiditaetsrisiko, nur fuer stark kapitalisierte Investoren |
+| **Nettomietrendite < 2,0%** | Unter Festgeld-Niveau | Immobilien-Risiko wird nicht verguetet |
+| **EK-Rueckfluss > 20 Jahre** | Kapital zu lange gebunden | Opportunitaetskosten zu hoch |
+| **Sanierungskosten > 40% des Kaufpreises** | Quasi-Neubau noetig | Neubau pruefen als Alternative |
+| **KPF > 30 in B/C/D-Lage** | Voellig ueberteuert | Keine Verhandlungsbasis erkennbar |
+
+### Kalkulatorische Warnsignale (GELB)
+
+| Signal | Schwelle | Handlung |
+|--------|----------|----------|
+| **Cashflow break-even oder leicht negativ** | -200 bis 0 EUR/Monat | Nur akzeptabel wenn starkes Mietpotenzial |
+| **Miete bereits ueber Markt** | Ist > Markt + 10% | Rueckgangsrisiko bei Mieterwechsel |
+| **Deal rechnet sich nur im Soll-Szenario** | BMR (Ist) unter Zielrendite | Soll-Miete rechtlich plausibilisieren, bevor weitergerechnet wird |
+| **Index-/Staffel-/Amtsmieten im Bestand** | Erhoehungspfad blockiert | Mietvertraege anfordern, Potenzial ggf. streichen |
+| **Hoher Gewerbeanteil** | > 25% der Miete | Gewerbe separat kalkulieren |
+| **Sanierung erforderlich + Miete bereits hoch** | Kein Potenzial zur Refinanzierung | Sanierung aus Cashflow nicht darstellbar |
+| **Aufteiler: Breakeven > 40%** | Vermarktungsrisiko | Sensitivitaetsrechnung mit -10% Verkaufspreis |
+
+---
+
+## Bei fehlenden Daten
+
+| Fehlende Information | Annahme | Auswirkung auf Konfidenz |
+|---------------------|---------|--------------------------|
+| **Heizungstyp** | Gas-Zentralheizung annehmen, 30.000 EUR Umruestung einplanen | -5% |
+| **Marktmiete** | Ist-Miete + 10% als konservative Annahme | -10% |
+| **Finanzierungszins** | 3,8% Sollzins annehmen | -3% |
+| **Sanierungszustand** | "Teilsaniert" annehmen (mittlere Pauschale) | -10% |
+| **Gewerbeanteil** | 0% annehmen (reines Wohnhaus) | -2% |
+| **Leerstand** | 0% annehmen, aber 3% Mietausfallwagnis | -5% |
+| **Makler-Provision** | Bestellerprinzip: 3,57% Kaeuferanteil annehmen | -2% |
+| **Strategie** | Buy-and-Hold annehmen | -0% |
+
+**Basis-Konfidenz:** 70%
+**Maximale Konfidenz:** 90% (Bierdeckel ist nie eine vollstaendige Kalkulation)
+**Unter 50% Konfidenz:** Warnung ausgeben, dass zu viele Annahmen getroffen wurden.
+
+---
+
+## Konfidenz-Bewertung
+
+| Konfidenz | Bedeutung | Typische Datenlage |
+|-----------|-----------|-------------------|
+| **80-90%** | Belastbare Bierdeckel-Kalkulation | Alle Pflichtangaben + Marktmiete + Heizung + Zustand bekannt |
+| **65-79%** | Gute Ersteinschaetzung | Pflichtangaben vorhanden, optionale Daten teilweise geschaetzt |
+| **50-64%** | Grobe Richtung | Mehrere wesentliche Annahmen getroffen |
+| **< 50%** | Nur Tendenz | Zu viele Unbekannte, Kalkulation als "vorlaeufig" kennzeichnen |
+
+---
+
+## Verwandte Wissensdatenbanken
+
+- `knowledge/kalkulationsformeln.md` -- Detaillierte Formeln fuer alle Renditekennzahlen und Cashflow-Berechnungen
+- `knowledge/risikobewertung.md` -- Risiko-Scoring fuer die Interpretation der Kennzahlen
+- `knowledge/marktbenchmarks.md` -- Benchmarks fuer KPF, Mieten, Sanierungskosten nach Region und Baujahr
+- `knowledge/rechtsgrundlagen.md` -- Mietpreisbremse, Kappungsgrenze, AfA-Regelungen, GEG
+
+### Verwandte Skills
+
+- `skills/expose-parser/SKILL.md` -- Davor: Eckdaten aus dem Expose strukturiert extrahieren
+- `skills/deal-screener/SKILL.md` -- Vorgelagertes Screening vor der Kalkulation
+- `skills/marktanalyse/SKILL.md` -- Standortdaten fuer die Marktmiete-Schaetzung
+- `skills/cashflow-modell/SKILL.md` -- Danach: Detaillierte 5-Jahres-Cashflow-Projektion, nur nach positivem Bierdeckel
+- `skills/bankenpitch/SKILL.md` -- Finanzierungskonzept & Bankenpraesentation
+- `skills/mietlisten-analyse/SKILL.md` -- Detaillierte Mietlisten-Validierung (Soll-Miete plausibilisieren)

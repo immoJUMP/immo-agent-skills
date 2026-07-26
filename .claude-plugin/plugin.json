@@ -1,0 +1,9 @@
+{
+  "name": "immo-agent-skills",
+  "version": "1.9.0",
+  "description": "30+ KI-Skills fuer deutsche Wohnimmobilien-Investoren: Ankauf, Finanzierung, Verwaltung, Vermietung, Buchhaltung, Dokumentenanalyse, Strategie und Prozessgestaltung.",
+  "author": {
+    "name": "immoJUMP"
+  },
+  "license": "LicenseRef-immoJUMP-SA-1.0"
+}
