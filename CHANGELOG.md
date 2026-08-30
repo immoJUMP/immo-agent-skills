@@ -2,6 +2,13 @@
 
 Alle wesentlichen Aenderungen an diesem Projekt.
 
+## [1.11.0](https://github.com/immoJUMP/immo-agent-skills/compare/v1.10.0...v1.11.0) (2026-08-30)
+
+
+### Hinzugefuegt
+
+* **nebenkosten-pruefer:** erweitere Rechtspruefung ([8a9c184](https://github.com/immoJUMP/immo-agent-skills/commit/8a9c1849ef1feb6950872d0609a9dd2dab07a5b5))
+
 ## [1.10.0](https://github.com/immoJUMP/immo-agent-skills/compare/v1.9.0...v1.10.0) (2026-07-26)
 
 
