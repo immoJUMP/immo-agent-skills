@@ -200,7 +200,8 @@ immo-agent-skills/
 │   ├── risikobewertung.md         # Risiko-Scoring-Framework
 │   ├── marktbenchmarks.md         # Benchmarks nach Baujahr, Lage, Zustand
 │   ├── rechtsgrundlagen.md        # BGB-Mietrecht, WEG, Mietspiegel
-│   └── checklisten.md             # Ankauf, Verwaltung, Vermietung
+│   ├── checklisten.md             # Ankauf, Verwaltung, Vermietung
+│   └── anlage-v-formularstruktur.md # Anlage V 2025 zeilengenau, Zuordnungsmatrix, Rechtsstand
 │
 ├── templates/                     # Beispiel-Eingabedaten & HTML-Templates
 │   └── bankenpitch-template.html  # Interaktives Bankenpitch-Template
@@ -265,7 +266,7 @@ immo-agent-skills/
 |-------|-------------|-----------------|
 | **Beleg-Sortierer** | Belege nach Kategorie und Objekt zuordnen | Beleg-PDFs oder Scans |
 | **DATEV-Vorbereitung** | Buchungssaetze fuer DATEV-Export aufbereiten | Sortierte Belege |
-| **Anlage-V-Assistent** | Anlage V vorausfuellen fuer den Steuerberater | Jahresdaten pro Objekt |
+| **Anlage-V-Assistent** | Anlage V 2025 zeilengenau vorausfuellen: AfA inkl. Restnutzungsdauer-Gutachten, 15%-Grenze, Paragraf-82b-Verteilung, Plausibilitaetspruefung, Steuerberater-Fragen | Mietkonto, Belege, Zinsbescheinigungen, Kaufvertrag, ggf. Gutachten |
 
 ### Dokumente
 
@@ -300,6 +301,7 @@ Die Wissensdatenbanken liefern den Kontext, damit die Skills praeziese Ergebniss
 | **marktbenchmarks.md** | Benchmarks nach Baujahr, Lage (A/B/C/D), Zustandsklasse |
 | **rechtsgrundlagen.md** | BGB Mietrecht (§535ff), Kappungsgrenze, Mietpreisbremse, WEG, Modernisierungsumlage |
 | **checklisten.md** | Pruef-Checklisten fuer Ankauf, Uebergabe, Vermietung, Verwaltung |
+| **anlage-v-formularstruktur.md** | Anlage V 2025 Zeile fuer Zeile (Zeilen 4-89), Zuordnungsmatrix Kostenart -> Zeile, Rechtsstand-Tabelle Vermietungseinkuenfte |
 
 ---
 
