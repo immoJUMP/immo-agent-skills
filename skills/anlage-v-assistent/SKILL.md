@@ -250,7 +250,7 @@ Der haeufigste Gegenangriff des Finanzamts lautet: Eine kurze Restnutzungsdauer 
 | Anschaffungskosten (Herstellung der Funktionstuechtigkeit, Kosten vor Nutzen-/Lastenuebergang) | AfA-Basis | 33 |
 
 - **15 %-Tracker** fuehren, wenn das Objekt weniger als 3 Jahre im Bestand ist: Gebaeude-Anschaffungskosten (inkl. anteiliger Nebenkosten) x 15 % = Grenze netto; alle Netto-Massnahmen seit Uebergang Besitz/Nutzen/Lasten kumulieren; Entnahmen aus der WEG-Erhaltungsruecklage fuer Sanierungen und Bauabzugsteuer-/Reverse-Charge-Betraege zaehlen mit; Erweiterungen, jaehrlich uebliche Wartung und nach Erwerb durch Dritte verursachte Schaeden zaehlen nicht. Ampel im Bericht: gruen < 10 %, gelb 10-15 %, rot > 15 %.
-- **Bauabzugsteuer (Paragraf 48 EStG):** Ab dem dritten vermieteten Objekt (Zwei-Wohnungen-Regel) ist der Vermieter Unternehmer im Sinne der Vorschrift; ohne Freistellungsbescheinigung des Bauunternehmers sind 15 % der Bauleistung einzubehalten (Freigrenzen 5.000 EUR bzw. 15.000 EUR bei ausschliesslich steuerfreier Vermietung). Fehlende Bescheinigungen als Risiko ausweisen.
+- **Bauabzugsteuer (Paragraf 48 EStG):** Die Abzugspflicht trifft jeden Vermieter, der mehr als **zwei Wohnungen** vermietet -- gezaehlt werden Wohnungen, nicht Objekte, ein Mehrfamilienhaus mit sechs Einheiten loest sie also aus. Ohne Freistellungsbescheinigung des Bauunternehmers (Paragraf 48b EStG) sind 15 % der Gegenleistung einzubehalten und ans Finanzamt abzufuehren. Freigrenzen je Leistendem und Kalenderjahr: 5.000 EUR, bei ausschliesslich umsatzsteuerfreier Vermietung 15.000 EUR. Die Pflicht gilt auch gegenueber auslaendischen Bauunternehmen; eine auslaendische Ansaessigkeitsbescheinigung ersetzt die deutsche Freistellungsbescheinigung nicht. Bei Massnahmen am Gemeinschaftseigentum ist die Eigentuemergemeinschaft Auftraggeber, die Bescheinigungen holt die Verwaltung ein. Fehlende Bescheinigungen als Risiko ausweisen: Bei Nichtabfuehrung haftet der Auftraggeber.
 
 **6.2 Eintragung**
 
@@ -559,7 +559,7 @@ Faktoren, die den Score senken: fehlende Kaufpreisaufteilung (-0.15), Gutachten 
 | Verbilligte Vermietung | 66 % / 50 % der ortsueblichen Warmmiete | Paragraf 21 Abs. 2 EStG; BFH IX R 17/21 (Luxusobjekte) |
 | Einkunftserzielungsabsicht | Typisierend bei dauerhafter Wohnraumvermietung | BMF-Schreiben vom 08.10.2004 |
 | Fahrtkosten | 0,30 EUR/km bzw. tatsaechliche Kosten; Entfernungspauschale bei regelmaessiger Taetigkeitsstaette | Paragraf 9 EStG; BFH IX R 18/15 (01.12.2015) |
-| Bauabzugsteuer | 15 % Einbehalt ohne Freistellungsbescheinigung; Zwei-Wohnungen-Regel; Freigrenzen 5.000/15.000 EUR | Paragrafen 48-48d EStG |
+| Bauabzugsteuer | 15 % Einbehalt ohne Freistellungsbescheinigung; Pflicht ab mehr als zwei vermieteten Wohnungen; Freigrenzen 5.000 EUR bzw. 15.000 EUR bei ausschliesslich steuerfreier Vermietung; Haftung des Auftraggebers | Paragrafen 48-48d EStG |
 | Fristen 2025 | 31.07.2026 ohne / 01.03.2027 mit Beratung; Verspaetungszuschlag automatisch nach 14 Monaten | Paragrafen 149, 152 AO |
 | Formulare | Anlage V, V-FeWo (Ferienwohnung/kurzfristig), V-Sonstige (Beteiligungen u.a.) seit VZ 2023 | Amtliche Vordrucke |
 
