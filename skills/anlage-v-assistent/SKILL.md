@@ -337,14 +337,27 @@ Ausnahme: Bei aufwendig gestalteten Objekten (Wohnflaeche ueber 250 m²) ist auc
 
 **Wichtig:** Der Nutzer ist Immobilieninvestor, kein IT-ler. Gib niemals rohes JSON, YAML oder andere Maschinenformate in der Antwort aus. Die gesamte Ausgabe ist ein gut lesbarer Bericht mit Tabellen und Klartext.
 
-**Im Chat:** der unten gezeigte Markdown-Bericht.
-**Als Datei:** je Objekt eine Uebertragungsliste `anlage-v_2025_<objekt>.csv` (Spalten: Zeile; Feld; Wert; Kennzahl; Herkunft/Beleg; Status) fuer die Eingabe in ELSTER oder die Uebergabe an die Kanzlei -- die Datei anbieten, nie als Rohdaten im Chat ausgeben.
+Der Bericht ist das Hauptergebnis und wird **als Markdown-Datei geschrieben**, nicht nur in den Chat gelegt. Grund: Eine Anlage V hat 89 Zeilen; bei mehreren Objekten ist das im Chat nicht mehr lesbar, und der Nutzer muss die Zahlen beim Ausfuellen in ELSTER oder im Gespraech mit der Kanzlei danebenlegen koennen. Markdown bleibt ausserdem nachbearbeitbar und versionierbar.
+
+**Diese Dateien schreibst du:**
+
+| Datei | Inhalt | Zweck |
+|-------|--------|-------|
+| `anlage-v_2025_<objekt>.md` | Der vollstaendige Bericht je Objekt (Struktur siehe unten) | Lesen, pruefen, danebenlegen beim Ausfuellen |
+| `anlage-v_2025_uebersicht.md` | Nur bei mehreren Objekten: Portfoliosummen, Ergebnis je Objekt, alle offenen Punkte gebuendelt | Einstieg und Gespraechsgrundlage fuer die Kanzlei |
+| `anlage-v_2025_<objekt>.csv` | Uebertragungsliste, Spalten: Zeile; Feld; Wert; Kennzahl; Herkunft/Beleg; Status | Abtippen in ELSTER, Import beim Steuerberater |
+
+Dateinamen: Objektbezeichnung kleingeschrieben, Umlaute aufgeloest, Leerzeichen und Sonderzeichen durch Bindestriche ersetzt, zum Beispiel `anlage-v_2025_musterstrasse-12.md`.
+
+**Im Chat** erscheint nur die Kurzfassung: die Zusammenfassung in Freitext, eine Tabelle mit Ergebnis je Objekt, die Warnsignale und die offenen Punkte fuer den Steuerberater. Danach die Liste der geschriebenen Dateien. Den vollstaendigen Zeilenbericht nie zusaetzlich in den Chat kopieren -- er steht in der Datei.
+
+**Kein PDF.** PDF nur erzeugen, wenn der Nutzer ausdruecklich danach fragt; dann aus der Markdown-Datei ableiten, damit beide Fassungen identisch bleiben. Ein PDF ist am Ende der Kette richtig, nicht am Anfang: Solange Zahlen noch geprueft und Wahlrechte noch entschieden werden, ist ein nicht editierbares Format hinderlich.
 
 ### Zusammenfassung (Freitext)
 
 3-5 Saetze: Anzahl Objekte, Gesamtueberschuss/-verlust, wichtigste Aenderung gegenueber dem Vorjahr (z.B. AfA nach Gutachten), Fristenstatus, Anzahl offener Steuerberater-Fragen.
 
-### Bericht
+### Bericht (Inhalt der Datei `anlage-v_2025_<objekt>.md`)
 
 ```markdown
 # Anlage V 2025: Musterstrasse 12, 40210 Duesseldorf (Objekt 1 von 2)
@@ -434,7 +447,11 @@ Ausnahme: Bei aufwendig gestalteten Objekten (Wohnflaeche ueber 250 m²) ist auc
 
 ## Dateien
 
-Uebertragungsliste geschrieben: `anlage-v_2025_musterstrasse-12.csv` (89 Zeilen, ELSTER-Reihenfolge)
+| Datei | Inhalt |
+|---|---|
+| `anlage-v_2025_musterstrasse-12.md` | Dieser Bericht |
+| `anlage-v_2025_musterstrasse-12.csv` | Uebertragungsliste, 89 Zeilen in ELSTER-Reihenfolge |
+| `anlage-v_2025_uebersicht.md` | Portfoliosummen ueber beide Objekte, alle offenen Punkte |
 ```
 
 ---
@@ -459,7 +476,8 @@ Vor der Ausgabe pruefen:
 - [ ] Zurechnung Zeile 86 entspricht den Eigentumsanteilen und ergibt Zeile 85
 - [ ] Alle Summenzeilen nachgerechnet; jede Zahl hat eine Herkunft; keine geschaetzte Zahl ohne Kennzeichnung
 - [ ] Strittige und gestaltbare Punkte stehen in der Steuerberater-Fragenliste, nicht stillschweigend entschieden
-- [ ] Datei geschrieben und angeboten; keine Rohdaten im Chat
+- [ ] Bericht je Objekt als Markdown-Datei geschrieben, bei mehreren Objekten zusaetzlich die Uebersicht
+- [ ] Uebertragungsliste als CSV geschrieben; keine Rohdaten und kein vollstaendiger Zeilenbericht im Chat
 
 ---
 
