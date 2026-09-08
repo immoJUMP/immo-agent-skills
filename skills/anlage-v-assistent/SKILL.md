@@ -186,15 +186,15 @@ Die Bemessungsgrundlage bleibt in jedem Fall auf den Gebaeudeanteil der Anschaff
 
 Bei einem **Neuerwerb**, fuer den das Gutachten von Anfang an gilt, ist die Rechnung eindeutig: Gebaeudeanteil geteilt durch Restnutzungsdauer.
 
-Bei einem **Bestandsobjekt mit nachtraeglichem Gutachten** ist die Behandlung umstritten. Rechne alle drei Varianten und lege sie dem Steuerberater vor:
+Bei einem **Bestandsobjekt mit nachtraeglichem Gutachten** ist die Behandlung umstritten. Die drei im Umlauf befindlichen Methoden fuehren zu spuerbar unterschiedlichen Betraegen. Rechne alle drei und lege sie dem Steuerberater zur Entscheidung vor -- benenne sie dabei immer ausgeschrieben, nicht mit Buchstaben, weil die Nummerierung je nach Quelle abweicht:
 
 | Variante | Rechnung | Vertreten von |
 |----------|----------|---------------|
-| A: neuer Satz auf urspruengliche Anschaffungskosten | Gebaeudeanteil x (100 / Restnutzungsdauer) | Beraterpraxis; hoechste AfA, Abschreibungsvolumen kann rechnerisch ueberschritten werden und endet dann frueher |
-| B: Restwertmethode | (Gebaeudeanteil minus bisherige AfA) / Restnutzungsdauer ab Stichtag | Ebenfalls vertreten; sauberste Volumenlogik |
-| C: Rueckrechnung auf den Anschaffungszeitpunkt | Finanzamt rechnet die Restnutzungsdauer auf den Kaufzeitpunkt zurueck und wendet den Satz ab Anschaffung an; Vorjahre bleiben unveraendert, ab dem ersten offenen Jahr gilt der zurueckgerechnete Satz | Typische Argumentation des Finanzamts |
+| **Anschaffungskosten-Methode:** neuer Satz auf die urspruenglichen Anschaffungskosten | Gebaeudeanteil x (100 / Restnutzungsdauer) | Beraterpraxis; hoechste AfA, Abschreibungsvolumen kann rechnerisch ueberschritten werden und endet dann frueher |
+| **Restwert-Methode:** verbleibendes Volumen ueber die Restnutzungsdauer | (Gebaeudeanteil minus bisherige AfA) / Restnutzungsdauer ab Stichtag | Ebenfalls vertreten; sauberste Volumenlogik |
+| **Rueckrechnungs-Methode:** Satz gilt ab Anschaffung | Finanzamt rechnet die Restnutzungsdauer auf den Kaufzeitpunkt zurueck und wendet den Satz ab Anschaffung an; Vorjahre bleiben unveraendert, ab dem ersten offenen Jahr gilt der zurueckgerechnete Satz | Typische Argumentation des Finanzamts |
 
-Beispiel (Variante B): Gebaeudeanteil 300.000 EUR, seit 2020 linear 2 Prozent, bis Ende 2024 kumuliert 30.000 EUR, Restwert 270.000 EUR. Gutachten mit Stichtag 01.01.2025 und 30 Jahren Restnutzungsdauer: AfA 2025 = 270.000 / 30 = **9.000 EUR** (3,33 Prozent). Nach Variante A waeren es 300.000 / 30 = 10.000 EUR.
+Beispiel (Restwert-Methode): Gebaeudeanteil 300.000 EUR, seit 2020 linear 2 Prozent, bis Ende 2024 kumuliert 30.000 EUR, Restwert 270.000 EUR. Gutachten mit Stichtag 01.01.2025 und 30 Jahren Restnutzungsdauer: AfA 2025 = 270.000 / 30 = **9.000 EUR** (3,33 Prozent). Nach der Anschaffungskosten-Methode waeren es 300.000 / 30 = 10.000 EUR.
 
 Weitere Regeln:
 - **Kein Wahlrecht:** Entweder die typisierte Nutzungsdauer oder die nachgewiesene. Eine Zwischenzahl oder ein Verschieben von AfA-Volumen in Folgejahre gibt es nicht. Wer eine laengere Dauer will, braucht ein entsprechend lautendes Gutachten.
@@ -395,8 +395,8 @@ Dateinamen: Objektbezeichnung kleingeschrieben, Umlaute aufgeloest, Leerzeichen 
 | Bisherige AfA 2020-2024 (2 %, 2020 zeitanteilig 6/12) | 39.789 EUR |
 | Restwert 01.01.2025 | 402.315 EUR |
 | Restnutzungsdauer laut Gutachten (Stichtag 01.01.2025, Methode ImmoWertV, Ortstermin ja, Gutachter ISO 17024) | 32 Jahre |
-| **AfA 2025 nach Variante B (Restwert / Restnutzungsdauer), Zeile 33: linear, 3,13 %, "2 = laut Erlaeuterung"** | **12.572 EUR** (Vorjahr 8.842 EUR) |
-| Vergleich Variante A (urspruengliche AK / Restnutzungsdauer) | 13.816 EUR -- Entscheidung Steuerberater |
+| **AfA 2025 nach der Restwert-Methode, Zeile 33: linear, 3,13 %, "2 = laut Erlaeuterung"** | **12.572 EUR** (Vorjahr 8.842 EUR) |
+| Vergleich Anschaffungskosten-Methode (urspruengliche AK / Restnutzungsdauer) | 13.816 EUR -- Entscheidung Steuerberater |
 | Zeile 42: Einbaukueche WE 3 (AK 6.800 EUR, 10 J., ab 03/2025) | 567 EUR |
 
 ## Werbungskosten (Zeilen 46-83)
@@ -440,7 +440,7 @@ Dateinamen: Objektbezeichnung kleingeschrieben, Umlaute aufgeloest, Leerzeichen 
 
 | # | Frage | Warum relevant |
 |---|-------|----------------|
-| 1 | Berechnungsvariante nach dem Gutachten: neuer Satz auf urspruengliche Anschaffungskosten oder auf den Restwert? | Differenz 1.244 EUR AfA im Jahr |
+| 1 | Berechnungsmethode nach dem Gutachten: neuer Satz auf die urspruenglichen Anschaffungskosten oder auf den Restwert? | Differenz 1.244 EUR AfA im Jahr |
 | 2 | Paragraf 82b: Dachsanierung auf 4 Jahre verteilen oder Sofortabzug? | Progression 2025 vs. 2026-2028 |
 | 3 | Steuerberaterrechnung 1.400 EUR: welcher Anteil entfaellt auf Anlage V? | Nur V+V-Anteil abziehbar |
 | 4 | Vorfaelligkeitsentschaedigung 2.100 EUR aus Umschuldung Darlehen 456 | Abzug nur bei fortgesetzter Vermietung |
@@ -467,7 +467,7 @@ Vor der Ausgabe pruefen:
 - [ ] AfA-Bemessungsgrundlage hergeleitet (Kaufpreis, Nebenkosten, Aufteilung, Inventar, nachtraegliche HK, Zuschuesse) und Methode dokumentiert
 - [ ] AfA-Satz passt zu Fertigstellungsjahr bzw. Gutachten; Kennzeichen "wie Vorjahr"/"laut Erlaeuterung" korrekt gesetzt; bei Aenderung Erlaeuterung erstellt
 - [ ] Gutachten-Check vollstaendig (Auftraggeber, Eigentuemerstellung zum Stichtag, Stichtag vor Sanierung, Determinanten, Methode, Ortstermin, Qualifikation, Zuordenbarkeit, Konsistenz zur Kaufpreisaufteilung) und Risiken benannt
-- [ ] Bei nachtraeglichem Gutachten: alle drei Berechnungsvarianten gerechnet und dem Steuerberater vorgelegt, nicht stillschweigend eine gewaehlt
+- [ ] Bei nachtraeglichem Gutachten: alle drei Berechnungsmethoden gerechnet und dem Steuerberater vorgelegt, nicht stillschweigend eine gewaehlt
 - [ ] Geprueft, welche Veranlagungszeitraeume noch offen sind (keine Erklaerung, Einspruchsfrist, Vorbehalt der Nachpruefung) -- bestandskraeftige Jahre nicht eingerechnet
 - [ ] Tilgung nirgends als Werbungskosten; Zinsen stimmen mit Zinsbescheinigungen ueberein
 - [ ] Erhaltungsaufwand klassifiziert; 15 %-Grenze fuer Objekte unter 3 Jahren gerechnet; Paragraf-82b-Vorjahresanteile (2021-2024) in Zeilen 61-72 uebernommen
