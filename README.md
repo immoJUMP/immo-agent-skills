@@ -116,6 +116,8 @@ Claude fragt dann im Gespraech alles ab, was er braucht -- Schritt fuer Schritt,
 
 **Die Antwort ist immer ein lesbarer Bericht** -- Tabellen, Ampeln (🟢🟡🔴), druckfertige Schreiben. Kein JSON, kein technisches Format. Das ist eine feste Design-Regel dieses Repos: Jede Ausgabeformat-Sektion der Skills verbietet rohe Maschinenformate in der Antwort. Wo strukturierte Daten fuer die Weiterverarbeitung gebraucht werden (z.B. Expose-Parser → Deal-Screener, DATEV-Buchungsstapel fuer den Steuerberater), schreibt der Skill sie in eine **Datei** (JSON/CSV) -- im Chat erscheint nur der Bericht. JSON-Bloecke in den Skill-Dateien selbst sind reine *Eingabe*-Spezifikationen fuer Entwickler und Automatisierungen (API, n8n).
 
+Bei sehr langen Berichten schreibt der Skill zusaetzlich den **Bericht selbst** als Markdown-Datei und legt in den Chat nur die Kurzfassung. Das betrifft heute den Anlage-V-Assistenten: Eine Anlage V hat 89 Zeilen, bei mehreren Objekten ist das im Chat nicht mehr brauchbar, und der Nutzer muss die Zahlen beim Ausfuellen danebenlegen koennen. Die Regel bleibt dieselbe -- lesbarer Bericht statt Maschinenformat -- nur der Ablageort wandert vom Chat in die Datei.
+
 ---
 
 ## Skills in claude.ai importieren (ohne Claude Code)
