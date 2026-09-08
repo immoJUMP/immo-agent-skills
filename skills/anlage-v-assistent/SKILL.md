@@ -162,8 +162,8 @@ Das ist der groesste Hebel der Anlage V und zugleich der haeufigste Streitpunkt 
 
 | Pruefpunkt | Soll | Bei Abweichung |
 |------------|------|----------------|
-| Auftraggeber | Der Steuerpflichtige selbst ist Auftraggeber und Adressat des Gutachtens | Gutachten des Voreigentuemers oder eines Dritten wird regelmaessig verworfen -- neu beauftragen oder umschreiben lassen |
-| Eigentuemerstellung zum Stichtag | Zum Stichtag war der Auftraggeber bereits AfA-berechtigt (ab Uebergang Besitz/Nutzen/Lasten) | Stichtag vor der eigenen AfA-Berechtigung ist ein klassischer Ablehnungsgrund |
+| Auftraggeber | Der Steuerpflichtige selbst ist Auftraggeber und Adressat des Gutachtens | Ein Gutachten des Voreigentuemers oder eines Dritten wirkt nicht ohne Weiteres fuer den eigenen Fall -- umschreiben lassen oder neu beauftragen |
+| Eigentuemerstellung zum Stichtag | Zum Stichtag war der Auftraggeber bereits AfA-berechtigt (ab Uebergang Besitz/Nutzen/Lasten) | Umstritten: Aus Gutachterpraxis wird das als formale Voraussetzung genannt, aus Beratersicht verlangt weder die Finanzverwaltung noch eine Zertifizierungsstelle das. Sichere Variante ist der eigene Auftrag ab Nutzen-/Lastenwechsel; bei abweichender Konstellation als Streitrisiko ausweisen statt das Gutachten zu verwerfen |
 | Stichtag | Moeglichst nah am Uebergang Besitz/Nutzen/Lasten; ein spaeterer Stichtag ist zulaessig, wenn der Zustand zum Stichtag beurteilt wird | Stichtag nach einer Sanierung macht eine kurze Restnutzungsdauer kaum noch begruendbar |
 | Zeitpunkt gegenueber der Sanierung | **Gutachten vor Sanierungsbeginn**, spaetestens mit Stichtag vor der ersten Massnahme | Nach der Sanierung ist der Zustand ein anderer; das Finanzamt greift genau hier an |
 | Determinanten | Technischer Verschleiss, wirtschaftliche Entwertung und rechtliche Nutzungsbeschraenkungen sind objektbezogen begruendet, nicht nur rechnerisch abgeleitet | Reines Alters-Rechenmodell ohne Objektbefund ist angreifbar -- Zustandsbeschreibung, Maengel, Modernisierungsgrad und Fotos nachfordern |
