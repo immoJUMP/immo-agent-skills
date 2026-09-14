@@ -1,0 +1,4 @@
+interface:
+  display_name: "Second Brain"
+  short_description: "Wissensbasis aufbauen, pflegen und auf Belege prüfen"
+  default_prompt: "Nutze $second-brain, um neue Quellen in meine Wissensbasis einzuarbeiten und den aktuellen Stand mit Belegen wiederzufinden."

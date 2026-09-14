@@ -2,7 +2,7 @@
 
 **25+ KI-Skills fuer den deutschen Immobilienmarkt** -- von der Objektpruefung bis zur Anlage V.
 
-Jeder Skill ist eine eigenstaendige Markdown-Datei mit YAML-Frontmatter. Kein Code, keine API-Keys, keine Abhaengigkeiten. Als **Claude Code Plugin** installieren -- alle Skills werden automatisch als Slash-Commands erkannt und auto-triggered.
+Jeder Skill hat eine `SKILL.md` mit YAML-Frontmatter; bei Bedarf liegen weitere Anleitungen und Vorlagen im selben Skill-Ordner. Als **Claude Code Plugin** installieren -- alle Skills werden automatisch als Slash-Commands erkannt und auto-triggered.
 
 ---
 
@@ -189,6 +189,7 @@ immo-agent-skills/
 │   ├── anlage-v-assistent/SKILL.md # Anlage V fuer Steuerberater
 │   ├── dokument-klassifizierer/SKILL.md # Dokumenttyp erkennen
 │   ├── ordner-architekt/SKILL.md  # Ablage aufbauen & restrukturieren
+│   ├── second-brain/             # Wissensbasis aufbauen, pflegen & pruefen
 │   ├── mietlisten-parser/SKILL.md # Mietlisten aus PDF extrahieren
 │   ├── expose-parser/SKILL.md     # Expose-Daten strukturiert extrahieren
 │   ├── akquise-netzwerk/SKILL.md  # Off-Market Akquiseplan
@@ -283,6 +284,9 @@ immo-agent-skills/
 | Skill | Beschreibung | Typischer Input |
 |-------|-------------|-----------------|
 | **Ordner-Architekt** | Baut/ordnet die Portfolio-Ablage als Grundlage fuer alle Folge-Skills -- im gefuehrten Gespraech mit Ist-Inventar, Bewertung & bestaetigungspflichtigem Umzugsplan | Zugriff auf Drive/Dropbox/lokalen Ordner |
+| **[Second Brain](skills/second-brain/SKILL.md)** | Richtet eine Wissensbasis ein, arbeitet Quellen in bestehende Wissensseiten ein oder prueft Belege, Widersprueche und Aktualitaet | Arbeitsordner bzw. erreichbare Wissensbasis, konkrete Frage und ausgewaehlte Quellen |
+
+**Second Brain nutzen:** Zum Beispiel: „Arbeite dieses Uebergabeprotokoll in meine bestehende Wissensbasis ein“ oder „Pruefe die Belege, aendere noch nichts“. Fuer diesen Skill den **gesamten Ordner `skills/second-brain/`** verwenden: Er enthaelt zusaetzliche Anleitungen, ein Seitenschema und fiktive Uebungsquellen. Die Plugin- und ZIP-Verteilung nehmen diese Dateien mit auf. Ein reiner Chat ohne Schreibzugriff kann einen Vorschlag liefern, aber keine dauerhaft gepflegte Ablage nachweisen.
 
 ### Strategie & Entscheidung
 
