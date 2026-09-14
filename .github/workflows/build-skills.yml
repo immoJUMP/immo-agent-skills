@@ -1,6 +1,10 @@
 name: Build Skill ZIPs
 
 on:
+  pull_request:
+    paths:
+      - "skills/**"
+      - ".github/workflows/build-skills.yml"
   push:
     branches: [main]
     paths:
