@@ -135,23 +135,13 @@ Du kannst jeden Skill auch direkt in claude.ai (Web-App) hochladen -- dann steht
 
 ---
 
-## Skills in ChatGPT importieren (Custom GPT)
+## Skills in ChatGPT nutzen
 
-ChatGPT kennt kein Skill-Format -- dort wird der Skill-Inhalt zu den Instructions eines Custom GPT:
+ChatGPT unterstuetzt inzwischen Skills. Der passende Weg haengt von Client und Paket ab: Standalone-Skills und ueber Plugins verteilte Skills werden in der [offiziellen Anleitung](https://learn.chatgpt.com/docs/build-skills) beschrieben. Dieses Repository liefert ein Claude-Code-Plugin sowie einzelne Skill-Ordner; die Verfuegbarkeit im ChatGPT-Pluginverzeichnis muss separat geprueft werden.
 
-1. **chatgpt.com** oeffnen → Seitenleiste **GPTs erkunden** → oben rechts **+ Erstellen**.
-2. In den Tab **Konfigurieren** wechseln (nicht den Chat-Assistenten "Erstellen" nutzen -- der verwaessert die Anweisungen).
-3. **Name** und **Beschreibung** vergeben (z.B. "Deal-Screener -- Schnellbewertung MFH").
-4. Den kompletten Inhalt der `SKILL.md` (ohne YAML-Frontmatter) in das Feld **Hinweise** (Instructions) einfuegen.
-5. Unter **Wissen** (Knowledge) die passenden Dateien aus `knowledge/` hochladen (z.B. `kalkulationsformeln.md`, `marktbenchmarks.md`).
-6. Oben rechts **Erstellen** → Sichtbarkeit waehlen ("Nur ich" reicht fuer den Eigenbedarf).
+Bei manueller Nutzung als Projektanweisung oder in einem eigenen Assistenten muessen neben der `SKILL.md` auch die fuer die Aufgabe benoetigten Referenzen erreichbar sein. Das gilt besonders fuer [Second Brain](skills/second-brain/HANDBUCH.md): Fuer dauerhafte Wissenspflege braucht die Arbeitsumgebung tatsaechlichen Lese- und Schreibzugriff auf den vorgesehenen Speicherort. Ohne diesen Zugriff bleibt das Ergebnis ein Vorschlag oder eine exportierbare Datei.
 
-> **Hinweis:** Die Instructions-Felder von Custom GPTs sind auf 8.000 Zeichen begrenzt. Bei langen Skills den Skill-Inhalt stattdessen als Knowledge-Datei hochladen und in die Instructions nur schreiben: "Befolge exakt die Anweisungen aus SKILL.md."
->
-> Screenshots der einzelnen Schritte folgen in `docs/screenshots/`.
-
-**Direkt im Chat (jedes LLM):**
-Skill-Datei oeffnen, Inhalt kopieren, in den Chat einfuegen, Daten dazu geben -- fertig.
+**Direkt im Chat:** Skill-Inhalt und benoetigte Referenzen koennen als Arbeitsgrundlage dienen. Pruefe, welche Dateien und Werkzeuge die gewaehlte Umgebung wirklich nutzen kann. Herstellerangaben geprueft am 14.09.2026.
 
 ---
 
@@ -287,6 +277,8 @@ immo-agent-skills/
 | **[Second Brain](skills/second-brain/SKILL.md)** | Richtet eine Wissensbasis ein, arbeitet Quellen in bestehende Wissensseiten ein oder prueft Belege, Widersprueche und Aktualitaet | Arbeitsordner bzw. erreichbare Wissensbasis, konkrete Frage und ausgewaehlte Quellen |
 
 **Second Brain nutzen:** Zum Beispiel: „Arbeite dieses Uebergabeprotokoll in meine bestehende Wissensbasis ein“ oder „Pruefe die Belege, aendere noch nichts“. Fuer diesen Skill den **gesamten Ordner `skills/second-brain/`** verwenden: Er enthaelt zusaetzliche Anleitungen, ein Seitenschema und fiktive Uebungsquellen. Die Plugin- und ZIP-Verteilung nehmen diese Dateien mit auf. Ein reiner Chat ohne Schreibzugriff kann einen Vorschlag liefern, aber keine dauerhaft gepflegte Ablage nachweisen.
+
+**[Second-Brain-Handbuch lesen](skills/second-brain/HANDBUCH.md):** Pitch und Nutzen, Aufbau einer Wissensbasis, Vergleich mit ChatGPT-Projekten, NotebookLM, Notion und Obsidian, Einrichtung, Alltagsprompts, Pflege im Team, Fehlerbehebung und eine 45-Minuten-Uebung. Das Handbuch liegt im Skill-Ordner und ist auch im ZIP enthalten.
 
 ### Strategie & Entscheidung
 

@@ -7,6 +7,8 @@ description: "Richtet eine nachvollziehbare Wissensbasis fuer Immobilien und Unt
 
 Dein Ergebnis ist eine nutzbare Wissensbasis: Der aktuelle Kenntnisstand ist auffindbar, mit Quellen belegt und von Vorschlägen, historischen Aussagen und offenen Punkten unterscheidbar. Arbeite im gewählten System und im beauftragten Umfang; führe passende Schreibarbeiten tatsächlich aus, wenn der Zugriff und Auftrag sie erlauben.
 
+Für Anwenderfragen zu Nutzen, Aufbau, Einführung, Systemvergleich und laufendem Betrieb gibt es das [Handbuch](HANDBUCH.md). Nur bei solchen Erklärungs- oder Einführungsaufträgen laden; für normale Quellenimporte genügen die passenden Arbeitsreferenzen.
+
 ## Einstieg: Welche Arbeit ist beauftragt?
 
 | Absicht | Vorgehen | Bei Bedarf laden |
