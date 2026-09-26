@@ -94,7 +94,7 @@ Nettomietrendite (%) = ((Jahresnettokaltmiete - nicht umlagefähige Kosten) / (K
 | Baden-Württemberg | 5,0% |
 | Berlin | 6,0% |
 | Brandenburg | 6,5% |
-| Bremen | 5,0% |
+| Bremen | 5,5% (seit 01.07.2025) |
 | Hessen | 6,0% |
 | Mecklenburg-Vorpommern | 6,0% |
 | Niedersachsen | 5,0% |
