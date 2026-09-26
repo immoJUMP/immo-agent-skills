@@ -2,6 +2,23 @@
 
 Alle wesentlichen Aenderungen an diesem Projekt.
 
+## [1.13.0](https://github.com/immoJUMP/immo-agent-skills/compare/v1.12.0...v1.13.0) (2026-09-26)
+
+
+### Hinzugefuegt
+
+* **second-brain:** Wissensbasis einrichten, pflegen und pruefen ([8b55e4b](https://github.com/immoJUMP/immo-agent-skills/commit/8b55e4b2b4b38fa51ab6e6e264632f017d694664))
+
+
+### Behoben
+
+* **grunderwerbsteuer:** Bremen 5,5 %, Sachsen 5,5 % und Thueringen-Aenderungsjahr korrigiert ([be996ae](https://github.com/immoJUMP/immo-agent-skills/commit/be996ae0e44d49dfdb02da29d4bc035f0b6d2f67))
+
+
+### Dokumentation
+
+* **second-brain:** Anwenderhandbuch mit Nutzen und Systemvergleich ([ac119b5](https://github.com/immoJUMP/immo-agent-skills/commit/ac119b5b4876cd79e0222c8ee3a99332bb6a7041))
+
 ## [1.12.0](https://github.com/immoJUMP/immo-agent-skills/compare/v1.11.0...v1.12.0) (2026-09-08)
 
 
