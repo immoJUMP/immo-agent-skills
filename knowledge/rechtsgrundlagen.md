@@ -350,7 +350,7 @@ Bei Umwandlung von Miet- in Eigentumswohnungen gilt:
 | Bayern | 3,5% | Unveraendert |
 | Berlin | 6,0% | 2014 |
 | Brandenburg | 6,5% | 2015 |
-| Bremen | 5,0% | 2014 |
+| Bremen | 5,5% | 2025 (ab 01.07.) |
 | Hamburg | 5,5% | 2023 |
 | Hessen | 6,0% | 2014 |
 | Mecklenburg-Vorpommern | 6,0% | 2019 |
@@ -358,12 +358,12 @@ Bei Umwandlung von Miet- in Eigentumswohnungen gilt:
 | Nordrhein-Westfalen | 6,5% | 2015 |
 | Rheinland-Pfalz | 5,0% | 2012 |
 | Saarland | 6,5% | 2015 |
-| Sachsen | 3,5% | Unveraendert |
+| Sachsen | 5,5% | 2023 |
 | Sachsen-Anhalt | 5,0% | 2012 |
 | Schleswig-Holstein | 6,5% | 2014 |
-| Thueringen | 5,0% | 2017 |
+| Thueringen | 5,0% | 2024 (Senkung von 6,5%) |
 
-**Niedrigste Saetze:** Bayern und Sachsen (je 3,5%)
+**Niedrigster Satz:** Bayern (3,5%)
 **Hoechste Saetze:** Brandenburg, NRW, Saarland, Schleswig-Holstein (je 6,5%)
 
 ### Befreiungen und Sonderfaelle

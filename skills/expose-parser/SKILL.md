@@ -277,7 +277,7 @@ Vor der Ausgabe pruefen:
 | Bayern | 3,5% |
 | Berlin | 6,0% |
 | Brandenburg | 6,5% |
-| Bremen | 5,0% |
+| Bremen | 5,5% |
 | Hamburg | 5,5% |
 | Hessen | 6,0% |
 | Mecklenburg-Vorpommern | 6,0% |
