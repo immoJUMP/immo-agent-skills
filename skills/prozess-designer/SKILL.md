@@ -145,6 +145,8 @@ Aufgabe die dem Bearbeiter eine Frage stellt und je nach Antwort unterschiedlich
 - `STATUS_CHANGE` -- Verschiebt das Objekt/den Kontakt in eine andere Pipeline-Phase. Pro Status darf es maximal EIN Template mit STATUS_CHANGE geben.
 - `CREATE_ACTIVITY` -- Erstellt eine neue Aktivitaet aus einem anderen Template. Ermoeglicht Verzweigungen und bedingte Ketten.
 
+**IDs nur aus der eigenen Organisation:** `target_status_id`, `template_id` und `next_activity_template_id` muessen zur Organisation der Vorlage gehoeren. Nimm Status-IDs aus `pipeline_statuses_list` der Pipeline, die du gerade baust, und Template-IDs aus der Antwort von `activity_template_create` in dieser Sitzung -- nie IDs aus den Beispielen oben, aus einer anderen Organisation oder aus einer exportierten Datei. Fremde und unbekannte IDs weist immoJUMP mit HTTP 400 ab (Meldung endet auf "nicht gefunden."). Dann die ID neu nachschlagen, nicht raten.
+
 #### 3. Recurring (Wiederkehrende Aufgabe)
 
 Aufgabe die automatisch nach einem Zeitplan erstellt wird (RFC 5545 RRULE).
@@ -193,6 +195,7 @@ Template A (Unterlagen anfordern)
 - Alle Templates einer Kette muessen zum gleichen Status gehoeren
 - Keine Zirkelverweise (max. 100 Templates pro Kette)
 - Kontext (immobilie_id, deal_id, contacts) wird automatisch vererbt
+- Das Folge-Template muss zur gleichen Organisation gehoeren (sonst HTTP 400)
 
 ### Kombination: Ketten + Entscheidungen
 
@@ -759,6 +762,7 @@ Vor Abgabe des Prozess-Designs pruefe (bei einem Solo-Investor entfallen die Rol
 - [ ] **Aufgaben rollengerecht?** Zuarbeiter-Aufgaben haben Schritte, Verantwortlichen-Aufgaben haben Rahmen
 - [ ] **Kein "Kuemmer dich drum"?** Jede Aufgabe hat ein messbares Ergebnis
 - [ ] **Ketten korrekt?** next_activity_template_id verweist auf existierendes Template, keine Zirkelverweise, alle im gleichen Status
+- [ ] **IDs aus der eigenen Organisation?** Jede target_status_id stammt aus pipeline_statuses_list, jede template_id/next_activity_template_id aus einem in dieser Organisation angelegten Template
 - [ ] **Entscheidungen vollstaendig?** Jedes Decision-Template hat decision_question + mindestens 2 Outcomes mit Aktionen
 - [ ] **Recurring sinnvoll?** Jedes wiederkehrende Template hat gueltige RRULE und Timezone
 - [ ] **Max 1 STATUS_CHANGE pro Status?** Nicht mehrere Templates mit STATUS_CHANGE-Outcome am gleichen Status
