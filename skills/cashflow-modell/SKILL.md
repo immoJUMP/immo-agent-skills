@@ -207,9 +207,14 @@ Bei geplanter Modernisierung gilt im Worst Case der Grundsatz: **Sanierung dauer
 Liquiditaet und Vermoegensaufbau sind zwei verschiedene Fragen -- beide beantworten, nicht vermischen:
 
 ```
+EK-Rendite   = (Nettokaltmiete p.a. - nicht umlagefaehige Kosten p.a. - Zinsen p.a.) / eingesetztes Eigenkapital * 100
+Cash-on-Cash = (Nettokaltmiete p.a. - nicht umlagefaehige Kosten p.a. - Zinsen p.a. - Tilgung p.a.) / eingesetztes Eigenkapital * 100
 Vermoegensaufbau p.a. = Cashflow nach Steuern + Tilgung + (konservative) Wertsteigerung
-EK-Rendite = Vermoegensaufbau p.a. / eingesetztes Eigenkapital * 100
 ```
+
+- **EK-Rendite** zaehlt die Tilgung als Ertrag (sie baut Vermoegen auf), **Cash-on-Cash** nicht: Er ist der Cashflow vor Steuern bezogen auf das Eigenkapital. Beide vor Steuern und ohne Wertsteigerung -- so rechnet auch der immoJUMP-Rechner, die Zahlen muessen dazu passen.
+- Den **Vermoegensaufbau** in EUR ausweisen, nicht als EK-Rendite: Steuereffekt und Wertsteigerung sind Annahmen und gehoeren nicht in die Kennzahl, die der Investor mit dem Rechner vergleicht.
+- Bei 0 EUR oder negativem Eigenkapital (100%-/110%-Finanzierung) gibt es keine sinnvolle Prozentzahl: "n/a (kein EK)" schreiben und stattdessen den absoluten Cashflow nennen.
 
 - Ein Deal kann liquiditaetsnegativ und trotzdem vermoegensbildend sein -- dann muss die Liquiditaetsluecke aus Reserven tragbar sein
 - **Refinanzierungs-Perspektive (optional):** Nach abgeschlossener Wertschoepfung (Sanierung + Mietanhebung) kann Nachbeleihung des gestiegenen Objektwerts gebundenes EK fuer das naechste Investment freisetzen. Als Ausblick ausweisen, nicht als Cashflow einrechnen. Beleihbarkeit, Sicherheitenfreigabe und Steuerfolgen individuell klaeren [Pruefbedarf: Bank + Steuerberater]
@@ -232,7 +237,8 @@ EK-Rendite = Vermoegensaufbau p.a. / eingesetztes Eigenkapital * 100
 | Cashflow-positiv ab | Monat 3 | Monat 14 | Monat 30 |
 | Kumulierter Cashflow (5 Jahre) | +85.000 EUR | +42.000 EUR | -12.000 EUR |
 | DSCR Durchschnitt (5 Jahre) | 1,45 | 1,22 | 0,95 |
-| EK-Rendite (Cash-on-Cash) | n/a (0 EK) | n/a (0 EK) | n/a (0 EK) |
+| EK-Rendite (inkl. Tilgung) | n/a (0 EK) | n/a (0 EK) | n/a (0 EK) |
+| Cash-on-Cash | n/a (0 EK) | n/a (0 EK) | n/a (0 EK) |
 
 **Kernaussage:** [z.B. "Das Objekt wird im Base Case ab Monat 14 cashflow-positiv. Selbst im Worst Case bleibt der negative Cashflow auf unter 12.000 EUR begrenzt und ist durch Liquiditaetsreserven abdeckbar."]
 
