@@ -245,33 +245,51 @@ Beleihungsauslauf (%) = Darlehensbetrag / Beleihungswert × 100
 
 ---
 
-## 9. Eigenkapitalrendite (EK-Rendite)
+## 9. Eigenkapitalrendite (EK-Rendite) und Cash-on-Cash
+
+Drei Kennzahlen, die oft vermischt werden. Sie beantworten verschiedene Fragen und
+heißen deshalb verschieden. EK-Rendite und Cash-on-Cash rechnen vor Steuern und ohne
+Wertsteigerung.
 
 ```
-EK-Rendite (%) = Jährlicher Cashflow / Eingesetztes Eigenkapital × 100
+EK-Rendite (%)   = (Nettokaltmiete p.a. - nicht umlagefähige Kosten p.a. - Zinsen p.a.) / Eingesetztes EK × 100
+                 = (Jährlicher Cashflow + jährliche Tilgung) / Eingesetztes EK × 100
+Cash-on-Cash (%) = Jährlicher Cashflow / Eingesetztes EK × 100
 ```
+
+- **EK-Rendite** zählt die Tilgung als Ertrag, weil sie Vermögen aufbaut.
+- **Cash-on-Cash** ist der Cashflow vor Steuern (nach Zins **und** Tilgung) bezogen auf das EK, also die Liquiditätssicht.
+- **Vermögensaufbau** (mit Steuereffekt und Wertsteigerung) in EUR ausweisen, nicht als EK-Rendite. Steuern und Wertsteigerung sind Annahmen.
+- Bei 0 EUR oder negativem EK (100-/110-%-Finanzierung) gibt es keine sinnvolle Prozentzahl: „n/a (kein EK)“ schreiben und den absoluten Cashflow nennen.
 
 **Eingesetztes Eigenkapital:**
 ```
 EK = Kaufpreis - Darlehensbetrag + Erwerbsnebenkosten + ggf. Sanierungskosten
 ```
 
-**Beispiel:**
+**Beispiel** (Finanzierung wie in Abschnitt 6, Mietkosten wie in Abschnitt 5):
 - Kaufpreis: 250.000 EUR
-- Darlehensbetrag: 200.000 EUR
+- Darlehensbetrag: 200.000 EUR (3,5% Zins, 1,25% Tilgung)
 - Erwerbsnebenkosten: 28.750 EUR
 - Eigenkapital: 250.000 - 200.000 + 28.750 = 78.750 EUR
-- Jährlicher Cashflow: 954 EUR
-- EK-Rendite: 954 / 78.750 × 100 = **1,21%**
+- Nettokaltmiete: 850 × 12 = 10.200 EUR
+- Nicht umlagefähige Kosten: (120 + 25,50) × 12 = 1.746 EUR (Hausgeldanteil, Mietausfallwagnis)
+- Zinsen im ersten Jahr: 200.000 × 3,5% = 7.000 EUR
+- Tilgung im ersten Jahr: 200.000 × 1,25% = 2.500 EUR
+- Jährlicher Cashflow vor Steuern: 10.200 - 1.746 - 7.000 - 2.500 = **-1.046 EUR**
+- EK-Rendite: (10.200 - 1.746 - 7.000) / 78.750 × 100 = **1,85%**
+- Cash-on-Cash: -1.046 / 78.750 × 100 = **-1,33%**
 
-**Erweiterte EK-Rendite (inkl. Tilgung und Wertsteigerung):**
+Der Deal baut Vermögen auf (positive EK-Rendite), kostet aber jeden Monat Liquidität
+(negativer Cash-on-Cash). Genau deshalb gehören beide Zahlen nebeneinander.
+
+**Vermögensaufbau inkl. Wertsteigerung (Zusatzsicht, keine EK-Rendite):**
 ```
-Erweiterte EK-Rendite = (Cashflow + jährliche Tilgung + Wertsteigerung) / EK × 100
+Vermögensaufbau p.a. = Cashflow + jährliche Tilgung + Wertsteigerung   (in EUR)
 ```
 
-- Jährliche Tilgung: ca. 2.500 EUR
 - Angenommene Wertsteigerung (1%): 2.500 EUR
-- Erweiterte EK-Rendite: (954 + 2.500 + 2.500) / 78.750 × 100 = **7,56%**
+- Vermögensaufbau: -1.046 + 2.500 + 2.500 = **3.954 EUR/Jahr** (bezogen auf das EK 5,02%)
 
 ---
 
@@ -464,4 +482,8 @@ Für denkmalgeschützte Gebäude können Sanierungskosten erhöht abgeschrieben 
 - Angenommene Wertsteigerung (1,5%): 1.950 EUR
 - Cashflow nach Steuern: -1.686,36 EUR
 - **Netto-Vermögensaufbau: 2.863,64 EUR/Jahr**
-- **EK-Rendite (auf EK von 11.791 EUR): 24,3%**
+- Bezogen auf das EK von 11.791 EUR: 24,3% (Vermögensaufbau nach Steuern, **keine** EK-Rendite)
+
+### Rendite auf das Eigenkapital
+- EK-Rendite: (-2.627,16 + 2.600) / 11.791 × 100 = **-0,23%**
+- Cash-on-Cash: -2.627,16 / 11.791 × 100 = **-22,28%**
