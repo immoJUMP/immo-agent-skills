@@ -212,7 +212,7 @@ Cash-on-Cash = (Nettokaltmiete p.a. - nicht umlagefaehige Kosten p.a. - Zinsen p
 Vermoegensaufbau p.a. = Cashflow nach Steuern + Tilgung + (konservative) Wertsteigerung
 ```
 
-- **EK-Rendite** zaehlt die Tilgung als Ertrag (sie baut Vermoegen auf), **Cash-on-Cash** nicht: Er ist der Cashflow vor Steuern bezogen auf das Eigenkapital. Beide vor Steuern und ohne Wertsteigerung -- so rechnet auch der immoJUMP-Rechner, die Zahlen muessen dazu passen.
+- **EK-Rendite** zaehlt die Tilgung als Ertrag (sie baut Vermoegen auf), **Cash-on-Cash** nicht: Er ist der Cashflow vor Steuern bezogen auf das Eigenkapital. Beide vor Steuern und ohne Wertsteigerung.
 - Den **Vermoegensaufbau** in EUR ausweisen, nicht als EK-Rendite: Steuereffekt und Wertsteigerung sind Annahmen und gehoeren nicht in die Kennzahl, die der Investor mit dem Rechner vergleicht.
 - Bei 0 EUR oder negativem Eigenkapital (100%-/110%-Finanzierung) gibt es keine sinnvolle Prozentzahl: "n/a (kein EK)" schreiben und stattdessen den absoluten Cashflow nennen.
 
