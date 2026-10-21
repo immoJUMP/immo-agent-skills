@@ -1,0 +1,17 @@
+{
+  "$schema": "https://anthropic.com/claude-code/marketplace.schema.json",
+  "name": "immoJUMP-immo-agent-skills",
+  "description": "KI-Skills fuer deutsche Wohnimmobilien-Investoren von immoJUMP.",
+  "owner": {
+    "name": "immoJUMP",
+    "url": "https://github.com/immoJUMP"
+  },
+  "plugins": [
+    {
+      "name": "immo-agent-skills",
+      "description": "30+ KI-Skills fuer deutsche Wohnimmobilien-Investoren: Ankauf, Finanzierung, Verwaltung, Vermietung, Buchhaltung, Dokumentenanalyse, Strategie, Prozessgestaltung und immoJUMP als Agenten-Backend.",
+      "source": "./",
+      "category": "productivity"
+    }
+  ]
+}
