@@ -127,6 +127,15 @@ immojump documents upload datenraum/RH-01 --recursive --immobilie-id "$ID"
 - Exit 0 heisst: nichts ist gescheitert.
 - Ein zweiter Lauf ist sicher: Schon Hochgeladenes erscheint unter
   `duplicates`.
+- **Die Duplikat-Erkennung gilt fuer die ganze Organisation, nicht nur fuer
+  das Haus.** Liegt dieselbe Datei schon an einem anderen Objekt, wird sie hier
+  nicht angehaengt. Der Eintrag unter `duplicates` nennt das Objekt
+  (`existingPropertyId`). Gehoert die Datei wirklich an beide Objekte (z. B.
+  eine Teilungserklaerung fuer zwei Haeuser), lade sie mit `--allow-duplicate`
+  erneut hoch.
+
+**Erwartung:** 919 PDFs in 14 Haeusern dauerten lokal 32 s, der zweite Lauf
+meldete nur noch Duplikate.
 
 **Mietvertrag an die Einheit haengen.** Enthaelt der Dateiname die
 Einheitennummer:
