@@ -137,6 +137,37 @@ immojump documents upload datenraum/RH-01 --recursive --immobilie-id "$ID"
 **Erwartung:** 919 PDFs in 14 Haeusern dauerten lokal 32 s, der zweite Lauf
 meldete nur noch Duplikate.
 
+**Mietvertraege den Einheiten zuordnen.** Der Ordner-Upload haengt die
+Vertraege nur an das Haus. Ein zweiter Upload mit `--unit-id` aendert daran
+nichts, denn die Dateien sind dann Duplikate. Zugeordnet wird deshalb danach,
+ueber die Dokument-ID. Enthaelt der Dateiname die Einheitennummer
+(`Mietvertrag_RH-01-WE-001.pdf`), sieht das so aus:
+
+```bash
+immojump units list "$ID" --all --fields id,extern_id > units.json
+immojump documents list --immobilie-id "$ID" --search Mietvertrag_ --all --fields id,dateiname > vertraege.json
+jq -r --slurpfile u units.json '
+  .[] | (.dateiname | sub("^Mietvertrag_"; "") | sub("\\.pdf$"; "")) as $nr
+      | ($u[0][] | select(.extern_id == $nr) | .id) as $unit
+      | "\(.id) \($unit)"' vertraege.json \
+| while read -r dok unit; do immojump documents set-unit "$dok" --unit-id "$unit" --fields id >/dev/null || echo "FEHLER $dok"; done
+```
+
+**Erwartung:** 93 Vertraege in 1,8 s zugeordnet. Kontrolle:
+`immojump documents list --immobilie-id "$ID" --unit-id <unit-id> --fields dateiname`.
+Wer die Einheit schon vor dem Upload kennt, laedt einzelne Vertraege direkt
+mit `--unit-id` hoch, aber nicht zusaetzlich im Ordner-Upload.
+
+- **Die Duplikat-Erkennung gilt fuer die ganze Organisation, nicht nur fuer
+  das Haus.** Liegt dieselbe Datei schon an einem anderen Objekt, wird sie hier
+  nicht angehaengt. Der Eintrag unter `duplicates` nennt das Objekt
+  (`existingPropertyId`). Gehoert die Datei wirklich an beide Objekte (z. B.
+  eine Teilungserklaerung fuer zwei Haeuser), lade sie mit `--allow-duplicate`
+  erneut hoch.
+
+**Erwartung:** 919 PDFs in 14 Haeusern dauerten lokal 32 s, der zweite Lauf
+meldete nur noch Duplikate.
+
 **Mietvertrag an die Einheit haengen.** Enthaelt der Dateiname die
 Einheitennummer:
 
@@ -179,14 +210,16 @@ immojump documents list --immobilie-id "$ID" --analysis-status failed     --all 
 ## 6. Eigene Werte je Einheit
 
 ```bash
-immojump fields list --model unit --fields id,name,type
-immojump fields create --model unit --name Marktmiete --type number          # einmal, Admin
+immojump fields list --model unit --fields definitions.id,definitions.name,definitions.type   # erst nachsehen
+immojump fields create --model unit --name Marktmiete --type number          # nur wenn noch nicht da; Admin
 immojump fields create --model unit --name Sanierungsbedarf --type text
 # werte.ndjson: {"extern_id":"RH-01-WE-001","values":{"Marktmiete":13.5,"Sanierungsbedarf":"Bad, Fenster"}}
 immojump units fields-set "$ID" --file werte.ndjson
 immojump units fields-get "$ID" --fields extern_id,values
 ```
 
+- Vorhandene Felder wiederverwenden: Ein Name ist je Organisation eindeutig,
+  ein zweites `fields create` mit gleichem Namen endet mit Exit 9.
 - Ein Feld je Kennzahl, mit fester Einheit im Namen, wenn noetig
   (z. B. „Marktmiete €/m²“).
 - `null` leert einen Wert.
@@ -197,32 +230,39 @@ immojump units fields-get "$ID" --fields extern_id,values
 ## 7. Auswerten ueber das Portfolio
 
 Alle Rezepte lesen ueber `units list-org`. Das kostet einen Aufruf je 500
-Einheiten.
+Einheiten. Gruppiert wird immer nach `immobilie_id`, denn zwei Haeuser koennen
+gleich heissen. Der Name dient nur der Anzeige. Gerundet wird erst am Ende.
 
 ```bash
 # Leerstand je Haus
-immojump units list-org --vacant --all --fields immobilie_name \
-  | jq 'group_by(.immobilie_name) | map({haus: .[0].immobilie_name, leer: length})'
+immojump units list-org --vacant --all --fields immobilie_id,immobilie_name \
+  | jq 'group_by(.immobilie_id) | map({haus: .[0].immobilie_name, id: .[0].immobilie_id, leer: length})'
 
-# Ist-Miete p.a., Flaeche und €/m² je Haus (nur Wohnen und Gewerbe)
-immojump units list-org --all --fields immobilie_name,type,livingspace,ist_rent \
-  | jq 'map(select(.type == "wohnen" or .type == "gewerbe"))
-        | group_by(.immobilie_name)
-        | map({haus: .[0].immobilie_name,
+# Ist-Miete p.a. (alle Einheiten inkl. Garagen und Stellplaetze), Wohn-/Gewerbeflaeche und €/m²
+immojump units list-org --all --fields immobilie_id,immobilie_name,type,livingspace,ist_rent \
+  | jq 'group_by(.immobilie_id)
+        | map({haus: .[0].immobilie_name, id: .[0].immobilie_id,
                einheiten: length,
-               flaeche: (map(.livingspace // 0) | add | round),
-               ist_miete_pa: (map(.ist_rent // 0) | add * 12 | round)})
-        | map(. + {eur_qm: (if .flaeche > 0 then (.ist_miete_pa / 12 / .flaeche * 100 | round / 100) else null end)})'
+               miete_pa: (map(.ist_rent // 0) | add * 12),
+               flaeche: (map(select(.type == "wohnen" or .type == "gewerbe") | .livingspace // 0) | add // 0),
+               miete_flaeche_monat: (map(select(.type == "wohnen" or .type == "gewerbe") | .ist_rent // 0) | add // 0)})
+        | map({haus, id, einheiten,
+               ist_miete_pa: (.miete_pa | round),
+               flaeche_qm: (.flaeche | round),
+               eur_qm: (if .flaeche > 0 then (.miete_flaeche_monat / .flaeche * 100 | round / 100) else null end)})'
 
 # Mietsteigerungspotenzial: Soll minus Ist je Haus (p.a.)
-immojump units list-org --all --fields immobilie_name,ist_rent,soll_rent \
-  | jq 'group_by(.immobilie_name) | map({haus: .[0].immobilie_name,
+immojump units list-org --all --fields immobilie_id,immobilie_name,ist_rent,soll_rent \
+  | jq 'group_by(.immobilie_id) | map({haus: .[0].immobilie_name, id: .[0].immobilie_id,
         potenzial_pa: (map((.soll_rent // 0) - (.ist_rent // 0)) | add * 12 | round)})'
 ```
 
 **Kaufpreisfaktor je Haus:**
-1. Hole den Kaufpreis aus `immobilien get <id> --exclude units,dokumente --fields daten.kaufpreis`.
-2. Teile ihn durch die Ist-Miete p.a. aus dem Rezept oben.
+1. Hole den Kaufpreis mit `immobilien get <id> --exclude units,dokumente --fields daten.kaufpreis`.
+2. Teile ihn durch `ist_miete_pa` aus dem zweiten Rezept. Darin stecken alle
+   Ist-Mieten, auch Garagen und Stellplaetze.
+
+Fuer €/m² zaehlen nur Wohn- und Gewerbeflaechen, mit deren Miete.
 
 Kennzahlen rechnet heute nur die Web-Oberflaeche. Per CLI rechnest du sie
 selbst und schreibst Ergebnisse, die bleiben sollen, als benutzerdefinierte
