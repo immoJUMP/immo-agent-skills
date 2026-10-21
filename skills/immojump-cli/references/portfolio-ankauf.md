@@ -247,7 +247,7 @@ immojump units list-org --all --fields immobilie_id,immobilie_name,type,livingsp
                flaeche: (map(select(.type == "wohnen" or .type == "gewerbe") | .livingspace // 0) | add // 0),
                miete_flaeche_monat: (map(select(.type == "wohnen" or .type == "gewerbe") | .ist_rent // 0) | add // 0)})
         | map({haus, id, einheiten,
-               ist_miete_pa: (.miete_pa | round),
+               ist_miete_pa: (.miete_pa * 100 | round / 100),
                flaeche_qm: (.flaeche | round),
                eur_qm: (if .flaeche > 0 then (.miete_flaeche_monat / .flaeche * 100 | round / 100) else null end)})'
 
