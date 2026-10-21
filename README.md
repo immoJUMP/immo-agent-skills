@@ -179,6 +179,7 @@ immo-agent-skills/
 │   ├── anlage-v-assistent/SKILL.md # Anlage V fuer Steuerberater
 │   ├── dokument-klassifizierer/SKILL.md # Dokumenttyp erkennen
 │   ├── ordner-architekt/SKILL.md  # Ablage aufbauen & restrukturieren
+│   ├── immojump-cli/SKILL.md      # immoJUMP per CLI als Agenten-Backend (Grossbestand, Datenraum)
 │   ├── second-brain/             # Wissensbasis aufbauen, pflegen & pruefen
 │   ├── mietlisten-parser/SKILL.md # Mietlisten aus PDF extrahieren
 │   ├── expose-parser/SKILL.md     # Expose-Daten strukturiert extrahieren
@@ -274,6 +275,7 @@ immo-agent-skills/
 | Skill | Beschreibung | Typischer Input |
 |-------|-------------|-----------------|
 | **Ordner-Architekt** | Baut/ordnet die Portfolio-Ablage als Grundlage fuer alle Folge-Skills -- im gefuehrten Gespraech mit Ist-Inventar, Bewertung & bestaetigungspflichtigem Umzugsplan | Zugriff auf Drive/Dropbox/lokalen Ordner |
+| **[immoJUMP-CLI](skills/immojump-cli/SKILL.md)** | Steuert immoJUMP ueber die `immojump`-CLI als Backend fuer Agenten -- Mieterlisten mit hunderten Einheiten wiederholbar importieren, Datenraum hochladen und analysieren, eigene Werte je Einheit zurueckschreiben, Auswertungen ueber das Portfolio | immoJUMP-Token, Mieterliste (CSV/NDJSON), Datenraum-Ordner |
 | **[Second Brain](skills/second-brain/SKILL.md)** | Richtet eine Wissensbasis ein, arbeitet Quellen in bestehende Wissensseiten ein oder prueft Belege, Widersprueche und Aktualitaet | Arbeitsordner bzw. erreichbare Wissensbasis, konkrete Frage und ausgewaehlte Quellen |
 
 **Second Brain nutzen:** Zum Beispiel: „Arbeite dieses Uebergabeprotokoll in meine bestehende Wissensbasis ein“ oder „Pruefe die Belege, aendere noch nichts“. Fuer diesen Skill den **gesamten Ordner `skills/second-brain/`** verwenden: Er enthaelt zusaetzliche Anleitungen, ein Seitenschema und fiktive Uebungsquellen. Die Plugin- und ZIP-Verteilung nehmen diese Dateien mit auf. Ein reiner Chat ohne Schreibzugriff kann einen Vorschlag liefern, aber keine dauerhaft gepflegte Ablage nachweisen.
