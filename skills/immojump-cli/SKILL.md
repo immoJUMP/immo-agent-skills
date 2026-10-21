@@ -63,8 +63,13 @@ Den Token nie in Dateien, Prompts oder Logs schreiben. Fuer reine Auswertungen
 4. **Stapel statt Schleifen.** Nutze `units import`, `units fields-set` und
    `documents upload <ordner> --recursive`, keine Schleife ueber 900 einzelne
    `units create`.
-5. **Vor jedem Massen-Schreiben ein Trockenlauf.** Erst `--dry-run` und die
-   Summe pruefen, dann ein Pilot mit einem Haus, dann der Rest.
+5. **Vor jedem Massen-Schreiben pruefen, dann ein Pilot.**
+   - `units import` hat `--dry-run`: zuerst damit die Summe pruefen.
+   - `documents upload`, `documents analyze-all` und `units fields-set` haben
+     keinen Trockenlauf. Davor zaehlst du lesend, was betroffen ist (Dateien,
+     `documents list ... --limit 1 --fields total`, Zahl der Zeilen), und
+     faengst mit einem Haus an.
+   - Erst danach kommt der Rest.
 6. **Kontext sparen.** Jede Liste bekommt `--fields`. Die Immobilie liest du
    mit `immobilien get <id> --exclude units,dokumente`. Fuer Fortschritt
    fragst du nur `--limit 1 --fields total`. OCR-Texte nie in Masse in den
