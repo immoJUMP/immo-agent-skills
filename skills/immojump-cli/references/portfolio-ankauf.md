@@ -278,10 +278,14 @@ Deshalb gilt:
    set -o pipefail
    immojump documents analyze-all --allow read,write --immobilie-id "$ID" > analyse.json
    rc=$?
-   jq '{listed, queued: (.queued | length), skipped: (.skipped | length), failed}' analyse.json
-   if [ "$rc" -ne 0 ]; then echo "Analyse-Start nicht vollstaendig (Exit $rc)"; fi
-   immojump documents list --immobilie-id "$ID" --analysis-status processing --limit 1 --fields total
-   immojump documents list --immobilie-id "$ID" --analysis-status failed     --all --fields id,dateiname,analysis_error
+   jq '{listed, queued: (.queued | length), skipped: (.skipped | length), failed}' analyse.json || exit 1
+   if [ "$rc" -ne 0 ]; then echo "Analyse-Start nicht vollstaendig (Exit $rc)"; exit "$rc"; fi
+   ```
+   Den Fortschritt fragst du spaeter getrennt ab:
+   ```bash
+   set -o pipefail
+   immojump documents list --immobilie-id "$ID" --analysis-status processing --limit 1 --fields total || exit 1
+   immojump documents list --immobilie-id "$ID" --analysis-status failed     --all --fields id,dateiname,analysis_error || exit 1
    ```
 
 - Exit 7 heisst Rate Limit: Die uebrigen stehen unter `skipped`, spaeter
@@ -330,7 +334,7 @@ immojump immobilien list --fields id,daten.extern_id > alle.json || exit 1
 jq '[.[] | select((.daten.extern_id // "") | startswith("RH-")) | .id]' alle.json > ankauf_ids.json || exit 1
 anzahl=$(jq length ankauf_ids.json) || exit 1
 if [ "$anzahl" -ne 14 ]; then echo "Erwartet 14 Ankaufshaeuser, gefunden $anzahl - erst klaeren"; exit 1; fi
-immojump units list-org --all --fields immobilie_id,immobilie_name,type,livingspace,ist_rent,soll_rent > org.json || exit 1
+immojump units list-org --all --fields immobilie_id,immobilie_name,type,livingspace,ist_rent,soll_rent,note > org.json || exit 1
 jq --slurpfile ids ankauf_ids.json 'map(select(.immobilie_id as $i | $ids[0] | index($i)))' org.json > einheiten.json || exit 1
 ```
 
@@ -355,10 +359,13 @@ jq 'group_by(.immobilie_id)
                  then (($v | map(.ist_rent) | add) / ($v | map(.livingspace) | add) * 100 | round / 100)
                  else null end)}) | from_entries)})' einheiten.json
 
-# Theoretisches Mietpotenzial p.a.: Neuvermietung, Steigerung und Uebermiete getrennt, unbekannte Soll-Mieten gezaehlt
+# Theoretisches Mietpotenzial p.a.: Neuvermietung (nur bestaetigter Leerstand: Ist 0 UND „Leerstand“ in note),
+# Steigerung und Uebermiete getrennt; unbekannte Ist- und Soll-Mieten gezaehlt statt verrechnet
 jq 'group_by(.immobilie_id)
     | map({haus: .[0].immobilie_name, id: .[0].immobilie_id,
-           neuvermietung_pa: (map(select((.ist_rent // 0) == 0 and .soll_rent != null) | .soll_rent) | add // 0 | . * 12 | round),
+           neuvermietung_pa: (map(select(.ist_rent == 0 and ((.note // "") | test("leerstand"; "i")) and .soll_rent != null)
+                                 | .soll_rent) | add // 0 | . * 12 | round),
+           ist_unbekannt: (map(select(.ist_rent == null)) | length),
            steigerung_vermietet_pa: (map(select((.ist_rent // 0) > 0 and .soll_rent != null and .soll_rent > .ist_rent)
                                        | .soll_rent - .ist_rent) | add // 0 | . * 12 | round),
            uebermiete_pa: (map(select((.ist_rent // 0) > 0 and .soll_rent != null and .soll_rent < .ist_rent)
@@ -378,6 +385,9 @@ jq 'group_by(.immobilie_id)
   - `uebermiete_pa` ist ein Risiko bei Neuvermietung, kein Potenzial.
   - Nenne `soll_unbekannt` immer mit. Die Zahl sagt nur etwas, wenn der Import
     unbekannte Soll-Mieten als `null` geschickt hat (Abschnitt 2).
+  - Neuvermietung zaehlt nur bestaetigten Leerstand (Ist-Miete 0 und
+    „Leerstand“ in `note`, siehe Abschnitt 2). Einheiten ohne Ist-Miete-Angabe
+    stehen unter `ist_unbekannt` und gehoeren in keine Potenzialzahl.
 
 **Kaufpreisfaktor je Haus:**
 1. Hole den Kaufpreis mit `immobilien get <id> --exclude units,dokumente --fields daten.kaufpreis`.
