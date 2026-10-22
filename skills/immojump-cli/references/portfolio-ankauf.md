@@ -12,15 +12,32 @@ diesem Lauf.
 2. CLI-Ausgaben gehen erst in eine Datei, dann wird der Exit-Code geprueft,
    erst danach rechnet `jq`. Leere oder unvollstaendige Daten sind ein Fehler,
    kein Ergebnis.
-3. Jeder schreibende Aufruf traegt `--allow read,write`. Die Shell jedes
-   Aufrufs ist neu, ein frueheres `export IMMOJUMP_ALLOW` gilt dort nicht mehr.
+3. Jeder schreibende Aufruf traegt `--allow read,write`, jeder rein lesende
+   `--readonly`. Die Shell jedes Aufrufs ist neu, ein frueheres `export` gilt
+   dort nicht mehr.
+4. **Jeder Block setzt seine Variablen selbst** und prueft sie, aus demselben
+   Grund. Ein leeres `$ID` haette sonst Folgen (die aktuelle CLI lehnt leere
+   IDs mit Exit 2 ab, aeltere nicht):
+   ```bash
+   ID='<uuid des Hauses>'; HAUS='RH-01'
+   [ -n "$ID" ] || { echo "ID fehlt"; exit 2; }
+   mkdir -p "arbeit/$HAUS" && cd "arbeit/$HAUS" || exit 1   # Arbeitsdateien je Haus, nicht gemischt
+   ```
+   Die Bloecke unten setzen diesen Kopf voraus. Die Arbeitsdateien enthalten
+   Mieterdaten: Nach Abschluss loeschen oder nur in einem geschuetzten Ordner
+   liegen lassen.
+
+**Voraussetzung:** eine CLI mit `units import` und `documents set-unit`.
+Pruefe `immojump units import --help >/dev/null && immojump documents set-unit --help >/dev/null`.
+Scheitert das, ist die installierte CLI zu alt: Der Mensch aktualisiert sie,
+du arbeitest nicht mit Ersatzwegen weiter.
 
 ---
 
 ## 0. Inventur und Freigabe, bevor geschrieben wird
 
 ```bash
-find datenraum -type f ! -name '.*' | wc -l                       # alle Dateien, die der Upload senden wuerde
+find datenraum -type f ! -path '*/.*' ! -iname 'thumbs.db' ! -iname 'desktop.ini' | wc -l   # Dateien, die der Upload ungefaehr senden wird
 find datenraum -type f -iname '*.pdf' | wc -l                     # davon PDFs
 find datenraum -maxdepth 1 -mindepth 1 -type d | wc -l            # Haeuser (ein Ordner je Haus)
 ```
@@ -31,6 +48,10 @@ Halte fest:
 - welche Dokumentarten vorliegen (Mietvertraege je Einheit, Grundbuch,
   Teilungserklaerung, Energieausweis, Expose, Scans ohne Text),
 - wie die Verkaeufer-Nummer aussieht (z. B. `RH-01-WE-001`).
+
+Die Zahl ist eine Schaetzung: ZIP-Archive werden im Backend entpackt, und die
+CLI ueberspringt versteckte und Systemdateien. Massgeblich ist der Bericht des
+Uploads.
 
 **Freigabe einholen.** Der Datenraum enthaelt personenbezogene Daten von
 Mietern. Bevor du etwas hochlaedst, nenne dem Menschen Umfang und Ziel und
@@ -62,6 +83,8 @@ immojump immobilien create --allow read,write --type MFH \
   --fields id
 ```
 
+- **Nie mit `-q slim=true`**: Die schlanke Liste enthaelt `daten` nicht, die
+  Pruefung faende dann kein Haus und legte alle neu an.
 - Lege `daten.extern_id` an jedem Haus an, mit einem gemeinsamen Praefix je
   Ankauf (hier `RH-`). Daran erkennt der naechste Lauf das Haus, und die
   Auswertung in Abschnitt 7 grenzt den Ankauf vom uebrigen Bestand ab.
@@ -85,7 +108,7 @@ Verkaeufer-Mieterliste:
 | Nutzung, Art | `type` | `wohnen`, `gewerbe`, `stellplatz`, `garage`, `sonstiges` |
 | Wohnflaeche, qm | `livingspace` | Zahl in m²; Stellplatz/Garage 0 |
 | Zimmer | `rooms` | 2.5 erlaubt |
-| Ist-Kaltmiete, NKM | `ist_rent` | €/Monat; Leerstand 0 |
+| Ist-Kaltmiete, NKM | `ist_rent` | €/Monat; Leerstand 0; **unbekannt: `null` schicken** |
 | Soll-/Marktmiete laut Verkaeufer | `soll_rent` | **unbekannt: `null` schicken**, siehe unten |
 | Mietbeginn | `lease_start_date` | `YYYY-MM-DD` oder `DD.MM.YYYY` |
 | letzte Mieterhoehung | `last_rent_increase_date` | dito |
@@ -113,8 +136,13 @@ Regeln:
 - **Keine fremden Schluessel.** Unbekannte Felder (etwa `extern_id_objekt`)
   lehnt das Backend mit 400 ab. Entferne sie, bevor du die Datei je Haus
   aufteilst.
-- **Leerstand:** `ist_rent` 0. Wenn bekannt, gehoert der Grund in `note`, z. B.
-  „Leerstand - Sanierung erforderlich“.
+- **Leerstand** bekommt eine feste Markierung: `ist_rent` 0 und `note`
+  **beginnt** mit „Leerstand“, z. B. „Leerstand - Sanierung erforderlich“.
+  Nur so zaehlt die Auswertung ihn als bestaetigten Leerstand. Mietfreie
+  Ueberlassung: `ist_rent` 0 und eine andere Notiz („mietfrei …“).
+- **Ist-Miete unbekannt:** `"ist_rent": null` schicken, nicht 0. Ohne Angabe
+  setzt das Backend beim Anlegen 0, und die Einheit sieht vermietet-ohne-Miete
+  oder leer aus.
 
 Beispiel einer Zeile:
 
@@ -131,6 +159,8 @@ Erst der Trockenlauf, dann der Vergleich mit der Datei, erst danach schreiben:
 ```bash
 set -o pipefail
 zeilen=$(jq -n '[inputs] | length' rh-01.ndjson) || { echo "rh-01.ndjson ist kein gueltiges NDJSON"; exit 1; }
+ohne_nummer=$(jq -n '[inputs | select((.extern_id // "") == "")] | length' rh-01.ndjson) || exit 1
+if [ "$ohne_nummer" -ne 0 ]; then echo "$ohne_nummer Zeilen ohne extern_id - jeder Lauf legte sie neu an"; exit 1; fi
 immojump units import "$ID" --allow read,write --file rh-01.ndjson --dry-run > probe.json \
   || { echo "Trockenlauf gescheitert, nichts importiert"; exit 1; }
 jq --argjson n "$zeilen" -e '(.created + .updated + .unchanged) == $n' probe.json >/dev/null \
@@ -155,8 +185,14 @@ Gegenpruefung unten entscheidet.
 
 ```bash
 set -o pipefail
-immojump units list "$ID" --all --fields ist_rent > ist.json || exit 1
-jq '{einheiten: length, ist_miete_monat: ((map(.ist_rent // 0) | add // 0) * 100 | round / 100)}' ist.json
+immojump units list "$ID" --readonly --all --fields ist_rent > ist.json || exit 1
+jq -n --slurpfile quelle rh-01.ndjson --slurpfile ist ist.json '
+  ($quelle | map(.ist_rent // 0) | add // 0) as $soll | ($ist[0] | map(.ist_rent // 0) | add // 0) as $hat
+  | {einheiten_quelle: ($quelle | length), einheiten_immojump: ($ist[0] | length),
+     ist_miete_quelle: ($soll * 100 | round / 100), ist_miete_immojump: ($hat * 100 | round / 100),
+     passt: (($quelle | length) == ($ist[0] | length) and (($soll - $hat) | fabs) < 0.01)}' > abgleich.json || exit 1
+cat abgleich.json
+jq -e '.passt' abgleich.json >/dev/null || { echo "Quelle und immoJUMP weichen ab - klaeren"; exit 1; }
 ```
 
 **Scheitert ein Stapel (Exit 11):**
@@ -184,7 +220,7 @@ if [ "$rc" -ne 0 ]; then echo "Upload nicht vollstaendig (Exit $rc) - siehe fail
   (`uploaded`, `duplicates`, `failed`, `empty`).
 - Exit 0 heisst: alles ist angekommen.
 - Exit 1 heisst: Teile sind gescheitert oder leer. Lade nur die Dateien aus
-  `failed` und `empty` erneut. Eintraege mit `may_exist: true` sind
+  `failed` erneut. Leere Dateien (`empty`) braucht es neu vom Verkaeufer. Eintraege mit `may_exist: true` sind
   moeglicherweise schon gespeichert; ein erneuter Lauf ohne
   `--allow-duplicate` ist trotzdem sicher.
 - Exit 4, 6 oder 7 heisst: Der Lauf wurde abgebrochen (Anmeldung, Recht,
@@ -212,8 +248,8 @@ Zugeordnet wird deshalb **nach** dem Upload, ueber die Dokument-ID, mit
 
 ```bash
 set -o pipefail
-immojump units list "$ID" --all --fields id,extern_id > units.json || exit 1
-immojump documents list --immobilie-id "$ID" --search Mietvertrag --all --fields id,dateiname > dokumente.json || exit 1
+immojump units list "$ID" --readonly --all --fields id,extern_id > units.json || exit 1
+immojump documents list --readonly --immobilie-id "$ID" --search Mietvertrag --all --fields id,dateiname > dokumente.json || exit 1
 
 # 1. Zuordnung planen, nichts schreiben. Jeder Vertrag braucht GENAU einen Treffer.
 jq -c --slurpfile u units.json '
@@ -254,46 +290,52 @@ mit `--unit-id` hoch und nimmt sie **nicht** zusaetzlich in den Ordner-Upload.
 **Jede Analyse verbraucht KI-Kontingent des Plans.**
 - Der Profi-Plan hat 100 Analysen im Monat. 919 Dokumente waeren also rund
   neun Monate Kontingent.
-- `analyze-all` ist ein schreibender Befehl, den eine `read,write`-Policy
-  nicht sperrt.
+- Analysen sind schreibende Befehle, die eine `read,write`-Policy nicht sperrt.
 
-Deshalb gilt:
+Deshalb wird die Freigabe an **konkrete Dokument-IDs** gebunden. Sonst
+kaemen Dokumente dazu, die waehrend der Freigabe hochgeladen werden:
 
-1. Zaehle je Haus genau die Auswahl, die du analysieren willst, und zeige sie
-   dem Menschen:
+1. Auswahl festhalten und dem Menschen zeigen:
    ```bash
    set -o pipefail
-   immojump documents list --immobilie-id "$ID" --analysis-status not_started --limit 1 --fields total
+   immojump documents list --readonly --immobilie-id "$ID" --analysis-status not_started --all --fields id,dateiname > auswahl.json || exit 1
+   echo "Zur Analyse: $(jq length auswahl.json) Dokumente in $HAUS"
    ```
    Frisch hochgeladene Dokumente haben noch **keine Kategorie**; die vergibt
-   erst die Analyse oder `--category` beim Upload. Ein Filter
-   `--category mietvertrag` zaehlt deshalb vorher 0. Nutze ihn nur, wenn du
-   beim Upload kategorisiert hast, dann aber beim Zaehlen UND beim Start.
-2. **Warte auf eine ausdrueckliche Freigabe** fuer genau diese Auswahl (Haus,
-   Anzahl) und nenne dabei den Kontingentverbrauch. Erst ein Pilot-Haus, dann
-   der Rest, jeweils freigegeben.
-3. Starten, mit **derselben** Auswahl, und kompakt auswerten. `failed` und
-   `skipped` nicht wegfiltern:
+   erst die Analyse oder `--category` beim Upload. Willst du nur eine Art
+   analysieren, schraenke `auswahl.json` per Dateiname ein und zeige die
+   eingeschraenkte Liste.
+2. **Warte auf eine ausdrueckliche Freigabe** fuer genau diese Liste (Haus,
+   Anzahl, Kontingentverbrauch). Erst ein Pilot-Haus, dann der Rest, jeweils
+   freigegeben.
+3. Genau diese IDs analysieren und das Ergebnis pruefen:
    ```bash
    set -o pipefail
-   immojump documents analyze-all --allow read,write --immobilie-id "$ID" > analyse.json
+   jq -r '.[].id' auswahl.json > ids.txt || exit 1
+   [ -s ids.txt ] || { echo "Keine Dokumente in der Auswahl"; exit 0; }
+   xargs immojump documents analyze --allow read,write < ids.txt > analyse.json
    rc=$?
-   jq '{listed, queued: (.queued | length), skipped: (.skipped | length), failed}' analyse.json || exit 1
+   # Mehrere IDs: {queued, skipped, failed}; eine einzelne ID: das Dokument. Nur Zahlen in den Kontext.
+   jq -c 'if has("queued") then {gestartet: (.queued | length), uebersprungen: (.skipped | length), failed}
+          else {gestartet: 1, id, analysis_status} end' analyse.json
    if [ "$rc" -ne 0 ]; then echo "Analyse-Start nicht vollstaendig (Exit $rc)"; exit "$rc"; fi
    ```
-   Den Fortschritt fragst du spaeter getrennt ab:
+4. Fortschritt spaeter getrennt abfragen; fertig ist es erst, wenn `queued`
+   UND `processing` bei 0 stehen:
    ```bash
    set -o pipefail
-   immojump documents list --immobilie-id "$ID" --analysis-status processing --limit 1 --fields total || exit 1
-   immojump documents list --immobilie-id "$ID" --analysis-status failed     --all --fields id,dateiname,analysis_error || exit 1
+   for status in queued processing; do
+     immojump documents list --readonly --immobilie-id "$ID" --analysis-status "$status" --limit 1 --fields total || exit 1
+   done
+   immojump documents list --readonly --immobilie-id "$ID" --analysis-status failed --all --fields id,dateiname,analysis_error || exit 1
    ```
 
-- Exit 7 heisst Rate Limit: Die uebrigen stehen unter `skipped`, spaeter
-  erneut starten. Ein anderer Exit ungleich 0 (z. B. erschoepftes
-  Kontingent): stoppen und den Menschen fragen.
-- `failed` aus `analyze-all` sind Dokumente, deren Start scheiterte; sie stehen
-  weiter auf `not_started`. `--analysis-status failed` sind gestartete
-  Analysen, die spaeter scheiterten. Beides getrennt melden.
+- `xargs` teilt sehr lange Listen auf mehrere Aufrufe auf. Scheitert einer,
+  endet `xargs` mit einem Exit ungleich 0. Dann den Bericht pruefen und nur
+  die fehlenden IDs erneut starten.
+- Exit 7 heisst Rate Limit: spaeter mit den noch nicht gestarteten IDs
+  erneut. Ein anderer Exit ungleich 0 (z. B. erschoepftes Kontingent):
+  stoppen und den Menschen fragen.
 - Scans ohne Textschicht brauchen OCR und dauern laenger.
 - Die Analyse aendert keine Einheiten, die ein Mensch oder dein Import angelegt
   hat (alle mit `extern_id`). Abweichungen, z. B. eine andere Miete im
@@ -305,19 +347,24 @@ Deshalb gilt:
 
 ```bash
 set -o pipefail
-immojump fields list --model unit --fields definitions.id,definitions.name,definitions.type   # erst nachsehen
-immojump fields create --allow read,write --model unit --name "Marktmiete EUR/qm" --type number   # nur wenn noch nicht da; Admin
-immojump fields create --allow read,write --model unit --name Sanierungsbedarf --type text
+immojump fields list --readonly --model unit --fields definitions.id,definitions.name,definitions.type > felder.json || exit 1
+vorhanden=$(jq '[.definitions[] | select(.name == "Marktmiete EUR/qm")] | length' felder.json) || exit 1
+if [ "$vorhanden" -eq 0 ]; then                                     # Anlegen nur, wenn es fehlt (Admin)
+  immojump fields create --allow read,write --model unit --name "Marktmiete EUR/qm" --type number || exit 1
+fi
 # werte.ndjson: {"extern_id":"RH-01-WE-001","values":{"Marktmiete EUR/qm":13.5,"Sanierungsbedarf":"Bad, Fenster"}}
-immojump units fields-set "$ID" --allow read,write --file werte.ndjson
-immojump units fields-get "$ID" --fields extern_id,values
+immojump units fields-set "$ID" --allow read,write --file werte.ndjson > gesetzt.json || { echo "Werte nicht gesetzt"; exit 1; }
+cat gesetzt.json
+immojump units fields-get "$ID" --readonly --fields extern_id,values > werte_ist.json || exit 1
+jq length werte_ist.json                                           # nur die Zahl in den Kontext, nicht alle Werte
 ```
 
 - Vorhandene Felder wiederverwenden: Ein Name ist je Organisation eindeutig,
   ein zweites `fields create` mit gleichem Namen endet mit Exit 9.
 - Ein Feld je Kennzahl, die Masseinheit im Namen (EUR/qm, EUR/Monat).
 - `null` leert einen Wert.
-- Unbekannte Einheitennummern bricht die CLI ab, bevor etwas gesendet wird.
+- Unbekannte Einheitennummern und doppelte Felder je Einheit bricht die CLI
+  ab, bevor etwas gesendet wird.
 
 ---
 
@@ -330,11 +377,11 @@ gerechnet:
 
 ```bash
 set -o pipefail
-immojump immobilien list --fields id,daten.extern_id > alle.json || exit 1
+immojump immobilien list --readonly --fields id,daten.extern_id > alle.json || exit 1
 jq '[.[] | select((.daten.extern_id // "") | startswith("RH-")) | .id]' alle.json > ankauf_ids.json || exit 1
 anzahl=$(jq length ankauf_ids.json) || exit 1
 if [ "$anzahl" -ne 14 ]; then echo "Erwartet 14 Ankaufshaeuser, gefunden $anzahl - erst klaeren"; exit 1; fi
-immojump units list-org --all --fields immobilie_id,immobilie_name,type,livingspace,ist_rent,soll_rent,note > org.json || exit 1
+immojump units list-org --readonly --all --fields immobilie_id,immobilie_name,type,livingspace,ist_rent,soll_rent,note > org.json || exit 1
 jq --slurpfile ids ankauf_ids.json 'map(select(.immobilie_id as $i | $ids[0] | index($i)))' org.json > einheiten.json || exit 1
 ```
 
@@ -349,9 +396,11 @@ jq 'map(select((.type == "wohnen" or .type == "gewerbe") and ((.ist_rent // 0) =
     | map({haus: .[0].immobilie_name, id: .[0].immobilie_id, ohne_ist_miete: length,
            flaeche_qm: (map(.livingspace // 0) | add | round)})' einheiten.json
 
-# Ist-Miete p.a. (alle Einheiten inkl. Garagen und Stellplaetze) und EUR/qm der VERMIETETEN Flaeche, getrennt nach Nutzung
+# Ist-Miete p.a. (alle Einheiten inkl. Garagen und Stellplaetze) und EUR/qm der VERMIETETEN Flaeche, getrennt nach Nutzung.
+# Fehlt bei einer Einheit die Ist-Miete (null), ist die Jahresmiete unvollstaendig: kein Faktor.
 jq 'group_by(.immobilie_id)
     | map(. as $h | {haus: $h[0].immobilie_name, id: $h[0].immobilie_id, einheiten: length,
+          ist_unbekannt: ($h | map(select(.ist_rent == null)) | length),
           ist_miete_pa: (($h | map(.ist_rent // 0) | add) * 12 * 100 | round / 100),
           eur_qm: ([ "wohnen", "gewerbe" ] | map(. as $t
             | ($h | map(select(.type == $t and (.ist_rent // 0) > 0 and (.livingspace // 0) > 0))) as $v
@@ -359,11 +408,11 @@ jq 'group_by(.immobilie_id)
                  then (($v | map(.ist_rent) | add) / ($v | map(.livingspace) | add) * 100 | round / 100)
                  else null end)}) | from_entries)})' einheiten.json
 
-# Theoretisches Mietpotenzial p.a.: Neuvermietung (nur bestaetigter Leerstand: Ist 0 UND „Leerstand“ in note),
+# Theoretisches Mietpotenzial p.a.: Neuvermietung (nur bestaetigter Leerstand: Ist 0 UND note beginnt mit „Leerstand“),
 # Steigerung und Uebermiete getrennt; unbekannte Ist- und Soll-Mieten gezaehlt statt verrechnet
 jq 'group_by(.immobilie_id)
     | map({haus: .[0].immobilie_name, id: .[0].immobilie_id,
-           neuvermietung_pa: (map(select(.ist_rent == 0 and ((.note // "") | test("leerstand"; "i")) and .soll_rent != null)
+           neuvermietung_pa: (map(select(.ist_rent == 0 and ((.note // "") | test("^\\s*leerstand"; "i")) and .soll_rent != null)
                                  | .soll_rent) | add // 0 | . * 12 | round),
            ist_unbekannt: (map(select(.ist_rent == null)) | length),
            steigerung_vermietet_pa: (map(select((.ist_rent // 0) > 0 and .soll_rent != null and .soll_rent > .ist_rent)
@@ -385,15 +434,17 @@ jq 'group_by(.immobilie_id)
   - `uebermiete_pa` ist ein Risiko bei Neuvermietung, kein Potenzial.
   - Nenne `soll_unbekannt` immer mit. Die Zahl sagt nur etwas, wenn der Import
     unbekannte Soll-Mieten als `null` geschickt hat (Abschnitt 2).
-  - Neuvermietung zaehlt nur bestaetigten Leerstand (Ist-Miete 0 und
-    „Leerstand“ in `note`, siehe Abschnitt 2). Einheiten ohne Ist-Miete-Angabe
+  - Neuvermietung zaehlt nur bestaetigten Leerstand (Ist-Miete 0 und `note`
+    beginnt mit „Leerstand“, siehe Abschnitt 2). „Kein Leerstand“ zaehlt
+    nicht. Einheiten ohne Ist-Miete-Angabe
     stehen unter `ist_unbekannt` und gehoeren in keine Potenzialzahl.
 
 **Kaufpreisfaktor je Haus:**
 1. Hole den Kaufpreis mit `immobilien get <id> --exclude units,dokumente --fields daten.kaufpreis`.
-2. Teile ihn durch die ungerundete Jahresmiete aller Einheiten
-   (`ist_miete_pa` oben, auf Cent genau). Ist sie 0, gibt es keinen Faktor.
-   Melde das, statt durch 0 zu teilen.
+2. Teile ihn durch die Jahresmiete aller Einheiten (`ist_miete_pa` oben, auf
+   Cent genau). **Kein Faktor**, wenn `ist_unbekannt` > 0 (die Jahresmiete ist
+   dann unvollstaendig) oder die Jahresmiete 0 ist. Melde den Grund, statt
+   eine Zahl zu nennen.
 
 Kennzahlen rechnet heute nur die Web-Oberflaeche. Per CLI rechnest du sie
 selbst und schreibst Ergebnisse, die bleiben sollen, als benutzerdefinierte
