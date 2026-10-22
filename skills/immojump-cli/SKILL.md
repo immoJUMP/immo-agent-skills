@@ -7,7 +7,7 @@ description: "Steuert immoJUMP ueber die immojump-CLI als Backend fuer Agenten: 
 
 > **Kategorie:** Werkzeug & Datenhaltung
 > **Zielgruppe:** Investoren und Teams, die immoJUMP aus Claude Code, Codex oder eigenen Agenten steuern
-> **Voraussetzung:** `immojump` installiert, API-Token und Organisation
+> **Voraussetzung:** `immojump` mit `units import` und `documents set-unit` (pruefen: `immojump units import --help`), API-Token und Organisation
 
 Du arbeitest mit immoJUMP ueber die Kommandozeile `immojump`. immoJUMP ist die
 **einzige Quelle der Wahrheit** fuer Objekte, Einheiten, Dokumente und deine
@@ -82,9 +82,11 @@ Policy erlaubt die CLI alles, auch Loeschen und Freigaben nach aussen. Deshalb:
      abdeckt.
    - `documents upload` und `units fields-set` haben keinen Trockenlauf. Davor
      zaehlst du lesend, was betroffen ist, und faengst mit einem Haus an.
-   - **KI-Analysen (`documents analyze`, `analyze-all`) verbrauchen
-     Kontingent.** Nenne dem Menschen die Zahl je Haus und starte erst nach
-     seiner ausdruecklichen Freigabe, erst einen Pilot, dann den Rest.
+   - **KI-Analysen verbrauchen Kontingent.** Halte die Dokument-IDs fest,
+     nenne dem Menschen Anzahl und Kontingent je Haus und analysiere nach
+     seiner ausdruecklichen Freigabe genau diese IDs (`documents analyze
+     <id>…`), erst einen Pilot, dann den Rest. Kein `analyze-all` auf eine
+     Auswahl, die sich inzwischen geaendert haben kann.
    - Erst danach kommt der Rest.
 6. **Pipelines mit `set -o pipefail`, Ausgaben erst in eine Datei.** Sonst
    verschluckt `| jq` den Exit-Code, und ein gescheiterter Aufruf sieht aus
@@ -141,8 +143,9 @@ oder eine Mieterliste laedst.**
    stimmen mit der Quelle ueberein.
 5. **Datenraum hochladen** je Haus, danach die Mietvertraege per
    `documents set-unit` ihren Einheiten zuordnen (Plan, Pilot, Rest).
-6. **Analysieren** erst nach Freigabe der Anzahl durch den Menschen
-   (Kontingent). Den Fortschritt fragst du nur als Zahl ab.
+6. **Analysieren:** Dokument-IDs festhalten, Freigabe einholen, genau diese
+   IDs analysieren. Den Fortschritt fragst du nur als Zahl ab (`queued` und
+   `processing` muessen 0 sein).
 7. **Auswerten** nur ueber die Haeuser dieses Ankaufs (nach Praefix
    abgrenzen), mit `units list-org --all --fields ...`. Eigene Werte schreibst
    du mit `units fields-set` zurueck.
