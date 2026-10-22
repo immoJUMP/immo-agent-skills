@@ -37,16 +37,24 @@ in immoJUMP zu halten (dann `deal-screener`, `mietlisten-analyse`,
 
 ## Einrichtung (einmal)
 
+**Den Zugang richtet der Mensch ein, nicht der Agent.** Bitte ihn, in seinem
+eigenen Terminal auszufuehren:
+
 ```bash
 curl -fsSL https://raw.githubusercontent.com/immoJUMP/immojump-cli/main/install.sh | sh
-export IMMOJUMP_TOKEN=...            # immoJUMP: Einstellungen -> API-Zugang
-export IMMOJUMP_ORGANISATION_ID=...  # aus der App-URL /o/<org-id>/
+immojump auth login --organisation <org-id>   # oeffnet die Token-Seite, speichert den Context
+```
+
+(`<org-id>` steht in der App-URL `/o/<org-id>/`.) Frag **nie** im Chat nach dem
+Token und schreib ihn nie in Dateien, Prompts oder Logs. Du selbst setzt nur
+die Policy und pruefst den Zugang:
+
+```bash
 export IMMOJUMP_ALLOW=read,write     # nie loeschen, nie nach aussen freigeben
 immojump auth status                 # prueft Token, Organisation und Rolle
 ```
 
-Den Token nie in Dateien, Prompts oder Logs schreiben. Fuer reine Auswertungen
-`--readonly` setzen.
+Fuer reine Auswertungen `--readonly` setzen.
 
 ---
 
@@ -64,11 +72,14 @@ Den Token nie in Dateien, Prompts oder Logs schreiben. Fuer reine Auswertungen
    `documents upload <ordner> --recursive`, keine Schleife ueber 900 einzelne
    `units create`.
 5. **Vor jedem Massen-Schreiben pruefen, dann ein Pilot.**
-   - `units import` hat `--dry-run`: zuerst damit die Summe pruefen.
-   - `documents upload`, `documents analyze-all` und `units fields-set` haben
-     keinen Trockenlauf. Davor zaehlst du lesend, was betroffen ist (Dateien,
-     `documents list ... --limit 1 --fields total`, Zahl der Zeilen), und
-     faengst mit einem Haus an.
+   - `units import` hat `--dry-run`: zuerst damit die Summe pruefen. Der echte
+     Lauf startet nur, wenn der Trockenlauf mit Exit 0 endet und alle Zeilen
+     abdeckt.
+   - `documents upload` und `units fields-set` haben keinen Trockenlauf. Davor
+     zaehlst du lesend, was betroffen ist, und faengst mit einem Haus an.
+   - **KI-Analysen (`documents analyze`, `analyze-all`) verbrauchen
+     Kontingent.** Nenne dem Menschen die Zahl je Haus und starte erst nach
+     seiner ausdruecklichen Freigabe, erst einen Pilot, dann den Rest.
    - Erst danach kommt der Rest.
 6. **Kontext sparen.** Jede Liste bekommt `--fields`. Die Immobilie liest du
    mit `immobilien get <id> --exclude units,dokumente`. Fuer Fortschritt
@@ -78,11 +89,18 @@ Den Token nie in Dateien, Prompts oder Logs schreiben. Fuer reine Auswertungen
    ueber hunderte Einheiten rechnest du mit `jq` oder einem Skript aus der
    CLI-Ausgabe. Nie im Kopf ueberschlagen.
 8. **Auf Exit-Codes reagieren, nicht auf Meldungstexte.**
-   - 7 (Rate Limit) und 8 (Server/Netz): spaeter erneut starten. Lesende
-     Aufrufe und Importe wiederholen sich selbst.
-   - 11 (ungueltige Eingabe): die Daten korrigieren.
-   - 9 (Konflikt): erst nachsehen, nicht blind wiederholen.
+   - 0: alles erledigt.
+   - 1: teilweise gescheitert (z. B. einzelne Dateien beim Upload). Der
+     Bericht steht trotzdem auf stdout: `failed` und `empty` auswerten.
+   - 2 (Aufruf falsch) und 3 (Konfiguration, Token oder Organisation fehlt):
+     Befehl bzw. Einrichtung pruefen, nicht wiederholen.
+   - 4 (Token ungueltig oder abgelaufen): den Menschen bitten, sich neu
+     anzumelden.
    - 6 (keine Berechtigung oder Policy): stoppen und fragen.
+   - 7 (Rate Limit) und 8 (Server, Netz, Zeitueberschreitung): spaeter erneut
+     starten. Lesende Aufrufe und Importe wiederholen sich selbst.
+   - 9 (Konflikt): erst nachsehen, nicht blind wiederholen.
+   - 11 (ungueltige Eingabe): die Daten korrigieren.
 9. **Schreiben nur mit Ziel.** Vor jedem schreibenden Lauf nennst du, welche
    Immobilie und wie viele Einheiten oder Dokumente betroffen sind. Loeschen
    (`destructive`) und Freigeben nach aussen (`external`) nur nach
@@ -102,18 +120,19 @@ oder eine Mieterliste laedst.**
 
 1. **Inventur des Datenraums.** Zaehle Haeuser, Einheiten je Haus und Dokumente
    je Art. Erst dann schreiben.
-2. **Haeuser anlegen.** Vorher pruefen, ob sie schon existieren:
-   `immobilien list --fields id,name,daten.extern_id`.
+2. **Haeuser anlegen** mit `daten.extern_id` (gemeinsames Praefix je Ankauf).
+   Vorher pruefen, ob sie schon existieren.
 3. **Mieterliste normalisieren** (Spaltenzuordnung in der Referenz), dann
    `units import --dry-run`, danach der echte Import je Haus.
 4. **Pruefen:** Die Zahl der Einheiten je Haus und die Summe der Ist-Miete
    stimmen mit der Quelle ueberein.
-5. **Datenraum hochladen** je Haus, Mietvertraege mit `--unit-id` direkt an
-   ihre Einheit.
-6. **Analysieren:** `documents analyze-all` je Haus, den Fortschritt fragst du
-   nur als Zahl ab.
-7. **Auswerten** ueber das ganze Portfolio mit `units list-org --all --fields ...`.
-   Eigene Werte schreibst du mit `units fields-set` zurueck.
+5. **Datenraum hochladen** je Haus, danach die Mietvertraege per
+   `documents set-unit` ihren Einheiten zuordnen (Plan, Pilot, Rest).
+6. **Analysieren** erst nach Freigabe der Anzahl durch den Menschen
+   (Kontingent). Den Fortschritt fragst du nur als Zahl ab.
+7. **Auswerten** nur ueber die Haeuser dieses Ankaufs (nach Praefix
+   abgrenzen), mit `units list-org --all --fields ...`. Eigene Werte schreibst
+   du mit `units fields-set` zurueck.
 
 ---
 
