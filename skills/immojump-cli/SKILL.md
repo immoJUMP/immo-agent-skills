@@ -46,19 +46,24 @@ immojump auth login --organisation <org-id>   # oeffnet die Token-Seite, speiche
 ```
 
 (`<org-id>` steht in der App-URL `/o/<org-id>/`.) Frag **nie** im Chat nach dem
-Token und schreib ihn nie in Dateien, Prompts oder Logs. Du selbst setzt nur
-die Policy und pruefst den Zugang:
+Token und schreib ihn nie in Dateien, Prompts oder Logs. Du selbst pruefst nur
+den Zugang:
 
 ```bash
-export IMMOJUMP_ALLOW=read,write     # nie loeschen, nie nach aussen freigeben
 immojump auth status                 # prueft Token, Organisation und Rolle
 ```
 
-Fuer reine Auswertungen `--readonly` setzen.
+**Policy bei jedem Aufruf.** In Claude Code und Codex startet jeder Befehl in
+einer neuen Shell, ein `export IMMOJUMP_ALLOW=…` gilt also nur einmal. Ohne
+Policy erlaubt die CLI alles, auch Loeschen und Freigaben nach aussen. Deshalb:
+- Jeder schreibende Aufruf bekommt `--allow read,write`.
+- Reine Auswertungen bekommen `--readonly`.
+- Dauerhaft setzt das nur der Mensch, z. B. in Claude Code ueber
+  `settings.json` → `env` → `IMMOJUMP_ALLOW=read,write`.
 
 ---
 
-## Die zehn Regeln
+## Die elf Regeln
 
 1. **Erst nachsehen, dann aufrufen.** Mit `immojump <ressource> --help`,
    `immojump schema <ressource> <befehl>` und `immojump docs` pruefst du die
@@ -81,31 +86,39 @@ Fuer reine Auswertungen `--readonly` setzen.
      Kontingent.** Nenne dem Menschen die Zahl je Haus und starte erst nach
      seiner ausdruecklichen Freigabe, erst einen Pilot, dann den Rest.
    - Erst danach kommt der Rest.
-6. **Kontext sparen.** Jede Liste bekommt `--fields`. Die Immobilie liest du
+6. **Pipelines mit `set -o pipefail`, Ausgaben erst in eine Datei.** Sonst
+   verschluckt `| jq` den Exit-Code, und ein gescheiterter Aufruf sieht aus
+   wie „nichts gefunden“ (Muster in der Referenz).
+7. **Kontext sparen.** Jede Liste bekommt `--fields`. Die Immobilie liest du
    mit `immobilien get <id> --exclude units,dokumente`. Fuer Fortschritt
    fragst du nur `--limit 1 --fields total`. OCR-Texte nie in Masse in den
    Kontext laden.
-7. **Rechnen macht Code, nicht du.** Summen, Mittelwerte, Faktor und Rendite
+8. **Rechnen macht Code, nicht du.** Summen, Mittelwerte, Faktor und Rendite
    ueber hunderte Einheiten rechnest du mit `jq` oder einem Skript aus der
    CLI-Ausgabe. Nie im Kopf ueberschlagen.
-8. **Auf Exit-Codes reagieren, nicht auf Meldungstexte.**
+9. **Auf Exit-Codes reagieren, nicht auf Meldungstexte.**
    - 0: alles erledigt.
-   - 1: teilweise gescheitert (z. B. einzelne Dateien beim Upload). Der
-     Bericht steht trotzdem auf stdout: `failed` und `empty` auswerten.
+   - 1: allgemeiner Fehler. Beim Upload heisst das: Teile sind gescheitert oder
+     leer, der Bericht steht trotzdem auf stdout (`failed`, `empty`
+     auswerten). Bei Analysen kann es ein erschoepftes Kontingent sein: dann
+     stoppen und fragen.
    - 2 (Aufruf falsch) und 3 (Konfiguration, Token oder Organisation fehlt):
      Befehl bzw. Einrichtung pruefen, nicht wiederholen.
    - 4 (Token ungueltig oder abgelaufen): den Menschen bitten, sich neu
      anzumelden.
+   - 5 (nicht gefunden): ID pruefen, nicht blind wiederholen.
    - 6 (keine Berechtigung oder Policy): stoppen und fragen.
-   - 7 (Rate Limit) und 8 (Server, Netz, Zeitueberschreitung): spaeter erneut
-     starten. Lesende Aufrufe und Importe wiederholen sich selbst.
+   - 7 (Rate Limit): spaeter erneut starten.
+   - 8 (Server, Netz, Zeitueberschreitung): Lesende Aufrufe wiederholen sich
+     selbst. Nach einem schreibenden Aufruf erst nachsehen, ob er doch
+     gewirkt hat, dann ggf. wiederholen.
    - 9 (Konflikt): erst nachsehen, nicht blind wiederholen.
    - 11 (ungueltige Eingabe): die Daten korrigieren.
-9. **Schreiben nur mit Ziel.** Vor jedem schreibenden Lauf nennst du, welche
+10. **Schreiben nur mit Ziel.** Vor jedem schreibenden Lauf nennst du, welche
    Immobilie und wie viele Einheiten oder Dokumente betroffen sind. Loeschen
    (`destructive`) und Freigeben nach aussen (`external`) nur nach
    ausdruecklicher Freigabe des Menschen.
-10. **Ergebnisse zurueckschreiben.** Eigene Analysewerte kommen in
+11. **Ergebnisse zurueckschreiben.** Eigene Analysewerte kommen in
     benutzerdefinierte Felder an der Einheit (`units fields-set`), Befunde zum
     Haus in eine Aktivitaet oder Notiz. Sonst wiederholt der naechste Agent
     deine Arbeit.
@@ -118,8 +131,8 @@ Vollstaendig mit Pruefpunkten, Feldzuordnung und Auswertungsrezepten:
 `references/portfolio-ankauf.md`. **Lies diese Datei, bevor du einen Datenraum
 oder eine Mieterliste laedst.**
 
-1. **Inventur des Datenraums.** Zaehle Haeuser, Einheiten je Haus und Dokumente
-   je Art. Erst dann schreiben.
+1. **Inventur des Datenraums** und **Go des Menschen**: Der Datenraum enthaelt
+   Mieterdaten. NDA bzw. Datenraum-Bedingungen muessen das Hochladen erlauben.
 2. **Haeuser anlegen** mit `daten.extern_id` (gemeinsames Praefix je Ankauf).
    Vorher pruefen, ob sie schon existieren.
 3. **Mieterliste normalisieren** (Spaltenzuordnung in der Referenz), dann
