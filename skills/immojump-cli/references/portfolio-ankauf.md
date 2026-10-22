@@ -348,10 +348,15 @@ kaemen Dokumente dazu, die waehrend der Freigabe hochgeladen werden:
 ```bash
 set -o pipefail
 immojump fields list --readonly --model unit --fields definitions.id,definitions.name,definitions.type > felder.json || exit 1
-vorhanden=$(jq '[.definitions[] | select(.name == "Marktmiete EUR/qm")] | length' felder.json) || exit 1
-if [ "$vorhanden" -eq 0 ]; then                                     # Anlegen nur, wenn es fehlt (Admin)
-  immojump fields create --allow read,write --model unit --name "Marktmiete EUR/qm" --type number || exit 1
-fi
+# Jedes Feld, das werte.ndjson nennt, muss vorher existieren: Ein unbekanntes
+# Feld lehnt den ganzen Stapel ab (Exit 11, nichts gespeichert).
+for feld in "Marktmiete EUR/qm:number" "Sanierungsbedarf:text"; do
+  name=${feld%:*}; typ=${feld##*:}
+  vorhanden=$(jq --arg n "$name" '[.definitions[] | select(.name == $n)] | length' felder.json) || exit 1
+  if [ "$vorhanden" -eq 0 ]; then                                   # Anlegen nur, wenn es fehlt (Admin)
+    immojump fields create --allow read,write --model unit --name "$name" --type "$typ" || exit 1
+  fi
+done
 # werte.ndjson: {"extern_id":"RH-01-WE-001","values":{"Marktmiete EUR/qm":13.5,"Sanierungsbedarf":"Bad, Fenster"}}
 immojump units fields-set "$ID" --allow read,write --file werte.ndjson > gesetzt.json || { echo "Werte nicht gesetzt"; exit 1; }
 cat gesetzt.json
