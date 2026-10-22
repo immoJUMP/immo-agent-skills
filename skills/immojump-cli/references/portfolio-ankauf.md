@@ -26,8 +26,13 @@ eine stabile Nummer aus Haus, Eingang, Geschoss und Lage, z. B.
 
 ## 1. Haeuser anlegen (wiederholbar)
 
+Vorher pruefen, ob das Haus schon existiert. Gesucht wird ueber die eigene
+Nummer in `daten.extern_id`:
+
 ```bash
-immojump immobilien list --fields id,name,daten.extern_id      # was gibt es schon?
+immojump immobilien list --fields id,name,daten.extern_id \
+  | jq -c '.[] | select(.daten.extern_id == "RH-01")'      # Treffer = schon da, NICHT neu anlegen
+
 immojump immobilien create --type MFH \
   --set name='Mehrfamilienhaus Rosengasse 136-150, Koeln' \
   --set daten.adresse='Rosengasse 136-150, 50968 Koeln' \
@@ -36,8 +41,9 @@ immojump immobilien create --type MFH \
   --fields id
 ```
 
-- Lege `daten.extern_id` an jedem Haus an. So findet der naechste Lauf das Haus
-  wieder, ohne lokale Zuordnungsdatei.
+- Lege `daten.extern_id` an jedem Haus an, mit einem gemeinsamen Praefix je
+  Ankauf (hier `RH-`). Daran erkennt der naechste Lauf das Haus, und die
+  Auswertung in Abschnitt 7 grenzt den Ankauf vom uebrigen Bestand ab.
 - Typ `MFH` fuer reine Wohnhaeuser, `WGH` fuer Wohn- und Geschaeftshaeuser.
 - Die neue Immobilie hat eine leere Start-„Einheit 1“. Der erste Import, der
   Einheiten anlegt, entfernt sie (`placeholder_removed: true`).
@@ -57,7 +63,7 @@ Verkaeufer-Mieterliste:
 | Wohnflaeche, qm | `livingspace` | Zahl in m²; Stellplatz/Garage 0 |
 | Zimmer | `rooms` | 2.5 erlaubt |
 | Ist-Kaltmiete, NKM | `ist_rent` | €/Monat; Leerstand 0 |
-| Soll-/Marktmiete | `soll_rent` | ohne Angabe = `ist_rent` |
+| Soll-/Marktmiete | `soll_rent` | beim ANLEGEN ohne Angabe = `ist_rent`; beim Update bleibt der alte Wert |
 | Mietbeginn | `lease_start_date` | `YYYY-MM-DD` oder `DD.MM.YYYY` |
 | letzte Mieterhoehung | `last_rent_increase_date` | dito |
 | Bemerkung, Mieter | `note` | Mieternamen nur, wenn noetig (Datenschutz) |
@@ -80,6 +86,9 @@ Regeln:
   aufteilst.
 - **Leerstand:** `ist_rent` 0. Wenn bekannt, gehoert der Grund in `note`, z. B.
   „Leerstand - Sanierung erforderlich“.
+- **Update-Semantik:** Bei einer schon vorhandenen Einheit aendert der Import
+  nur die mitgeschickten Felder. Wer nur `ist_rent` neu schickt, laesst
+  `soll_rent` auf dem alten Wert.
 
 Beispiel einer Zeile:
 
@@ -91,9 +100,14 @@ Beispiel einer Zeile:
 
 ## 3. Import mit Pruefpunkten
 
+Erst der Trockenlauf, dann der Vergleich mit der Datei, erst danach schreiben:
+
 ```bash
-immojump units import "$ID" --file rh-01.ndjson --dry-run --fields created,updated,unchanged,placeholder_removed
-immojump units import "$ID" --file rh-01.ndjson --fields created,updated,unchanged,batches
+zeilen=$(grep -c . rh-01.ndjson)
+probe=$(immojump units import "$ID" --file rh-01.ndjson --dry-run) || { echo "Trockenlauf gescheitert, nichts importiert"; exit 1; }
+echo "$probe" | jq --argjson n "$zeilen" -e '(.created + .updated + .unchanged) == $n' >/dev/null \
+  || { echo "Trockenlauf deckt nicht alle $zeilen Zeilen ab"; exit 1; }
+immojump units import "$ID" --file rh-01.ndjson --fields created,updated,unchanged,placeholder_removed,batches
 ```
 
 **Erwartung** beim ersten Lauf: `created` = Zeilen der Datei,
@@ -105,7 +119,7 @@ lokal unter einer Sekunde.
 
 ```bash
 immojump units list "$ID" --all --fields ist_rent \
-  | jq '{einheiten: length, ist_miete_monat: (map(.ist_rent // 0) | add * 100 | round / 100)}'
+  | jq '{einheiten: length, ist_miete_monat: ((map(.ist_rent // 0) | add // 0) * 100 | round / 100)}'
 ```
 
 **Scheitert ein Stapel (Exit 11):**
@@ -119,91 +133,102 @@ immojump units list "$ID" --all --fields ist_rent \
 ## 4. Datenraum hochladen
 
 ```bash
-immojump documents upload datenraum/RH-01 --recursive --immobilie-id "$ID"
+immojump documents upload datenraum/RH-01 --recursive --immobilie-id "$ID" \
+  | jq '{uploaded: (.uploaded | length), duplicates: (.duplicates | length), failed, empty}'
 ```
 
 - Die CLI laedt in Stapeln von 10 Dateien bzw. 25 MB und berichtet je Datei
   (`uploaded`, `duplicates`, `failed`, `empty`).
-- Exit 0 heisst: nichts ist gescheitert.
+- Exit 0 heisst: alles ist angekommen. Exit 1 heisst: Teile sind gescheitert
+  oder leer, der Bericht steht trotzdem auf stdout. Pruefe `failed` und `empty`
+  und lade nur diese Dateien erneut.
 - Ein zweiter Lauf ist sicher: Schon Hochgeladenes erscheint unter
   `duplicates`.
 - **Die Duplikat-Erkennung gilt fuer die ganze Organisation, nicht nur fuer
   das Haus.** Liegt dieselbe Datei schon an einem anderen Objekt, wird sie hier
   nicht angehaengt. Der Eintrag unter `duplicates` nennt das Objekt
   (`existingPropertyId`). Gehoert die Datei wirklich an beide Objekte (z. B.
-  eine Teilungserklaerung fuer zwei Haeuser), lade sie mit `--allow-duplicate`
-  erneut hoch.
+  eine Teilungserklaerung fuer zwei Haeuser), lade **genau diese Datei** mit
+  `--allow-duplicate` erneut hoch. Nie einen ganzen Ordner mit
+  `--allow-duplicate`.
 
 **Erwartung:** 919 PDFs in 14 Haeusern dauerten lokal 32 s, der zweite Lauf
 meldete nur noch Duplikate.
 
-**Mietvertraege den Einheiten zuordnen.** Der Ordner-Upload haengt die
-Vertraege nur an das Haus. Ein zweiter Upload mit `--unit-id` aendert daran
-nichts, denn die Dateien sind dann Duplikate. Zugeordnet wird deshalb danach,
-ueber die Dokument-ID. Enthaelt der Dateiname die Einheitennummer
-(`Mietvertrag_RH-01-WE-001.pdf`), sieht das so aus:
+### Mietvertraege den Einheiten zuordnen
+
+Der Ordner-Upload haengt die Vertraege nur an das Haus. Ein zweiter Upload mit
+`--unit-id` aendert daran nichts, denn die Dateien sind dann Duplikate.
+Zugeordnet wird deshalb **nach** dem Upload, ueber die Dokument-ID, mit
+`documents set-unit`. Enthaelt der Dateiname die Einheitennummer
+(`Mietvertrag_RH-01-WE-001.pdf`):
 
 ```bash
 immojump units list "$ID" --all --fields id,extern_id > units.json
-immojump documents list --immobilie-id "$ID" --search Mietvertrag_ --all --fields id,dateiname > vertraege.json
-jq -r --slurpfile u units.json '
-  .[] | (.dateiname | sub("^Mietvertrag_"; "") | sub("\\.pdf$"; "")) as $nr
-      | ($u[0][] | select(.extern_id == $nr) | .id) as $unit
-      | "\(.id) \($unit)"' vertraege.json \
-| while read -r dok unit; do immojump documents set-unit "$dok" --unit-id "$unit" --fields id >/dev/null || echo "FEHLER $dok"; done
+immojump documents list --immobilie-id "$ID" --search Mietvertrag --all --fields id,dateiname > dokumente.json
+
+# 1. Zuordnung planen, nichts schreiben. Jeder Vertrag braucht GENAU einen Treffer.
+jq -c --slurpfile u units.json '
+  .[] | select(.dateiname | test("^Mietvertrag_.*\\.pdf$"; "i"))
+      | (.dateiname | sub("^Mietvertrag_"; ""; "i") | sub("\\.pdf$"; ""; "i")) as $nr
+      | {dok: .id, datei: .dateiname, nr: $nr, units: [$u[0][] | select(.extern_id == $nr) | .id]}' \
+  dokumente.json > plan.ndjson
+jq -c 'select((.units | length) != 1)' plan.ndjson     # muss leer sein, sonst: klaeren, NICHT schreiben
+
+# 2. Pilot mit drei Vertraegen, dann pruefen; erst danach der Rest.
+jq -r 'select((.units | length) == 1) | "\(.dok) \(.units[0])"' plan.ndjson | head -3 > pilot.txt
+: > fehler.txt
+while read -r dok unit; do
+  immojump documents set-unit "$dok" --unit-id "$unit" --fields id >/dev/null
+  rc=$?
+  if [ "$rc" -eq 0 ]; then continue; fi
+  if [ "$rc" -eq 6 ]; then echo "Keine Berechtigung - Abbruch"; exit 6; fi
+  echo "FEHLER $dok (Exit $rc)" >> fehler.txt
+done < pilot.txt
+if [ -s fehler.txt ]; then cat fehler.txt; exit 1; fi
 ```
 
-**Erwartung:** 93 Vertraege in 1,8 s zugeordnet. Kontrolle:
+Fuer den Rest dieselbe Schleife ohne `head -3`. Am Ende muss `fehler.txt` leer
+sein, sonst ist der Lauf gescheitert und du meldest die Liste. Kontrolle:
 `immojump documents list --immobilie-id "$ID" --unit-id <unit-id> --fields dateiname`.
+**Erwartung:** 93 Vertraege in 1,8 s zugeordnet.
+
 Wer die Einheit schon vor dem Upload kennt, laedt einzelne Vertraege direkt
-mit `--unit-id` hoch, aber nicht zusaetzlich im Ordner-Upload.
-
-- **Die Duplikat-Erkennung gilt fuer die ganze Organisation, nicht nur fuer
-  das Haus.** Liegt dieselbe Datei schon an einem anderen Objekt, wird sie hier
-  nicht angehaengt. Der Eintrag unter `duplicates` nennt das Objekt
-  (`existingPropertyId`). Gehoert die Datei wirklich an beide Objekte (z. B.
-  eine Teilungserklaerung fuer zwei Haeuser), lade sie mit `--allow-duplicate`
-  erneut hoch.
-
-**Erwartung:** 919 PDFs in 14 Haeusern dauerten lokal 32 s, der zweite Lauf
-meldete nur noch Duplikate.
-
-**Mietvertrag an die Einheit haengen.** Enthaelt der Dateiname die
-Einheitennummer:
-
-```bash
-for f in datenraum/RH-01/Mietvertraege/*.pdf; do
-  nr=$(basename "$f" .pdf | sed 's/^Mietvertrag_//')          # RH-01-WE-001
-  unit=$(immojump units list "$ID" --extern-id "$nr" --limit 1 --fields items.id | jq -r '.items[0].id // empty')
-  [ -n "$unit" ] && immojump documents upload "$f" --immobilie-id "$ID" --unit-id "$unit" --category mietvertrag
-done
-```
-
-Bei vielen Vertraegen laedst du die Einheiten einmal mit
-`units list "$ID" --all --fields id,extern_id` und ordnest lokal zu, statt je
-Datei die Liste abzufragen. Ein schon hochgeladenes Dokument ordnest du
-nachtraeglich mit `documents set-unit <dok-id> --unit-id <unit-id>` zu.
+mit `--unit-id` hoch und nimmt sie **nicht** zusaetzlich in den Ordner-Upload.
 
 ---
 
 ## 5. Analysieren
 
-```bash
-immojump documents analyze-all --immobilie-id "$ID" --fields listed,queued
-immojump documents list --immobilie-id "$ID" --analysis-status queued     --limit 1 --fields total
-immojump documents list --immobilie-id "$ID" --analysis-status processing --limit 1 --fields total
-immojump documents list --immobilie-id "$ID" --analysis-status failed     --all --fields id,dateiname,analysis_error
-```
+**Jede Analyse verbraucht KI-Kontingent des Plans.** Der Profi-Plan hat 100
+Analysen im Monat. `analyze-all` ist ein schreibender Befehl, den
+`IMMOJUMP_ALLOW=read,write` nicht sperrt. Deshalb gilt:
 
-- **Kontingent:** Jede Analyse zaehlt auf das KI-Kontingent des Plans. Vor dem
-  Start rechnest du die Zahl der Dokumente gegen das Kontingent und nennst sie
-  dem Menschen.
+1. Zaehle je Haus, was analysiert wuerde, und zeige es dem Menschen:
+   ```bash
+   immojump documents list --immobilie-id "$ID" --analysis-status not_started --limit 1 --fields total
+   ```
+2. **Warte auf eine ausdrueckliche Freigabe** fuer genau diese Auswahl
+   (Haus, Dokumentart, Anzahl). Erst ein Pilot-Haus, dann der Rest, jeweils
+   freigegeben.
+3. Starten und kompakt auswerten. `failed` und `skipped` nicht wegfiltern:
+   ```bash
+   immojump documents analyze-all --immobilie-id "$ID" \
+     | jq '{listed, queued: (.queued | length), skipped: (.skipped | length), failed}'
+   immojump documents list --immobilie-id "$ID" --analysis-status queued     --limit 1 --fields total
+   immojump documents list --immobilie-id "$ID" --analysis-status processing --limit 1 --fields total
+   immojump documents list --immobilie-id "$ID" --analysis-status failed     --all --fields id,dateiname,analysis_error
+   ```
+
+- `failed` aus `analyze-all` sind Dokumente, deren Start scheiterte; sie stehen
+  weiter auf `not_started`. `--analysis-status failed` sind gestartete
+  Analysen, die spaeter scheiterten. Beides getrennt melden.
 - Scans ohne Textschicht brauchen OCR und dauern laenger.
 - Bei Exit 7 laeuft `analyze-all` spaeter erneut. Bereits angestossene
   Dokumente werden uebersprungen.
 - Die Analyse aendert keine Einheiten, die ein Mensch oder dein Import angelegt
-  hat. Abweichungen (z. B. eine andere Miete im Mietvertrag) speichert sie als
-  Vorschlag am Dokument.
+  hat (alle mit `extern_id`). Abweichungen, z. B. eine andere Miete im
+  Mietvertrag, speichert sie als Vorschlag am Dokument.
 
 ---
 
@@ -229,40 +254,61 @@ immojump units fields-get "$ID" --fields extern_id,values
 
 ## 7. Auswerten ueber das Portfolio
 
-Alle Rezepte lesen ueber `units list-org`. Das kostet einen Aufruf je 500
-Einheiten. Gruppiert wird immer nach `immobilie_id`, denn zwei Haeuser koennen
-gleich heissen. Der Name dient nur der Anzeige. Gerundet wird erst am Ende.
+Zuerst den Ankauf abgrenzen: In einer bestehenden Organisation liefert
+`units list-org` auch den Altbestand. Die IDs der Ankaufshaeuser kommen ueber
+das Praefix aus Abschnitt 1:
 
 ```bash
-# Leerstand je Haus
-immojump units list-org --vacant --all --fields immobilie_id,immobilie_name \
-  | jq 'group_by(.immobilie_id) | map({haus: .[0].immobilie_name, id: .[0].immobilie_id, leer: length})'
-
-# Ist-Miete p.a. (alle Einheiten inkl. Garagen und Stellplaetze), Wohn-/Gewerbeflaeche und €/m²
-immojump units list-org --all --fields immobilie_id,immobilie_name,type,livingspace,ist_rent \
-  | jq 'group_by(.immobilie_id)
-        | map({haus: .[0].immobilie_name, id: .[0].immobilie_id,
-               einheiten: length,
-               miete_pa: (map(.ist_rent // 0) | add * 12),
-               flaeche: (map(select(.type == "wohnen" or .type == "gewerbe") | .livingspace // 0) | add // 0),
-               miete_flaeche_monat: (map(select(.type == "wohnen" or .type == "gewerbe") | .ist_rent // 0) | add // 0)})
-        | map({haus, id, einheiten,
-               ist_miete_pa: (.miete_pa * 100 | round / 100),
-               flaeche_qm: (.flaeche | round),
-               eur_qm: (if .flaeche > 0 then (.miete_flaeche_monat / .flaeche * 100 | round / 100) else null end)})'
-
-# Mietsteigerungspotenzial: Soll minus Ist je Haus (p.a.)
-immojump units list-org --all --fields immobilie_id,immobilie_name,ist_rent,soll_rent \
-  | jq 'group_by(.immobilie_id) | map({haus: .[0].immobilie_name, id: .[0].immobilie_id,
-        potenzial_pa: (map((.soll_rent // 0) - (.ist_rent // 0)) | add * 12 | round)})'
+immojump immobilien list --fields id,daten.extern_id \
+  | jq '[.[] | select((.daten.extern_id // "") | startswith("RH-")) | .id]' > ankauf_ids.json
+immojump units list-org --all --fields immobilie_id,immobilie_name,type,livingspace,ist_rent,soll_rent \
+  | jq --slurpfile ids ankauf_ids.json 'map(select(.immobilie_id as $i | $ids[0] | index($i)))' > einheiten.json
 ```
+
+Alle Rezepte lesen `einheiten.json`. Gruppiert wird nach `immobilie_id`, denn
+zwei Haeuser koennen gleich heissen; der Name dient nur der Anzeige. Gerundet
+wird erst am Ende.
+
+```bash
+# Wohnungen und Gewerbe ohne erfasste Ist-Miete je Haus (Kandidaten fuer Leerstand)
+jq 'map(select((.type == "wohnen" or .type == "gewerbe") and ((.ist_rent // 0) == 0)))
+    | group_by(.immobilie_id)
+    | map({haus: .[0].immobilie_name, id: .[0].immobilie_id, ohne_ist_miete: length,
+           flaeche_qm: (map(.livingspace // 0) | add | round)})' einheiten.json
+
+# Ist-Miete p.a. (alle Einheiten inkl. Garagen und Stellplaetze) und EUR/qm der VERMIETETEN Flaeche, getrennt nach Nutzung
+jq 'group_by(.immobilie_id)
+    | map(. as $h | {haus: $h[0].immobilie_name, id: $h[0].immobilie_id, einheiten: length,
+          ist_miete_pa: (($h | map(.ist_rent // 0) | add) * 12 * 100 | round / 100),
+          eur_qm: ([ "wohnen", "gewerbe" ] | map(. as $t
+            | ($h | map(select(.type == $t and (.ist_rent // 0) > 0 and (.livingspace // 0) > 0))) as $v
+            | {key: $t, value: (if ($v | length) > 0
+                 then (($v | map(.ist_rent) | add) / ($v | map(.livingspace) | add) * 100 | round / 100)
+                 else null end)}) | from_entries)})' einheiten.json
+
+# Theoretisches Mietpotenzial p.a., zwei Zahlen, unbekannte Soll-Mieten gezaehlt statt als 0 gerechnet
+jq 'group_by(.immobilie_id)
+    | map({haus: .[0].immobilie_name, id: .[0].immobilie_id,
+           neuvermietung_pa: (map(select((.ist_rent // 0) == 0 and .soll_rent != null) | .soll_rent) | add // 0 | . * 12 | round),
+           anpassung_vermietet_pa: (map(select((.ist_rent // 0) > 0 and .soll_rent != null) | .soll_rent - .ist_rent) | add // 0 | . * 12 | round),
+           soll_unbekannt: (map(select(.soll_rent == null)) | length)})' einheiten.json
+```
+
+**Einordnung, bevor du Zahlen weitergibst:**
+- „Ohne erfasste Ist-Miete“ ist noch kein Leerstand. Auch mietfreie
+  Ueberlassung oder eine fehlende Angabe ergibt 0. Bestaetige Leerstand an der
+  Mieterliste (`note`) oder beim Verkaeufer.
+- EUR/qm rechnet nur vermietete Wohn- bzw. Gewerbeflaeche, getrennt. Leere
+  Flaeche zaehlt nicht mit, sonst wirkt die Miete je m² zu niedrig.
+- Das Mietpotenzial ist theoretisch. Die Soll-Miete ist die Angabe des
+  Verkaeufers und nicht gegen Mietspiegel, Kappungsgrenze oder
+  Mietpreisbremse geprueft. Nenne `soll_unbekannt` immer mit.
 
 **Kaufpreisfaktor je Haus:**
 1. Hole den Kaufpreis mit `immobilien get <id> --exclude units,dokumente --fields daten.kaufpreis`.
-2. Teile ihn durch `ist_miete_pa` aus dem zweiten Rezept. Darin stecken alle
-   Ist-Mieten, auch Garagen und Stellplaetze.
-
-Fuer €/m² zaehlen nur Wohn- und Gewerbeflaechen, mit deren Miete.
+2. Teile ihn durch die ungerundete Jahresmiete aller Einheiten
+   (`ist_miete_pa` oben, auf Cent genau). Ist sie 0, gibt es keinen Faktor.
+   Melde das, statt durch 0 zu teilen.
 
 Kennzahlen rechnet heute nur die Web-Oberflaeche. Per CLI rechnest du sie
 selbst und schreibst Ergebnisse, die bleiben sollen, als benutzerdefinierte
