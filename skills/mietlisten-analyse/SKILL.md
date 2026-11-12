@@ -95,7 +95,7 @@ Abweichung = (Ist-Miete_EUR_qm / Mietspiegel_EUR_qm - 1) * 100
 **Wichtig bei der Mietspiegel-Zuordnung:**
 - Qualifizierter Mietspiegel nach §558d BGB ist rechtsverbindlich
 - Einfacher Mietspiegel ist Orientierung, aber nicht bindend
-- Ohne Mietspiegel: Vergleichsmieten ueber Datenbanken oder 3 Vergleichswohnungen
+- Ohne Mietspiegel: Mietspiegel einer vergleichbaren Nachbargemeinde (§558a Abs. 4 BGB), Mietdatenbank nach §558e BGB, Sachverstaendigengutachten oder drei konkrete Vergleichswohnungen (§558a Abs. 2 BGB), jeweils mit Quelle. Keine Angebotsmieten von Immobilienportalen -- sie sind keine ortsuebliche Vergleichsmiete
 - Mietspiegel-Zuordnung beruecksichtigen: Baujahr, Lage, Ausstattung, Wohnungsgroesse
 
 ### Schritt 3: Mieterhoehungspotenzial berechnen
@@ -112,11 +112,10 @@ Abweichung = (Ist-Miete_EUR_qm / Mietspiegel_EUR_qm - 1) * 100
 Maximale Erhoehung = Miete_vor_3_Jahren * Kappungsgrenze_Prozent
 
 Standard: 20% in 3 Jahren
-Verschaerft (in vielen Grossstaedten): 15% in 3 Jahren
+Abgesenkt per Landesverordnung (§ 558 Abs. 3 Satz 2 BGB): 15% in 3 Jahren
 ```
 
-**Staedte mit abgesenkter Kappungsgrenze (15%) -- Auswahl:**
-Berlin, Hamburg, Muenchen, Koeln, Frankfurt, Stuttgart, Duesseldorf, Freiburg, Heidelberg, Muenster, Regensburg, Tuebingen, Potsdam, Darmstadt und weitere (Landesverordnungen pruefen)
+**Kappungsgrenze und Mietpreisbremse immer fuer die konkrete Gemeinde pruefen.** Ob 15% statt 20% gelten und ob die Mietpreisbremse greift, bestimmt die jeweilige Landesverordnung gemeindegenau und befristet (§ 558 Abs. 3, § 556d Abs. 2 BGB). Keine Staedteliste aus dem Gedaechtnis verwenden. Im Bericht nennen: Verordnung mit Name und Fundstelle, Geltungsdauer, ob die Gemeinde in der Anlage steht, Datum der Pruefung. Ist die Verordnung nicht geprueft: beide Varianten (15% und 20%) rechnen und als "unbelegt" kennzeichnen. Beispiel und Vorgehen: `knowledge/rechtsgrundlagen.md`, Abschnitte 2 bis 4.
 
 **Berechnung pro Einheit:**
 ```
@@ -352,8 +351,8 @@ kooperativ -- einvernehmliche Erhoehung pruefen).
 | Erhoehungspotenzial jaehrlich | 15.000 EUR |
 | Realistisch erreichbar Jahr 1 | 5.400 EUR |
 | Realistisch erreichbar Jahr 3 | 11.200 EUR |
-| Mietpreisbremse-Gebiet | Ja |
-| Kappungsgrenze | 15% |
+| Mietpreisbremse-Gebiet | Ja (Landesverordnung Land XY, Fundstelle, gueltig bis 31.12.2029, geprueft am TT.MM.JJJJ) |
+| Kappungsgrenze | 15% (dieselbe Verordnung, Gemeinde in der Anlage) |
 
 ## Leerstandsanalyse
 
@@ -448,8 +447,9 @@ Vor Ausgabe des Ergebnisses pruefe:
 - [ ] Alle Einheiten aus der Mietliste sind erfasst (Summe stimmt)
 - [ ] Miete-pro-qm ist korrekt berechnet (Kaltmiete / Wohnflaeche)
 - [ ] Mietspiegel-Vergleich nutzt korrekte Einordnung (Baujahr, Lage, Ausstattung, Groesse)
-- [ ] Kappungsgrenze korrekt angewandt (20% oder 15% je nach Stadt)
-- [ ] Mietpreisbremse nur in Gebieten mit Verordnung angewandt
+- [ ] Kappungsgrenze korrekt angewandt (20% oder 15% laut gepruefter Landesverordnung fuer die Gemeinde, Quelle genannt)
+- [ ] Mietpreisbremse nur in Gebieten mit Verordnung angewandt (Fundstelle und Geltungsdauer geprueft)
+- [ ] Vergleichsmiete aus Mietspiegel, Gutachten oder Vergleichswohnungen belegt -- keine Portalwerte
 - [ ] Leerstand korrekt als physisch UND wirtschaftlich berechnet
 - [ ] Anomalien sind plausibel begruendet (nicht jede Auffaelligkeit ist ein Problem)
 - [ ] Wohnflaechen-Abgleich mit Teilungserklaerung durchgefuehrt (falls vorhanden)
@@ -483,7 +483,7 @@ Vor Ausgabe des Ergebnisses pruefe:
 
 ## Bei fehlenden Daten
 
-1. **Ohne Mietspiegel:** Vergleichsmieten ueber Online-Portale schaetzen (ImmoScout24, Homeday, Wohnungsboerse). Confidence Score auf max. 0.60 setzen. Empfehlung: Qualifizierten Mietspiegel der Kommune anfordern.
+1. **Ohne Mietspiegel:** Keine Vergleichsmieten aus Online-Portalen (Angebotsmieten sind keine ortsuebliche Vergleichsmiete und tragen keine Erhoehung nach § 558a BGB). Stattdessen Mietspiegel einer vergleichbaren Nachbargemeinde, Gutachten oder drei Vergleichswohnungen mit Quelle; fehlt auch das, eine Spanne mit Quelle und dem Vermerk "unbelegt" angeben. Confidence Score auf max. 0.60 setzen. Empfehlung: Mietspiegel der Kommune anfordern.
 2. **Ohne Mietbeginn-Daten:** Kappungsgrenze nicht berechenbar. Alle Mieten als "Erhoehungspotenzial unbestimmt" markieren.
 3. **Ohne Wohnflaechenangaben:** Miete pro qm nicht berechenbar. Aus Grundrissen oder Teilungserklaerung ableiten.
 4. **Ohne Nebenkosten:** Wirtschaftliche Analyse nur auf Kaltmiete-Basis. Warnung ausgeben dass NK-Umlagefaehigkeit nicht geprueft.
