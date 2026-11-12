@@ -1,6 +1,6 @@
 # Nebenkosten-Pruefung: Rechtsanker und Regressionstests
 
-**Stand:** 2026-08-29
+**Stand:** 2026-11-12
 
 **Geltungsbereich:** Wohnraummiete in Deutschland
 **Zweck:** Referenz fuer den Nebenkosten-Pruefer; keine Rechtsberatung.
@@ -202,6 +202,15 @@ Konkrete, bereits absehbare Aenderungen duerfen nachvollziehbar einbezogen werde
 | Vorauszahlung plus pauschal 15 Prozent | Puffer entfernen; nur korrigierte Ist-Kosten und konkret belegte Aenderungen verwenden |
 | Zweifamilienhaus, Vermieter wohnt in Einheit 1 | Ausnahme des § 2 HeizkostenV pruefen, nicht automatisch Standardsplit erzwingen |
 | Mieter zieht im Oktober aus | Zwischenablesung und sachgerechte Zeit-/Verbrauchsabgrenzung verlangen |
+| Gasabschlaege 12 x 150 EUR und Schlussrechnung 1.640 EUR werden addiert | Doppelzaehlung erkennen; nur 1.640 EUR nach Gutschriften ansetzen |
+| Stromrechnung deckt 01.01.–31.07., Folgerechnung fehlt | Nicht hochrechnen; Luecke 01.08.–31.12. benennen und Folgeversorgung suchen |
+| Wasser Abschnitt A 800 EUR (30.000 Pers.-Tage), Abschnitt B 400 EUR (20.000 Pers.-Tage), Mieter 1.000 Pers.-Tage nur in A | 800 x 1.000/30.000 = 26,67 EUR; nicht 1.200 x 1.000/50.000 = 24,00 EUR |
+| Schornsteinfeger-PDF mit Rechnung A (einmalige Abnahme Therme) und Rechnung B (jaehrliche Messung) | Zwei Belege mit Seitenbereich; A nur Vermieter oder offen, B laufend pruefen |
+| Eine Lastschrift deckt Strom, Gas und Wasser ab | Nicht nach Betrag aufteilen; je Leistung die Versorgerrechnung heranziehen |
+| Personenzahl eines Haushalts wird von 2 auf 3 korrigiert | Gemeinsamen Nenner und Anteile aller Einheiten neu berechnen |
+| Vorauszahlung im Juni von 200 auf 230 EUR erhoeht | 5 x 200 + 7 x 230 = 2.610 EUR aus belegten Monaten; nicht 12 x 230 |
+| Pruefprotokoll zeigt Abgasaustritt mit Sofortmassnahme | Sofort melden, vor jeder Umlagefrage; Beseitigung nicht unterstellen |
+| 100,00 EUR auf drei gleiche Einheiten: Zeilen gedruckt 33,33, Summe gedruckt 100,00 | Sichtbare Summe 99,99; Rundungsrest 0,01 EUR offen dem Vermieteranteil zuordnen |
 
 ## Primaerquellen
 

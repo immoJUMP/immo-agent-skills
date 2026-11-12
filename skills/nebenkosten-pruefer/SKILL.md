@@ -21,7 +21,7 @@ description: "Prueft Betriebskosten- und Heizkostenabrechnungen fuer deutschen W
 
 ## Verbindliche Referenz
 
-Lies vor der Pruefung `references/nebenkosten-pruefung.md`. Die Datei enthaelt Rechtsanker, Stop-Regeln und Regressionstests fuer typische Fehlkonstellationen.
+Lies vor der Pruefung `references/nebenkosten-pruefung.md`. Die Datei enthaelt Rechtsanker, Stop-Regeln und Regressionstests fuer typische Rechts- und Belegfehler.
 
 **Quellenhierarchie:**
 
@@ -85,6 +85,42 @@ Ermittle zuerst:
 - normaler Bestand, Mieterwechsel oder Eigentuemerwechsel
 
 Wenn Wohnraumart oder Vertragsmodell unklar ist, keine abschliessende Ampel ausgeben. Zuerst die fehlenden Vertragsstellen anfordern.
+
+### 0b. Belegschicht aufbauen, bevor ein Betrag zaehlt
+
+Grundsatz: **erst der Beleg, dann der Betrag.** Kein Betrag geht in die Pruefung, nur weil er plausibel ist, in einem Entwurf, einer Mail oder einem Zahlungsplan steht. Dateinamen und Betreffzeilen sind Suchhilfen, kein Inhaltsnachweis.
+
+**Jedes PDF vollstaendig lesen:**
+
+- Echte Seitenzahl feststellen und jede Seite pruefen, auch Anlagen, Rueckseiten, Zahlungsseiten und angehaengte Gutschriften.
+- Bild-PDFs und Scans rendern oder per OCR lesen. Nicht nach der ersten Rechnung oder der ersten passenden Summe aufhoeren.
+- Ankreuzformulare (z. B. Schornsteinfeger-, Wartungsprotokolle) visuell pruefen: Extrahierter Text enthaelt oft auch die nicht angekreuzten Alternativen.
+
+**Sammel-PDFs in logische Dokumente zerlegen:** Ein neues Dokument beginnt, sobald Rechnungsnummer, Aussteller, Datum, Leistungsart, Objekt/Einheit oder Ueberschrift wechselt. Im Bericht ausweisen: `PDF-Seiten 1–2: Rechnung A`, `PDF-Seiten 3–5: Rechnung B`. Mehrere Rechnungen nie als eine behandeln.
+
+**Ein Belegdatensatz je Rechnung oder Gutschrift:** Quelldatei und Seitenbereich, Aussteller, Rechnungsnummer, Rechnungsdatum, Leistungszeitraum, Objekt/Einheit, Leistung, netto/USt/brutto, Abschlaege, Gutschriften, Saldo. Identische Dateien entdoppeln, Fundort behalten.
+
+**Drei Zahlenebenen strikt trennen:**
+
+| Ebene | Beweist | Beweist nicht |
+|---|---|---|
+| Abschlagsplan / Vorauszahlungssoll | geplanten Zahlungsfluss | tatsaechliche Jahreskosten |
+| Bankabbuchung | dass gezahlt wurde | Kostenart, Endbetrag, Umlagefaehigkeit |
+| Schluss-/Jahresrechnung nach Gutschriften | tatsaechliche Kosten | Zahlung |
+
+Kosten = Schlussrechnung. Abschlaege nie zusaetzlich zur Schlussrechnung addieren. Eine Sammelabbuchung (z. B. Strom, Gas und Wasser in einer Lastschrift) nicht ohne unabhaengigen Beleg auf Kostenarten aufteilen. Gleiche Betraege beweisen keine gleiche Kostenart.
+
+**Teilzeitraeume zusammensetzen:** Bei Versorger-, Tarif-, Zaehler- oder Eigentuemerwechsel je Leistung und Zaehler die Rechnungsabschnitte nach Datum sortieren, Ueberlappungen und Doppelungen ausschliessen und Kalenderluecken mit exaktem Datum benennen. Eine Teilrechnung nie als Jahreskosten ausweisen und nie auf zwoelf Monate hochrechnen. Eine Schlussrechnung oder ein Zaehlerausbau beweist nicht, dass danach keine Folgeversorgung bestand: Nachfolgevertrag und Folgezaehler suchen.
+
+**Belegungs-Zeitachse je Einheit:** Ein- und Auszug, Leerstand und Personenzahl mit Datum festhalten, bevor ein Anteil berechnet wird. Das Auszugsdatum des Vormieters nicht aus dem Einzug des Nachfolgers oder der letzten Mietzahlung ableiten. Ein datierter Vermerk `leer` ist eine Intervallgrenze, kein Auszugsdatum. Eine geaenderte Vorauszahlung ist kein Einzugsdatum.
+
+**Vertragskette je Mietverhaeltnis:** Mietvertrag und alle Nachtraege, Zusatzvereinbarungen und Mietaenderungen suchen. Je Feld (Vorauszahlung, Pauschale, Umlageklausel, Mietzeit) festhalten, welches Dokument ab welchem Datum gilt. Ein Nachtrag aendert nur die Felder, die er ausdruecklich regelt.
+
+**Status je Beleg getrennt fuehren:** gefunden, vollstaendig gelesen, Betrag abgestimmt, Zahlung belegt, rechtlich eingeordnet, in die Abrechnung uebernommen. Ein Beleg, der gefunden, aber bewusst ausgeschlossen wurde, ist nicht `fehlend`, sondern `belegt, nicht umlagefaehig` mit Grund.
+
+**Einheitsbezug ist keine Mieterschuld:** `Therme 1. OG links` nennt den Leistungsort. Direkte Belastung eines einzelnen Mieters braucht eine eigene vertragliche oder Verursachungsgrundlage mit Beleg.
+
+**Sicherheit vor Abrechnung:** Ein sicherheitskritischer Befund in einem Pruefprotokoll (z. B. Abgasaustritt, Anweisung zur sofortigen Maengelbeseitigung) wird sofort mit Einheit, Datum und Fundstelle gemeldet, vor jeder Umlagefrage. Ein altes Protokoll beweist nicht den heutigen Zustand. Eine spaetere Rechnung, ein Mail-Datum oder ein `naechste Pruefung`-Vermerk beweist keine Beseitigung. Status: `Mangel dokumentiert; Beseitigung in den gesichteten Unterlagen nicht belegt`.
 
 ### 1. Vertragsmodell als Stop-Gate pruefen
 
@@ -179,6 +215,18 @@ Rechnung je Position:
 `Mieteranteil = umlagefaehige Gesamtkosten x individueller Anteil`
 
 Bei Einheiten- oder Personenschluesseln den Nenner transparent ausweisen. Keine Personenzahl verwenden, wenn Vertrag oder sachlicher Grund fehlen.
+
+**Nenner je Teilzeitraum:** Wurde eine Jahresposition aus mehreren belegten Abschnitten zusammengesetzt und unterscheidet sich der Nenner zwischen den Abschnitten (Belegung, Personentage, Verbrauch), komponentenweise rechnen:
+
+`Mieteranteil = Kosten A x Anteil A + Kosten B x Anteil B + ...`
+
+Nie die Jahressumme durch einen gemischten Nenner teilen, es sei denn, dieser Nenner ist selbst belegt. Die Jahressumme bleibt als Anzeigezeile erhalten, auch wenn der Mieter nur in einem Abschnitt wohnte; sein Zaehler ist im anderen Abschnitt null.
+
+**Unterjaehrig beim Einheitenschluessel:** `(Jahreskosten / beteiligte Einheiten) x belegte Tage / Tage im Zeitraum`. Tage inklusive Anfangs- und Endtag zaehlen. Leerstandstage bleiben Vermieteranteil. Keinen Personentage-Nenner uebernehmen, nur weil benachbarte Wasserzeilen ihn verwenden.
+
+**Korrektur wirkt auf alle:** Aendert sich Personenzahl, Belegungszeit oder Flaeche einer Einheit, aendert sich der gemeinsame Nenner und damit der Anteil **jeder** Einheit. Alle abhaengigen Anteile neu berechnen, nicht nur die korrigierte Einheit.
+
+**Schluesselwechsel bleibt begrenzt:** Wechselt eine Position z. B. von Einheiten auf Quadratmeter, muessen Formel, Bezeichnung und Erlaeuterung wechseln, auch wenn bei gleich grossen Einheiten derselbe Betrag herauskommt. Nur die benannte Position und das benannte Mietverhaeltnis umstellen. Rechnerische Gleichheit ist keine rechtliche Gleichheit.
 
 ### 5. HeizkostenV pruefen
 
@@ -279,6 +327,12 @@ Rechne jede Position neu, nicht nur Stichproben:
 
 Rundungen erst am Ende der jeweiligen Rechenstufe vornehmen. Jede Abweichung in Euro und mit Rechenweg ausweisen.
 
+**Sichtbare Summen muessen aufgehen:** Werden Positionen auf Cent gedruckt und die Summe als Summe dieser Zeilen dargestellt, jeden Mieteranteil auf zwei Nachkommastellen runden und die gerundeten Werte addieren. Volle Genauigkeit gehoert in Hilfs- oder Pruefspalten, nicht in eine sichtbare Cent-Differenz zwischen Zeilen und Summe. Jeder Mieteranteil und die Summe aller Anteile plus Vermieteranteil muessen auf die belegte Gesamtkostenzeile zurueckfuehren.
+
+**Rechnen mit Werkzeug, nicht im Kopf:** Saldo, Anteile und Tagesquoten deterministisch berechnen (Tabellenformel oder Skript) und das Ergebnis gegen die Abrechnung abgleichen.
+
+**Vorauszahlungen aus Monatsbelegen summieren:** `Monatsrate x 12` nur, wenn die Rate unveraendert war, alle zwoelf Monate dem Mieter zuzuordnen sind und jede Zahlung belegt ist. Sonst die belegten Monate einzeln summieren und Rate je Teilzeitraum ausweisen. Ein Mietkonto beweist die Teilbetraege nur, wenn es die Aufteilung (z. B. Betriebskosten- und Heizkostenvorauszahlung getrennt) und den Abgleich Soll/Haben zeigt. Werden Betriebs- und Heizkostenvorauszahlung in getrennten Abrechnungen verrechnet, Doppelanrechnung ausschliessen.
+
 ### 8. WEG-Abrechnung transformieren
 
 Eine WEG-Jahresabrechnung ist nur Rohmaterial:
@@ -348,6 +402,25 @@ Ziel ist weder kuenstlich niedrige Warmmiete noch Vermieterfinanzierung durch ue
 | ⚪ NICHT PRUEFBAR | notwendige Daten fehlen |
 
 Keine erfundene Prozent-Konfidenz ausgeben. Stattdessen Datenabdeckung nennen: `vollstaendig`, `wesentliche Luecken` oder `nur Vorpruefung`.
+
+### Belegeinordnung
+
+Jeden Beleg in genau eine Klasse setzen und ausgeschlossene Belege sichtbar lassen:
+
+- `belegt, umlagefaehig`
+- `belegt, nur Vermieter` (mit Grund)
+- `belegt, Einordnung offen` (mit konkreter Rechts- oder Vertragsfrage)
+- `Beleg fehlt fuer [Zeitraum]`
+
+**Kein stilles Weglassen, kein stilles Aufnehmen.**
+
+### Wenn eine korrigierte Mieterabrechnung entsteht
+
+- Die Erlaeuterung gehoert **in die Abrechnung des Mieters**, nicht nur in den Pruefbericht. Statt `1.060 / 765 Pers.-Tage` den Zeitraum, die Personenzahl, die Belegungstage und einen kurzen Rechenweg mit den Zahlen dieses Haushalts zeigen.
+- Kostenzeilen knapp halten, Komponentenrechnung in einem eigenen Abschnitt.
+- Bei einer Abrechnung fuer einen einzelnen Mieter eine eigene Arbeitskopie nur mit dessen Daten erzeugen, damit der Export keine Daten anderer Mieter enthaelt.
+- Bis alle Pflichtdaten belegt sind, sichtbar `ENTWURF` markieren. Eine vorlaeufige Vorschau fuer den Vermieter mit strittigen Positionen ist keine Freigabe gegenueber dem Mieter.
+- Nach dem Schreiben Formeln und angezeigte Werte zuruecklesen und das exportierte PDF jede Seite pruefen: abgeschnittene Bezeichnungen, fehlende Vorauszahlungsaufteilung, falscher Saldo oder alter Zeitraum in Fussnoten.
 
 ### Berichtsvorlage
 
@@ -424,6 +497,13 @@ Keine erfundene Prozent-Konfidenz ausgeben. Stattdessen Datenabdeckung nennen: `
 Vor Ausgabe alle Punkte abhaken:
 
 - [ ] Wohnraum/Spezialfall und Nutzerrolle bestimmt
+- [ ] Jedes PDF vollstaendig gelesen, Sammel-PDFs in Einzelbelege mit Seitenbereich zerlegt
+- [ ] Jeder Betrag fuehrt auf einen Beleg mit Fundstelle zurueck
+- [ ] Abschlag, Bankzahlung und Schlussrechnung getrennt; nichts doppelt gezaehlt
+- [ ] Teilrechnungen ohne Luecke und Ueberlappung zusammengesetzt, offene Tage benannt
+- [ ] Belegungs-Zeitachse und Vertragskette je Einheit aufgebaut
+- [ ] Ausgeschlossene Belege mit Grund sichtbar
+- [ ] Sicherheitskritische Befunde sofort gemeldet
 - [ ] Vorauszahlung, Pauschale, Inklusivmiete oder Mischmodell bestimmt
 - [ ] Umlagevereinbarung vor Umlageschluessel geprueft
 - [ ] Formelle und materielle Fehler getrennt
@@ -440,6 +520,9 @@ Vor Ausgabe alle Punkte abhaken:
 - [ ] Warmwasserformel nur im zulaessigen Ausnahmefall verwendet
 - [ ] CO2-Stufe, Vermieteranteil und Pflichtangaben geprueft
 - [ ] Jede Position vollstaendig nachgerechnet
+- [ ] Bei unterschiedlichen Nennern je Teilzeitraum komponentenweise verteilt
+- [ ] Nach einer Belegungs- oder Personenkorrektur alle Einheiten neu berechnet
+- [ ] Sichtbare Zeilen auf Cent gerundet und exakt zur sichtbaren Summe addiert
 - [ ] tatsaechliche Vorauszahlungen statt Sollwert verwendet
 - [ ] Mieterwechsel verbrauchs- und zeitgerecht abgegrenzt
 - [ ] Vorauszahlungsanpassung ohne pauschalen Sicherheitspuffer berechnet
@@ -468,6 +551,14 @@ Vor Ausgabe alle Punkte abhaken:
 | Vorauszahlung plus 10-15 Prozent | unangemessener Pauschalpuffer | nur korrigierte Ist-Basis und konkrete Prognose verwenden |
 | Leerstand aus Nenner entfernt | Kostenverschiebung auf Mieter | Vermieteranteil wieder einsetzen |
 | Eigentuemerwechsel pauschal bewertet | falsche Innen-/Aussen-Zuordnung | Grundbuch, Nutzen-Lasten und Kaufvertrag getrennt pruefen |
+| Abschlaege und Schlussrechnung addiert | Doppelzaehlung | nur Schlussrechnung nach Gutschriften ansetzen |
+| Teilrechnung als Jahreskosten | Kostenluecke oder Hochrechnung | Abschnitte zusammensetzen, offene Tage benennen |
+| Jahressumme durch gemischten Nenner geteilt | falscher Mieteranteil | komponentenweise je Teilzeitraum rechnen |
+| Sammel-PDF als eine Rechnung erfasst | einmalige Abnahme oder Reparatur rutscht in laufende Kosten | Rechnungsnummern und Seitenbereiche trennen |
+| Sammellastschrift auf Kostenarten verteilt | Kostenart geraten | Versorgerrechnungen je Leistung heranziehen |
+| Einheit auf Rechnung genannt, Mieter direkt belastet | keine Anspruchsgrundlage | Auftrag, Verursachung oder Vereinbarung belegen |
+| Gefaehrlicher Befund im Pruefprotokoll | Personenschaden | sofort melden; Beseitigung und Nachpruefung belegen lassen |
+| Sichtbare Zeilen ergeben nicht die Summe | Abrechnung wirkt fehlerhaft | Zeilen auf Cent runden, gerundete Werte addieren |
 
 ---
 
@@ -482,6 +573,11 @@ Vor Ausgabe alle Punkte abhaken:
 - Ohne Hauswart-Leistungsbild: nur eindeutig umlagefaehigen Anteil bestaetigen.
 - Ohne WEG-Aufteilung: Hausgeld nicht als umlagefaehige Kosten behandeln.
 - Ohne Vorjahr: Trendanalyse auslassen, keine Marktentwicklung erfinden.
+- Ohne lueckenlose Versorgerrechnungen: nur belegte Abschnitte ansetzen, fehlende Tage benennen, nicht hochrechnen.
+- Ohne Belegungsdaten: Personen- oder Tagesanteile nicht schaetzen; eindeutig bestimmbare Rechenfehler trotzdem korrigieren und offene Eingaben einzeln benennen.
+- Ohne Nachweis der Zahlungen: Saldo als `vorlaeufig` kennzeichnen.
+
+**Offene Punkte nach Zustaendigkeit sortieren:** geklaerte Fakten; noch nicht abgeschlossene eigene Pruefung; Rueckfragen an Dritte (Verwalter, Messdienst, Versorger); Fragen, die nur der Vermieter beantworten kann. Vorhandene Unterlagen erst selbst suchen, bevor sie erneut angefordert werden.
 
 ---
 
