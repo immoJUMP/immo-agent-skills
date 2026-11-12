@@ -385,7 +385,7 @@ Jede Besichtigung muendet in genau eine Aktion:
 - [ ] Schadstoffbelastung (Asbest, KMF, PCB, PAK, Holzschutzmittel)
 
 **Haustechnik:**
-- [ ] Heizungsanlage (Typ, Alter, Zustand, GEG-Konformitaet)
+- [ ] Heizungsanlage (Typ, Alter, Restlebensdauer, Zustand; Schornsteinfeger-Protokoll)
 - [ ] Elektroinstallation (Alter, Zustand, FI-Schutzschalter)
 - [ ] Wasser- und Abwasserleitungen (Material, Alter, Zustand)
 - [ ] Aufzug (Baujahr, letzte TUEV-Pruefung, Zustand)
@@ -394,7 +394,7 @@ Jede Besichtigung muendet in genau eine Aktion:
 **Energetik:**
 - [ ] Energieausweis (Verbrauch oder Bedarf)
 - [ ] Energieeffizienzklasse
-- [ ] GEG-Anforderungen: Welche Pflichten bestehen?
+- [ ] GModG-Pflichten (vormals GEG): oberste Geschossdecke (§ 35), ungedaemmte Leitungen (§ 69), ab 6 WE Heizungspruefung (§ 60b); bei 1-2-FH vom Selbstnutzer seit vor 2002 Nachruestfrist zwei Jahre ab Uebergang
 - [ ] Foerderfaehigkeit fuer energetische Sanierung pruefen
 - [ ] CO2-Kosten-Aufteilung (seit 01.01.2023, nach CO2KostAufG)
 

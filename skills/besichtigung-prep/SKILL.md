@@ -118,7 +118,7 @@ Fuer jede gefundene Inkonsistenz formuliere eine konkrete Frage an den Verkaeufe
 | Pruefpunkt | Worauf achten | Warum wichtig |
 |-----------|---------------|---------------|
 | Dachkonstruktion | Holzzustand, Schaedlingsbefall, Durchfeuchtung | Statik, Sanierungskosten |
-| Daemmung | Vorhanden, Material, Staerke | GEG-Pflicht oberste Geschossdecke |
+| Daemmung | Vorhanden, Material, Staerke | Nachruestpflicht oberste Geschossdecke (§ 35 GModG) |
 | Undichtigkeiten | Wasserflecken, Schimmel, Tropfstellen | Dach-Sanierung 80-150 EUR/qm |
 | Ausbau-Potenzial | Hoehe, Statik, Belichtung | Wertschoepfungspotenzial |
 
@@ -131,7 +131,7 @@ Fuer jede gefundene Inkonsistenz formuliere eine konkrete Frage an den Verkaeufe
 | Bad | Alter, Zustand, Fliesen, Armaturen, Lueftung | Sanierungskosten 8.000-15.000 EUR/Bad |
 | Kueche | Zustand, Ausstattung, Anschluesse | Vermietbarkeit |
 | Elektrik | Steckdosen-Anzahl, FI-Schalter, Schaltertyp (Alter) | Sicherheit, Modernisierungsbedarf |
-| Heizkoerper | Typ, Thermostatventile, Einzelraumregelung | GEG-Anforderung, Komfort |
+| Heizkoerper | Typ, Thermostatventile, Einzelraumregelung | Einzelraumregelung (§ 63 GModG), Komfort |
 | Raumgefuehl | Helligkeit, Schnitt, Hoehe, Geruch | Vermietbarkeit |
 | Wohnflaeche | Plausibilitaet gegen Expose/TE pruefen: Dachschraegen (1-2 m Hoehe zaehlen nur 50%, unter 1 m gar nicht), Balkon/Terrasse (i.d.R. 25%, max. 50%), Technik-/Heiz-/Abstellraeume zaehlen nicht | Flaechenfehler kippen Kaufpreis/qm, Miete/qm und Rendite -- WoFlV-Berechnung anfordern |
 
@@ -142,7 +142,7 @@ Ohne diese Fotos ist die Nachbereitung und jede spaetere Kostenschaetzung wertlo
 | Nr. | Pflichtfoto | Wofuer |
 |-----|-------------|--------|
 | 1 | Sicherungskasten (offen, alle Reihen) | Elektro-Risikoeinschaetzung, Alter, FI |
-| 2 | Heizung inkl. Typenschild (Hersteller, Baujahr, Leistung) | GEG-Check, Restlebensdauer, Austauschkosten |
+| 2 | Heizung inkl. Typenschild (Hersteller, Baujahr, Leistung) | Restlebensdauer, Ersatzkosten (Alter allein ist keine Rechtspflicht nach GModG) |
 | 3 | Kelleraussenwaende und -boden (alle Seiten) | Feuchte, Salzausblueruhungen, Abdichtung |
 | 4 | Wasser-/Abwasserleitungen im Keller (Material erkennbar) | Strangsanierungs-Bedarf, Blei-Verdacht |
 | 5 | Dach von aussen + Dachboden innen (falls zugaenglich) | Eindeckung, Undichtigkeiten, Daemmung |

@@ -136,10 +136,11 @@ Bewerte jede Kategorie nach folgendem Schema:
 **Pruefpunkte:**
 - Energieeffizienzklasse (A+ bis H)
 - Heizungstyp und Baujahr der Anlage
-- GEG 2024 Anforderungen: Austauschpflicht fuer Heizungen aelter als 30 Jahre (Konstanttemperaturkessel)
+- Pflichten nach dem Gebaeudemodernisierungsgesetz (GModG, seit 29.07.2026, vormals GEG): Bestehende Heizungen duerfen unabhaengig vom Alter weiterlaufen (Betriebsverbot fuer 30 Jahre alte Kessel und 65-Prozent-Vorgabe gestrichen). Eine alte Heizung ist ein Renovierungs- und Ausfallrisiko nach Restlebensdauer, kein Rechtsabzug. Neue Gas-/Oelheizungen brauchen ab 2029 einen Bio-Anteil (§ 43 GModG)
+- Fortbestehende Nachruestpflichten: oberste Geschossdecke (§ 35 GModG), ungedaemmte Leitungen in unbeheizten Raeumen (§ 69 Abs. 2), ab 6 Wohnungen Heizungspruefung bis 30.09.2027 bzw. nach 15 Jahren (§ 60b). Beim Kauf eines Hauses mit max. zwei Wohnungen von einem Selbstnutzer seit vor 2002: Kaeufer muss Geschossdecke und Leitungen binnen zwei Jahren nachruesten (§ 35 Abs. 3, § 69 Abs. 3 und 4). Details: `skills/energieausweis-check/SKILL.md`, Schritt 3
 - Kommunale Waermeplanung: Fernwaerme-Anschlussmoeglichkeit pruefen
 - Daemmzustand: Fassade, Dach/oberste Geschossdecke, Kellerdecke, Fenster
-- EU-Gebaeuderichtlinie (EPBD): Mindest-Energiestandards ab 2030/2033
+- EU-Gebaeuderichtlinie (EPBD): Mindest-Energiestandards je Gebaeude nur fuer Nichtwohngebaeude (§ 40 GModG, ab 2030/2033); fuer Wohngebaeude nationaler Absenkpfad ohne Pflicht fuer das einzelne Haus
 - Geschaetzte Sanierungskosten fuer energetische Ertuechtigung
 
 **Bewertung:**
@@ -279,7 +280,7 @@ Bewerte jede Kategorie nach folgendem Schema:
 | Ausbau-/Umnutzungspotenzial eingepreist | Bauakte, Genehmigungslage und Statik pruefen, sonst Potenzial auf 0 setzen |
 | Sanierungskosten in der Kalkulation | Nur gewerkebasiert mit 10-20% Puffer akzeptieren, Pauschalzahlen zurueckweisen |
 | Wohnflaeche geht in Kaufpreis-/Mietkalkulation ein | Flaechenquelle und WoFlV-Plausibilitaet dokumentieren, sonst Konfidenz senken |
-| Heizungstausch absehbar | Nicht isoliert bewerten: Huelle, Heizlast und GEG-Pflichten mitpruefen (Energieberater) |
+| Heizungstausch absehbar | Nicht isoliert bewerten: Huelle, Heizlast und GModG-Pflichten mitpruefen (Energieberater); Kosten nach Restlebensdauer timen, nicht als Pflicht |
 | Fenstertausch geplant | Lueftungskonzept mitdenken -- neue dichte Fenster ohne Lueftungslogik = Schimmelrisiko |
 | Schwamm, Statik oder Schadstoffverdacht | Immer Fachgutachten VOR Angebot, keine Eigenbewertung |
 | Bauakte fehlt oder unvollstaendig | Zusaetzliche Pruefung + Risikoabschlag im Preis |
@@ -402,7 +403,7 @@ Vor Ausgabe des Ergebnisses pruefe:
 | Signal | Typische Preisanpassung |
 |--------|------------------------|
 | Instandhaltungsstau > 200 EUR/qm | Volle Sanierungskosten vom KP abziehen |
-| Heizung aelter 25 Jahre + Oelheizung | 50.000-120.000 EUR Austauschkosten |
+| Heizung aelter 25 Jahre + Oelheizung | 50.000-120.000 EUR Ersatzkosten als Instandhaltung (Lebensdauer erreicht; keine Rechtspflicht zum Austausch nach GModG) |
 | Leerstand > 15% | Mietausfallrisiko einpreisen |
 | Sonderumlage beschlossen aber nicht gezahlt | Betrag vom KP abziehen |
 | WEG-Streitigkeiten mit Klageverfahren | Anwalts- und Verfahrenskosten |

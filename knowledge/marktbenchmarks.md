@@ -154,7 +154,7 @@ Nicht umlagefaehiges Hausgeld (ca.) = Hausgeld × 0,30 bis 0,35
 ### Foerderungen beachten
 
 - **KfW-Foerderung:** Zuschuss oder guenstiger Kredit fuer energetische Sanierung
-- **BAFA-Foerderung:** Heizungstausch (bis zu 70% Foerderung moeglich seit 2024)
+- **Heizungsfoerderung (KfW 458, Stand 21.07.2026):** Grundfoerderung 30 %; bis 70 % (80 %) nur mit Boni fuer selbstgenutzte Wohneinheiten -- bei Vermietung mit 30 % rechnen
 - **Laender-/Kommunalfoerderung:** Regional unterschiedlich
 - **Denkmal-AfA:** Erhoehte steuerliche Abschreibung (siehe Kalkulationsformeln)
 

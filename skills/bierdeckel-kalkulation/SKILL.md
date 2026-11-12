@@ -281,13 +281,15 @@ Wenn kein detaillierter Sanierungsplan vorliegt, schaetze pauschal:
 | 1990-2010 | 200-500 EUR/qm | 100-250 EUR/qm | 30-100 EUR/qm |
 | Nach 2010 | 50-200 EUR/qm | 30-100 EUR/qm | 0-50 EUR/qm |
 
-**Heizungs-Sonderkosten (GEG):**
+**Heizungs-Sonderkosten (nach Restlebensdauer):**
+
+Rechtsstand 12.11.2026: Nach dem Gebaeudemodernisierungsgesetz (GModG, seit 29.07.2026) duerfen bestehende Heizungen unabhaengig vom Alter weiterlaufen. Angesetzt wird der Ersatz, wenn die Anlage ihre Lebensdauer (Kessel typisch 20-25 Jahre) erreicht, nicht wegen einer Rechtspflicht.
 
 | Heizungstyp | Geschaetzte Umruestungskosten | Zeitdruck |
 |-------------|-------------------------------|-----------|
-| Oel-Heizung | 25.000-70.000 EUR | Hoch (Austausch bis 2026-2028) |
+| Oel-Heizung | 25.000-70.000 EUR | Hoch, wenn > 20 Jahre (Lebensdauer, Tank, Brennstoffkosten) |
 | Gas-Etagenheizung (alt) | 8.000-15.000 EUR pro Therme | Mittel (bei Ausfall) |
-| Gas-Zentralheizung (alt) | 20.000-60.000 EUR | Mittel (bei Ausfall oder > 30 Jahre) |
+| Gas-Zentralheizung (alt) | 20.000-60.000 EUR | Mittel (bei Ausfall oder > 20 Jahre) |
 | Gas-Zentralheizung (jung) | 0 EUR (vorerst) | Niedrig |
 | Fernwaerme / Waermepumpe | 0 EUR | Kein Handlungsbedarf |
 
@@ -297,7 +299,7 @@ Gesamtinvestition inkl. Sanierung = Gesamtinvestition + Sanierungskosten
 Rendite nach Sanierung = JNKM(Soll) / Gesamtinvestition inkl. Sanierung * 100
 ```
 
-**Grundsatz:** Sanierung dauert laenger und kostet mehr als geplant -- auf dem Bierdeckel immer die obere Kante der Pauschale ansetzen oder einen Puffer aufschlagen. Unsanierte Objekte bieten hoehere Anfangsrendite und Verhandlungsspielraum, tragen aber GEG-, Heizungs-, Elektro-, Dach- und Sonderumlagenrisiko; sanierte Objekte und Neubau kaufen stabilere Endrendite und geringere Regulierungsrisiken (Banken achten zunehmend auf Energieklasse, CO2-Kostenanteil des Eigentuemers steigt mit schlechter Effizienzklasse).
+**Grundsatz:** Sanierung dauert laenger und kostet mehr als geplant -- auf dem Bierdeckel immer die obere Kante der Pauschale ansetzen oder einen Puffer aufschlagen. Unsanierte Objekte bieten hoehere Anfangsrendite und Verhandlungsspielraum, tragen aber Nachruestpflichten (GModG), Heizungs-, Elektro-, Dach- und Sonderumlagenrisiko; sanierte Objekte und Neubau kaufen stabilere Endrendite und geringere Regulierungsrisiken (Banken achten zunehmend auf Energieklasse, CO2-Kostenanteil des Eigentuemers steigt mit schlechter Effizienzklasse).
 
 ### Schritt 8: Aufteiler-Kalkulation (optional)
 
@@ -608,7 +610,7 @@ Vor Abgabe der Kalkulation pruefe:
 - `knowledge/kalkulationsformeln.md` -- Detaillierte Formeln fuer alle Renditekennzahlen und Cashflow-Berechnungen
 - `knowledge/risikobewertung.md` -- Risiko-Scoring fuer die Interpretation der Kennzahlen
 - `knowledge/marktbenchmarks.md` -- Benchmarks fuer KPF, Mieten, Sanierungskosten nach Region und Baujahr
-- `knowledge/rechtsgrundlagen.md` -- Mietpreisbremse, Kappungsgrenze, AfA-Regelungen, GEG
+- `knowledge/rechtsgrundlagen.md` -- Mietpreisbremse, Kappungsgrenze, AfA-Regelungen, GModG
 
 ### Verwandte Skills
 

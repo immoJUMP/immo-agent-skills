@@ -166,7 +166,7 @@ Das Baujahr lenkt die Pruefung -- es ersetzt keine Einzelfallbewertung, besonder
 
 ### Score 7-10 (NIEDRIG)
 - Energieeffizienzklasse A+ bis C
-- Modernisierte Heizung (< 10 Jahre, GEG-konform)
+- Modernisierte Heizung (< 10 Jahre)
 - Gedaemmte Fassade, Dach und Kellerdecke
 - Moderne Fenster (2-fach oder 3-fach Verglasung)
 - Niedriger Energieverbrauch < 100 kWh/qm/Jahr
@@ -177,18 +177,17 @@ Das Baujahr lenkt die Pruefung -- es ersetzt keine Einzelfallbewertung, besonder
 - Teilweise gedaemmt
 - Fenster teilweise erneuert
 - Energieverbrauch 100-180 kWh/qm/Jahr
-- GEG-Anforderungen mittelfristig erfuellbar
+- Nachruestpflichten nach GModG (§ 35 oberste Geschossdecke, § 69 Leitungen) erfuellt oder guenstig nachholbar
 
 ### Score 1-3 (HOCH)
 - Energieeffizienzklasse F bis H
-- Heizung > 20 Jahre, Austauschpflicht nach GEG
+- Heizung > 20 Jahre: Lebensdauer erreicht, Ersatz als Instandhaltung einpreisen (keine Rechtspflicht zum Austausch, GModG seit 29.07.2026)
 - Keine Daemmung
 - Einfachverglasung oder alte Fenster
 - Energieverbrauch > 200 kWh/qm/Jahr
-- Erhebliche Investitionen zur GEG-Konformitaet noetig
+- Offene Nachruestpflichten nach GModG (§ 35, § 69; ab 6 WE Heizungspruefung § 60b) und hoher Sanierungsbedarf der Huelle
 
 ### Dealbreaker
-- Oelheizung > 30 Jahre ohne Ausnahmeregelung
 - Kein Energieausweis vorhanden und nicht erstellbar
 - Energetische Sanierung wirtschaftlich nicht darstellbar
 
@@ -297,21 +296,21 @@ Das Baujahr lenkt die Pruefung -- es ersetzt keine Einzelfallbewertung, besonder
 - Letzte Sanierung < 10 Jahre
 - Instandhaltungsruecklage ausreichend gefuellt
 - Keine anstehenden Sonderumlagen
-- Keine GEG-bedingten Pflichtmassnahmen
+- Keine offenen Pflichtmassnahmen nach GModG
 
 ### Score 4-6 (MITTEL)
 - Mittelfristiger Sanierungsbedarf (3-5 Jahre)
 - Geschaetzte Kosten 200-500 EUR/qm
 - Instandhaltungsruecklage teilweise ausreichend
 - Kleinere Sonderumlage moeglich
-- GEG-Massnahmen mittelfristig erforderlich
+- Heizung oder Huelle erreichen mittelfristig ihre Lebensdauer
 
 ### Score 1-3 (HOCH)
 - Akuter Sanierungsbedarf
 - Geschaetzte Kosten > 500 EUR/qm
 - Instandhaltungsruecklage leer oder nicht vorhanden
 - Hohe Sonderumlage angekuendigt oder wahrscheinlich
-- Sofortige GEG-Pflichtmassnahmen
+- Offene Pflichtmassnahmen nach GModG (z. B. oberste Geschossdecke § 35, Leitungen § 69)
 - Sanierungsstau in der WEG
 
 ### Dealbreaker
@@ -446,7 +445,7 @@ Diese Regeln gelten quer ueber alle Kategorien -- sie verhindern, dass Begeister
 | Ausbau-/Umnutzungspotenzial eingepreist | Bauakte, Genehmigungslage und Statik pruefen -- sonst Potenzial mit 0 ansetzen |
 | Sanierungskosten in der Kalkulation | Nur gewerkebasiert mit 10-20% Puffer akzeptieren |
 | Wohnflaeche geht in Kalkulation ein | Flaechenquelle und WoFlV-Plausibilitaet dokumentieren -- keine Flaechenannahme ohne Quelle |
-| Heizungstausch absehbar | Huelle, Heizlast und GEG-Pflichten mitpruefen (Energieberater) -- Heizung nie isoliert entscheiden |
+| Heizungstausch absehbar | Huelle, Heizlast und GModG-Pflichten mitpruefen (Energieberater) -- Heizung nie isoliert entscheiden; Alter allein ist kein Rechtsabzug |
 | Fenstertausch geplant | Lueftungskonzept mitdenken -- dichte Fenster ohne Lueftungslogik = Schimmelrisiko |
 | Schwamm-, Statik- oder Schadstoffverdacht | Fachgutachten VOR Angebot -- keine Eigenbewertung |
 | Bauakte fehlt oder unvollstaendig | Zusaetzliche Pruefung + Risikoabschlag im Preis |
