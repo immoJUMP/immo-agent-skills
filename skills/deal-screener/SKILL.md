@@ -159,20 +159,22 @@ Kategorisiere das Objekt und leite typische Risiken und Investitionsbedarfe ab:
 | **1950-1970** | Nachkriegsbau / Wiederaufbau | Einfache Bausubstanz, duenne Waende, oft Nachtspeicher/Oel, Asbest moeglich | Mittel-Hoch (600-1.200 EUR/qm) |
 | **1970-1990** | Betonbauten / Plattenbauten | Flachdaecher, grosse Fensterflaechen, Waermebruecken, erste Waermedaemmung | Mittel (400-900 EUR/qm) |
 | **1990-2010** | Moderne Bausubstanz | Bessere Daemmung, Zentralheizung Standard, geringerer Investitionsbedarf | Niedrig-Mittel (200-500 EUR/qm) |
-| **Nach 2010** | Neubau / Nahezu-Neubau | EnEV/GEG-konform, geringe Instandhaltung, oft hoher Kaufpreis | Niedrig (50-200 EUR/qm) |
+| **Nach 2010** | Neubau / Nahezu-Neubau | Nach EnEV/GEG gebaut, geringe Instandhaltung, oft hoher Kaufpreis | Niedrig (50-200 EUR/qm) |
 
-### Schritt 5: Heizungstyp-Bewertung (GEG-Konformitaet)
+### Schritt 5: Heizungstyp-Bewertung (Restlebensdauer und Betriebskosten)
 
-Bewerte den Heizungstyp unter Beruecksichtigung des Gebaeudeenergiegesetzes (GEG 2024):
+Rechtsstand 12.11.2026: Seit 29.07.2026 gilt das Gebaeudemodernisierungsgesetz (GModG, vormals GEG; BGBl. 2026 I Nr. 226). Bestehende Heizungen duerfen unabhaengig vom Alter weiterlaufen; das fruehere Betriebsverbot fuer 30 Jahre alte Kessel und die 65-Prozent-Vorgabe sind gestrichen. Neue Gas- und Oelheizungen sind erlaubt, brauchen aber ab 2029 einen steigenden Bio-Anteil (10 % ab 2029, 15 % ab 2030, 30 % ab 2035, 60 % ab 2040; § 43 GModG). Details und Nachruestpflichten: `skills/energieausweis-check/SKILL.md`, Schritt 3.
 
-| Heizungstyp | Bewertung | GEG-Risiko | Geschaetzte Umruestungskosten |
+Bewerte deshalb nach Restlebensdauer (typisch 20-25 Jahre fuer Kessel) und Betriebskostenrisiko, nicht nach einer Rechtspflicht. Das Alter allein ist kein Abzug, sondern eine Renovierungsposition mit Kosten und Zeitpunkt.
+
+| Heizungstyp | Bewertung | Risiko | Geschaetzte Ersatzkosten |
 |-------------|-----------|------------|-------------------------------|
-| **Fernwaerme** | GRUEN | Kein Handlungsbedarf | 0 EUR |
-| **Waermepumpe** | GRUEN | GEG-konform | 0 EUR |
-| **Gas-Zentralheizung (Baujahr Heizung < 15 Jahre)** | GELB | Austauschpflicht bei Stoerung ab 2024/2026 (je nach Kommune) | 15.000-40.000 EUR pro Heizanlage |
-| **Gas-Zentralheizung (Baujahr Heizung > 15 Jahre)** | GELB-ROT | Baldiger Austausch wahrscheinlich | 20.000-60.000 EUR pro Heizanlage |
+| **Fernwaerme** | GRUEN | Preis und Vertragslaufzeit pruefen | 0 EUR |
+| **Waermepumpe** | GRUEN | Systemfit (Heizlast, Vorlauftemperatur) pruefen | 0 EUR |
+| **Gas-Zentralheizung (Heizung < 15 Jahre)** | GELB | Restlebensdauer 5-15 Jahre; steigender CO2-Preis, Gruengasquote angekuendigt (§ 42a GModG) | Keine Sofortkosten, Ersatz spaeter 15.000-40.000 EUR pro Heizanlage |
+| **Gas-Zentralheizung (Heizung > 15 Jahre)** | GELB-ROT | Ersatz in den naechsten Jahren wahrscheinlich; neue Gasheizung loest die Bio-Treppe aus | 20.000-60.000 EUR pro Heizanlage |
 | **Gas-Etagenheizung (dezentral)** | GELB-ROT | Jede Therme einzeln, hoher Aufwand | 8.000-15.000 EUR pro Therme |
-| **Oel-Heizung** | ROT | Auslaufmodell, Austausch zwingend bis 2026-2028 | 25.000-70.000 EUR pro Heizanlage |
+| **Oel-Heizung** | GELB-ROT | Weiterbetrieb erlaubt, aber meist alt, Tankrisiko und hohe Brennstoffkosten; neue Oelheizung loest die Bio-Treppe aus | 25.000-70.000 EUR pro Heizanlage (bei Lebensdauer erreicht als Instandhaltung einpreisen) |
 | **Nachtspeicher/Strom** | ROT | Unwirtschaftlich, hohe NK-Belastung fuer Mieter | 30.000-80.000 EUR (Umruestung auf Zentralheizung) |
 
 ### Schritt 6: Dealtyp-Einordnung
@@ -197,7 +199,7 @@ Aggregiere alle Teilbewertungen zu einer Gesamtampel:
 - Kein Showstopper identifiziert
 - KPF im Rahmen fuer die Lagekategorie
 - Bruttomietrendite >= 5% (B/C/D-Lage) bzw. >= 3,5% (A-Lage)
-- Heizung GEG-konform oder Umruestung kalkulierbar
+- Heizung mit ausreichender Restlebensdauer oder Ersatz kalkulierbar
 - Baujahr-typische Risiken ueberschaubar
 
 **GELB** -- Genauer pruefen:
@@ -282,7 +284,7 @@ Erbbaurecht ✅ | Altlasten ✅ | Sanierungsstau ✅ | Bevoelkerungsrueckgang �
 |---------|-------|-----------|
 | Lage (C) | 🟡 | Aufwertendes Viertel, aber noch sozialer Brennpunkt-Charakter. Gute OEPNV-Anbindung. |
 | Baujahr (1950-1970) | 🟡 | Nachkriegsbau, typische Substanzrisiken: Leitungen, Fenster, ggf. Asbest pruefen. |
-| Heizung | 🟡 | Gas-Zentralheizung, GEG-Austauschpflicht beachten. Alter der Anlage erfragen. |
+| Heizung | 🟡 | Gas-Zentralheizung, Alter der Anlage erfragen. Bei mehr als 20 Jahren Ersatz als Instandhaltung einpreisen (kein Austauschzwang nach GModG). |
 | Rendite | 🟢 | KPF 19,3 und Bruttomietrendite 5,2% sind fuer C-Lage attraktiv. |
 | Leerstand | 🟡 | 16,7% Leerstand -- Ursache klaeren: Sanierung oder strukturell? |
 
@@ -311,7 +313,7 @@ Vor Abgabe der Bewertung pruefe:
 1. **Rechnerische Konsistenz**: Stimmen KPF und Bruttomietrendite rechnerisch? (KPF = 1 / Bruttomietrendite * 100)
 2. **Lage-KPF-Plausibilitaet**: Passt der KPF zur bewerteten Lagekategorie? Ein KPF von 30 in D-Lage ist immer ROT.
 3. **Baujahr-Sanierung-Logik**: Wurde der Sanierungsbedarf zum Baujahr passend bewertet? Ein unsanierter Altbau von 1955 hat anderen Bedarf als ein kernsanierter.
-4. **Heizungs-GEG-Check**: Wurde die GEG-Pflicht korrekt bewertet? Oel-Heizungen sind ab 2026 nicht mehr zulaessig (mit Ausnahmen).
+4. **Heizungs-Check**: Wurde die Heizung nach Restlebensdauer und Betriebskosten bewertet statt nach einer Rechtspflicht? Bestehende Oel- und Gasheizungen sind auch nach dem GModG weiter zulaessig; nur neu eingebaute brauchen ab 2029 einen Bio-Anteil (§ 43 GModG).
 5. **Showstopper-Vollstaendigkeit**: Wurden alle 6 Showstopper-Kriterien explizit geprueft?
 6. **Ampel-Konsistenz**: Passt die Gesamtampel zu den Teilbewertungen? Wenn 3 von 5 Teilbewertungen ROT sind, kann die Gesamtampel nicht GRUEN sein.
 7. **Fehlende-Daten-Auswirkung**: Wurde die Konfidenz bei fehlenden Daten reduziert?
@@ -352,7 +354,7 @@ Vor Abgabe der Bewertung pruefe:
 
 | Fehlende Information | Auswirkung auf Konfidenz | Annahme / Vorgehen |
 |---------------------|--------------------------|---------------------|
-| **Heizungstyp** | -10% Konfidenz | Konservativ Gas annehmen, GEG-Risiko einpreisen |
+| **Heizungstyp** | -10% Konfidenz | Konservativ Gas annehmen, Ersatz nach Baujahr-typischem Alter einpreisen |
 | **Leerstand** | -10% Konfidenz | 5% Leerstand pauschal annehmen |
 | **Sanierungszustand** | -15% Konfidenz | Baujahr-typischen Zustand annehmen (unsaniert) |
 | **Energieausweis** | -5% Konfidenz | Baujahr-typischen Verbrauch schaetzen |

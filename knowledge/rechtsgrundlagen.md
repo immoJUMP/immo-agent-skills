@@ -89,7 +89,7 @@ Berlin, Hamburg, Muenchen, Koeln, Frankfurt, Stuttgart, Duesseldorf, Leipzig, Dr
 - Verringerung des Wasserverbrauchs
 - Erhoehung des Gebrauchswerts
 - Verbesserung der Wohnverhaeltnisse
-- Massnahmen aufgrund gesetzlicher Pflichten (z.B. GEG)
+- Massnahmen aufgrund gesetzlicher Pflichten (z.B. GModG)
 - Schaffung neuen Wohnraums
 
 **Berechnung:**
@@ -102,6 +102,8 @@ Monatliche Mieterhoehung = Modernisierungskosten × 8% / 12
 - Bei Ausgangsmiete unter 7 EUR/qm: Maximal 2 EUR/qm in 6 Jahren
 - Instandhaltungsanteil muss abgezogen werden
 - Foerdermittel muessen abgezogen werden
+
+**Heizung (§§ 559e, 559f BGB, Stand 29.07.2026):** Sonderregeln fuer Heizungstausch und Waermepumpe siehe Abschnitt 6, "Mietrecht bei neuer Heizung".
 
 **Vereinfachtes Verfahren (§559c BGB):**
 - Bei Kosten bis 10.000 EUR/Wohnung
@@ -257,33 +259,55 @@ Bei Umwandlung von Miet- in Eigentumswohnungen gilt:
 
 ---
 
-## 6. GEG 2024 - Gebaeudeenergiegesetz
+## 6. GModG - Gebaeudemodernisierungsgesetz (vormals GEG)
 
-### Heizungstausch-Regelungen (seit 01.01.2024)
+**Stand: 12.11.2026.** Quelle: Gesetz zur Aenderung des Gebaeudeenergiegesetzes, zur Aenderung des Gebaeude-Elektromobilitaetsinfrastruktur-Gesetzes und zur Aenderung weiterer Vorschriften im Waermebereich vom 23.07.2026, BGBl. 2026 I Nr. 226, verkuendet 28.07.2026 (https://www.recht.bund.de/eli/bund/bgbl-1/2026/226). Lesefassung: https://www.gesetze-im-internet.de/geg/ (nichtamtlich). Ueberblick der Bundesregierung: https://www.bundesregierung.de/breg-de/aktuelles/neues-gebaeudemodernisierungsgesetz-2430284
 
-**Neubau in Neubaugebieten:**
-- Jede neu eingebaute Heizung muss zu 65% mit erneuerbaren Energien betrieben werden
+- **Name:** Das Gebaeudeenergiegesetz heisst seit 29.07.2026 "Gebaeudemodernisierungsgesetz (GModG)" (Art. 1 Nr. 1). Paragrafen im Bestandsteil sind neu nummeriert (z. B. § 47 GEG -> § 35 GModG).
+- **Inkrafttreten (Art. 9):** Art. 1, 5, 6, 8 am 29.07.2026; Art. 2 und 7 am 01.01.2027; Art. 3 am 01.01.2028; Art. 4 am 01.01.2030.
+- **Altfassung:** Unterlagen von vor dem 29.07.2026 (Energieausweis-Empfehlungen, Gutachten, Exposes, aeltere Skills) koennen noch die 65-Prozent-Vorgabe, die kommunalen Fristen nach Waermeplanung oder die Pflicht zum Austausch 30 Jahre alter Kessel nennen. Diese Regeln gelten nicht mehr und begruenden keinen Kaufpreisabzug.
 
-**Bestandsgebaeude - Abhaengig von kommunaler Waermeplanung:**
+### Heizung im Bestand
 
-| Gemeindgroesse | Waermeplanung bis | Uebergangsfrist |
+| Regel | Inhalt | Quelle |
 |---|---|---|
-| > 100.000 Einwohner | 30.06.2026 | Bis Waermeplan vorliegt, max. 30.06.2026 |
-| < 100.000 Einwohner | 30.06.2028 | Bis Waermeplan vorliegt, max. 30.06.2028 |
+| Gestrichen | 65-Prozent-Vorgabe fuer neue Heizungen (§ 71 GEG), Beratungspflicht vor Einbau fossiler Heizungen, Betriebsverbot fuer 30 Jahre alte Konstanttemperaturkessel (§ 72 GEG), Ende fossiler Kessel zum 31.12.2044, Ausnahmen und Uebergangsfristen der §§ 71a bis 71p und 73 GEG | Art. 1 Nr. 32 (§§ 71 bis 73 gestrichen) |
+| Bestehende Heizung | Darf unabhaengig vom Alter weiterlaufen. Alter ist eine Renovierungsposition nach Restlebensdauer, keine Rechtspflicht | Folge aus Art. 1 Nr. 32 |
+| Ersatz | Freie Wahl unter zehn Optionen: Gas/Oel/Fluessiggas, Waermepumpe, Solarthermie, Biomasse oder Wasserstoff, Waermepumpen-Hybrid, Solarthermie-Hybrid, KWK, Stromdirektheizung, Waermenetz, innovative Loesung | § 42 GModG |
+| Bio-Treppe | Gas-, Oel- oder Fluessiggasheizung, nach dem 29.07.2026 in ein bestehendes Gebaeude neu eingebaut: mind. 10 % der Waerme aus Biomethan, Bioheizoel, biogenem Fluessiggas oder Wasserstoff ab 01.01.2029, 15 % ab 2030, 30 % ab 2035, 60 % ab 2040. Pflicht des Eigentuemers bzw. Betreibers (Abs. 6). Bestehende Anlagen: keine Quote | § 43 Abs. 1 GModG |
+| Erfuellung ohne Bio-Brennstoff | Solarthermie (2029-2034 pauschal ab 0,04 qm Aperturflaeche je qm Nutzflaeche bei max. zwei Wohnungen, 0,03 qm bei mehr), Lueftung mit Waermerueckgewinnung (2029-2034), Waermepumpen-Hybrid mit mind. 30 % bzw. 40 % Leistungsanteil, Biomasse-Hybrid | § 43 Abs. 3 bis 5, § 45 Abs. 2 GModG |
+| Havarie 2028 | Ersatz nach irreparablem Ausfall vom 01.01. bis 31.12.2028: Pflicht erst zwoelf Monate nach Einbau | § 43 Abs. 7 GModG |
+| Nachweis | Lieferant bestaetigt die Erfuellung mit der Abrechnung; Eigentuemer bewahrt Belege fuenf Jahre auf (in den ersten 15 Betriebsjahren) | § 96 Abs. 4 und 5 GModG |
+| Gruengasquote | Bundesregierung legt bis 01.12.2026 ein Gesetz vor, das Inverkehrbringer zu klimaneutralen Brennstoffen ab 2045 verpflichtet. Keine Eigentuemerpflicht, aber Preisrisiko fuer Gas und Oel | § 42a GModG |
+| Stromdirektheizung | Einbau im Bestand mit Wohnungen nur, wenn Waermeschutz nach §§ 16, 19 um mind. 30 % unterschritten (Ausnahmen: selbstgenutztes Haus mit max. zwei Wohnungen, Tausch einer Einzelraum-Stromdirektheizung) | § 46 GModG |
 
-**Waehrend der Uebergangsfrist:**
-- Defekte Heizung darf repariert werden
-- Bei Heizungshavarie: 5 Jahre Uebergangsfrist fuer 65%-EE-Loesung
-- Einbau von Gasheizungen moeglich, aber mit Beratungspflicht und steigendem Biogasanteil
+### Nachruestpflichten (bestehen fort)
 
-**Erfuellungsoptionen (65%-EE-Pflicht):**
-1. Waermepumpe
-2. Fernwaerme
-3. Biomasseheizung (Pellet, Holz)
-4. Stromdirektheizung (bei sehr gut gedaemmten Gebaeuden)
-5. Hybridheizung (Waermepumpe + Gas/Oel)
-6. Solarthermie + Ergaenzung
-7. Wasserstoff-ready Gasheizung (wenn H2-Netzgebiet)
+| Pflicht | Inhalt | Quelle |
+|---|---|---|
+| Oberste Geschossdecke | Oberste Geschossdecken, die den Mindestwaermeschutz nach DIN 4108-2 nicht erfuellen, auf U <= 0,24 W/(qm*K) daemmen; alternativ das Dach darueber | § 35 Abs. 1 GModG (vormals § 47 GEG) |
+| Leitungen | Bisher ungedaemmte, zugaengliche Waermeverteilungs- und Warmwasserleitungen sowie Armaturen ausserhalb beheizter Raeume nach Anlage 8 daemmen | § 69 Abs. 2 GModG |
+| Heizungspruefung (ab 6 Wohnungen) | Wasser-Heizung, keine Waermepumpe: eingebaut vor 01.10.2009 -> Pruefung und Optimierung bis 30.09.2027; spaeter -> innerhalb eines Jahres nach 15 Jahren | § 60b GModG |
+| Hydraulischer Abgleich (ab 6 Wohnungen) | Nach Einbau einer Heizung mit Wasser als Waermetraeger | § 60c GModG |
+| Waermepumpe (ab 6 Wohnungen) | Inbetriebnahme ab 01.01.2024: Betriebspruefung nach einer Heizperiode, spaetestens nach zwei Jahren | § 60a GModG |
+| Bussgeld | Geschossdecke und Leitungen bis 50.000 EUR; Energieausweis und Pflichtangaben in Anzeigen bis 10.000 EUR; Heizungspruefung, Bio-Treppe bis 5.000 EUR | § 108 Abs. 2 GModG |
+
+### Eigentuemerwechsel
+
+- **Haus mit max. zwei Wohnungen, Eigentuemer wohnte dort am 01.02.2002 selbst:** Die Nachruestpflichten fuer Geschossdecke und Leitungen treffen erst den neuen Eigentuemer nach dem ersten Eigentumsuebergang; Frist zwei Jahre (§ 35 Abs. 3, § 69 Abs. 3 und 4 GModG). Wirtschaftlichkeitsausnahme fuer selbstnutzende Eigentuemer: § 35 Abs. 4.
+- **Mehrfamilienhaus:** Keine Sonderfrist; die Pflichten treffen den jeweiligen Eigentuemer, nach dem Uebergang also den Kaeufer. Vor dem Kauf pruefen und einpreisen.
+- **Energieausweis:** Vorlage spaetestens bei der Besichtigung, Uebergabe nach dem Kaufvertrag (§ 80 Abs. 4). Kaeufer eines Hauses mit max. zwei Wohnungen fuehrt ein informatorisches Beratungsgespraech, wenn es unentgeltlich angeboten wird.
+
+### Mietrecht bei neuer Heizung
+
+- **Kostenteilung nach § 5a CO2KostAufG (Art. 5):** Bei einer Gas-/Oelheizung nach § 43 Abs. 1 tragen Vermieter und Mieter je zur Haelfte die Gas-Netzentgelte und CO2-Kosten ab 01.01.2028 und die Kosten des Bio-Anteils ab 01.01.2029 (bis 30 % des Brennstoffs). Neubauten bis 31.12.2029: § 5b. Haertefall: § 5d.
+- **Modernisierung (Art. 6):** Heizungseinbau nach § 42 GModG ist Modernisierung (§ 555b Nr. 1a BGB). Umlage nach § 559e BGB: 10 % der Kosten abzueglich Foerderung, 15 % Erhaltungspauschale (nicht bei Gas-/Oelheizung nach § 43), Kappung 0,50 EUR/qm/Monat in sechs Jahren. Waermepumpe: volle Umlage nur mit Jahresarbeitszahl >= 2,5 (Ausnahmen: Baujahr nach 1996, WSchV-1995-Niveau, Sanierung nach § 38 GModG, Vorlauf <= 55 Grad C), sonst 50 % (§ 559f BGB).
+
+### Foerderung Heizung (KfW 458, Stand seit 21.07.2026)
+- Grundfoerderung 30 %; Klimageschwindigkeitsbonus (16 % bis 31.01.2027, danach halbjaehrlich 4 Punkte weniger, ab 01.08.2028 null) und Einkommensbonus (10-40 %) nur fuer selbstgenutzte Wohneinheiten; max. 70 % (80 % bei niedrigem Einkommen)
+- Foerderfaehige Kosten: 28.000 EUR erste Wohneinheit, je 15.000 EUR fuer die 2. bis 6., je 8.000 EUR ab der 7.
+- Vermietende Privatpersonen und WEG: KfW 458 mit Grundfoerderung; GbR und Gesellschaften: KfW 459
+- Quelle: https://www.kfw.de/inlandsfoerderung/Privatpersonen/Bestehende-Immobilie/Förderprodukte/Heizungsförderung-für-Privatpersonen-Wohngebäude-(458)/ -- vor Antrag pruefen
 
 ### Sanierungsfahrplan (iSFP)
 - Individueller Sanierungsfahrplan durch Energieberater
@@ -293,9 +317,9 @@ Bei Umwandlung von Miet- in Eigentumswohnungen gilt:
 ### Energieausweis-Pflicht
 - Bei Verkauf, Vermietung oder Verpachtung
 - Verbrauchsausweis oder Bedarfsausweis
-- Bedarfsausweis Pflicht bei: < 5 Wohnungen und Baujahr vor 1977 (ohne Nachweis energetischer Sanierung)
+- Bedarfsausweis Pflicht bei: < 5 Wohnungen und Bauantrag vor 01.11.1977 (ohne Nachweis energetischer Sanierung; § 80 Abs. 3 GModG)
 - Gueltigkeitsdauer: 10 Jahre
-- Bussgeld bei Verstoss: bis 10.000 EUR
+- Bussgeld bei Verstoss: bis 10.000 EUR (§ 108 Abs. 2 Nr. 2 GModG)
 
 ---
 
@@ -500,4 +524,4 @@ Bei Umwandlung von Miet- in Eigentumswohnungen gilt:
 | Eigenbedarfs-Sperrfrist (Umwandlung) | 3-10 Jahre | §577a BGB |
 | Modernisierungsankuendigung | 3 Monate vorher | §555c BGB |
 | Mieterhoehung Zustimmungsfrist | 2 Monate | §558b BGB |
-| Energieausweis Gueltigkeit | 10 Jahre | GEG |
+| Energieausweis Gueltigkeit | 10 Jahre | GModG (vormals GEG) |

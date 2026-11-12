@@ -83,7 +83,7 @@ Pruefe VOR der Kaufvertragsanalyse folgende Rahmenbedingungen:
 | **Milieuschutzgebiet / Sanierungsgebiet** | Liegt das Objekt in einem Erhaltungssatzungsgebiet (§172 BauGB)? Dann hat die Gemeinde ein Vorkaufsrecht und kann Modernisierungen einschraenken. Sanierungsgebiet (§144 BauGB): Genehmigungsvorbehalt fuer Grundstuecksgeschaefte. | §172 BauGB, §144 BauGB |
 | **Denkmalschutz** | Denkmalgeschuetztes Objekt? Einschraenkungen bei Sanierung, aber AfA-Vorteile (§7i EStG). Denkmalbehoerde muss Massnahmen genehmigen. | Landesdenkmalschutzgesetz, §7i EStG |
 | **Mietpreisbremse** | Gilt am Standort die Mietpreisbremse (§556d BGB)? Auswirkung auf Mietpotenzial und Nachvermietung. Ausnahmen: Neubau nach 01.10.2014, umfassende Modernisierung. | §556d BGB |
-| **Energieausweis** | Liegt ein gueltiger Energieausweis vor? Pflicht bei Verkauf (§80 GEG). Energiekennwert relevant fuer GEG-Sanierungspflichten. | §80 GEG |
+| **Energieausweis** | Liegt ein gueltiger Energieausweis vor? Vorlage spaetestens bei Besichtigung, Uebergabe nach Vertragsschluss (§80 Abs. 4 GModG, vormals GEG). Offene Nachruestpflichten (§ 35 oberste Geschossdecke, § 69 Leitungen) gehen mit dem Eigentum auf den Kaeufer ueber; bei 1-2-FH vom Selbstnutzer seit vor 2002 zwei Jahre Frist ab Uebergang. | §§ 35, 69, 80 GModG |
 | **Versicherungsschutz** | Gebaeudeversicherung mit gleitendem Neuwert vorhanden? 4 Schadensarten (Feuer, Leitungswasser, Sturm/Hagel, weitere Elementar) + Elementarschadenversicherung + Grundbesitzerhaftpflicht. Bei WEG: Versicherung ueber WEG-Verwalter, Police pruefen. | §§21, 27 WEG |
 | **Altlasten-/Baulastenauskunft** | Altlastenverzeichnis und Baulastenverzeichnis angefordert? Altlasten: Kontamination des Bodens. Baulasten: Oeffentlich-rechtliche Verpflichtungen (Abstandsflaechen, Stellplaetze, Leitungsrechte). | Landesbauordnung |
 
@@ -317,7 +317,7 @@ Vor Abgabe der Bewertung pruefe:
 | **Grundbuchauszug** | -20% Konfidenz | Pruefung Abt. II/III nicht moeglich, WARNUNG ausgeben |
 | **Teilungserklaerung (bei ETW)** | -15% Konfidenz | SNR und MEA nicht pruefbar |
 | **Mietvertrag (bei vermietetem Objekt)** | -15% Konfidenz | Verkaeufergarantien nicht verifizierbar |
-| **Energieausweis** | -5% Konfidenz | GEG-Pflicht hinweisen |
+| **Energieausweis** | -5% Konfidenz | Vorlagepflicht nach § 80 GModG hinweisen |
 | **Versicherungsnachweise** | -5% Konfidenz | Versicherungsschutz nicht pruefbar |
 | **Bodenrichtwert** | -5% Konfidenz | AfA-Aufschluesselung nicht plausibilisierbar |
 | **WEG-Protokolle** | -10% Konfidenz | Sonderumlagen-Risiko nicht einschaetzbar |

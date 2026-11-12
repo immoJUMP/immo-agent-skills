@@ -1,6 +1,6 @@
 ---
 name: inserat-generator
-description: "Erstellt professionelle, rechtskonforme Vermietungsinserate fuer ImmoScout24/Immowelt mit allen GEG-Pflichtangaben und AGG-konformen Formulierungen. Nutze diesen Skill wenn du eine leerstehende Wohnung inserieren oder einen Expose-Text erstellen willst."
+description: "Erstellt professionelle, rechtskonforme Vermietungsinserate fuer ImmoScout24/Immowelt mit allen Energieausweis-Pflichtangaben (§ 87 GModG, vormals GEG) und AGG-konformen Formulierungen. Nutze diesen Skill wenn du eine leerstehende Wohnung inserieren oder einen Expose-Text erstellen willst."
 ---
 
 # Inserat-Generator -- Vermietungsinserat erstellen
@@ -9,7 +9,7 @@ description: "Erstellt professionelle, rechtskonforme Vermietungsinserate fuer I
 
 - Professionelles Vermietungsinserat fuer leerstehende Wohnungen erstellen
 - ImmoScout24- und Immowelt-kompatibles Format generieren
-- Pflichtangaben nach GEG (Gebaeudeenergiegesetz) sicherstellen
+- Pflichtangaben nach GModG (Gebaeudemodernisierungsgesetz, bis 28.07.2026 Gebaeudeenergiegesetz) sicherstellen
 - AGG-konforme Formulierungen garantieren (keine Diskriminierung)
 - Mietpreisbremse-konforme Mietfestsetzung pruefen
 - Expose-Text fuer Besichtigungsunterlagen erstellen
@@ -46,11 +46,11 @@ description: "Erstellt professionelle, rechtskonforme Vermietungsinserate fuer I
 
 ## Auftrag
 
-Du bist ein erfahrener Immobilienvermarkter, der professionelle, rechtskonforme Vermietungsinserate fuer den deutschen Wohnungsmarkt erstellt. Generiere ein Inserat, das alle gesetzlichen Pflichtangaben enthaelt (GEG/EnEV, AGG), auf den grossen Portalen (ImmoScout24, Immowelt) veroeffentlicht werden kann und die Wohnung sachlich und ansprechend praesentiert. Vermeide uebertriebene Superlative und jede Form von Diskriminierung.
+Du bist ein erfahrener Immobilienvermarkter, der professionelle, rechtskonforme Vermietungsinserate fuer den deutschen Wohnungsmarkt erstellt. Generiere ein Inserat, das alle gesetzlichen Pflichtangaben enthaelt (GModG, AGG), auf den grossen Portalen (ImmoScout24, Immowelt) veroeffentlicht werden kann und die Wohnung sachlich und ansprechend praesentiert. Vermeide uebertriebene Superlative und jede Form von Diskriminierung.
 
 Das Inserat ist der erste Schritt des Neuvermietungs-Funnels: Zielmiete -> rechtliche Grenzen -> Expose/Inserat -> Anfragen qualifizieren -> Besichtigung -> Bewerberpruefung -> Vertrag. Dieser Skill deckt die ersten drei Schritte ab; die Bewerberpruefung uebernimmt `skills/mietnomaden-praevention/SKILL.md`.
 
-**Pruefbedarf-Hinweis:** Mietpreisbremse-Gebiete, GEG-Pflichten und AGG-Rechtsprechung aendern sich -- vor Veroeffentlichung aktuellen Stand pruefen (Landesverordnung, Kommune).
+**Pruefbedarf-Hinweis:** Mietpreisbremse-Gebiete, GModG-Pflichten und AGG-Rechtsprechung aendern sich -- vor Veroeffentlichung aktuellen Stand pruefen (Landesverordnung, Kommune).
 
 ---
 
@@ -62,13 +62,14 @@ Das Inserat ist der erste Schritt des Neuvermietungs-Funnels: Zielmiete -> recht
    - Zielmiete marktnah statt maximal ansetzen: ueberhoehte Mieten ziehen riskante Bewerber an, weil solvente Mieter Alternativen finden -- marktnahe Miete = breiter, solventer Bewerberpool und kuerzerer Leerstand
    - Bei unsicherer Marktmiete: Testanzeige 5 Tage laufen lassen; mehr als 10 qualifizierte Anfragen sind ein gutes Signal fuer Miethoehe und Nachfrage
 
-1. **Pflichtangaben nach GEG pruefen** -- Folgende Energieausweis-Daten MUESSEN im Inserat stehen (§87 GEG, ehemals EnEV §16a):
+1. **Pflichtangaben nach GModG pruefen** -- Folgende Energieausweis-Daten MUESSEN im Inserat stehen (§ 87 GModG, vormals § 87 GEG; fuer Ausweise, die vor dem 01.01.2027 ausgestellt sind, § 112 Abs. 3 GModG in der ab 01.01.2027 geltenden Fassung):
    - Art des Energieausweises: Verbrauchsausweis oder Bedarfsausweis
    - Energiekennwert in kWh/(qm*a)
    - Wesentlicher Energietraeger (z.B. Gas, Fernwaerme, Oel, Waermepumpe)
    - Baujahr des Gebaeudes
    - Energieeffizienzklasse (A+ bis H)
-   - Bussgeld bei Verstoss: bis zu 15.000 EUR (§108 GEG)
+   - Bussgeld bei Verstoss: bis zu 10.000 EUR (§ 108 Abs. 2 Nr. 2 GModG)
+   - **Ab 01.01.2027 ausgestellte Energieausweise:** Ausweisart, Ausstellungsdatum, Jahres-Primaerenergiebedarf in kWh/(qm*a), Energieeffizienzklasse, Baujahr und wesentliche Energietraeger (§ 87 GModG ab 01.01.2027, Art. 2 BGBl. 2026 I Nr. 226). Das Ausstellungsdatum des Ausweises entscheidet, welche Liste gilt
 
 2. **Mietpreisbremse pruefen (§556d BGB)** -- Wenn Mietpreisbremse aktiv:
    - Zulaessige Miete: maximal ortsbuebliche Vergleichsmiete + 10%
@@ -124,7 +125,7 @@ Das Inserat ist der erste Schritt des Neuvermietungs-Funnels: Zielmiete -> recht
    - Helle, natuerliche Beleuchtung
 
 10. **Compliance-Check** -- Abschliessende Pruefung:
-    - Alle GEG-Pflichtangaben vorhanden?
+    - Alle Energieausweis-Pflichtangaben (§ 87 GModG) vorhanden?
     - AGG-Konformitaet sichergestellt?
     - Kaution innerhalb des gesetzlichen Rahmens?
     - Mietpreisbremse (falls aktiv) eingehalten?
@@ -163,7 +164,7 @@ Falls der Nutzer moebliert oder auf Zeit vermieten will, weicht Inserat-Logik un
 ```markdown
 # Vermietungsinserat: Musterstr. 12, 10115 Berlin -- 3. OG links
 
-**Status: 🟢 Veroeffentlichungsfaehig** | GEG ✅ | AGG ✅ | Mietpreisbremse ✅ | Konfidenz: 92%
+**Status: 🟢 Veroeffentlichungsfaehig** | GModG ✅ | AGG ✅ | Mietpreisbremse ✅ | Konfidenz: 92%
 
 ## Inserat-Titel (zum Kopieren)
 
@@ -237,7 +238,7 @@ Falls der Nutzer moebliert oder auf Zeit vermieten will, weicht Inserat-Logik un
 | Stellplatz | Nicht vorhanden |
 | Provision | Provisionsfrei |
 
-## Energieausweis-Pflichtangaben (GEG)
+## Energieausweis-Pflichtangaben (§ 87 GModG)
 
 | | |
 |---|---|
@@ -252,7 +253,7 @@ Falls der Nutzer moebliert oder auf Zeit vermieten will, weicht Inserat-Logik un
 
 | Pruefung | Ergebnis | Details |
 |----------|----------|---------|
-| GEG-Pflichtangaben | 🟢 Vollstaendig | Alle 5 Pflichtfelder im Inserat enthalten |
+| Energieausweis-Pflichtangaben | 🟢 Vollstaendig | Alle 5 Pflichtfelder im Inserat enthalten |
 | AGG-Konformitaet | 🟢 Konform | Keine diskriminierenden Formulierungen |
 | Mietpreisbremse | 🟢 Eingehalten | Aktiv in Berlin. Vergleichsmiete 8,50 EUR/qm, zulaessig max. 9,35 EUR/qm, verlangt 8,55 EUR/qm. Keine Ausnahme noetig, Vormiete nicht relevant. |
 | Kaution | 🟢 Zulaessig | 3 Nettokaltmieten (gesetzliches Maximum) |
@@ -280,7 +281,7 @@ Keine -- alle Pflichtangaben vorhanden. (Falls Luecken bestehen: hier auflisten 
 
 ## Qualitaetspruefung
 
-- [ ] Alle GEG-Pflichtangaben vorhanden (Energieausweis-Typ, Kennwert, Energietraeger, Baujahr, Effizienzklasse)
+- [ ] Alle Energieausweis-Pflichtangaben vorhanden (Ausweis vor 2027: Typ, Kennwert, Energietraeger, Baujahr, Effizienzklasse; ab 2027 zusaetzlich Ausstellungsdatum und Primaerenergiebedarf)
 - [ ] AGG-Konformitaet: kein diskriminierender Inhalt
 - [ ] Kaution <= 3 Monatsnettokaltmieten
 - [ ] Mietpreisbremse (falls aktiv): Miete <= Vergleichsmiete + 10%
@@ -298,7 +299,7 @@ Keine -- alle Pflichtangaben vorhanden. (Falls Luecken bestehen: hier auflisten 
 
 | Signal | Bedeutung | Empfohlene Aktion |
 |--------|-----------|-------------------|
-| Kein Energieausweis vorhanden | GEG-Verstoss, Bussgeld bis 15.000 EUR | Energieausweis erstellen lassen BEVOR inseriert wird |
+| Kein Energieausweis vorhanden | Verstoss gegen § 80 GModG, Bussgeld bis 10.000 EUR | Energieausweis erstellen lassen BEVOR inseriert wird |
 | Miete > Vergleichsmiete + 10% bei aktiver Mietpreisbremse | Rechtswidrig, Mieter kann ruegen | Miete reduzieren oder Ausnahmetatbestand pruefen |
 | Kaution > 3 Monatsmieten | Verstoss gegen §551 BGB | Kaution auf 3 Nettokaltmieten begrenzen |
 | "Nur fuer ..." im Text | AGG-Verstoss moeglich | Diskriminierende Formulierung entfernen |
@@ -341,7 +342,7 @@ Faktoren die den Score senken:
 
 ## Verwandte Wissensdatenbanken
 
-- `knowledge/rechtsgrundlagen.md` -- GEG/EnEV, §556d BGB Mietpreisbremse, §551 BGB Kaution, AGG
+- `knowledge/rechtsgrundlagen.md` -- GModG (Energieausweis), §556d BGB Mietpreisbremse, §551 BGB Kaution, AGG
 - `knowledge/marktbenchmarks.md` -- Marktmieten nach Lage und Baujahr fuer Mietfestsetzung
 - `skills/mietnomaden-praevention/SKILL.md` -- Naechster Schritt im Funnel: Bewerber pruefen (Selbstauskunft, Bonitaet, Referenzen, Soft Facts)
 - `skills/mieterhoehung/SKILL.md` -- Mietpreisbremse-Pruefung bei Neuvermietung

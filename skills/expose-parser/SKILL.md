@@ -244,7 +244,7 @@ Vor der Ausgabe pruefen:
 | Index-/Staffel-/Amtsmieten erwaehnt | Normaler Mieterhoehungspfad blockiert, Under-Rent-Potenzial ggf. nicht hebbar | Vertragsart je Einheit klaeren |
 | Hoher Leerstand als "Potenzial" vermarktet | Bank bewertet schlecht vermietete Objekte im Ertragswert niedriger -- moeglicher hoeherer EK-Bedarf | Leerstandsursache klaeren, Finanzierungswirkung pruefen |
 | Baujahr vor 1950 ohne Sanierung | Erheblicher Sanierungsstau wahrscheinlich | Sanierungskosten einplanen |
-| Energieklasse F-H | Hohe Heizkosten, GEG-Sanierungspflicht moeglich; Markt preist energetisch schlechte Objekte mit Abschlag, CO2-Kostenanteil des Eigentuemers steigt, Banken pruefen Energieausweise zunehmend | Energetische Sanierung kalkulieren |
+| Energieklasse F-H | Hohe Heizkosten; keine Sanierungspflicht allein wegen der Klasse, aber Nachruestpflichten nach GModG pruefen (oberste Geschossdecke, Leitungen); Markt preist energetisch schlechte Objekte mit Abschlag, CO2-Kostenanteil des Eigentuemers steigt, Banken pruefen Energieausweise zunehmend | Energetische Sanierung kalkulieren |
 | Erbbaurecht | Erbbauzins reduziert Rendite, Vertragsende beachten | Erbbaurechtsvertrag anfordern |
 | Denkmalschutz | Einschraenkungen bei Sanierung, aber steuerliche Vorteile | Denkmalschutzbescheid anfordern |
 | Hohe Maklercourtage (> 5%) | Ueberdurchschnittliche Ankaufsnebenkosten | Verhandeln oder einkalkulieren |

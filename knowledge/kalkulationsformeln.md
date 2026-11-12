@@ -339,13 +339,15 @@ Monatliche Mieterhöhung pro Einheit = (Modernisierungskosten × 8%) / 12
 - Bei Mieten unter 7 EUR/qm: max. 2 EUR/qm innerhalb von 6 Jahren
 
 **Beispiel:**
-- Modernisierungskosten (Heizungstausch): 25.000 EUR
+- Modernisierungskosten (Fenstertausch): 25.000 EUR
 - Abzug Instandhaltungsanteil: 8.000 EUR
 - Umlagefähige Kosten: 17.000 EUR
 - Jährliche Umlage: 17.000 × 8% = 1.360 EUR
 - Monatliche Mieterhöhung: 1.360 / 12 = **113,33 EUR**
 - Wohnfläche: 65 qm
 - Erhöhung pro qm: 113,33 / 65 = **1,74 EUR/qm** (unter Kappungsgrenze)
+
+**Heizungstausch:** Eigene Regeln nach §§ 559e, 559f BGB (10 % nach Abzug der Foerderung, Kappung 0,50 EUR/qm in sechs Jahren, Waermepumpe nur mit Jahresarbeitszahl >= 2,5 voll umlegbar). Details: `knowledge/rechtsgrundlagen.md`, Abschnitt 6.
 
 ---
 
