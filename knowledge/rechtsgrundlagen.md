@@ -61,8 +61,7 @@ Praxisregel: Erst den Weg bestimmen, dann rechnen. Die einvernehmliche Erhoehung
 - Regelmaessig: Maximal 20% Erhoehung in 3 Jahren
 - In Gebieten mit angespanntem Wohnungsmarkt: Maximal 15% in 3 Jahren (durch Landesverordnung)
 
-**Staedte mit abgesenkter Kappungsgrenze (15%) - Auswahl:**
-Berlin, Hamburg, Muenchen, Koeln, Frankfurt, Stuttgart, Duesseldorf, Leipzig, Dresden, Freiburg, Heidelberg, Muenster, Regensburg, Potsdam, Darmstadt (jeweils gueltige Landesverordnung pruefen)
+**Welche Gemeinde 15% hat, steht nur in der Landesverordnung.** Fuer die konkrete Gemeinde pruefen und mit Quelle nennen: Verordnung (Name, Fundstelle), Geltungsdauer, Gemeinde in der Anlage. Keine Staedteliste aus dem Gedaechtnis -- Verordnungen laufen aus und werden mit anderen Gemeindelisten neu erlassen. Geprueftes Beispiel NRW: Abschnitt 4, "Sperrfrist bei Umwandlung".
 
 **Verfahren:**
 1. Schriftliches Mieterhoehungsverlangen an Mieter
@@ -121,7 +120,7 @@ Monatliche Mieterhoehung = Modernisierungskosten × 8% / 12
 
 ### Geltungsbereich
 - Nur in Gebieten mit angespanntem Wohnungsmarkt
-- Durch Landesverordnung bestimmt (befristet auf max. 5 Jahre, verlaengerbar)
+- Durch Landesverordnung bestimmt (befristet auf max. 5 Jahre, verlaengerbar) -- gemeindegenau mit Fundstelle und Geltungsdauer pruefen, Beispiel NRW in Abschnitt 4
 - Gilt nur fuer Wiedervermietung, nicht fuer Neuvermietung nach Neubau
 
 ### Berechnung der zulaessigen Miete
@@ -200,18 +199,12 @@ Zulaessige Miete = ortsuebliche Vergleichsmiete + 10%
 
 ### Sperrfrist bei Umwandlung (§577a BGB)
 
-Bei Umwandlung von Miet- in Eigentumswohnungen gilt:
-- **Bundesweit:** Mindestens 3 Jahre Sperrfrist fuer Eigenbedarfskuendigung
-- **Laenderverordnung:** Bis zu 10 Jahre (z.B. Berlin, Hamburg, Muenchen)
+Bei Umwandlung von Miet- in Eigentumswohnungen und anschliessender Veraeusserung gilt:
+- **Bundesweit:** 3 Jahre Sperrfrist fuer Eigenbedarfs- und Verwertungskuendigung ab Veraeusserung (§577a Abs. 1 BGB), auch beim Erwerb durch Personengesellschaften oder mehrere Erwerber (§577a Abs. 1a)
+- **Per Landesverordnung:** Bis zu 10 Jahre in Gemeinden, die das Land bestimmt (§577a Abs. 2 BGB)
+- **Immer gemeindegenau pruefen**, keine Staedteliste aus dem Gedaechtnis: Verordnung mit Name, Fundstelle, Geltungsdauer und Uebergangsregel nennen. Die Laender legen dieselben Gemeindelisten oft gemeinsam fuer Mietpreisbremse, abgesenkte Kappungsgrenze und Sperrfrist fest.
 
-| Stadt | Sperrfrist |
-|---|---|
-| Berlin | 10 Jahre |
-| Hamburg | 10 Jahre |
-| Muenchen | 10 Jahre |
-| Koeln | 8 Jahre |
-| Frankfurt | 10 Jahre |
-| Sonstige | 3 Jahre (bundesweit) oder per Landesverordnung |
+**Geprueftes Beispiel NRW (Stand 12.11.2026):** Mieterschutzverordnung NRW vom 28.01.2025 (GV. NRW. S. 111), geaendert am 28.10.2025 (GV. NRW. S. 848), in Kraft seit 01.03.2025. Fuer die 57 Gemeinden der Anlage (u. a. Bonn, Erftstadt, Koeln) gelten: Sperrfrist 8 Jahre, Kappungsgrenze 15 % (beides bis 28.02.2030) und Mietpreisbremse (bis 31.12.2029). Wurde vor dem 01.03.2025 umgewandelt und verkauft, gilt weiter die Verordnung vom 09.06.2020 (5 Jahre). Quelle: https://recht.nrw.de/lrgv/rechtsverordnung/07112025-mieterschutzverordnung-nrw-mietschvo-nrw/ und Anlage im Verordnungstext des Ministeriums (mhkbd.nrw).
 
 ### Widerspruchsrecht des Mieters (§574 BGB / Sozialklausel)
 - Mieter kann Kuendigung widersprechen bei unzumutbarer Haerte
@@ -521,7 +514,7 @@ Bei Umwandlung von Miet- in Eigentumswohnungen gilt:
 | Kautionsrueckzahlung | 3-6 Monate (angemessen) | §551 BGB |
 | Vorkaufsrecht Mieter | 2 Monate | §577 BGB |
 | Spekulationsfrist Verkauf | 10 Jahre | §23 EStG |
-| Eigenbedarfs-Sperrfrist (Umwandlung) | 3-10 Jahre | §577a BGB |
+| Eigenbedarfs-Sperrfrist (Umwandlung) | 3 Jahre, per Landesverordnung bis 10 Jahre (gemeindegenau pruefen) | §577a BGB |
 | Modernisierungsankuendigung | 3 Monate vorher | §555c BGB |
 | Mieterhoehung Zustimmungsfrist | 2 Monate | §558b BGB |
 | Energieausweis Gueltigkeit | 10 Jahre | GModG (vormals GEG) |

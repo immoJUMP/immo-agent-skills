@@ -193,10 +193,11 @@ Erstelle eine vollstaendige Liste aller wahrscheinlichen Einwaende des Verkaeufe
 
 **Eroeffnungsangebot kalkulieren:**
 - Setze den Anker UNTERHALB deiner tatsaechlichen Schmerzgrenze
-- Faustformel: Eroeffnungsangebot = Schmerzgrenze minus 50-70% der Differenz (Asking Price minus Schmerzgrenze)
-- Beispiel: Asking 850K, Schmerzgrenze 780K, Differenz 70K → Eroeffnung bei ca. 730-745K
+- Faustformel **nur bei kleinem Abstand** (Differenz Asking Price minus Schmerzgrenze hoechstens ca. 10% des Asking Price): Eroeffnungsangebot = Schmerzgrenze minus 50-70% der Differenz
+- Beispiel: Asking 850K, Schmerzgrenze 780K, Differenz 70K (8,2%) → Eroeffnung bei ca. 730-745K
 - Du laesst dich dann "hochverhandeln" auf deine tatsaechliche Schmerzgrenze
 - Der Verkaeufer fuehlt sich als Gewinner
+- **Bei grossem Abstand (mehr als ca. 10%) keine Faustformel:** Ein zusaetzlicher Abschlag unter eine ohnehin weit entfernte Schmerzgrenze wirkt unserioes und beendet oft das Gespraech. Eroeffne nahe der Schmerzgrenze und lege die Herleitung offen (eigene Kalkulation, belegte Sanierungskosten mit Zeitpunkt, Mietspiegel, Vergleichsdaten). Pruefe vorher, ob der Deal die Verhandlung ueberhaupt lohnt (`skills/deal-screener/SKILL.md`).
 
 **Kontrast-Technik fuer Vertragsklauseln:**
 - Liste 15 Forderungen im Kaufvertrag auf
@@ -226,7 +227,8 @@ Arbeite ALLE fuenf Verhandlungsstufen systematisch durch -- die meisten Kaeufer 
 
 **Stufe 5: Leistung**
 - Verkaeufer-Darlehen, Zahlungsziel, Mietgarantie, Rueckabwicklungsklausel
-- Formulierung: "Ich kann den Kaufpreis akzeptieren, wenn wir ein Zahlungsziel von 4 Monaten vereinbaren. Das gibt mir bessere Zinskonditionen bei der Bank, und Sie haben den sicheren Verkauf."
+- Formulierung: "Ich kann den Kaufpreis akzeptieren, wenn Sie fuer die zwei leerstehenden Wohnungen eine Mietgarantie ueber 12 Monate geben. Dann traegt jeder das Risiko, das er selbst einschaetzen kann."
+- Zahlungsziel nur mit echtem Grund verlangen (z. B. Foerderbescheid, Verkauf eines anderen Objekts) und nie mit Zinsen begruenden: Ein spaeterer Zahlungstermin verbessert die Bankkonditionen nicht, Bereitstellungszinsen machen ihn eher teurer, und den Verkaeufer interessiert das Argument nicht.
 
 ### Schritt 6: Zugestaendnis-Tausch vorbereiten
 
@@ -243,7 +245,7 @@ Formulierungsmuster:
 
 | Dein Zugestaendnis | Deine Gegenforderung |
 |--------------------|---------------------|
-| Kaufpreis um 20K erhoeht | 4 Monate Zahlungsziel nach Beurkundung |
+| Kaufpreis um 20K erhoeht | Mietgarantie fuer leerstehende Einheiten (12 Monate) |
 | Uebernahme der vollen Makler-Provision | Kaufpreis um Provisionshoehe reduziert |
 | Schneller Notartermin (innerhalb 4 Wochen) | Kaufpreisreduktion um 15K fuer Flexibilitaet |
 | Verzicht auf Gewaehrleistungsansprueche | Gutachten auf Kosten des Verkaeufers |
@@ -255,24 +257,26 @@ Formulierungsmuster:
 - "Hier koennte der Schrank stehen" oder aehnliche Einrichtungskommentare
 - "Kann man die Wand rausnehmen?" oder aehnliche Umbauplanungen
 - Begeisterung oder Freude zeigen
-- Fotos machen oder Massband auspacken
+- Fotos oder Masse als Einrichtungsplanung kommentieren ("Passt hier unser Sofa?")
 - Mit dem Partner ueber Raumaufteilung diskutieren
 
 **Warum:** Diese Signale verraten dem Verkaeufer, dass du innerlich schon gekauft hast. Ab diesem Moment hat er keinen Anreiz mehr, im Preis nachzugeben.
 
 **Stattdessen:** Sachlich bleiben, Maengel notieren, nachdenklich wirken. Formulierung: "Interessant. Ich muss mir das nochmal in Ruhe durchrechnen."
 
+**Fotografieren und Messen sind Pruefung, kein Kaufsignal.** Pflichtfotos und Flaechenplausibilisierung aus `skills/besichtigung-prep/SKILL.md` immer machen, aber als Zustandsdokumentation ankuendigen: "Ich dokumentiere den Zustand fuer meine Kalkulation."
+
 ### Schritt 8: Dritte-Person-Technik anwenden
 
-Korrigiere Fehleinschaetzungen des Verkaeufers NIEMALS direkt. Nutze die Dritte-Person-Technik:
+Korrigiere Fehleinschaetzungen des Verkaeufers NIEMALS direkt. Nutze die Dritte-Person-Technik -- **aber nur mit echten Dritten und echten Aussagen**: ein vorliegendes Gutachten, ein Handwerkerangebot, die Auskunft des Verwalters, die Bankbewertung, der Mietspiegel der Gemeinde. Frage den Nutzer, welche Quellen tatsaechlich vorliegen. Erfinde nie eine Person oder eine Aussage: Das fliegt bei Rueckfragen auf, zerstoert das Vertrauen und kann bei kaufrelevanten Tatsachen rechtlich angreifbar sein. Gibt es keinen Dritten, formuliere als eigene, belegte Rechnung.
 
 **Falsch:** "Sie irren sich, das Haus ist keine 850.000 EUR wert."
-**Richtig:** "Interessant -- ich dachte auch so. Dann hat mir ein Gutachter erklaert, dass bei Haeusern dieses Baujahrs die Sanierungskosten oft unterschaetzt werden. Er meinte, realistisch muss man mit X EUR rechnen."
+**Richtig (wenn ein Dachdecker-Angebot vorliegt):** "Interessant -- ich dachte auch so. Dann hat mir der Dachdecker, der sich das Dach angesehen hat, ein Angebot ueber X EUR gemacht. Das muss ich einrechnen."
 
 **Falsch:** "Ihre Mieten sind viel zu hoch angesetzt."
-**Richtig:** "Die Mieten sehen auf den ersten Blick gut aus. Ein befreundeter Verwalter hat mir allerdings gezeigt, dass der Mietspiegel in dieser Lage eher bei Y EUR/qm liegt."
+**Richtig:** "Die Mieten sehen auf den ersten Blick gut aus. Der Mietspiegel der Stadt weist fuer diese Lage und Ausstattung allerdings Y EUR/qm aus -- hier ist die Tabelle."
 
-**Warum:** Direkte Korrektur erzeugt Widerstand. Die dritte Person (Gutachter, Verwalter, Bankberater) ist glaubwuerdiger und erzeugt keinen persoenlichen Angriff.
+**Warum:** Direkte Korrektur erzeugt Widerstand. Eine echte dritte Quelle ist glaubwuerdiger und erzeugt keinen persoenlichen Angriff.
 
 ### Schritt 9: Rhetorik-Werkzeugkasten
 
@@ -408,13 +412,13 @@ Kaeufer hat gute Position: gesicherte Finanzierung, Verkaeufer unter Zeitdruck (
 | 2 -- Bonus | Sanierungskostenbeteiligung 30.000 EUR | "Koennen wir 30.000 EUR auf ein Notaranderkonto legen, zweckgebunden fuer die Heizungssanierung?" |
 | 3 -- Dreingabe | Stellplaetze und Kellerabteile inklusive | "Waere es moeglich, die 4 Stellplaetze und die Kellerflaeche ohne Aufpreis in den Kauf einzubeziehen?" |
 | 4 -- Draufgabe | Leerstehende Wohnungen besenrein uebergeben | "Wenn wir uns preislich einigen, waere eine besenreine Uebergabe der leerstehenden Wohnungen moeglich?" |
-| 5 -- Leistung | 4 Monate Zahlungsziel | "Ich kann beim Preis auf 780.000 EUR gehen, wenn wir ein Zahlungsziel von 4 Monaten nach Beurkundung vereinbaren. Das gibt mir bessere Bankkonditionen." |
+| 5 -- Leistung | Mietgarantie 12 Monate fuer 2 leere Einheiten | "Ich kann beim Preis auf 780.000 EUR gehen, wenn Sie fuer die zwei leerstehenden Wohnungen eine Mietgarantie ueber 12 Monate geben." |
 
 ## Zugestaendnis-Tausch
 
 | Dein Zugestaendnis | Deine Gegenforderung | Formulierung |
 |--------------------|----------------------|--------------|
-| Kaufpreis von 735K auf 780K erhoeht | 4 Monate Zahlungsziel nach Beurkundung | "OK, ich sehe ein, 735.000 war ambitioniert. Bleiben wir bei 780.000. Aber dann braeuchte ich 4 Monate Zahlungsziel fuer bessere Zinskonditionen." |
+| Kaufpreis von 735K auf 780K erhoeht | Mietgarantie 12 Monate fuer 2 leere Einheiten | "OK, ich sehe ein, 735.000 war ambitioniert. Bleiben wir bei 780.000. Aber dann brauche ich fuer die zwei leeren Wohnungen eine Mietgarantie ueber 12 Monate." |
 | Verzicht auf Sanierungskostenbeteiligung | Stellplaetze und Inventar inklusive | "Ich verzichte auf die separate Sanierungsgutschrift. Dafuer wuerde ich die Stellplaetze und das vorhandene Inventar gerne mit uebernehmen." |
 
 ## Dos and Don'ts
@@ -426,7 +430,7 @@ Kaeufer hat gute Position: gesicherte Finanzierung, Verkaeufer unter Zeitdruck (
 - Alle Vereinbarungen sofort schriftlich festhalten
 - Maengel waehrend Besichtigung dokumentieren (Fotos, Notizen)
 - Entscheidungsfaehigkeit signalisieren: "Ich kann heute entscheiden"
-- Dritte-Person-Technik bei Korrekturen nutzen
+- Dritte-Person-Technik bei Korrekturen nutzen -- nur mit echten Quellen (Gutachten, Angebot, Mietspiegel)
 
 **Don'ts:**
 - NIEMALS Begeisterung zeigen vor Preiseinigung
@@ -444,7 +448,7 @@ Kaeufer hat gute Position: gesicherte Finanzierung, Verkaeufer unter Zeitdruck (
 
 Vor Abgabe der Verhandlungsstrategie pruefe:
 
-1. **Konsistenz Eroeffnungsangebot**: Liegt das Eroeffnungsangebot UNTER der Schmerzgrenze? Es muss Verhandlungsmasse nach oben geben.
+1. **Konsistenz Eroeffnungsangebot**: Liegt das Eroeffnungsangebot UNTER der Schmerzgrenze? Es muss Verhandlungsmasse nach oben geben. Faustformel nur angewandt, wenn der Abstand Asking-Schmerzgrenze hoechstens ca. 10% betraegt; sonst begruendete Eroeffnung nahe der Schmerzgrenze.
 2. **Dreischritt-Vollstaendigkeit**: Sind fuer jede Verhandlungssituation alle drei Schritte (Verstehen, Bestaetigen, Argumentieren) ausformuliert?
 3. **Einwand-Abdeckung**: Sind alle wahrscheinlichen Einwaende des Verkaeufers mit konkreten Entkraeftungen versehen?
 4. **Fuenf-Stufen-Durchgang**: Wurden alle fuenf Verhandlungsstufen mit Formulierungen ausgearbeitet?
@@ -455,6 +459,7 @@ Vor Abgabe der Verhandlungsstrategie pruefe:
 9. **Motiv-Hebel**: Wurden Nicht-Preis-Leistungen (Entruempelung, flexible Uebergabe, Mieterschutz, Diskretion, Tempo) als Verhandlungswaehrung geprueft?
 10. **LOI-Faehigkeit**: Ist das Angebot als weiterleitbarer LOI mit Begruendung, Bedingungen und Frist strukturierbar -- und liegt eine Besichtigungs- und Kalkulationsgrundlage vor?
 11. **Nachverhandlungs-Disziplin**: Ist klar markiert, dass Nachverhandlung nur mit neuen belastbaren Fakten erfolgt?
+12. **Echte Quellen**: Stammt jede zitierte Drittaussage aus einer vorliegenden Quelle? Keine erfundenen Gutachter, Verwalter oder Banker. Kein Zinsargument fuer ein Zahlungsziel.
 
 ---
 
@@ -527,4 +532,4 @@ Vor Abgabe der Verhandlungsstrategie pruefe:
 - `skills/makler-coach/SKILL.md` -- Maklerbeziehung als Verhandlungsvorteil nutzen (Tuersteher-Logik, Provisionsschutz)
 - `skills/kaufvertrag-pruefung/SKILL.md` -- Abgleich Kaufvertragsentwurf gegen Verhandlungsergebnis vor dem Notartermin
 - `skills/bankgespraech-coach/SKILL.md` -- Finanzierungszusage als Verhandlungsargument vorbereiten
-- `skills/finanzierung/finanzierungsrechner.md` -- Detaillierte Finanzierungsberechnung fuer Zahlungsziel-Argumente
+- `skills/cashflow-modell/SKILL.md` -- Finanzierungs- und Cashflow-Rechnung als Grundlage fuer Preis- und Konditionsargumente
