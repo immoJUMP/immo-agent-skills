@@ -989,6 +989,7 @@ def freigabe_noetig(pfade: list) -> str:
     return "fach"
 
 
+BEKANNTE_WERKZEUGE = {"mietjump", "gmail", "veroeffentlichen", "vorschlag", "fallbuch", "browser"}
 PFAD_OK = re.compile(r"^[A-Za-z0-9ÄÖÜäöüß_][A-Za-z0-9ÄÖÜäöüß_. ()+,-]*$")
 
 
@@ -1086,6 +1087,12 @@ def vorschlag_pruefen(slug: str, d: dict, ordner: Path) -> tuple:
             return None, f"neuer Agent {n}: agent.yaml ist kein gueltiges YAML"
         if str(ay.get("slug")) != n or not re.fullmatch(r"[a-z][a-z0-9-]{1,30}", n):
             return None, f"neuer Agent {n}: slug in agent.yaml muss genau '{n}' sein (Kleinbuchstaben, Ziffern, Bindestrich)"
+        unbekannt = [w for w in (ay.get("werkzeuge") or []) if w not in BEKANNTE_WERKZEUGE]
+        if unbekannt:
+            return None, f"neuer Agent {n}: unbekannte Werkzeuge {', '.join(map(str, unbekannt))}"
+        for p_, inhalt in dateien.items():
+            if p_.startswith(f"agenten/{n}/") and b"{{" in inhalt:
+                return None, f"neuer Agent {n}: {p_} enthaelt noch einen Platzhalter {{{{...}}}}"
     meta["_pfade"] = pfade
     meta["_loeschen"] = loeschen
     meta["_dateien"] = dateien
@@ -1161,6 +1168,8 @@ def _vorschlag_verarbeiten(slug: str, d: dict, ordner: Path, k: dict) -> dict:
         ziel.write_bytes(inhalt)
     for p in meta["_loeschen"]:
         (WISSEN / p).unlink(missing_ok=True)
+    if meta.get("art") == "agent-einstellen":
+        _codeowners_ergaenzen(meta, k)
     git("add", "-A")
     if not git("status", "--porcelain").stdout.strip():
         git("checkout", "-q", "main")
@@ -1183,6 +1192,31 @@ def _vorschlag_verarbeiten(slug: str, d: dict, ordner: Path, k: dict) -> dict:
     git("checkout", "-q", "main")
     logbuch(f"Vorschlag {slug}/{ordner.name}: {erg['status']}", [f"{k2}: {v2}" for k2, v2 in erg.items()], "vorschlag")
     return erg
+
+
+def _codeowners_ergaenzen(meta: dict, k: dict) -> None:
+    """Prueferzuordnung fuer einen neuen Agenten (nur Hinweis fuer GitHub; massgeblich ist die Pruefung im Doktor)."""
+    co = WISSEN / ".github" / "CODEOWNERS"
+    if not co.exists():
+        return
+    text = co.read_text(encoding="utf-8")
+    eig = "@" + k.get("EIGENTUEMER_GITHUB", "eigentuemer")
+    for p in meta["_pfade"]:
+        if p.startswith("agenten/") and p.endswith("/agent.yaml") and p.count("/") == 2:
+            n = p.split("/")[1]
+            if f"/agenten/{n}/" in text:
+                continue
+            try:
+                ay = yaml.safe_load(meta["_dateien"][p].decode("utf-8", "replace")) or {}
+            except yaml.YAMLError:
+                ay = {}
+            fv = (ay.get("fachverantwortlich") or {}).get("github")
+            fach = f"@{fv} {eig}" if fv and f"@{fv}" != eig else eig
+            text += (f"\n# Agent {n} (vom Doktor beim Einstellen ergaenzt)\n"
+                     f"/agenten/{n}/wissen/ {fach}\n/agenten/{n}/beispiele/ {fach}\n/agenten/{n}/testfragen.yaml {fach}\n"
+                     f"/agenten/{n}/agent.yaml {eig}\n/agenten/{n}/rolle.md {eig}\n/agenten/{n}/regeln.md {eig}\n"
+                     f"/agenten/{n}/rechte.yaml {eig}\n/agenten/{n}/skills/ {eig}\n")
+    co.write_text(text, encoding="utf-8")
 
 
 def _lokale_pr_nummer(branch: str) -> int:

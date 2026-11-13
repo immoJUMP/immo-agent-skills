@@ -125,6 +125,12 @@ class RechteTest(unittest.TestCase):
         falsch = dict(ok, **{"agenten/neu/agent.yaml": "slug: anders\n"})
         o = self.vorschlag("kurt", falsch, art="agent-einstellen")
         self.assertIn("slug", self.d.vorschlag_pruefen("kurt", self.kurt, o)[1])
+        werkzeug = dict(ok, **{"agenten/neu/agent.yaml": "slug: neu\nwerkzeuge: [vorschlag, docker]\n"})
+        o = self.vorschlag("kurt", werkzeug, art="agent-einstellen")
+        self.assertIn("unbekannte Werkzeuge", self.d.vorschlag_pruefen("kurt", self.kurt, o)[1])
+        platzhalter = dict(ok, **{"agenten/neu/rolle.md": "Du bist {{NAME}}"})
+        o = self.vorschlag("kurt", platzhalter, art="agent-einstellen")
+        self.assertIn("Platzhalter", self.d.vorschlag_pruefen("kurt", self.kurt, o)[1])
 
     # --- Dateizugriffe
     def test_sicher_schreiben_folgt_keinem_symlink(self):
