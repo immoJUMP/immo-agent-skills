@@ -59,7 +59,12 @@ def _url(basis, teile, verzeichnis=False):
 
 
 def _anfrage(methode, url, daten=None, kopf=None):
-    anfrage = urllib.request.Request(url, data=daten, method=methode, headers=kopf or {})
+    kopf = dict(kopf or {})
+    zugang = os.environ.get("WEBDAV_ZUGANG", "")  # "<agent>:<passwort>", nur fuer den eigenen Ordner gueltig
+    if zugang:
+        import base64
+        kopf["Authorization"] = "Basic " + base64.b64encode(zugang.encode()).decode()
+    anfrage = urllib.request.Request(url, data=daten, method=methode, headers=kopf)
     try:
         with urllib.request.urlopen(anfrage, timeout=ZEITLIMIT) as r:
             return r.status

@@ -205,13 +205,39 @@ cmd_hochladen() { # Installer-Dateien auf den Server kopieren (ohne Geheimnisse)
   info "Installer nach $ziel:/opt/agenten/installer kopiert, Befehl 'doktor' installiert."
 }
 
-cmd_mietjump_hochladen() { # MietJUMP-Quelle (git-Stand) auf den Server, ohne .git und ohne Daten
-  local ziel="${1:?root@host}" quelle="${2:-$HOME/stage2/mietverwaltung-oss}" ref="${3:-HEAD}" key
+cmd_mietjump_hochladen() { # MietJUMP-Stand auf den Server, ohne .git und ohne Daten
+  # Quelle: angegebener Checkout, sonst eigener Klon unter ~/.agenten-doktor/mietjump (privates Repo,
+  # Lesezugriff als Outside Collaborator noetig; gh muss angemeldet sein).
+  local ziel="${1:?root@host}" quelle="${2:-}" ref="${3:-}" key
   key="$(ssh_schluessel)"
+  if [ -z "$quelle" ]; then
+    quelle="$HOME/.agenten-doktor/mietjump"
+    if [ -d "$quelle/.git" ]; then
+      git -C "$quelle" fetch -q origin && git -C "$quelle" checkout -q "${MIETJUMP_REF:-main}" && git -C "$quelle" pull -q --ff-only || true
+    else
+      mkdir -p "$(dirname "$quelle")"
+      gh repo clone "${MIETJUMP_REPO:-immodigit/mietjump}" "$quelle" -- -q \
+        || fehler "MietJUMP-Repo nicht klonbar. Hast du Lesezugriff auf ${MIETJUMP_REPO:-immodigit/mietjump}? (Christian fragen)"
+      [ -n "${MIETJUMP_REF:-}" ] && git -C "$quelle" checkout -q "$MIETJUMP_REF"
+    fi
+  fi
+  ref="${ref:-HEAD}"
   [ -d "$quelle/.git" ] || [ -f "$quelle/.git" ] || fehler "$quelle ist kein git-Checkout von MietJUMP."
+  git -C "$quelle" cat-file -e "$ref:Dockerfile" 2>/dev/null \
+    || fehler "Dieser MietJUMP-Stand hat noch keinen Serverbetrieb (Dockerfile fehlt). Branch mit Selbstbetrieb waehlen (MIETJUMP_REF)."
   git -C "$quelle" archive --format=tar "$ref" \
     | ssh -i "$key" "${SSH_OPTS[@]}" "$ziel" 'rm -rf /opt/agenten/mietjump-quelle && mkdir -p /opt/agenten/mietjump-quelle && tar -x -C /opt/agenten/mietjump-quelle'
   info "MietJUMP ($(git -C "$quelle" rev-parse --short "$ref") aus $quelle) nach $ziel:/opt/agenten/mietjump-quelle kopiert."
+}
+
+cmd_datei_senden() { # Datei (z.B. Kontoauszug CAMT/CSV) in den Arbeitsordner eines Agenten legen
+  local ziel="${1:?root@host}" datei="${2:?datei}" agent="${3:-vera}" unterordner="${4:-bank}" key name
+  key="$(ssh_schluessel)"
+  [ -f "$datei" ] || fehler "$datei nicht gefunden."
+  name="$(basename "$datei" | tr -c 'A-Za-z0-9._-' '_')"
+  [[ "$agent" =~ ^[a-z][a-z0-9-]{1,30}$ && "$unterordner" =~ ^[a-z0-9_-]{1,30}$ ]] || fehler "ungueltiger Agent oder Ordner"
+  ssh -i "$key" "${SSH_OPTS[@]}" "$ziel" "d=/opt/agenten/daten/agenten/$agent/arbeit/$unterordner; [ ! -L \$d ] || exit 3; mkdir -p \$d && cat > \$d/$name && chown -R 10000:10000 \$d" < "$datei"
+  info "$name liegt bei $agent unter arbeit/$unterordner/. Sag dem Agenten Bescheid (oder die Routine holt es ab)."
 }
 
 cmd_konfig_setzen() { # Zeilen KEY=WERT von stdin in /opt/agenten/konfig.env uebernehmen (nicht geheim)
@@ -267,6 +293,18 @@ cmd_geheimnis_senden() {
   info "$schluessel auf dem Server gesetzt."
 }
 
+cmd_hetzner_schutz() { # Loeschschutz (kostenlos) und optional Hetzner-Backups (+20 % Serverpreis)
+  local name="${1:?Servername}" backups="${2:-}" srv
+  srv="$(hz GET "/servers?name=$name" | jq -r '.servers[0].id // empty')"
+  [ -n "$srv" ] || fehler "Server $name nicht gefunden."
+  hz_pruefen "$(hz POST "/servers/$srv/actions/change_protection" '{"delete":true,"rebuild":true}')" >/dev/null
+  info "Loesch- und Neuaufbau-Schutz fuer $name aktiv."
+  if [ "$backups" = "--backups" ]; then
+    hz_pruefen "$(hz POST "/servers/$srv/actions/enable_backup" '{}')" >/dev/null
+    info "Hetzner-Backups aktiv (7 taegliche Abbilder, +20 % Serverpreis)."
+  fi
+}
+
 usage() {
   cat <<EOF
 doktor-lokal (Projekt: $PROJEKT, setzen mit DOKTOR_PROJEKT=...)
@@ -276,11 +314,14 @@ doktor-lokal (Projekt: $PROJEKT, setzen mit DOKTOR_PROJEKT=...)
   token-pruefen <name...>       zeigt nur vorhanden/fehlt
   hetzner-anlegen <name> [typ] [ort]   VM mit Firewall und Grundausstattung
   hetzner-status                alle vom Doktor verwalteten Server
+  hetzner-schutz <name> [--backups]   Loeschschutz an, optional Hetzner-Backups (+20 %)
   ssh-schliessen <name>         Port 22 von aussen zu (nach Tailscale-Beitritt)
   ssh-oeffnen <name>            Notzugang fuer die eigene IP
   hochladen <root@host>         Installer-Dateien und Wissens-Vorlage auf den Server
   ssh <root@host> <befehl>      Befehl auf dem Server (z.B. "doktor check")
   mietjump-hochladen <root@host> [quelle] [ref]   MietJUMP-Stand auf den Server
+                                (ohne quelle: Klon von immodigit/mietjump unter ~/.agenten-doktor/mietjump)
+  datei-senden <root@host> <datei> [agent] [ordner]  z.B. Kontoauszug an Vera (arbeit/bank/)
   konfig-setzen <root@host>     KEY=WERT-Zeilen von stdin in konfig.env (nicht geheim)
   tailscale-beitritt <root@host> [name]   Server ins Tailnet, Ausgang zu anderen Geraeten gesperrt
   codex-anmelden <root@host> <agent>      ChatGPT/Codex-Anmeldung: Link und Code fuer Chrome
@@ -298,10 +339,12 @@ case "$befehl" in
   hetzner-anlegen) cmd_hetzner_anlegen "$@" ;;
   hetzner-status) cmd_hetzner_status ;;
   ssh-schliessen) cmd_ssh_schliessen "$@" ;;
+  hetzner-schutz) cmd_hetzner_schutz "$@" ;;
   ssh-oeffnen) cmd_ssh_oeffnen "$@" ;;
   hochladen) cmd_hochladen "$@" ;;
   ssh) cmd_ssh "$@" ;;
   mietjump-hochladen) cmd_mietjump_hochladen "$@" ;;
+  datei-senden) cmd_datei_senden "$@" ;;
   konfig-setzen) cmd_konfig_setzen "$@" ;;
   tailscale-beitritt) cmd_tailscale_beitritt "$@" ;;
   codex-anmelden) cmd_codex_anmelden "$@" ;;

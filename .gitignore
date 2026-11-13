@@ -18,3 +18,7 @@ credentials.*
 # Office-Sperr-/Temp-Dateien
 ~$*
 .~lock.*#
+
+# Python
+__pycache__/
+*.pyc

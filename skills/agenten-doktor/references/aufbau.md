@@ -80,14 +80,16 @@ gibt `fertig` aus. Backups sind in der Console aktiv.
 Gebraucht werden vier Namen auf `<ip>`: `<DOMAIN>` (Startseite), `chat.<DOMAIN>`,
 `dash.<DOMAIN>`, `miet.<DOMAIN>`.
 
-- Subdomain unter `cl.immodigit.de`: `doktor-lokal.sh dns-eintrag <name> <ip>`.
+- Subdomain unter `cl.immodigit.de`: Die Zone gehört Christian. Schick ihm Name und `<ip>`,
+  er legt `<name>.cl.immodigit.de` und `*.<name>.cl.immodigit.de` als A-Einträge an. Wichtig:
+  `*.cl.immodigit.de` zeigt sonst auf einen anderen Server, dann scheitern die Zertifikate.
 - Eigene Domain: nach Ja beim DNS-Anbieter des Nutzers in Chrome A-Einträge für `<DOMAIN>`
   und `*.<DOMAIN>` (oder einzeln `chat`, `dash`, `miet`) auf `<ip>`, TTL 300. Jeder Anbieter
   sieht anders aus: Screenshot, nicht raten. Kommst du nicht weiter, schreibst du dem
   Nutzer eine Anleitung mit genau diesen vier Einträgen.
 - `ACME_EMAIL` für Zertifikatswarnungen: eine Adresse des Nutzers.
 
-**Prüfpunkt:** `dig +short <DOMAIN>` und `dig +short chat.<DOMAIN>` zeigen `<ip>`.
+**Prüfpunkt:** `doktor-lokal.sh dns-pruefen <DOMAIN> <ip>` und `doktor-lokal.sh dns-pruefen chat.<DOMAIN> <ip>` melden „zeigt auf“.
 Bei eigener Domain kann das bis zum Ablauf des alten Eintrags dauern.
 
 ## 6. Tailscale
@@ -208,11 +210,12 @@ eigenen Terminal** aus. Du liest diese Ausgabe nicht. Er kopiert den Token, du r
 
 ## 13. Hochladen, Einstellungen, Geheimnisse
 
-1. `doktor-lokal.sh hochladen root@<host>` und `doktor-lokal.sh mietjump-hochladen root@<host>`.
+1. `doktor-lokal.sh hochladen root@<host>` und `doktor-lokal.sh mietjump-hochladen root@<host> <Pfad zum MietJUMP-Checkout>`
+   (privates Repo `immodigit/mietjump`, Lesezugriff vorher bei Christian anfragen, Checkout per `gh repo clone`).
 2. `konfig.env` lokal unter `~/.agenten-doktor/<projekt>/konfig.env` nach SCHNITTSTELLEN.md
    Abschnitt 2 schreiben. Sie enthält nichts Geheimes. `HERMES_IMAGE` übernimmst du fest aus
    dem Installer, nie `latest`. Dann:
-   `scp -i ~/.ssh/agenten-doktor_ed25519 ~/.agenten-doktor/<projekt>/konfig.env root@<host>:/opt/agenten/konfig.env`
+   `doktor-lokal.sh konfig-setzen root@<host> < ~/.agenten-doktor/<projekt>/konfig.env`
 3. Geheimnisse einzeln senden, je nach Wahl:
 
 ```bash
@@ -227,7 +230,9 @@ doktor-lokal.sh geheimnis-senden root@<host> openrouter OPENROUTER_API_KEY
 doktor-lokal.sh geheimnis-senden root@<host> claude-oauth CLAUDE_CODE_OAUTH_TOKEN
 ```
 
-Die übrigen Geheimnisse (Rocket.Chat, MongoDB, Dashboard, MietJUMP-Tokens) erzeugt der Server selbst.
+Die übrigen Geheimnisse (Rocket.Chat, MongoDB, Dashboard, MietJUMP-Tokens, Schlüssel für die
+Postfach-Wache) erzeugt der Server selbst. Den Google-Token bekommt nur die Postfach-Wache,
+nie ein Agenten-Container.
 
 **Prüfpunkt:** `doktor-lokal.sh ssh root@<host> 'doktor status'` läuft. `geheim.env` siehst du nicht an.
 
@@ -235,11 +240,9 @@ Die übrigen Geheimnisse (Rocket.Chat, MongoDB, Dashboard, MietJUMP-Tokens) erze
 
 1. `doktor-lokal.sh ssh root@<host> 'doktor installieren'` im Hintergrund starten und die
    Ausgabe verfolgen. Der Befehl ist idempotent: Bei Abbruch einfach erneut starten.
-2. Nur bei `codex`: je Agent `doktor-lokal.sh codex-anmelden <slug>` (für `kurt` und
-   `vera`) im Hintergrund starten. Die Ausgabe zeigt Adresse und Gerätecode: Seite in
-   Chrome öffnen, Code eintragen. Anmelden und Zulassen macht der Nutzer. Fehlt der Befehl
-   in deiner Version von `doktor-lokal.sh`, den Weg im Container mit `hermes --help`
-   nachsehen, nicht raten.
+2. Nur bei `codex`: je Agent `doktor-lokal.sh codex-anmelden root@<host> <agent>` (für
+   `kurt` und `vera`). Die Ausgabe zeigt Adresse und Gerätecode: Seite in Chrome öffnen,
+   Code eintragen. Anmelden und Zulassen macht der Nutzer. Danach `doktor modell-test <agent>`.
    Nie eine Anmeldedatei von einem Container in den anderen kopieren: Die Anmeldung
    erneuert sich laufend, zwei Container mit derselben Datei können sich gegenseitig
    abmelden (Fehler 401).

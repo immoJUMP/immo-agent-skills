@@ -62,11 +62,92 @@ def info(text: str) -> None:
     print(f"• {text}", flush=True)
 
 
+AGENT_BASIS = DATEN / "agenten"
+MAX_DATEI = 2 * 1024 * 1024
+
+
+def _unter_agent(p: Path) -> bool:
+    try:
+        p.relative_to(AGENT_BASIS)
+        return True
+    except ValueError:
+        return False
+
+
+def symlink_frei(p: Path) -> bool:
+    """Weder p noch ein Elternordner bis DATEN/agenten ist ein Symlink. Agenten koennen in ihren
+    beschreibbaren Ordnern Symlinks anlegen; der Doktor laeuft als root und darf ihnen nie folgen."""
+    q = p
+    while _unter_agent(q) and q != AGENT_BASIS:
+        if q.is_symlink():
+            return False
+        q = q.parent
+    return True
+
+
+def sicher_lesen(p: Path, max_bytes: int = MAX_DATEI) -> bytes:
+    """Liest nur regulaere Dateien ohne Symlink im Pfad, nie FIFOs oder Geraete, hoechstens max_bytes."""
+    if not symlink_frei(p):
+        raise Fehler(f"Symlink in {p} (Manipulationsversuch?), wird nicht gelesen.")
+    fd = os.open(p, os.O_RDONLY | os.O_NOFOLLOW | os.O_NONBLOCK)
+    try:
+        st = os.fstat(fd)
+        import stat as _stat
+        if not _stat.S_ISREG(st.st_mode):
+            raise Fehler(f"{p} ist keine normale Datei.")
+        if st.st_size > max_bytes:
+            raise Fehler(f"{p} ist zu gross ({st.st_size} Bytes).")
+        return os.read(fd, max_bytes + 1)[:max_bytes] if st.st_size else b""
+    finally:
+        os.close(fd)
+
+
+def sicher_schreiben(p: Path, daten, modus: int = 0o644) -> None:
+    """Schreibt atomar ueber eine neue Datei (O_EXCL) und os.replace. Ein Symlink am Ziel wird
+    ersetzt statt verfolgt; ein Symlink im Elternpfad bricht ab."""
+    if isinstance(daten, str):
+        daten = daten.encode("utf-8")
+    if not symlink_frei(p.parent):
+        raise Fehler(f"Symlink im Pfad {p.parent} (Manipulationsversuch?), nichts geschrieben.")
+    p.parent.mkdir(parents=True, exist_ok=True)
+    import tempfile
+    fd, tmp = tempfile.mkstemp(dir=str(p.parent), prefix=".doktor-")
+    try:
+        with os.fdopen(fd, "wb") as f:
+            f.write(daten)
+        os.chmod(tmp, modus)
+        os.replace(tmp, p)
+    except BaseException:
+        Path(tmp).unlink(missing_ok=True)
+        raise
+
+
+def besitz_setzen(pfad: Path, uid: int = HERMES_UID, gid: int | None = None) -> None:
+    """chown -R ohne je einem Symlink zu folgen (lchown auf jeden Eintrag)."""
+    gid = uid if gid is None else gid
+    if pfad.is_symlink() or not pfad.exists():
+        return
+    os.lchown(pfad, uid, gid)
+    for wurzel, ordner, dateien in os.walk(pfad, followlinks=False):
+        for n in ordner + dateien:
+            try:
+                os.lchown(os.path.join(wurzel, n), uid, gid)
+            except FileNotFoundError:
+                pass
+
+
 def lies_env(pfad: Path) -> dict:
     werte: dict = {}
-    if not pfad.exists():
+    if not pfad.exists() and not pfad.is_symlink():
         return werte
-    for zeile in pfad.read_text(encoding="utf-8").splitlines():
+    if _unter_agent(pfad):
+        try:
+            text = sicher_lesen(pfad).decode("utf-8", "replace")
+        except Fehler:
+            return werte
+    else:
+        text = pfad.read_text(encoding="utf-8")
+    for zeile in text.splitlines():
         zeile = zeile.strip()
         if not zeile or zeile.startswith("#") or "=" not in zeile:
             continue
@@ -76,19 +157,8 @@ def lies_env(pfad: Path) -> dict:
 
 
 def schreibe_env(pfad: Path, werte: dict, kopf: str = "") -> None:
-    pfad.parent.mkdir(parents=True, exist_ok=True)
-    tmp = pfad.with_suffix(".tmp")
-    alt = os.umask(0o077)
-    try:
-        with open(tmp, "w", encoding="utf-8") as f:
-            if kopf:
-                f.write(f"# {kopf}\n")
-            for k in sorted(werte):
-                f.write(f"{k}={werte[k]}\n")
-        os.chmod(tmp, 0o600)
-        os.replace(tmp, pfad)
-    finally:
-        os.umask(alt)
+    text = (f"# {kopf}\n" if kopf else "") + "".join(f"{k}={werte[k]}\n" for k in sorted(werte))
+    sicher_schreiben(pfad, text, 0o600)
 
 
 def konfig() -> dict:
@@ -257,6 +327,8 @@ class RocketChat:
             # ACHTUNG: Ein Passwortwechsel loescht in Rocket.Chat alle Login- und Zugangstoken
             # dieses Kontos. Deshalb hier nur Name und Rollen angleichen, nie das Passwort.
             self.api("POST", "users.update", {"userId": u["_id"], "data": {"roles": rollen, "name": anzeigename}})
+            if not u.get("active", True):  # z. B. frueher abgebauter und neu eingestellter Agent
+                self.api("POST", "users.setActiveStatus", {"userId": u["_id"], "activeStatus": True})
             return u["_id"]
         s, d = self.api("POST", "users.create", {
             "username": name, "name": anzeigename, "password": passwort, "roles": rollen,
@@ -401,7 +473,7 @@ def hermes_config(slug: str, d: dict, k: dict, rc: dict) -> dict:
         "agent": {"reasoning_effort": "medium", "run_budget_seconds": 1800, "disabled_toolsets": gesperrt},
         "approvals": {"mode": "off"},
         "terminal": {"timeout": 600, "cwd": "/opt/data/arbeit",
-                     "env_passthrough": ["AGENT_SLUG", "DASH_BASIS_URL", "POSTFACH_TOKEN", "GMAIL_API_BASIS", "TZ"]},
+                     "env_passthrough": ["AGENT_SLUG", "DASH_BASIS_URL", "POSTFACH_TOKEN", "GMAIL_API_BASIS", "WEBDAV_ZUGANG", "TZ"]},
         "memory": {"memory_char_limit": 4000, "user_char_limit": 2000},
         "skills": {"disabled": ["google-workspace", "notion"]},
         "curator": {"prune_builtins": False},
@@ -476,7 +548,9 @@ def ordner_angleichen(ziel: Path, dateien: dict) -> int:
 
 
 def ausschnitt_rendern(slug: str, d: dict) -> int:
-    """Kopiert genau die Dateien, die der Agent laut rechte.yaml lesen darf."""
+    """Kopiert genau die Dateien, die der Agent laut rechte.yaml lesen darf. Nur vom Stand main."""
+    if (WISSEN / ".git").exists() and git("rev-parse", "--abbrev-ref", "HEAD", check=False).stdout.strip() != "main":
+        raise Fehler("Wissens-Repo steht nicht auf main, Ausschnitt wird nicht gerendert.")
     ziel = agent_pfade(slug)["ausschnitt"]
     lesen = list(d["rechte"]["lesen"]) + ["AGENTS.md", "llms.txt", "INDEX.md", "README.md"]
     auswahl = {}
@@ -489,7 +563,7 @@ def ausschnitt_rendern(slug: str, d: dict) -> int:
         if passt(rel, lesen):
             auswahl[rel] = p
     n = ordner_angleichen(ziel, auswahl)
-    run(["chown", "-R", f"{HERMES_UID}:{HERMES_UID}", str(ziel)])
+    besitz_setzen(ziel)
     return n
 
 
@@ -502,6 +576,66 @@ def plugin_bereitstellen() -> Path:
         run(["git", "clone", "--depth", "1", "--branch", PLUGIN_REF, PLUGIN_REPO, str(cache)])
         shutil.rmtree(cache / ".git", ignore_errors=True)
     return cache
+
+
+def _ssha(passwort: str) -> str:
+    import base64
+    salz = secrets.token_bytes(8)
+    return "{SSHA}" + base64.b64encode(hashlib.sha1(passwort.encode() + salz).digest() + salz).decode()
+
+
+def _ssha_passt(gespeichert: str, passwort: str) -> bool:
+    import base64
+    if not gespeichert.startswith("{SSHA}"):
+        return False
+    roh = base64.b64decode(gespeichert[6:])
+    return hmac.compare_digest(roh[:20], hashlib.sha1(passwort.encode() + roh[20:]).digest())
+
+
+def webdav_passwort(slug: str) -> str:
+    key = f"WEBDAV_PASS_{slug.upper().replace('-', '_')}"
+    if not geheim().get(key):
+        geheim_setzen(key, zufall(24))
+    return geheim()[key]
+
+
+def dateiablage_konfigurieren(defs: dict) -> bool:
+    """Schreibzugriff per WebDAV nur mit eigenem Zugang und nur in den eigenen Ordner /<agent>/.
+    Lesen (Port 8080) bleibt fuer alle, dahinter liegt Caddy mit Passwort. True bei Aenderung."""
+    ziel = DATEN / "dateien-konfig"
+    (ziel / "zugaenge").mkdir(parents=True, exist_ok=True)
+    orte = []
+    for slug in defs:
+        pw = webdav_passwort(slug)
+        datei = ziel / "zugaenge" / f"{slug}.htpasswd"
+        alt = datei.read_text() if datei.exists() else ""
+        if not alt.startswith(f"{slug}:") or not _ssha_passt(alt.split(":", 1)[1].strip(), pw):
+            sicher_schreiben(datei, f"{slug}:{_ssha(pw)}\n", 0o644)
+        orte.append(
+            f"    location /{slug}/ {{\n"
+            f"      auth_basic \"Agent {slug}\";\n"
+            f"      auth_basic_user_file /etc/nginx/agenten/zugaenge/{slug}.htpasswd;\n"
+            "      limit_except GET HEAD PUT DELETE MKCOL { deny all; }\n"
+            "    }\n")
+    conf = (
+        "# Vom Doktor erzeugt. Lesen fuer alle (Port 8080, hinter Caddy mit Passwort),\n"
+        "# Schreiben nur je Agent in den eigenen Ordner (Port 8081, nur im Docker-Netz agenten).\n"
+        "# Kein COPY/MOVE: damit koennte ein Agent ueber den Destination-Kopf in fremde Ordner schreiben.\n"
+        "worker_processes 1;\nevents { worker_connections 256; }\nhttp {\n"
+        "  include /etc/nginx/mime.types;\n  default_type application/octet-stream;\n  charset utf-8;\n"
+        "  sendfile on;\n  server_tokens off;\n  access_log /dev/stdout;\n"
+        "  server {\n    listen 8080;\n    root /srv/dateien;\n    autoindex on;\n    autoindex_localtime on;\n"
+        "    location / { limit_except GET HEAD { deny all; } try_files $uri $uri/ =404; }\n"
+        "    location = /gesund { return 200 \"ok\\n\"; }\n  }\n"
+        "  server {\n    listen 8081;\n    root /srv/dateien;\n    client_max_body_size 512m;\n"
+        "    client_body_temp_path /tmp/nginx-dav;\n    dav_methods PUT DELETE MKCOL;\n    create_full_put_path on;\n"
+        "    dav_access user:rw group:r all:r;\n    location / { return 403; }\n"
+        + "".join(orte) + "  }\n}\n")
+    alt = (ziel / "nginx.conf").read_text() if (ziel / "nginx.conf").exists() else ""
+    if alt != conf:
+        sicher_schreiben(ziel / "nginx.conf", conf, 0o644)
+        return True
+    return False
 
 
 def postfach_schluessel(slug: str) -> str:
@@ -532,10 +666,11 @@ def agent_einrichten(slug: str, d: dict, k: dict, rc_info: dict) -> bool:
         p[key].mkdir(parents=True, exist_ok=True)
     (p["vorschlaege"] / "_freigaben").mkdir(exist_ok=True)
     h = p["hermes"]
-    vorher = _fingerabdruck(h, ["config.yaml", "SOUL.md", ".env"]) + _ordner_fingerabdruck(p["skills"])
+    vorher = _fingerabdruck(h, ["config.yaml", "SOUL.md", ".env"]) + _ordner_fingerabdruck(p["skills"]) + \
+        _fingerabdruck(DATEN / "werkzeug-env", [f"{slug}.env"])
 
-    (h / "config.yaml").write_text(yaml.safe_dump(hermes_config(slug, d, k, rc_info), allow_unicode=True, sort_keys=False))
-    (h / "SOUL.md").write_text(soul(slug, d, k), encoding="utf-8")
+    sicher_schreiben(h / "config.yaml", yaml.safe_dump(hermes_config(slug, d, k, rc_info), allow_unicode=True, sort_keys=False), 0o640)
+    sicher_schreiben(h / "SOUL.md", soul(slug, d, k))
     g = geheim()
     env = lies_env(h / ".env")  # lokale Ergaenzungen bleiben erhalten
     env = {kk: vv for kk, vv in env.items() if not kk.startswith(("ROCKETCHAT_", "TELEGRAM_", "GMAIL_"))}
@@ -560,11 +695,15 @@ def agent_einrichten(slug: str, d: dict, k: dict, rc_info: dict) -> bool:
         if k.get("EIGENTUEMER_TELEGRAM_ID"):
             env["TELEGRAM_ALLOWED_USERS"] = k["EIGENTUEMER_TELEGRAM_ID"]
             env["TELEGRAM_HOME_CHANNEL"] = k["EIGENTUEMER_TELEGRAM_ID"]
-    env = {kk: vv for kk, vv in env.items() if not kk.startswith(("POSTFACH_", "GMAIL_"))}
+    env = {kk: vv for kk, vv in env.items() if not kk.startswith(("POSTFACH_", "GMAIL_", "WEBDAV_"))}
+    # Zugaenge der Werkzeuge liegen in einer root-eigenen Datei ausserhalb des Agenten-Ordners,
+    # Docker liest sie beim Start als Container-Umgebung ein. Der Agent kann sie nicht veraendern.
+    wz = {"WEBDAV_ZUGANG": f"{slug}:{webdav_passwort(slug)}"}
     if "gmail" in (d.get("werkzeuge") or []) and g.get("GMAIL_REFRESH_TOKEN"):
         # Der Agent bekommt nur seinen Schluessel fuer die Postfach-Wache, nie den Google-Token.
-        env["POSTFACH_TOKEN"] = postfach_schluessel(slug)
-        env["GMAIL_API_BASIS"] = "http://postfach:8090/gmail/v1"
+        wz["POSTFACH_TOKEN"] = postfach_schluessel(slug)
+        wz["GMAIL_API_BASIS"] = "http://postfach:8090/gmail/v1"
+    schreibe_env(DATEN / "werkzeug-env" / f"{slug}.env", wz, f"Werkzeug-Zugaenge fuer {slug}, nur root")
     if k.get("MODELL_ANBIETER") == "openai" and g.get("OPENAI_API_KEY"):
         env["OPENAI_API_KEY"] = g["OPENAI_API_KEY"]
     if k.get("MODELL_ANBIETER") == "openrouter" and g.get("OPENROUTER_API_KEY"):
@@ -576,33 +715,43 @@ def agent_einrichten(slug: str, d: dict, k: dict, rc_info: dict) -> bool:
     ordner_angleichen(p["skills"], {f.relative_to(quelle).as_posix(): f for f in quelle.rglob("*") if f.is_file()}
                       if quelle.exists() else {})
 
-    # Rocket.Chat-Plugin, gepinnt
+    # Rocket.Chat-Plugin, gepinnt. Vom Agenten angelegte Symlinks im Weg werden entfernt.
+    for teil in (h / "plugins", h / "plugins" / "rocketchat-platform"):
+        if teil.is_symlink():
+            teil.unlink()
+            logbuch(f"{slug}: Symlink {teil.name} im Profil entfernt", ["moeglicher Manipulationsversuch"], "warnung")
     ziel = h / "plugins" / "rocketchat-platform"
     stempel = ziel / ".installed-ref"
-    if not stempel.exists() or stempel.read_text().strip() != PLUGIN_REF:
+    try:
+        stand = sicher_lesen(stempel).decode().strip() if stempel.exists() else ""
+    except Fehler:
+        stand = ""
+    if stand != PLUGIN_REF or not (ziel / "plugin.yaml").exists():
         if ziel.exists():
             shutil.rmtree(ziel)
         ziel.parent.mkdir(parents=True, exist_ok=True)
-        shutil.copytree(plugin_bereitstellen(), ziel)
-        stempel.write_text(PLUGIN_REF)
+        shutil.copytree(plugin_bereitstellen(), ziel, symlinks=True)
+        sicher_schreiben(stempel, PLUGIN_REF)
     gs = h / "gateway_state.json"
-    if not gs.exists():
-        gs.write_text('{"desired_state":"running","gateway_state":"running"}')
-    if not (p["fallbuch"] / "INDEX.md").exists():
-        (p["fallbuch"] / "INDEX.md").write_text("# Fallbuch\n\nEine Zeile je Fall: `- [Datum Kurzname](datei.md) Einschaetzung in einem Satz`.\n")
+    if not gs.exists() or gs.is_symlink():
+        sicher_schreiben(gs, '{"desired_state":"running","gateway_state":"running"}')
+    if not (p["fallbuch"] / "INDEX.md").exists() or (p["fallbuch"] / "INDEX.md").is_symlink():
+        sicher_schreiben(p["fallbuch"] / "INDEX.md", "# Fallbuch\n\nEine Zeile je Fall: `- [Datum Kurzname](datei.md) Einschaetzung in einem Satz`.\n")
     ausschnitt_rendern(slug, d)
     for key in ("hermes", "vorschlaege", "fallbuch", "arbeit", "skills"):
-        run(["chown", "-R", f"{HERMES_UID}:{HERMES_UID}", str(p[key])])
-    os.chmod(h / ".env", 0o600)
-    nachher = _fingerabdruck(h, ["config.yaml", "SOUL.md", ".env"]) + _ordner_fingerabdruck(p["skills"])
+        besitz_setzen(p[key])
+    nachher = _fingerabdruck(h, ["config.yaml", "SOUL.md", ".env"]) + _ordner_fingerabdruck(p["skills"]) + \
+        _fingerabdruck(DATEN / "werkzeug-env", [f"{slug}.env"])
     return vorher != nachher
 
 
 def _fingerabdruck(ordner: Path, dateien: list) -> str:
     h = hashlib.sha256()
     for d in dateien:
-        f = ordner / d
-        h.update(f.read_bytes() if f.exists() else b"-")
+        try:
+            h.update(sicher_lesen(ordner / d))
+        except (Fehler, OSError):
+            h.update(b"-")
     return h.hexdigest()
 
 
@@ -610,7 +759,7 @@ def _ordner_fingerabdruck(ordner: Path) -> str:
     h = hashlib.sha256()
     if ordner.exists():
         for f in sorted(ordner.rglob("*")):
-            if f.is_file():
+            if f.is_file() and not f.is_symlink():
                 h.update(f.relative_to(ordner).as_posix().encode())
                 h.update(f.read_bytes())
     return h.hexdigest()
@@ -642,6 +791,7 @@ def compose_agenten_schreiben(defs: dict, k: dict) -> None:
                 "DASH_BASIS_URL": f"https://dash.{k.get('DOMAIN', '')}", "TZ": k.get("ZEITZONE", "Europe/Berlin"),
                 "HERMES_TIMEZONE": k.get("ZEITZONE", "Europe/Berlin"),
             },
+            "env_file": [str(DATEN / "werkzeug-env" / f"{slug}.env")],
             "volumes": vol,
             "networks": ["agenten"],
             "deploy": {"resources": {"limits": {"memory": "3g"}}},
@@ -706,7 +856,13 @@ def wissen_vorbereiten(k: dict) -> None:
     if not (WISSEN / "AGENTS.md").exists():
         vorlage = INST / "wissens-vorlage"
         if vorlage.exists():
-            shutil.copytree(vorlage, WISSEN, dirs_exist_ok=True)
+            # Ein vorhandenes Repo wird ergaenzt, nie ueberschrieben: nur fehlende Dateien aus der Vorlage
+            for q in vorlage.rglob("*"):
+                if q.is_file():
+                    z = WISSEN / q.relative_to(vorlage)
+                    if not z.exists():
+                        z.parent.mkdir(parents=True, exist_ok=True)
+                        shutil.copy2(q, z)
         start = INST / "agenten"
         (WISSEN / "agenten").mkdir(exist_ok=True)
         for x in start.iterdir():
@@ -749,13 +905,47 @@ def _platzhalter_ersetzen(k: dict) -> None:
 
 
 def wissen_holen(k: dict) -> bool:
+    """Holt main per Rebase. Lokale, noch nicht hochgeladene Commits (Fallbuch, Logbuch, Protokoll)
+    gehen dabei nie verloren; bei einem Konflikt bleibt der lokale Stand und das Logbuch meldet es."""
+    git("checkout", "-q", "-f", "main", check=False)
     if not repo_url(k):
         return False
     vorher = git("rev-parse", "HEAD", check=False).stdout.strip()
-    git("fetch", "-q", "origin", check=False)
-    git("checkout", "-q", "main", check=False)
-    git("reset", "-q", "--hard", "origin/main", check=False)
+    if git("fetch", "-q", "origin", check=False).returncode != 0:
+        return False
+    p = git("rebase", "-q", "origin/main", check=False)
+    if p.returncode != 0:
+        git("rebase", "--abort", check=False)
+        z = zustand()
+        if not z.get("rebase_konflikt"):
+            logbuch("Wissens-Repo: Konflikt beim Holen", ["lokale Commits und GitHub widersprechen sich",
+                    "lokaler Stand bleibt, Doktor in Claude Code aufrufen"], "fehler")
+            z["rebase_konflikt"] = jetzt().isoformat()
+            zustand_speichern(z)
+        return False
+    z = zustand()
+    if z.pop("rebase_konflikt", None):
+        zustand_speichern(z)
+    hochladen_main(k)
     return vorher != git("rev-parse", "HEAD", check=False).stdout.strip()
+
+
+def hochladen_main(k: dict) -> None:
+    """Push von main mit Rueckmeldung: ein fehlgeschlagener Push wird einmal protokolliert, nicht still verschluckt."""
+    if not repo_url(k):
+        return
+    if not git("log", "origin/main..main", "--oneline", check=False).stdout.strip():
+        return
+    p = git("push", "-q", "origin", "main", check=False)
+    z = zustand()
+    if p.returncode != 0:
+        if not z.get("push_fehler"):
+            logbuch("Wissens-Repo: Hochladen fehlgeschlagen", [(p.stderr or p.stdout).strip()[-300:],
+                    "Commits bleiben lokal und werden beim naechsten Abgleich erneut hochgeladen"], "fehler")
+            z["push_fehler"] = jetzt().isoformat()
+            zustand_speichern(z)
+    elif z.pop("push_fehler", None):
+        zustand_speichern(z)
 
 
 # ---------------------------------------------------------------- Rechte und Vorschlaege
@@ -767,7 +957,18 @@ EIGENTUEMER_ONLY = [
 NIE_PER_VORSCHLAG = ["geschaeftsfuehrung/**", ".github/**", "CODEOWNERS", "AGENTS.md", "betrieb/**", "agenten/*/fallbuch/**",
                      "agenten/*/aenderungen.md"]
 FACH = ["agenten/*/wissen/**", "agenten/*/beispiele/**", "agenten/*/testfragen.yaml", "team/**"]
-GEHEIM_MUSTER = re.compile(r"(ghp_[A-Za-z0-9]{20,}|github_pat_[A-Za-z0-9_]{20,}|sk-[A-Za-z0-9_-]{20,}|xox[bp]-[A-Za-z0-9-]{10,}|AKIA[0-9A-Z]{16}|-----BEGIN [A-Z ]*PRIVATE KEY)")
+def enthaelt_geheimnis(text: str) -> bool:
+    if GEHEIM_MUSTER.search(text):
+        return True
+    for wert in geheim().values():  # jeder echte Wert des Servers, nicht nur bekannte Formate
+        if len(wert) >= 12 and wert in text:
+            return True
+    return False
+
+
+GEHEIM_MUSTER = re.compile(r"(ghp_[A-Za-z0-9]{20,}|github_pat_[A-Za-z0-9_]{20,}|gho_[A-Za-z0-9]{20,}|sk-[A-Za-z0-9_-]{20,}|"
+                           r"xox[bp]-[A-Za-z0-9-]{10,}|AKIA[0-9A-Z]{16}|-----BEGIN [A-Z ]*PRIVATE KEY|GOCSPX-[A-Za-z0-9_-]{10,}|"
+                           r"\b1//0[A-Za-z0-9_-]{20,}|\b\d{8,10}:AA[A-Za-z0-9_-]{30,}|ya29\.[A-Za-z0-9_-]{20,})")
 
 
 def freigabe_noetig(pfade: list) -> str:
@@ -778,40 +979,83 @@ def freigabe_noetig(pfade: list) -> str:
     return "fach"
 
 
+PFAD_OK = re.compile(r"^[A-Za-z0-9ÄÖÜäöüß_][A-Za-z0-9ÄÖÜäöüß_. ()+,-]*$")
+
+
+def _vorschlag_einlesen(ordner: Path) -> tuple:
+    """Liest vorschlag.yaml und alle Dateien in den Speicher. Symlinks, Sonderdateien und zu grosse
+    Vorschlaege werden abgelehnt; danach arbeitet der Doktor nur noch mit dem Speicherabbild."""
+    if not symlink_frei(ordner):
+        return None, None, "Symlink im Vorschlag (nicht erlaubt)"
+    meta_roh = sicher_lesen(ordner / "vorschlag.yaml", 200_000)
+    dateien = {}
+    dateien_dir = ordner / "dateien"
+    gesamt = 0
+    if dateien_dir.exists():
+        if dateien_dir.is_symlink():
+            return None, None, "Symlink im Vorschlag (nicht erlaubt)"
+        for wurzel, ordner_namen, namen in os.walk(dateien_dir, followlinks=False):
+            for n in ordner_namen:
+                if os.path.islink(os.path.join(wurzel, n)):
+                    return None, None, f"Symlink {n} im Vorschlag (nicht erlaubt)"
+            for n in namen:
+                f = Path(wurzel) / n
+                if f.is_symlink():
+                    return None, None, f"Symlink {n} im Vorschlag (nicht erlaubt)"
+                rel = f.relative_to(dateien_dir).as_posix()
+                inhalt = sicher_lesen(f, 1_000_000)
+                gesamt += len(inhalt)
+                if gesamt > 5_000_000 or len(dateien) > 200:
+                    return None, None, "Vorschlag zu gross (hoechstens 200 Dateien, 5 MB)"
+                dateien[rel] = inhalt
+    return meta_roh, dateien, None
+
+
 def vorschlag_pruefen(slug: str, d: dict, ordner: Path) -> tuple:
-    meta_datei = ordner / "vorschlag.yaml"
-    if not meta_datei.exists():
-        return None, "vorschlag.yaml fehlt"
     try:
-        meta = yaml.safe_load(meta_datei.read_text(encoding="utf-8")) or {}
+        meta_roh, dateien, grund = _vorschlag_einlesen(ordner)
+    except (Fehler, OSError) as e:
+        return None, f"Vorschlag nicht lesbar: {e}"
+    if grund:
+        return None, grund
+    try:
+        meta = yaml.safe_load(meta_roh.decode("utf-8", "replace")) or {}
     except yaml.YAMLError as e:
         return None, f"vorschlag.yaml ist kein gueltiges YAML: {e}"
+    if not isinstance(meta, dict):
+        return None, "vorschlag.yaml muss Schluessel und Werte enthalten"
     for feld in ("titel", "art", "ausloeser", "begruendung"):
         if not str(meta.get(feld) or "").strip():
             return None, f"Pflichtfeld fehlt: {feld}"
     tf = meta.get("testfragen") or []
-    if not tf or not all(isinstance(t, dict) and t.get("frage") and t.get("erwartet") for t in tf):
+    if not isinstance(tf, list) or not tf or not all(isinstance(t, dict) and t.get("frage") and t.get("erwartet") for t in tf):
         return None, "mindestens eine Testfrage mit frage und erwartet noetig"
-    dateien_dir = ordner / "dateien"
-    pfade = []
-    if dateien_dir.exists():
-        for f in dateien_dir.rglob("*"):
-            if f.is_file():
-                pfade.append(f.relative_to(dateien_dir).as_posix())
+    pfade = sorted(dateien)
     loeschen = [str(x) for x in (meta.get("loeschen") or [])]
     alle = pfade + loeschen
     if not alle:
         return None, "keine Dateien im Vorschlag"
-    if meta.get("art") == "agent-einstellen":
-        for r in dateien_dir.glob("agenten/*/rechte.yaml"):
-            rr = yaml.safe_load(r.read_text(encoding="utf-8")) or {}
-            if any(str(x).startswith("geschaeftsfuehrung") for x in (rr.get("lesen") or []) + (rr.get("vorschlagen") or [])):
-                return None, f"neuer Agent {r.parent.name} darf kein Geschaeftsfuehrungswissen bekommen"
-    neue_agenten = {p.split("/")[1] for p in pfade if p.startswith("agenten/") and p.count("/") >= 2
-                    and not (WISSEN / "agenten" / p.split("/")[1]).exists()} if meta.get("art") == "agent-einstellen" else set()
     for p in alle:
-        if ".." in p.split("/") or p.startswith("/"):
+        teile = p.split("/")
+        if p.startswith("/") or any(t in ("", ".", "..") or t.startswith(".") or not PFAD_OK.match(t) for t in teile):
             return None, f"unzulaessiger Pfad: {p}"
+
+    def rechte_yaml(roh: bytes) -> dict:
+        try:
+            r = yaml.safe_load(roh.decode("utf-8", "replace")) or {}
+            return r if isinstance(r, dict) else {}
+        except yaml.YAMLError:
+            return {}
+    neue_agenten = set()
+    if meta.get("art") == "agent-einstellen":
+        for p in pfade:
+            if p.startswith("agenten/") and p.endswith("/rechte.yaml") and p.count("/") == 2:
+                rr = rechte_yaml(dateien[p])
+                if any(str(x).startswith("geschaeftsfuehrung") for x in (rr.get("lesen") or []) + (rr.get("vorschlagen") or [])):
+                    return None, f"neuer Agent {p.split('/')[1]} darf kein Geschaeftsfuehrungswissen bekommen"
+        neue_agenten = {p.split("/")[1] for p in pfade if p.startswith("agenten/") and p.count("/") >= 2
+                        and not (WISSEN / "agenten" / p.split("/")[1]).exists()}
+    for p in alle:
         # Ein Einstellungsantrag bringt das erste Aenderungsprotokoll des NEUEN Agenten mit
         if p.count("/") == 2 and p.startswith("agenten/") and p.endswith("/aenderungen.md") and p.split("/")[1] in neue_agenten:
             continue
@@ -820,22 +1064,22 @@ def vorschlag_pruefen(slug: str, d: dict, ordner: Path) -> tuple:
         if not passt(p, d["rechte"]["vorschlagen"]):
             return None, f"{p} liegt ausserhalb deiner Vorschlagsrechte ({', '.join(d['rechte']['vorschlagen'])})"
     for p in pfade:
-        inhalt = (dateien_dir / p).read_text(encoding="utf-8", errors="replace")
-        if GEHEIM_MUSTER.search(inhalt):
+        if enthaelt_geheimnis(dateien[p].decode("utf-8", "replace")):
             return None, f"{p} enthaelt etwas, das wie ein Geheimnis aussieht. Bitte entfernen."
-    if meta.get("art") == "agent-einstellen":
-        neue = {p.split("/")[1] for p in pfade if p.startswith("agenten/") and p.count("/") >= 2}
-        for n in neue:
-            r = dateien_dir / "agenten" / n / "rechte.yaml"
-            if r.exists():
-                rr = yaml.safe_load(r.read_text(encoding="utf-8")) or {}
-                if any(str(x).startswith("geschaeftsfuehrung") for x in (rr.get("lesen") or []) + (rr.get("vorschlagen") or [])):
-                    return None, f"neuer Agent {n} darf kein Geschaeftsfuehrungswissen bekommen"
-            for pflicht in ("agent.yaml", "rolle.md", "regeln.md", "rechte.yaml", "testfragen.yaml"):
-                if not (dateien_dir / "agenten" / n / pflicht).exists() and not (WISSEN / "agenten" / n / pflicht).exists():
-                    return None, f"neuer Agent {n}: {pflicht} fehlt"
+    for n in neue_agenten:
+        for pflicht in ("agent.yaml", "rolle.md", "regeln.md", "rechte.yaml", "testfragen.yaml"):
+            if f"agenten/{n}/{pflicht}" not in dateien:
+                return None, f"neuer Agent {n}: {pflicht} fehlt"
+        try:
+            ay = yaml.safe_load(dateien[f"agenten/{n}/agent.yaml"].decode("utf-8", "replace")) or {}
+        except yaml.YAMLError:
+            return None, f"neuer Agent {n}: agent.yaml ist kein gueltiges YAML"
+        if str(ay.get("slug")) != n or not re.fullmatch(r"[a-z][a-z0-9-]{1,30}", n):
+            return None, f"neuer Agent {n}: slug in agent.yaml muss genau '{n}' sein (Kleinbuchstaben, Ziffern, Bindestrich)"
     meta["_pfade"] = pfade
     meta["_loeschen"] = loeschen
+    meta["_dateien"] = dateien
+    meta["_hash"] = hashlib.sha256(meta_roh + b"".join(k.encode() + v for k, v in sorted(dateien.items()))).hexdigest()
     return meta, None
 
 
@@ -861,57 +1105,74 @@ def github_api(methode, pfad, daten=None):
 
 def vorschlaege_abholen(defs: dict, k: dict) -> list:
     ergebnisse = []
+    z = zustand()
+    erledigt = z.setdefault("verarbeitete_vorschlaege", {})
     for slug, d in defs.items():
         basis = agent_pfade(slug)["vorschlaege"]
-        if not basis.exists():
+        if not basis.exists() or basis.is_symlink():
             continue
         for ordner in sorted(basis.iterdir()):
-            if not ordner.is_dir() or ordner.name.startswith("_") or (ordner / "ergebnis.yaml").exists():
+            schluessel = f"{slug}/{ordner.name}"
+            # Massgeblich ist das Register des Doktors, nicht ergebnis.yaml im (vom Agenten beschreibbaren) Ordner
+            if ordner.is_symlink() or not ordner.is_dir() or ordner.name.startswith(("_", ".")) or schluessel in erledigt:
                 continue
             if not (ordner / "vorschlag.yaml").exists():
                 continue
-            meta, grund = vorschlag_pruefen(slug, d, ordner)
-            if grund:
-                _ergebnis(ordner, {"status": "abgelehnt", "grund": grund})
-                logbuch(f"Vorschlag {slug}/{ordner.name} abgelehnt", [grund], "vorschlag")
-                ergebnisse.append(f"{slug}/{ordner.name}: abgelehnt ({grund})")
-                continue
-            stufe = freigabe_noetig(meta["_pfade"] + meta["_loeschen"])
-            branch = f"vorschlag/{slug}/{ordner.name}"
-            git("checkout", "-q", "main")
-            git("checkout", "-q", "-B", branch)
-            for p in meta["_pfade"]:
-                z = WISSEN / p
-                z.parent.mkdir(parents=True, exist_ok=True)
-                shutil.copy2(ordner / "dateien" / p, z)
-            for p in meta["_loeschen"]:
-                (WISSEN / p).unlink(missing_ok=True)
-            git("add", "-A")
-            if not git("status", "--porcelain").stdout.strip():
-                git("checkout", "-q", "main")
-                _ergebnis(ordner, {"status": "abgelehnt", "grund": "keine Aenderung gegenueber dem aktuellen Stand"})
-                logbuch(f"Vorschlag {slug}/{ordner.name} ohne Aenderung", ["Inhalt entspricht schon dem aktuellen Stand"], "vorschlag")
-                ergebnisse.append(f"{slug}/{ordner.name}: ohne Aenderung")
-                continue
-            git("commit", "-q", "-m", f"{meta['titel']}\n\nVorschlag von {slug}, Freigabe: {stufe}")
-            erg = {"status": "pr-erstellt", "freigabe_durch": stufe, "branch": branch}
-            if repo_url(k):
-                git("push", "-q", "-f", "origin", branch)
-                s, pr = github_api("POST", f"/repos/{k['WISSEN_REPO']}/pulls",
-                                   {"title": meta["titel"], "head": branch, "base": "main", "body": pr_text(slug, meta, stufe)})
-                if s not in (200, 201):
-                    erg = {"status": "fehler", "grund": f"PR nicht angelegt ({s}): {pr.get('message', '')}"}
-                else:
-                    erg.update({"pr": pr["number"], "url": pr["html_url"]})
-                    github_api("POST", f"/repos/{k['WISSEN_REPO']}/issues/{pr['number']}/labels",
-                               {"labels": [f"von-{slug}", f"freigabe-{stufe}", str(meta.get('art'))]})
-            else:
-                erg["pr"] = _lokale_pr_nummer(branch)
-            git("checkout", "-q", "main")
-            _ergebnis(ordner, erg)
-            logbuch(f"Vorschlag {slug}/{ordner.name}: {erg['status']}", [f"{k2}: {v2}" for k2, v2 in erg.items()], "vorschlag")
-            ergebnisse.append(f"{slug}/{ordner.name}: {erg['status']} {erg.get('url', erg.get('pr', ''))}")
+            try:
+                erg = _vorschlag_verarbeiten(slug, d, ordner, k)
+            except Exception as e:  # noqa: BLE001  ein kaputter Vorschlag darf den Abgleich nicht lahmlegen
+                git("checkout", "-q", "-f", "main", check=False)
+                erg = {"status": "fehler", "grund": f"{type(e).__name__}: {str(e)[:300]}"}
+                logbuch(f"Vorschlag {schluessel}: Fehler", [erg["grund"]], "fehler")
+            erledigt[schluessel] = {"status": erg.get("status"), "pr": erg.get("pr"), "zeit": jetzt().isoformat()}
+            zustand_speichern(z)
+            try:
+                _ergebnis(ordner, erg)
+            except Fehler as e:
+                logbuch(f"Ergebnis fuer {schluessel} nicht abgelegt", [str(e)], "warnung")
+            ergebnisse.append(f"{schluessel}: {erg['status']} {erg.get('url', erg.get('pr', erg.get('grund', '')))}")
     return ergebnisse
+
+
+def _vorschlag_verarbeiten(slug: str, d: dict, ordner: Path, k: dict) -> dict:
+    meta, grund = vorschlag_pruefen(slug, d, ordner)
+    if grund:
+        logbuch(f"Vorschlag {slug}/{ordner.name} abgelehnt", [grund], "vorschlag")
+        return {"status": "abgelehnt", "grund": grund}
+    stufe = freigabe_noetig(meta["_pfade"] + meta["_loeschen"])
+    branch = f"vorschlag/{slug}/{ordner.name}"
+    git("checkout", "-q", "-f", "main")
+    git("checkout", "-q", "-B", branch)
+    for p, inhalt in meta["_dateien"].items():
+        ziel = WISSEN / p
+        ziel.parent.mkdir(parents=True, exist_ok=True)
+        if ziel.is_symlink():
+            ziel.unlink()
+        ziel.write_bytes(inhalt)
+    for p in meta["_loeschen"]:
+        (WISSEN / p).unlink(missing_ok=True)
+    git("add", "-A")
+    if not git("status", "--porcelain").stdout.strip():
+        git("checkout", "-q", "main")
+        logbuch(f"Vorschlag {slug}/{ordner.name} ohne Aenderung", ["Inhalt entspricht schon dem aktuellen Stand"], "vorschlag")
+        return {"status": "abgelehnt", "grund": "keine Aenderung gegenueber dem aktuellen Stand"}
+    git("commit", "-q", "-m", f"{meta['titel']}\n\nVorschlag von {slug}, Freigabe: {stufe}, Inhalt {meta['_hash'][:12]}")
+    erg = {"status": "pr-erstellt", "freigabe_durch": stufe, "branch": branch}
+    if repo_url(k):
+        git("push", "-q", "-f", "origin", branch)
+        s_, pr = github_api("POST", f"/repos/{k['WISSEN_REPO']}/pulls",
+                            {"title": meta["titel"], "head": branch, "base": "main", "body": pr_text(slug, meta, stufe)})
+        if s_ not in (200, 201):
+            erg = {"status": "fehler", "grund": f"PR nicht angelegt ({s_}): {pr.get('message', '')}"}
+        else:
+            erg.update({"pr": pr["number"], "url": pr["html_url"]})
+            github_api("POST", f"/repos/{k['WISSEN_REPO']}/issues/{pr['number']}/labels",
+                       {"labels": [f"von-{slug}", f"freigabe-{stufe}", str(meta.get('art'))]})
+    else:
+        erg["pr"] = _lokale_pr_nummer(branch)
+    git("checkout", "-q", "main")
+    logbuch(f"Vorschlag {slug}/{ordner.name}: {erg['status']}", [f"{k2}: {v2}" for k2, v2 in erg.items()], "vorschlag")
+    return erg
 
 
 def _lokale_pr_nummer(branch: str) -> int:
@@ -928,8 +1189,8 @@ def _lokale_pr_nummer(branch: str) -> int:
 
 def _ergebnis(ordner: Path, daten: dict) -> None:
     daten["zeit"] = f"{jetzt():%Y-%m-%d %H:%M}"
-    (ordner / "ergebnis.yaml").write_text(yaml.safe_dump(daten, allow_unicode=True, sort_keys=False))
-    run(["chown", "-R", f"{HERMES_UID}:{HERMES_UID}", str(ordner)], check=False)
+    sicher_schreiben(ordner / "ergebnis.yaml", yaml.safe_dump(daten, allow_unicode=True, sort_keys=False))
+    besitz_setzen(ordner / "ergebnis.yaml")
 
 
 def berechtigt(person: str, pfade: list, defs: dict, k: dict) -> tuple:
@@ -950,11 +1211,13 @@ def berechtigt(person: str, pfade: list, defs: dict, k: dict) -> tuple:
     return True, "Fachverantwortliche/r"
 
 
-def pr_freigeben(nummer: int, person: str, k: dict, defs: dict) -> str:
+def pr_freigeben(nummer: int, person: str, k: dict, defs: dict, erwarteter_sha: str = "") -> str:
     if repo_url(k):
         s, pr = github_api("GET", f"/repos/{k['WISSEN_REPO']}/pulls/{nummer}")
         if s != 200:
             raise Fehler(f"PR #{nummer} nicht gefunden ({s}).")
+        if erwarteter_sha and (pr.get("head") or {}).get("sha") != erwarteter_sha:
+            raise Fehler(f"PR #{nummer} wurde nach dem Bestaetigungscode geaendert. Bitte neu freigeben.")
         if pr.get("merged"):
             return f"PR #{nummer} ist schon uebernommen."
         s, files = github_api("GET", f"/repos/{k['WISSEN_REPO']}/pulls/{nummer}/files?per_page=100")
@@ -964,7 +1227,8 @@ def pr_freigeben(nummer: int, person: str, k: dict, defs: dict) -> str:
             logbuch(f"Freigabe PR #{nummer} verweigert", [person, grund], "freigabe")
             raise Fehler(grund)
         s, m = github_api("PUT", f"/repos/{k['WISSEN_REPO']}/pulls/{nummer}/merge",
-                          {"merge_method": "squash", "commit_title": f"{pr['title']} (#{nummer}, freigegeben von {person})"})
+                          {"merge_method": "squash", "sha": (pr.get("head") or {}).get("sha"),
+                           "commit_title": f"{pr['title']} (#{nummer}, freigegeben von {person})"})
         if s != 200:
             raise Fehler(f"Merge fehlgeschlagen ({s}): {m.get('message', '')}")
         wissen_holen(k)
@@ -972,15 +1236,25 @@ def pr_freigeben(nummer: int, person: str, k: dict, defs: dict) -> str:
         branch = zustand().get("lokale_prs", {}).get(str(nummer))
         if not branch:
             raise Fehler(f"Lokaler Vorschlag #{nummer} unbekannt.")
+        if erwarteter_sha and git("rev-parse", branch, check=False).stdout.strip() != erwarteter_sha:
+            raise Fehler(f"Vorschlag #{nummer} wurde nach dem Bestaetigungscode geaendert. Bitte neu freigeben.")
         pfade = git("diff", "--name-only", f"main...{branch}").stdout.split()
         ok, grund = berechtigt(person, pfade, defs, k)
         if not ok:
             logbuch(f"Freigabe #{nummer} verweigert", [person, grund], "freigabe")
             raise Fehler(grund)
-        git("checkout", "-q", "main")
-        git("merge", "-q", "--squash", branch)
+        git("checkout", "-q", "-f", "main")
+        if git("merge", "-q", "--squash", branch, check=False).returncode != 0 or \
+                git("diff", "--name-only", "--diff-filter=U", check=False).stdout.strip():
+            git("reset", "-q", "--hard", "HEAD", check=False)
+            raise Fehler(f"Vorschlag #{nummer} passt nicht mehr zum aktuellen Stand (Konflikt). Der Agent muss ihn neu einreichen.")
         git("commit", "-q", "-m", f"Vorschlag #{nummer} uebernommen (freigegeben von {person})")
     aenderungsprotokoll(nummer, person, pfade, k)
+    betroffen = sorted({m.group(1) for p in pfade for m in [re.match(r"agenten/([^/]+)/", p)] if m})
+    if betroffen:
+        z = zustand()
+        z["testfragen_offen"] = sorted(set(z.get("testfragen_offen", [])) | set(betroffen))
+        zustand_speichern(z)
     logbuch(f"PR #{nummer} freigegeben und uebernommen", [f"von {person}"] + [f"`{p}`" for p in pfade], "freigabe")
     return f"PR #{nummer} uebernommen. Der Doktor rollt die Aenderung beim naechsten Abgleich aus."
 
@@ -997,13 +1271,15 @@ def aenderungsprotokoll(nummer, person, pfade, k):
     if agenten:
         git("add", "-A")
         git("commit", "-q", "-m", f"Aenderungsprotokoll zu #{nummer}", check=False)
-        if repo_url(k):
-            git("push", "-q", "origin", "main", check=False)
+        hochladen_main(k)
 
 
 def telegram_an_eigentuemer(text: str) -> None:
     """Direkt ueber die Bot-API (sendMessage stoert das Abholen durch Kurts Gateway nicht)."""
-    token, chat = geheim().get("TELEGRAM_BOT_TOKEN"), konfig().get("EIGENTUEMER_TELEGRAM_ID")
+    # Bevorzugt ein eigener Doktor-Bot, den kein Agent kennt. Ohne ihn geht der Code ueber Kurts Bot:
+    # Kurt sieht ausgehende Nachrichten nicht, koennte aber selbst Nachrichten an den Eigentuemer schicken.
+    g = geheim()
+    token, chat = (g.get("DOKTOR_TELEGRAM_BOT_TOKEN") or g.get("TELEGRAM_BOT_TOKEN")), konfig().get("EIGENTUEMER_TELEGRAM_ID")
     if not token or not chat or chat == "0":
         raise Fehler("Telegram ist nicht eingerichtet (Bot-Token oder Telegram-ID des Eigentuemers fehlt).")
     s, d = http_json("POST", f"https://api.telegram.org/bot{token}/sendMessage", {"chat_id": int(chat), "text": text})
@@ -1012,32 +1288,70 @@ def telegram_an_eigentuemer(text: str) -> None:
 
 
 def pr_titel(nummer: int, k: dict) -> tuple:
+    """(titel, pfade, kopf_sha) eines PR. Der Bestaetigungscode wird an kopf_sha gebunden."""
     if repo_url(k):
         s, pr = github_api("GET", f"/repos/{k['WISSEN_REPO']}/pulls/{nummer}")
         s2, files = github_api("GET", f"/repos/{k['WISSEN_REPO']}/pulls/{nummer}/files?per_page=100")
-        return (pr.get("title", f"#{nummer}") if s == 200 else f"#{nummer}"), ([f["filename"] for f in files] if isinstance(files, list) else [])
+        return ((pr.get("title", f"#{nummer}") if s == 200 else f"#{nummer}"),
+                ([f["filename"] for f in files] if isinstance(files, list) else []),
+                ((pr.get("head") or {}).get("sha", "") if s == 200 else ""))
     branch = zustand().get("lokale_prs", {}).get(str(nummer), "")
     pfade = git("diff", "--name-only", f"main...{branch}", check=False).stdout.split() if branch else []
     titel = git("log", "-1", "--format=%s", branch, check=False).stdout.strip() if branch else f"#{nummer}"
-    return titel or f"#{nummer}", pfade
+    sha = git("rev-parse", branch, check=False).stdout.strip() if branch else ""
+    return titel or f"#{nummer}", pfade, sha
+
+
+def github_freigaben_abholen(defs: dict, k: dict) -> list:
+    """Fachverantwortliche und Eigentuemer geben auf GitHub mit 'Approve' frei. Der Doktor merged nur,
+    wenn die Person nach der Rechte-Matrix fuer alle Dateien berechtigt ist und das Approve den aktuellen
+    Stand des PR betrifft."""
+    if not repo_url(k):
+        return []
+    aus = []
+    s, prs = github_api("GET", f"/repos/{k['WISSEN_REPO']}/pulls?state=open&per_page=50")
+    if s != 200 or not isinstance(prs, list):
+        return []
+    for pr in prs:
+        if not any(str(l.get("name", "")).startswith("von-") for l in pr.get("labels") or []):
+            continue
+        sha = (pr.get("head") or {}).get("sha")
+        s2, reviews = github_api("GET", f"/repos/{k['WISSEN_REPO']}/pulls/{pr['number']}/reviews?per_page=100")
+        if s2 != 200 or not isinstance(reviews, list):
+            continue
+        zust = [r for r in reviews if r.get("state") == "APPROVED" and r.get("commit_id") == sha]
+        for r in zust:
+            login = (r.get("user") or {}).get("login")
+            try:
+                aus.append(pr_freigeben(pr["number"], f"github:{login}", k, defs, erwarteter_sha=sha))
+                break
+            except Fehler as e:
+                z = zustand()
+                schl = f"gh-approve-{pr['number']}-{login}-{sha[:7]}"
+                if not z.get(schl):
+                    logbuch(f"Approve fuer PR #{pr['number']} nicht ausreichend", [f"github:{login}", str(e)], "freigabe")
+                    z[schl] = True
+                    zustand_speichern(z)
+    return aus
 
 
 def freigaben_abholen(defs: dict, k: dict) -> list:
     """Kurt reicht Freigaben des Eigentuemers aus Telegram als Datei ein. Weil ein manipulierter Agent
     eine solche Datei faelschen koennte, verlangt der Doktor einen Bestaetigungscode, den er selbst
-    per Telegram an den Eigentuemer schickt und den kein Agent sieht (zweiter Kanal wie beim Online-Banking)."""
+    per Telegram an den Eigentuemer schickt. Der Code ist an PR-Nummer UND Inhaltsstand (Commit) gebunden:
+    aendert sich der PR nach dem Versand, verfaellt der Code."""
     aus = []
     z = zustand()
     codes = z.setdefault("freigabecodes", {})
     for slug in defs:
         ordner = agent_pfade(slug)["vorschlaege"] / "_freigaben"
-        if not ordner.exists():
+        if not ordner.exists() or not symlink_frei(ordner):
             continue
         for f in sorted(ordner.glob("*.yaml")):
-            if f.name.endswith((".erledigt.yaml", ".wartet.yaml")):
+            if f.is_symlink() or f.name.endswith((".erledigt.yaml", ".wartet.yaml")):
                 continue
             try:
-                m = yaml.safe_load(f.read_text(encoding="utf-8")) or {}
+                m = yaml.safe_load(sicher_lesen(f, 20_000).decode("utf-8", "replace")) or {}
                 nummer = int(m.get("pr"))
                 if not defs[slug].get("telegram"):
                     raise Fehler(f"{slug} hat keinen Telegram-Zugang und darf keine Freigaben weiterreichen.")
@@ -1046,33 +1360,44 @@ def freigaben_abholen(defs: dict, k: dict) -> list:
                     if repo_url(k):
                         github_api("PATCH", f"/repos/{k['WISSEN_REPO']}/pulls/{nummer}", {"state": "closed"})
                     erg = f"PR #{nummer} abgelehnt und geschlossen."
-                    logbuch(f"PR #{nummer} abgelehnt", [f"Wortlaut: {m.get('wortlaut', '')}"], "freigabe")
+                    logbuch(f"PR #{nummer} abgelehnt", [f"Wortlaut: {str(m.get('wortlaut', ''))[:200]}"], "freigabe")
                 else:
+                    titel, pfade, sha = pr_titel(nummer, k)
+                    if not sha:
+                        raise Fehler(f"PR #{nummer} nicht gefunden.")
                     eintrag = codes.get(str(nummer))
                     code = re.sub(r"\D", "", str(m.get("code") or ""))
-                    gueltig = eintrag and (time.time() - eintrag["zeit"] < 1800)
+                    gueltig = eintrag and (time.time() - eintrag["zeit"] < 1800) and eintrag.get("sha") == sha
                     if code and gueltig and hmac.compare_digest(code, eintrag["code"]):
                         codes.pop(str(nummer), None)
                         zustand_speichern(z)
-                        erg = pr_freigeben(nummer, f"telegram:{k.get('EIGENTUEMER_TELEGRAM_ID')}", k, defs)
+                        erg = pr_freigeben(nummer, f"telegram:{k.get('EIGENTUEMER_TELEGRAM_ID')}", k, defs, erwarteter_sha=sha)
                     else:
                         neu = f"{secrets.randbelow(10 ** 6):06d}"
-                        codes[str(nummer)] = {"code": neu, "zeit": time.time()}
+                        codes[str(nummer)] = {"code": neu, "zeit": time.time(), "sha": sha}
                         zustand_speichern(z)
-                        titel, pfade = pr_titel(nummer, k)
-                        liste = ", ".join(p.split("/", 2)[-1] if p.startswith("agenten/") else p for p in pfade[:6])
+                        heikel = [p for p in pfade if freigabe_noetig([p]) == "eigentuemer"]
+                        liste = "\n".join(f"- {p}" for p in pfade[:15]) + (f"\n- ... und {len(pfade) - 15} weitere" if len(pfade) > 15 else "")
+                        warnung = ("\nACHTUNG: aendert Regeln, Rechte, Werkzeuge oder stellt einen Agenten ein.\n" if heikel else "")
                         telegram_an_eigentuemer(
-                            f"Bestaetigung noetig: Freigabe von #{nummer} \"{titel}\" ({len(pfade)} Datei(en): {liste}).\n\n"
-                            f"Wenn das von dir kommt, schreib Kurt: freigeben #{nummer} Code {neu}\n"
-                            "Der Code gilt 30 Minuten. Wenn du nichts freigeben wolltest: ignorieren und dem Doktor Bescheid geben.")
-                        erg = ("Code war falsch oder abgelaufen. " if code else "") + \
+                            f"Agenten-Doktor: Bestaetigung noetig\n\nFreigabe von #{nummer} \"{titel}\" (Stand {sha[:7]})\n"
+                            f"Dateien:\n{liste}\n{warnung}\n"
+                            f"Nur wenn DU gerade genau diese Freigabe willst, schreib Kurt: freigeben #{nummer} Code {neu}\n"
+                            "Gilt 30 Minuten und nur fuer diesen Stand. Hast du nichts angefordert: ignorieren und den Doktor rufen.")
+                        erg = ("Code war falsch, abgelaufen oder der PR hat sich geaendert. " if code else "") + \
                             f"Bestaetigungscode fuer #{nummer} an den Eigentuemer geschickt. Warte auf 'freigeben #{nummer} Code ...'."
-                        logbuch(f"Bestaetigungscode fuer PR #{nummer} verschickt", [f"angefragt von {slug}", "Code nicht protokolliert"], "freigabe")
+                        logbuch(f"Bestaetigungscode fuer PR #{nummer} verschickt", [f"angefragt von {slug}", f"Stand {sha[:7]}", "Code nicht protokolliert"], "freigabe")
             except Exception as e:  # noqa: BLE001
                 erg = f"Nicht ausgefuehrt: {e}"
-            f.rename(f.with_name(f.stem + ".erledigt.yaml"))
-            f.with_name(f.stem + ".ergebnis.txt").write_text(erg + "\n")
-            run(["chown", "-R", f"{HERMES_UID}:{HERMES_UID}", str(ordner)], check=False)
+            ziel = f.with_name(f.stem + ".erledigt.yaml")
+            if ziel.exists() or ziel.is_symlink():
+                ziel.unlink()
+            f.rename(ziel)
+            try:
+                sicher_schreiben(f.with_name(f.stem + ".ergebnis.txt"), erg + "\n")
+                besitz_setzen(ordner)
+            except Fehler as e2:
+                logbuch("Freigabe-Ergebnis nicht abgelegt", [str(e2)], "warnung")
             aus.append(erg)
     return aus
 
@@ -1085,10 +1410,19 @@ def fallbuecher_spiegeln(defs: dict, k: dict) -> int:
             continue
         z = WISSEN / "agenten" / slug / "fallbuch"
         z.mkdir(parents=True, exist_ok=True)
+        if q.is_symlink():
+            continue
         for f in q.glob("*.md"):
+            if f.is_symlink():
+                logbuch(f"Fallbuch {slug}/{f.name} nicht gespiegelt", ["Symlink (nicht erlaubt)"], "warnung")
+                continue
             ziel = z / f.name
-            inhalt = f.read_bytes()
-            if GEHEIM_MUSTER.search(inhalt.decode("utf-8", "replace")):
+            try:
+                inhalt = sicher_lesen(f, 200_000)
+            except Fehler as e:
+                logbuch(f"Fallbuch {slug}/{f.name} nicht gespiegelt", [str(e)], "warnung")
+                continue
+            if enthaelt_geheimnis(inhalt.decode("utf-8", "replace")):
                 logbuch(f"Fallbuch {slug}/{f.name} nicht gespiegelt", ["enthaelt ein Geheimnis-Muster"], "warnung")
                 continue
             if not ziel.exists() or ziel.read_bytes() != inhalt:
@@ -1097,8 +1431,7 @@ def fallbuecher_spiegeln(defs: dict, k: dict) -> int:
     if n:
         git("add", "-A")
         git("commit", "-q", "-m", f"Fallbuecher gespiegelt ({n} Dateien)")
-        if repo_url(k):
-            git("push", "-q", "origin", "main", check=False)
+        hochladen_main(k)
     return n
 
 
@@ -1115,8 +1448,7 @@ def logbuch_spiegeln(k: dict) -> None:
         git("checkout", "-q", "main", check=False)
         git("add", "betrieb")
         git("commit", "-q", "-m", "Betriebslogbuch", check=False)
-        if repo_url(k):
-            git("push", "-q", "origin", "main", check=False)
+        hochladen_main(k)
 
 
 # ---------------------------------------------------------------- Befehle
@@ -1128,16 +1460,23 @@ def cmd_geheimnis_setzen(a):
     geheim_setzen(a.schluessel, wert)
     if a.schluessel == "CLAUDE_CODE_OAUTH_TOKEN":
         schreibe_env(GEHEIM_DIR / "meridian.env", {"CLAUDE_CODE_OAUTH_TOKEN": wert}, "nur fuer den Meridian-Container")
+        if konfig().get("MODELL_ANBIETER") == "meridian" and (INST / "compose.yaml").exists():
+            compose("up", "-d", "--force-recreate", "meridian", check=False, timeout=900)
+            info("Meridian mit neuem Token neu gestartet.")
     logbuch(f"Geheimnis {a.schluessel} gesetzt", ["Wert per stdin, nicht protokolliert"])
     info(f"{a.schluessel} gespeichert.")
 
 
 def basis_vorbereiten(k: dict) -> None:
-    for d in ("daten/dateien/_start", "daten/rocketchat/db", "daten/mietjump", "daten/agenten", "daten/sicherung", "logbuch", "geheim"):
+    for d in ("daten/start", "daten/dateien-konfig", "daten/rocketchat/db", "daten/mietjump", "daten/agenten", "daten/sicherung", "logbuch", "geheim"):
         (BASIS / d).mkdir(parents=True, exist_ok=True)
     os.chmod(GEHEIM_DIR, 0o700)
-    run(["chown", "-R", "1000:1000", str(DATEN / "mietjump")])  # node im MietJUMP-Image
-    run(["chown", "-R", "101:101", str(DATEN / "dateien")])  # nginx im Dateiablage-Image (WebDAV schreibt)
+    besitz_setzen(DATEN / "mietjump", 1000)  # node im MietJUMP-Image
+    (DATEN / "dateien").mkdir(parents=True, exist_ok=True)
+    besitz_setzen(DATEN / "dateien", 101)  # nginx im Dateiablage-Image (WebDAV schreibt)
+    (DATEN / "start").mkdir(parents=True, exist_ok=True)
+    if not (DATEN / "dateien-konfig" / "nginx.conf").exists():
+        dateiablage_konfigurieren({})
     g = geheim()
     neu = {}
     for key, n in (("RC_ADMIN_PASS", 24), ("RC_EIGENTUEMER_PASS", 18), ("DASH_PASS", 18), ("RESTIC_PASSWORD", 32)):
@@ -1192,8 +1531,8 @@ def _mietjump_demo() -> None:
     for name in ("umsaetze-2026-10.camt053.xml", "umsaetze-2026-11.camt053.xml"):
         p = run(["docker", "exec", "agenten-mietjump-1", "cat", f"/app/beispiel/mfh-13/{name}"], check=False, still=True)
         if p.returncode == 0:
-            (bank / name).write_text(p.stdout, encoding="utf-8")
-    run(["chown", "-R", f"{HERMES_UID}:{HERMES_UID}", str(bank)], check=False)
+            sicher_schreiben(bank / name, p.stdout)
+    besitz_setzen(bank)
     (DATEN / "mietjump" / ".demo-geladen").write_text(f"{jetzt():%Y-%m-%d %H:%M}\n")
     logbuch("MietJUMP-Testdaten geladen", ["MFH Musterallee 13, Stammdaten und Soll Okt/Nov, Kontoauszuege fuer Vera unter arbeit/bank"])
 
@@ -1209,24 +1548,30 @@ def rocketchat_einrichten(k: dict, defs: dict) -> dict:
     rci["eigentuemer_benutzer"] = eig_name
     rci["eigentuemer_id"] = rc.benutzer_anlegen(eig_name, k.get("EIGENTUEMER_NAME", "Eigentuemer"), g["RC_EIGENTUEMER_PASS"], ["user", "admin"],
                                                 k.get("ACME_EMAIL"))
+    fehlgeschlagen = []
     for slug, d in defs.items():
-        key = f"RC_BOTPASS_{slug.upper().replace('-', '_')}"
-        if not g.get(key):
-            geheim_setzen(key, zufall(24))
-            g = geheim()
-        uid = rc.benutzer_anlegen(slug, f"{d.get('name', slug)} ({d.get('rolle', 'Agent')})", g[key], ["user", "bot"])
-        tkey = f"RC_TOKEN_{slug.upper().replace('-', '_')}"
-        if not rc.token_gueltig(uid, g.get(tkey, "")):
-            try:
-                _, token = rc.zugangstoken(slug, g[key])
-            except Fehler:
-                rc.passwort_setzen(uid, g[key])  # nur im Notfall, loescht alte Token
-                _, token = rc.zugangstoken(slug, g[key])
-            geheim_setzen(tkey, token)
-            g = geheim()
-            logbuch(f"Rocket.Chat-Zugangstoken fuer {slug} neu ausgestellt", ["altes Token ungueltig oder fehlend"], "reparatur")
-        raum = ((d.get("rocketchat") or {}).get("raum") or slug)
-        rci["bots"][slug] = {"user_id": uid, "raum": raum}
+        try:
+            key = f"RC_BOTPASS_{slug.upper().replace('-', '_')}"
+            if not g.get(key):
+                geheim_setzen(key, zufall(24))
+                g = geheim()
+            uid = rc.benutzer_anlegen(slug, f"{d.get('name', slug)} ({d.get('rolle', 'Agent')})", g[key], ["user", "bot"])
+            tkey = f"RC_TOKEN_{slug.upper().replace('-', '_')}"
+            if not rc.token_gueltig(uid, g.get(tkey, "")):
+                try:
+                    _, token = rc.zugangstoken(slug, g[key])
+                except Fehler:
+                    rc.passwort_setzen(uid, g[key])  # nur im Notfall, loescht alte Token
+                    _, token = rc.zugangstoken(slug, g[key])
+                geheim_setzen(tkey, token)
+                g = geheim()
+                logbuch(f"Rocket.Chat-Zugangstoken fuer {slug} neu ausgestellt", ["altes Token ungueltig oder fehlend"], "reparatur")
+            raum = ((d.get("rocketchat") or {}).get("raum") or slug)
+            rci["bots"][slug] = {"user_id": uid, "raum": raum}
+        except Fehler as e:  # ein Agent darf die anderen nicht blockieren
+            fehlgeschlagen.append(slug)
+            logbuch(f"Rocket.Chat-Konto fuer {slug} nicht eingerichtet", [str(e)[:300]], "fehler")
+    defs = {s_: d_ for s_, d_ in defs.items() if s_ not in fehlgeschlagen}
     alle_bots = list(defs.keys())
     rci["raeume"]["team"] = rc.raum("team", [eig_name] + alle_bots, privat=True, thema="Ganzes Team. Agenten antworten hier nur, wenn du sie mit @Name ansprichst.")
     for slug, d in defs.items():
@@ -1269,9 +1614,9 @@ footer{{color:var(--grau);font-size:.85rem;margin-top:32px}}
 <h2>Gesundheit</h2><table>{zeilen or '<tr><td colspan=3>noch kein Check gelaufen</td></tr>'}</table>
 <footer>Betrieben mit dem Agenten-Doktor. Bei Problemen in Claude Code: „Doktor, schau dir den Server an“.</footer>
 </main></body></html>"""
-    ziel = DATEN / "dateien" / "_start"
+    ziel = DATEN / "start"  # bewusst NICHT in der WebDAV-Ablage: kein Agent kann die Startseite aendern
     ziel.mkdir(parents=True, exist_ok=True)
-    (ziel / "index.html").write_text(html, encoding="utf-8")
+    sicher_schreiben(ziel / "index.html", html)
 
 
 def _cron_jobs(slug: str) -> dict:
@@ -1300,7 +1645,10 @@ def routinen_einrichten(slug: str, d: dict) -> list:
     aus = []
     ziel = "telegram" if d.get("telegram") else "rocketchat"
     stempel_datei = agent_pfade(slug)["hermes"] / ".routinen.json"
-    stempel = json.loads(stempel_datei.read_text()) if stempel_datei.exists() else {}
+    try:
+        stempel = json.loads(sicher_lesen(stempel_datei, 100_000)) if stempel_datei.exists() else {}
+    except (Fehler, ValueError):
+        stempel = {}
     for name, job in ist.items():
         if name.startswith(f"{slug}-") and (name not in soll or stempel.get(name) != _routine_hash(soll[name])):
             run(["docker", "exec", "-u", "hermes", f"agent-{slug}", "hermes", "cron", "remove", job["id"]], check=False, still=True)
@@ -1314,11 +1662,15 @@ def routinen_einrichten(slug: str, d: dict) -> list:
                  "--name", name, "--deliver", ziel], check=False, still=True)
         if q.returncode == 0:
             stempel[name] = _routine_hash(r)
+            stempel.pop(f"fehler:{name}", None)
             aus.append(f"{name}: angelegt ({r['zeitplan']})")
         else:
-            aus.append(f"{name}: FEHLER {(q.stderr or q.stdout).strip()[-200:]}")
-    stempel = {n: h for n, h in stempel.items() if n in soll}
-    stempel_datei.write_text(json.dumps(stempel))
+            letzter = stempel.get(f"fehler:{name}", 0)
+            stempel[f"fehler:{name}"] = time.time()
+            if time.time() - letzter > 6 * 3600:  # hoechstens alle 6 Stunden melden
+                aus.append(f"{name}: FEHLER {(q.stderr or q.stdout).strip()[-200:]}")
+    stempel = {n: h for n, h in stempel.items() if n in soll or (n.startswith("fehler:") and n[7:] in soll)}
+    sicher_schreiben(stempel_datei, json.dumps(stempel))
     return aus
 
 
@@ -1333,6 +1685,7 @@ ZEITPLAENE = {
     "reparieren": ("*:05/30", "reparieren --still", "bekannte Fehler selbst beheben"),
     "sichern": ("*-*-* 03:00", "sichern", "naechtliche Sicherung"),
     "agenten-check": ("Sun *-*-* 19:00", "agenten-check", "woechentlicher Agenten-Check"),
+    "testfragen": ("*:0/15", "testfragen --offen", "Testfragen nach freigegebenen Aenderungen"),
 }
 
 
@@ -1344,7 +1697,13 @@ def zeitplaene_einrichten() -> None:
         Path(f"/etc/systemd/system/doktor-{name}.timer").write_text(
             f"[Unit]\nDescription=Agenten-Doktor: {text}\n\n[Timer]\nOnCalendar={wann}\nPersistent=true\n"
             f"RandomizedDelaySec=20\n\n[Install]\nWantedBy=timers.target\n")
+    Path("/etc/systemd/system/doktor-nach-start.service").write_text(
+        "[Unit]\nDescription=Agenten-Doktor: Agenten nach dem Hochfahren sauber verbinden\n"
+        "After=docker.service network-online.target\nWants=network-online.target\n\n"
+        "[Service]\nType=oneshot\nExecStartPre=/bin/sleep 20\nExecStart=/usr/local/bin/doktor nach-start\nTimeoutStartSec=900\n\n"
+        "[Install]\nWantedBy=multi-user.target\n")
     run(["systemctl", "daemon-reload"])
+    run(["systemctl", "enable", "doktor-nach-start.service"], check=False)
     for name in ZEITPLAENE:
         run(["systemctl", "enable", "--now", f"doktor-{name}.timer"], check=False)
 
@@ -1360,12 +1719,41 @@ def alle_ausrollen(k: dict, defs: dict, erzwingen_rc: bool = False) -> list:
         rci = rocketchat_einrichten(k, defs)
         if fehlend:
             berichte.append("Rocket.Chat-Konto und Raum angelegt fuer: " + ", ".join(fehlend))
+    entfernt = [s for s in (rci.get("bots") or {}) if s not in defs]
+    if entfernt:
+        rc = RocketChat()
+        rc.kopf = rc.anmelden(k.get("RC_ADMIN_BENUTZER", "doktor"), geheim()["RC_ADMIN_PASS"])
+        z = zustand()
+        for s in entfernt:
+            bot = z["rocketchat"]["bots"].pop(s)
+            rc.api("POST", "users.setActiveStatus", {"userId": bot["user_id"], "activeStatus": False})
+            raum = bot.get("raum")
+            if raum and raum in z["rocketchat"]["raeume"] and raum not in ("team",) and \
+                    not any(b.get("raum") == raum for b in z["rocketchat"]["bots"].values()):
+                rc.api("POST", "groups.archive", {"roomId": z["rocketchat"]["raeume"].pop(raum)})
+            shutil.rmtree(agent_pfade(s)["basis"], ignore_errors=True)
+        zustand_speichern(z)
+        rci = z["rocketchat"]
+        berichte.append("abgebaut (Konto deaktiviert, Raum archiviert): " + ", ".join(entfernt))
     if any("mietjump" in (d.get("werkzeuge") or []) and not geheim().get(f"MIETJUMP_AGENT_TOKEN_{s.upper().replace('-', '_')}")
            for s, d in defs.items()):
         mietjump_einrichten(k, defs)
     postfach_konfigurieren(defs)
+    ohne_konto = [s for s in defs if s not in (rci.get("bots") or {})]
+    if dateiablage_konfigurieren({s: d for s, d in defs.items() if s not in ohne_konto}):
+        run(["docker", "exec", "agenten-dateien-1", "nginx", "-s", "reload"], check=False)
+    if ohne_konto:
+        berichte.append("NICHT ausgerollt, Rocket.Chat-Konto fehlt: " + ", ".join(ohne_konto))
+        defs = {s: d for s, d in defs.items() if s not in ohne_konto}
     laufend = set(run(["docker", "ps", "--format", "{{.Names}}"], still=True).stdout.split())
-    geaendert = [s for s, d in defs.items() if agent_einrichten(s, d, k, rci)]
+    geaendert = []
+    for s, d in defs.items():
+        try:
+            if agent_einrichten(s, d, k, rci):
+                geaendert.append(s)
+        except Fehler as e:
+            berichte.append(f"{s}: Profil nicht gerendert ({str(e)[:200]})")
+            logbuch(f"{s}: Profil nicht gerendert", [str(e)[:300]], "fehler")
     compose_agenten_schreiben(defs, k)
     compose("up", "-d", "--remove-orphans", timeout=1800)
     neu = [s for s in defs if f"agent-{s}" not in laufend]
@@ -1426,6 +1814,7 @@ def cmd_abgleich(a):
     berichte = []
     berichte += vorschlaege_abholen(defs, k)
     berichte += freigaben_abholen(defs, k)
+    berichte += github_freigaben_abholen(defs, k)
     defs = agenten_definitionen()
     n = fallbuecher_spiegeln(defs, k)
     if n:
@@ -1476,10 +1865,23 @@ def pruefungen(mit_modell: bool) -> list:
         start = run(["docker", "inspect", "-f", "{{.State.StartedAt}}", f"agent-{s}"], check=False, still=True).stdout.strip()
         p = run(["docker", "logs", "--since", start or "30m", f"agent-{s}"], check=False, still=True)
         logs = (p.stdout + p.stderr)[-20000:]
-        fehler = [m for m in ("401", "token_invalidated", "invalid_grant", "Conflict: terminated by other getUpdates",
-                              "weekly limit", "failed to authenticate", "Traceback") if m in logs]
+        # "failed to authenticate" meldet das Plugin auch bei DNS-Fehlern waehrend des Hochfahrens.
+        # Ein echtes Anmeldeproblem erkennt man an "rejected with HTTP 401".
+        fehler = [m for m in ("rejected with HTTP 401", "token_invalidated", "invalid_grant", "Conflict: terminated by other getUpdates",
+                              "weekly limit", "Traceback") if m in logs]
         erg.append((GELB if fehler else GRUEN, f"{s}: Protokoll seit Start", "Auffaellig: " + ", ".join(fehler) if fehler else "keine bekannten Fehlermuster"))
         hp = agent_pfade(s)["hermes"]
+        if "mietjump" in (defs[s].get("werkzeuge") or []):
+            al = hp / "logs" / "agent.log"
+            try:
+                roh = sicher_lesen(al, 50_000_000).decode("utf-8", "replace") if al.exists() else ""
+            except Fehler:
+                roh = ""
+            zeilen = [z for z in roh.splitlines()[-4000:] if "MCP: registered" in z]
+            if zeilen and " registered 0 tool(s)" in zeilen[-1]:
+                erg.append((ROT, f"{s}: MietJUMP-Werkzeuge", "MCP-Verbindung beim Start gescheitert und geparkt (Neustart des Agenten noetig)"))
+            elif zeilen:
+                erg.append((GRUEN, f"{s}: MietJUMP-Werkzeuge", zeilen[-1].split("MCP:", 1)[-1].strip()[:80]))
         if not (hp / "plugins" / "rocketchat-platform" / "plugin.yaml").exists():
             erg.append((ROT, f"{s}: Rocket.Chat-Plugin", "fehlt im Profil, Agent ist im Chat taub"))
         envd = lies_env(hp / ".env")
@@ -1509,10 +1911,15 @@ def pruefungen(mit_modell: bool) -> list:
     # WebDAV schreiben und lesen
     try:
         ip = container_ip("agenten-dateien-1")
-        req = urllib.request.Request(f"http://{ip}:8081/_check/ping.txt", data=f"{time.time()}".encode(), method="PUT")
+        erster = next(iter(defs), None)
+        if not erster:
+            raise Fehler("keine Agenten")
+        import base64
+        req = urllib.request.Request(f"http://{ip}:8081/{erster}/_check/ping.txt", data=f"{time.time()}".encode(), method="PUT")
+        req.add_header("Authorization", "Basic " + base64.b64encode(f"{erster}:{webdav_passwort(erster)}".encode()).decode())
         with urllib.request.urlopen(req, timeout=5):
             pass
-        with urllib.request.urlopen(f"http://{ip}:8080/_check/ping.txt", timeout=5) as r:
+        with urllib.request.urlopen(f"http://{ip}:8080/{erster}/_check/ping.txt", timeout=5) as r:
             erg.append((GRUEN if r.status == 200 else ROT, "Dashboard-Ablage", "schreiben und lesen ok"))
     except Exception as e:  # noqa: BLE001
         erg.append((ROT, "Dashboard-Ablage", str(e)[:120]))
@@ -1610,14 +2017,21 @@ def cmd_reparieren(a):
             # Plugin-Ordner kann gefehlt haben, ohne dass sich der Fingerabdruck aendert: immer neu starten
             run(["docker", "restart", f"agent-{slug}"], check=False)
             massnahmen.append(f"{slug}: Plugin/Allowlist wiederhergestellt, neu gestartet")
+    for slug in defs:
+        if f"{slug}: MietJUMP-Werkzeuge" in rot:
+            if warte_auf_dienste(120):
+                run(["docker", "restart", f"agent-{slug}"], check=False)
+                massnahmen.append(f"{slug}: MCP-Verbindung zu MietJUMP war geparkt, Agent neu gestartet")
     # 3. Rocket.Chat-Token ungueltig -> neu ausstellen
     for s, n, d in erg:
-        if n.endswith("Protokoll seit Start") and "failed to authenticate" in d:
+        if n.endswith("Protokoll seit Start") and "rejected with HTTP 401" in d:
             slug = n.split(":")[0]
-            rocketchat_einrichten(k, defs)
-            agent_einrichten(slug, defs[slug], k, zustand().get("rocketchat"))
-            run(["docker", "restart", f"agent-{slug}"], check=False)
-            massnahmen.append(f"{slug}: Rocket.Chat-Zugangstoken neu ausgestellt")
+            vorher = geheim().get(f"RC_TOKEN_{slug.upper().replace('-', '_')}")
+            rocketchat_einrichten(k, defs)  # stellt nur ungueltige Token neu aus
+            if geheim().get(f"RC_TOKEN_{slug.upper().replace('-', '_')}") != vorher:
+                agent_einrichten(slug, defs[slug], k, zustand().get("rocketchat"))
+                run(["docker", "restart", f"agent-{slug}"], check=False)
+                massnahmen.append(f"{slug}: Rocket.Chat-Zugangstoken war ungueltig, neu ausgestellt")
         if n.endswith("Protokoll seit Start") and "Conflict: terminated by other getUpdates" in d:
             massnahmen.append(f"{n.split(':')[0]}: Telegram-Bot laeuft doppelt. Pruefen, ob ein anderer Server denselben Bot nutzt (nicht automatisch reparierbar).")
     # 4. Platte voll
@@ -1678,11 +2092,16 @@ def cmd_agenten_check(a):
         if a.slug and slug != a.slug:
             continue
         p = agent_pfade(slug)
-        soul_len = len((p["hermes"] / "SOUL.md").read_text(encoding="utf-8")) if (p["hermes"] / "SOUL.md").exists() else 0
+        def _laenge(f: Path) -> int:
+            try:
+                return len(sicher_lesen(f).decode("utf-8", "replace"))
+            except (Fehler, OSError):
+                return 0
+        soul_len = _laenge(p["hermes"] / "SOUL.md")
         eigene = len(list(p["skills"].rglob("SKILL.md")))
         gesamt = len(list((p["hermes"] / "skills").rglob("SKILL.md"))) if (p["hermes"] / "skills").exists() else 0
         mem = p["hermes"] / "memories" / "MEMORY.md"
-        mem_len = len(mem.read_text(encoding="utf-8")) if mem.exists() else 0
+        mem_len = _laenge(mem)
         fb = len([f for f in p["fallbuch"].glob("*.md") if f.name != "INDEX.md"]) if p["fallbuch"].exists() else 0
         logs = run(["docker", "logs", "--since", "24h", f"agent-{slug}"], check=False, still=True)
         fehler = (logs.stdout + logs.stderr).count("Traceback") + (logs.stdout + logs.stderr).count(" ERROR ")
@@ -1696,7 +2115,11 @@ def cmd_agenten_check(a):
             hinweise.append(f"{slug}: {gesamt - eigene} mitgelieferte Skills geladen. Ungenutzte in skills.disabled aufnehmen.")
         if fehler > 5:
             hinweise.append(f"{slug}: {fehler} Fehler in 24 Std. Protokoll pruefen (doktor reparieren).")
-        if fb and not (p["fallbuch"] / "INDEX.md").read_text(encoding="utf-8").count("]("):
+        try:
+            index_text = sicher_lesen(p["fallbuch"] / "INDEX.md").decode("utf-8", "replace")
+        except (Fehler, OSError):
+            index_text = ""
+        if fb and not index_text.count("]("):
             hinweise.append(f"{slug}: Fallbuch-Index ohne Eintraege, obwohl {fb} Faelle existieren.")
     zeilen += ["", "## Hinweise", ""] + ([f"- {h}" for h in hinweise] or ["- keine, alles im Rahmen"])
     text = "\n".join(zeilen) + "\n"
@@ -1706,8 +2129,7 @@ def cmd_agenten_check(a):
     git("checkout", "-q", "main", check=False)
     git("add", "betrieb")
     git("commit", "-q", "-m", "Agenten-Check", check=False)
-    if repo_url(k):
-        git("push", "-q", "origin", "main", check=False)
+    hochladen_main(k)
     if "kurt" in defs:
         ausschnitt_rendern("kurt", defs["kurt"])
     logbuch("Agenten-Check", hinweise or ["alles im Rahmen"], "wartung")
@@ -1729,23 +2151,35 @@ def cmd_sichern(a):
     if run(["restic", "cat", "config"], env=env, check=False, still=True).returncode != 0:
         run(["restic", "init"], env=env)
     dump = DATEN / "sicherung" / "dumps"
+    if dump.exists():
+        shutil.rmtree(dump)  # nie einen alten Dump als neuen ausgeben
     dump.mkdir(parents=True, exist_ok=True)
-    run(["docker", "exec", "agenten-mongo-1", "mongodump", "--quiet", "--archive=/data/db/sicherung.archive", "--gzip"], check=False)
-    if (DATEN / "rocketchat" / "db" / "sicherung.archive").exists():
+    probleme = []
+    (DATEN / "rocketchat" / "db" / "sicherung.archive").unlink(missing_ok=True)
+    q = run(["docker", "exec", "agenten-mongo-1", "mongodump", "--quiet", "--archive=/data/db/sicherung.archive", "--gzip"], check=False)
+    if q.returncode == 0 and (DATEN / "rocketchat" / "db" / "sicherung.archive").exists():
         shutil.move(str(DATEN / "rocketchat" / "db" / "sicherung.archive"), dump / "rocketchat.archive.gz")
-    run(["docker", "exec", "agenten-mietjump-1", "mietjump", "sicherung", "/app/daten/sicherung.db"], check=False)
-    if (DATEN / "mietjump" / "sicherung.db").exists():
-        shutil.move(str(DATEN / "mietjump" / "sicherung.db"), dump / "mietjump.db")
+    else:
+        probleme.append("Rocket.Chat-Dump fehlgeschlagen")
+    if (BASIS / "mietjump-quelle" / "Dockerfile").exists():
+        (DATEN / "mietjump" / "sicherung.db").unlink(missing_ok=True)
+        q = run(["docker", "exec", "agenten-mietjump-1", "mietjump", "sicherung", "/app/daten/sicherung.db"], check=False)
+        if q.returncode == 0 and (DATEN / "mietjump" / "sicherung.db").exists():
+            shutil.move(str(DATEN / "mietjump" / "sicherung.db"), dump / "mietjump.db")
+        else:
+            probleme.append("MietJUMP-Sicherung fehlgeschlagen")
     p = run(["restic", "backup", "--quiet", "--tag", "doktor", "--exclude", str(DATEN / "rocketchat" / "db"),
              "--exclude", str(repo), str(DATEN), str(BASIS / "konfig.env"), str(GEHEIM_DIR), str(LOGBUCH_DIR)], env=env, check=False)
     run(["restic", "forget", "--quiet", "--keep-daily", "7", "--keep-weekly", "4", "--keep-monthly", "6", "--prune"], env=env, check=False)
-    ok = p.returncode == 0
+    ok = p.returncode == 0 and not probleme
+    if p.returncode != 0:
+        probleme.append(f"restic: {(p.stderr or '').strip()[-300:]}")
     z = zustand()
     if ok:
         z["letzte_sicherung"] = jetzt().isoformat()
         zustand_speichern(z)
-    logbuch("Sicherung " + ("ok" if ok else "FEHLER"), [f"Ziel {env['RESTIC_REPOSITORY']}", (p.stderr or "")[-300:]] if not ok else [f"Ziel {env['RESTIC_REPOSITORY']}"], "wartung")
-    print("Sicherung ok." if ok else f"Sicherung fehlgeschlagen: {p.stderr[-300:]}")
+    logbuch("Sicherung " + ("ok" if ok else "FEHLER"), [f"Ziel {env['RESTIC_REPOSITORY']}"] + probleme, "wartung")
+    print("Sicherung ok." if ok else "Sicherung fehlgeschlagen: " + "; ".join(probleme))
     sys.exit(0 if ok else 2)
 
 
@@ -1756,6 +2190,11 @@ def cmd_aktualisieren(a):
         print(f"Aktuell: {alt}. Neue Version testen: doktor aktualisieren --hermes vX.Y.Z [--testen-nur]")
         return
     neu = alt.rsplit(":", 1)[0] + ":" + a.hermes
+    defs0 = agenten_definitionen()
+    ausgang = {s: modell_test(s)[0] for s in defs0}
+    if not all(ausgang.values()):
+        raise Fehler("Schon vor dem Update antworten nicht alle Agenten (" +
+                     ", ".join(s for s, ok in ausgang.items() if not ok) + "). Erst reparieren, dann aktualisieren.")
     info(f"Ziehe {neu} ...")
     run(["docker", "pull", "-q", neu], timeout=1800)
     soll = run(["docker", "run", "--rm", "--entrypoint", "/opt/hermes/.venv/bin/python3", neu, "-c",
@@ -1768,14 +2207,14 @@ def cmd_aktualisieren(a):
     probe = DATEN / "probe-update"
     if probe.exists():
         shutil.rmtree(probe)
-    shutil.copytree(agent_pfade(slug)["hermes"], probe, ignore=shutil.ignore_patterns("sessions", "logs", "*.db*"))
+    shutil.copytree(agent_pfade(slug)["hermes"], probe, symlinks=True, ignore=shutil.ignore_patterns("sessions", "logs", "*.db*"))
     env = lies_env(probe / ".env")
     env = {kk: vv for kk, vv in env.items() if not kk.startswith(("ROCKETCHAT_", "TELEGRAM_"))}  # Probe darf nicht chatten
     schreibe_env(probe / ".env", env)
     cfg = yaml.safe_load((probe / "config.yaml").read_text())
     cfg["plugins"] = {"enabled": [], "disabled": ["rocketchat-platform", "telegram-platform"]}
     (probe / "config.yaml").write_text(yaml.safe_dump(cfg, allow_unicode=True, sort_keys=False))
-    run(["chown", "-R", f"{HERMES_UID}:{HERMES_UID}", str(probe)])
+    besitz_setzen(probe)
     netz = "agenten_agenten"
     marke = f"UPDATE-OK-{secrets.token_hex(2)}"
     p = run(["docker", "run", "--rm", "--network", netz, "-e", f"HERMES_UID={HERMES_UID}", "-e", f"HERMES_GID={HERMES_UID}",
@@ -1806,8 +2245,7 @@ def cmd_aktualisieren(a):
         werte["HERMES_IMAGE"] = alt
         werte["HERMES_CONFIG_VERSION"] = alt_version
         schreibe_env(KONFIG, werte)
-        compose_agenten_schreiben(defs, konfig())
-        compose("up", "-d", timeout=900)
+        alle_ausrollen(konfig(), defs)  # Profile mit alter Config-Version neu rendern, alte Images starten
         logbuch(f"Update auf {a.hermes} zurueckgerollt", [f"Modelltest fehlgeschlagen fuer: {', '.join(fehl)}"], "update")
         print("Nach dem Umstellen antworteten nicht alle Agenten. Zurueck auf " + alt)
         sys.exit(2)
@@ -1845,13 +2283,106 @@ def cmd_vorlage_uebernehmen(a):
         _platzhalter_ersetzen(k)
         git("add", "-A")
         git("commit", "-q", "-m", f"Vorlage der Start-Agenten aktualisiert ({len(geaendert)} Dateien, Doktor)")
-        if repo_url(k):
-            git("push", "-q", "origin", "main", check=False)
+        hochladen_main(k)
     logbuch("Vorlage der Start-Agenten uebernommen", [f"geaendert: {x}" for x in geaendert] + [f"uebersprungen (im Repo angepasst): {x}" for x in uebersprungen], "aufbau")
     for x in geaendert:
         info(f"aktualisiert: {x}")
     for x in uebersprungen:
         info(f"uebersprungen, im Repo angepasst: {x}")
+
+
+def warte_auf_dienste(sekunden: int = 300) -> bool:
+    """Wartet, bis Rocket.Chat und MietJUMP antworten."""
+    ende = time.time() + sekunden
+    while time.time() < ende:
+        try:
+            ok_rc = http_json("GET", f"http://{container_ip('agenten-rocketchat-1')}:3000/api/info", timeout=5)[0] == 200
+            ok_mj = (not (BASIS / "mietjump-quelle" / "Dockerfile").exists()) or \
+                http_json("GET", f"http://{container_ip('agenten-mietjump-1')}:8787/gesund", timeout=5)[0] == 200
+            if ok_rc and ok_mj:
+                return True
+        except Exception:  # noqa: BLE001
+            pass
+        time.sleep(5)
+    return False
+
+
+def cmd_nach_start(a):
+    """Nach dem Hochfahren: Docker startet alle Container gleichzeitig, Agenten sind schneller als
+    Rocket.Chat und MietJUMP und parken dann ihre MCP-Verbindung. Darum warten und Agenten neu starten."""
+    defs = agenten_definitionen()
+    bereit = warte_auf_dienste(600)
+    for s in defs:
+        run(["docker", "restart", f"agent-{s}"], check=False)
+    logbuch("Start nach Neustart", [f"Dienste bereit: {'ja' if bereit else 'NEIN (10 Min. gewartet)'}",
+                                    "Agenten neu gestartet: " + ", ".join(defs)], "wartung")
+
+
+def testfragen_laden(slug: str) -> list:
+    f = WISSEN / "agenten" / slug / "testfragen.yaml"
+    if not f.exists():
+        return []
+    d = yaml.safe_load(f.read_text(encoding="utf-8")) or {}
+    liste = d.get("testfragen") if isinstance(d, dict) else d
+    return [t for t in (liste or []) if isinstance(t, dict) and t.get("frage") and t.get("erwartet")]
+
+
+def testfragen_laufen(slug: str) -> tuple:
+    """Jede Testfrage an den echten Agenten (mit SOUL und Skills), dann ein getrennter Pruefaufruf ohne
+    Agentenregeln: erfuellt die Antwort die erwartete Kernaussage? Ergebnis als Bericht im Wissens-Repo."""
+    fragen = testfragen_laden(slug)
+    zeilen = [f"# Testfragen {slug} ({jetzt():%d.%m.%Y %H:%M})", "", "| Ergebnis | Frage | Erwartet |", "|---|---|---|"]
+    ok_n = 0
+    for t in fragen:
+        p = run(["docker", "exec", "-u", "hermes", f"agent-{slug}", "hermes", "chat", "-Q", "--max-turns", "6", "--source", "tool",
+                 "-q", f"[Testfrage aus dem Lernkreislauf, nichts ausfuehren, nur beschreiben, was du tun wuerdest] {t['frage']}"],
+                check=False, still=True, timeout=600)
+        antwort = (p.stdout or "").strip()[-4000:]
+        urteil = run(["docker", "exec", "-u", "hermes", f"agent-{slug}", "hermes", "chat", "-Q", "--max-turns", "1", "--ignore-rules",
+                      "--source", "tool", "-q",
+                      "Du bist Pruefer. Erfuellt die ANTWORT die ERWARTETE KERNAUSSAGE inhaltlich? Antworte nur mit JA oder NEIN.\n"
+                      f"ERWARTET: {t['erwartet']}\nANTWORT: {antwort}"], check=False, still=True, timeout=300).stdout.strip().upper()
+        bestanden = urteil.startswith("JA") or "\nJA" in urteil
+        ok_n += bestanden
+        zeilen.append(f"| {'bestanden' if bestanden else 'NICHT bestanden'} | {t['frage'][:120]} | {t['erwartet'][:120]} |")
+    zeilen += ["", f"{ok_n} von {len(fragen)} bestanden."]
+    ziel = WISSEN / "betrieb" / "testfragen" / f"{slug}.md"
+    ziel.parent.mkdir(parents=True, exist_ok=True)
+    ziel.write_text("\n".join(zeilen) + "\n", encoding="utf-8")
+    git("add", "betrieb")
+    git("commit", "-q", "-m", f"Testfragen {slug}: {ok_n}/{len(fragen)}", check=False)
+    hochladen_main(konfig())
+    return ok_n, len(fragen)
+
+
+def cmd_testfragen(a):
+    """Testfragen eines oder aller Agenten. --offen: nur Agenten, deren Definition seit dem letzten Lauf
+    per Freigabe geaendert wurde (laeuft per Zeitplan)."""
+    defs = agenten_definitionen()
+    z = zustand()
+    if a.offen:
+        ziele = [s for s in z.get("testfragen_offen", []) if s in defs]
+    else:
+        ziele = [a.slug] if a.slug else list(defs)
+    if not ziele:
+        return
+    ergebnisse = []
+    for s in ziele:
+        if not modell_test(s)[0]:
+            ergebnisse.append(f"{s}: Modell antwortet nicht, Testfragen verschoben")
+            continue
+        ok_n, n = testfragen_laufen(s)
+        ergebnisse.append(f"{s}: {ok_n} von {n} Testfragen bestanden")
+        if a.offen:
+            z = zustand()
+            z["testfragen_offen"] = [x for x in z.get("testfragen_offen", []) if x != s]
+            zustand_speichern(z)
+        if ok_n < n:
+            ergebnisse.append(f"{s}: Bericht unter betrieb/testfragen/{s}.md. Letzte Freigabe pruefen oder per Vorschlag nachbessern.")
+    logbuch("Testfragen", ergebnisse, "test")
+    logbuch_spiegeln(konfig())
+    for e in ergebnisse:
+        print(e)
 
 
 def cmd_logbuch(a):
@@ -1888,6 +2419,25 @@ def cmd_telegram_koppeln(a):
         schreibe_env(KONFIG, w)
         info(f"Telegram-ID des Eigentuemers gespeichert: {m.group(1)}")
     logbuch("Telegram gekoppelt", [f"Agent {slug}"], "aufbau")
+
+
+def sperre_holen(warten_s: int = 900):
+    """Nur ein veraendernder Doktor-Lauf zur selben Zeit (Zeitplaene und Handaufrufe teilen sich Repo und Container)."""
+    import fcntl
+    BASIS.mkdir(parents=True, exist_ok=True)
+    f = open(BASIS / ".doktor.sperre", "w")
+    ende = time.time() + warten_s
+    while True:
+        try:
+            fcntl.flock(f, fcntl.LOCK_EX | fcntl.LOCK_NB)
+            return f
+        except BlockingIOError:
+            if time.time() > ende:
+                raise Fehler("Ein anderer Doktor-Lauf haelt die Sperre seit 15 Minuten. Bitte spaeter erneut.")
+            time.sleep(2)
+
+
+OHNE_SPERRE = {"status", "zugangsdaten", "geheimnis-setzen"}
 
 
 def main():
@@ -1930,6 +2480,11 @@ def main():
     s.add_argument("slug", nargs="?")
     s.set_defaults(f=cmd_modell_test)
     sub.add_parser("zugangsdaten").set_defaults(f=cmd_zugangsdaten)
+    sub.add_parser("nach-start").set_defaults(f=cmd_nach_start)
+    s = sub.add_parser("testfragen")
+    s.add_argument("slug", nargs="?")
+    s.add_argument("--offen", action="store_true", help="nur Agenten mit frisch freigegebenen Aenderungen")
+    s.set_defaults(f=cmd_testfragen)
     s = sub.add_parser("vorlage-uebernehmen")
     s.add_argument("--erzwingen", action="store_true")
     s.set_defaults(f=cmd_vorlage_uebernehmen)
@@ -1941,6 +2496,9 @@ def main():
         print("doktor muss als root laufen.", file=sys.stderr)
         sys.exit(2)
     try:
+        sperre = None if a.befehl in OHNE_SPERRE else sperre_holen(60 if a.befehl in ("abgleich", "check", "reparieren") else 900)
+        if sperre is not None and (WISSEN / ".git").exists():
+            git("checkout", "-q", "-f", "main", check=False)  # nie auf einem Vorschlags-Branch weiterarbeiten
         a.f(a)
     except Fehler as e:
         print(f"FEHLER: {e}", file=sys.stderr)

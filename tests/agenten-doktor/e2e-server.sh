@@ -54,6 +54,11 @@ pruef "veroeffentlichen liefert Link unter dash.$DOMAIN/vera/" bash -c "[[ '$URL
 pruef "Dashboard mit Passwort abrufbar" bash -c "curl -fsS -u team:$(geheim DASH_PASS) '$URL' | grep -q 'E2E Mieteingang'"
 pruef "Dashboard ohne Passwort gesperrt" bash -c "[ \$(curl -s -o /dev/null -w '%{http_code}' '$URL') = 401 ]"
 
+echo "== 2b. Dateiablage: nur eigener Ordner"
+pruef "Vera kann nicht in Kurts Dashboard-Ordner schreiben" bash -c "docker exec -u hermes agent-vera sh -c '[ -n \"\$WEBDAV_ZUGANG\" ] && curl -s -o /dev/null -w %{http_code} -u \"\$WEBDAV_ZUGANG\" -T /opt/data/arbeit/e2e/test.html http://dateien:8081/kurt/fremd.html' | grep -qE '^(401|403)$'"
+pruef "Vera kann die Startseite nicht ersetzen" bash -c "docker exec -u hermes agent-vera sh -c '[ -n \"\$WEBDAV_ZUGANG\" ] && curl -s -o /dev/null -w %{http_code} -u \"\$WEBDAV_ZUGANG\" -T /opt/data/arbeit/e2e/test.html http://dateien:8081/_start/index.html' | grep -qE '^(401|403)$' && curl -fsS -u team:$(geheim DASH_PASS) https://$DOMAIN/ | grep -q 'Dein Agenten-Team'"
+pruef "WebDAV ohne Zugang abgewiesen" bash -c "docker exec -u hermes agent-vera sh -c 'curl -s -o /dev/null -w %{http_code} -T /opt/data/arbeit/e2e/test.html http://dateien:8081/vera/ohne.html' | grep -qE '^(401|403)$'"
+
 echo "== 3. Wissens-Ausschnitte und Isolation"
 pruef "Kurt sieht Geschaeftsfuehrung" docker exec agent-kurt test -e /opt/data/wissen/geschaeftsfuehrung/README.md
 pruef "Vera sieht keine Geschaeftsfuehrung" bash -c '! docker exec agent-vera test -e /opt/data/wissen/geschaeftsfuehrung'
@@ -78,6 +83,22 @@ pruef "Freigabe durch Eigentuemer uebernimmt PR" doktor freigeben "$PR1" --von "
 pruef "Aenderungsprotokoll fortgeschrieben" bash -c "grep -q '#$PR1 freigegeben' $D/wissen/agenten/vera/aenderungen.md"
 doktor abgleich >/dev/null 2>&1
 pruef "neues Wissen landet in Veras Ausschnitt" docker exec agent-vera test -e /opt/data/wissen/agenten/vera/wissen/e2e-jobcenter.md
+
+echo "== 4b. Angriffe ueber Symlinks (Agent manipuliert seine Ordner)"
+echo "OPFER-INHALT" > /tmp/e2e-opfer; chmod 644 /tmp/e2e-opfer
+ln -sf /opt/agenten/geheim/geheim.env $D/agenten/vera/fallbuch/leck.md
+ln -sfn /tmp/e2e-opfer $D/agenten/vera/hermes/SOUL.md
+VS=$D/agenten/vera/vorschlaege/$HEUTE-e2e-symlink; rm -rf "$VS"; mkdir -p "$VS/dateien/agenten/vera/wissen"
+cp "$V1/vorschlag.yaml" "$VS/vorschlag.yaml" 2>/dev/null || printf 'titel: "x"\nart: wissen\nausloeser: "e2e"\nbegruendung: "e2e"\ntestfragen:\n  - frage: "a"\n    erwartet: "b"\n' > "$VS/vorschlag.yaml"
+ln -sf /opt/agenten/geheim/geheim.env "$VS/dateien/agenten/vera/wissen/geheim.md"
+chown -h -R 10000:10000 $D/agenten/vera/fallbuch $D/agenten/vera/hermes/SOUL.md "$VS"
+doktor abgleich --alles >/dev/null 2>&1
+pruef "Fallbuch-Symlink auf Geheimnisse wird nicht gespiegelt" bash -c "! test -e $D/wissen/agenten/vera/fallbuch/leck.md && ! grep -rq RC_ADMIN_PASS $D/wissen"
+pruef "Symlink statt SOUL.md: Ziel bleibt unveraendert, SOUL.md wieder echte Datei" bash -c "grep -qx OPFER-INHALT /tmp/e2e-opfer && test -f $D/agenten/vera/hermes/SOUL.md && ! test -L $D/agenten/vera/hermes/SOUL.md"
+pruef "Vorschlag mit Symlink abgelehnt" bash -c "grep -q 'Symlink' $VS/ergebnis.yaml"
+rm -f $D/agenten/vera/fallbuch/leck.md /tmp/e2e-opfer
+rm -f "$V1/ergebnis.yaml"; doktor abgleich >/dev/null 2>&1
+pruef "geloeschtes ergebnis.yaml fuehrt nicht zu erneuter Verarbeitung" bash -c "! test -e $V1/ergebnis.yaml"
 
 echo "== 5. Freigabe per Telegram nur mit Bestaetigungscode"
 mkdir -p $D/agenten/kurt/vorschlaege/_freigaben
@@ -170,6 +191,12 @@ echo "== Aufraeumen"
 cd $D/wissen && git rm -rq --ignore-unmatch agenten/testhanna agenten/vera/wissen/e2e-jobcenter.md >/dev/null 2>&1 && \
   git -c user.name=Agenten-Doktor -c user.email=doktor@agenten.invalid commit -qm "E2E-Testdaten entfernt" && cd - >/dev/null
 rm -rf $D/agenten/*/vorschlaege/$HEUTE-e2e-* $D/agenten/kurt/vorschlaege/_freigaben/999.* $D/dateien/vera/e2e
+python3 - <<'PY'
+import json
+p="/opt/agenten/daten/zustand.json"; z=json.load(open(p))
+z["verarbeitete_vorschlaege"]={k:v for k,v in z.get("verarbeitete_vorschlaege",{}).items() if "-e2e-" not in k}
+json.dump(z,open(p,"w"),indent=2,ensure_ascii=False)
+PY
 doktor abgleich --alles >/dev/null 2>&1
 docker rm -f agent-testhanna >/dev/null 2>&1; rm -rf $D/agenten/testhanna
 doktor logbuch "End-to-End-Test: $OK bestanden, $FEHL fehlgeschlagen" --art test >/dev/null 2>&1

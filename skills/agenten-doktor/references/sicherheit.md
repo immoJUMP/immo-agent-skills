@@ -58,11 +58,12 @@ Prüfliste der Bestandsaufnahme.
 2. **Datenabfluss übers Internet:** Agenten-Container dürfen ins Internet, weil das Modell
    dort läuft. Ein manipulierter Agent könnte per Terminal Daten an eine fremde Adresse
    schicken. Der Installer hat keinen Ausgangsfilter.
-3. **Gmail-Zugang im Container:** Das Werkzeug `gmail` läuft in Veras Container und
-   braucht dort den Gmail-Zugang. Die Berechtigung für Entwürfe (`gmail.compose`) erlaubt
-   technisch auch Senden. Ein manipulierter Agent mit Terminal könnte die Google-Schnittstelle
-   direkt aufrufen. Sauberer wäre ein Gmail-Vermittler auf dem Host, der den Zugang hält.
-   Ähnlich liegen Modellzugang und Bot-Token in den Containern, die sie brauchen: Ausgabelimit setzen.
+3. **Gmail:** Den Google-Token hält nur die Postfach-Wache auf dem Server. Veras Container
+   kennt nur ihren eigenen Schlüssel für die Wache. Die Wache lässt Lesen, Anhänge, Entwürfe
+   und eigene Labels durch und lehnt Senden, Löschen, Weiterleitungsregeln und das Entfernen
+   von Labels ab (getestet). Restrisiko: Ein manipulierter Agent kann Entwürfe mit falschem
+   Inhalt anlegen. Deshalb prüft ein Mensch jeden Entwurf vor dem Senden.
+   Modellzugang und Bot-Token liegen in den Containern, die sie brauchen: Ausgabelimit setzen.
 4. **Modellanbieter sieht Daten:** Mails und Mieterdaten gehen zum Modellanbieter.
    Verträge zur Auftragsverarbeitung mit Hetzner und dem Modellanbieter abschließen,
    Verbrauchertarife sind die schwächere Grundlage ([modelle-und-kosten.md](modelle-und-kosten.md)).

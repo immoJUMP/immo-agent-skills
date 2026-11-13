@@ -15,7 +15,7 @@
 	basic_auth {
 		{$DASH_BENUTZER} {$DASH_PASS_HASH}
 	}
-	root * /srv/dateien/_start
+	root * /srv/start
 	file_server
 }
 
