@@ -1,0 +1,4 @@
+# Was in Veras Wissens-Ausschnitt kommt (lesen) und wofür sie Vorschläge ablegen darf (vorschlagen).
+# Freigabe richtet sich nach SCHNITTSTELLEN.md Abschnitt 6, nicht nach dieser Datei.
+lesen: ["team/**", "agenten/vera/**"]
+vorschlagen: ["agenten/vera/wissen/**", "agenten/vera/beispiele/**", "agenten/vera/testfragen.yaml", "team/objekte/**"]

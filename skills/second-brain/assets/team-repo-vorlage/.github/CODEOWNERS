@@ -1,0 +1,42 @@
+# Wer prüft was (SCHNITTSTELLEN.md, Abschnitt 6). Ändern nur durch den Eigentümer.
+#
+# Platzhalter, ersetzt vom Doktor:
+#   @EIGENTUEMER                 GitHub-Konto aus konfig.env (EIGENTUEMER_GITHUB), beim Anlegen des Repos
+#   @FACHVERANTWORTLICH_<SLUG>   fachverantwortlich.github aus agenten/<slug>/agent.yaml, beim Einstellen des Agenten
+#
+# GitHub nimmt die letzte passende Zeile. Darum: Allgemeines oben, Strenges unten.
+# Erzwungen wird CODEOWNERS nur mit Branch-Schutz "Require review from Code Owners".
+# Die verbindliche Sperre ist "doktor freigeben": Es merged nur, wenn die Person für alle Dateien berechtigt ist.
+
+# Standard: alles, was unten nicht genannt ist, gibt nur der Eigentümer frei.
+*                                   @EIGENTUEMER
+
+# Team-Wissen: Eigentümer oder Fachverantwortliche/r des vorschlagenden Agenten.
+# Der Doktor hängt beim Einstellen jedes Agenten @FACHVERANTWORTLICH_<SLUG> an diese Zeile an.
+/team/                              @EIGENTUEMER
+
+# Je Agent ein Block. Der Doktor fügt ihn im PR "agent-einstellen" unter diesem Muster ein,
+# vor dem Abschnitt "Nur Eigentümer", ohne Kommentarzeichen, <slug> und <SLUG> ersetzt:
+# agent:<slug> anfang
+# /agenten/<slug>/wissen/           @EIGENTUEMER @FACHVERANTWORTLICH_<SLUG>
+# /agenten/<slug>/beispiele/        @EIGENTUEMER @FACHVERANTWORTLICH_<SLUG>
+# /agenten/<slug>/testfragen.yaml   @EIGENTUEMER @FACHVERANTWORTLICH_<SLUG>
+# /agenten/<slug>/fallbuch/         @EIGENTUEMER @FACHVERANTWORTLICH_<SLUG>
+# agent:<slug> ende
+
+# Nur Eigentümer. Diese Zeilen stehen zuletzt, damit sie immer gewinnen.
+/agenten/*/agent.yaml               @EIGENTUEMER
+/agenten/*/rolle.md                 @EIGENTUEMER
+/agenten/*/regeln.md                @EIGENTUEMER
+/agenten/*/rechte.yaml              @EIGENTUEMER
+/agenten/*/skills/                  @EIGENTUEMER
+/agenten/*/aenderungen.md           @EIGENTUEMER
+/agenten/_vorlage/                  @EIGENTUEMER
+/agenten/README.md                  @EIGENTUEMER
+/geschaeftsfuehrung/                @EIGENTUEMER
+/betrieb/                           @EIGENTUEMER
+/.github/                           @EIGENTUEMER
+/AGENTS.md                          @EIGENTUEMER
+/INDEX.md                           @EIGENTUEMER
+/llms.txt                           @EIGENTUEMER
+/README.md                          @EIGENTUEMER

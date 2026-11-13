@@ -39,3 +39,39 @@ Bei Änderungen: neue Quelle, ersetzte/infrage gestellte Aussage und Begründung
 - `stale_after: JJJJ-MM`: optionaler vereinbarter Prüfmonat für zeitkritisches Wissen. Ab Monatsbeginn ist die Prüfung fällig. Er ist weder automatischer Ablauf der enthaltenen Fakten noch Löschauftrag. Kein Datum erfinden, wenn Anlass/Turnus unbekannt ist.
 
 Eine in der Quelle bestätigte Entscheidung und eine geprüfte Wissensseite sind verschieden. Auch eine Seite im Entwurfsstatus kann einzelne klar belegte Aussagen enthalten; benenne deren Beleg und begrenze die Aussage auf den belegten Stand.
+
+## Entscheidungen
+
+Für datierte Entscheidungen eine eigene Datei je Entscheidung: `entscheidungen/JJJJ-MM-TT-slug.md`, dazu eine Zeile im Index des Ordners. Die Entscheidung erklärt das Warum. Die Regel, die daraus folgt, steht an ihrem zuständigen Ort und verweist auf die Entscheidung; sie wird nicht in die Entscheidung kopiert.
+
+```markdown
+# ENTSCHEIDUNG ALS SATZ
+
+**Datum:** JJJJ-MM-TT
+**Status:** vorgeschlagen | entschieden | ersetzt durch JJJJ-MM-TT-slug.md
+**Entschieden von:** ROLLE
+**Gilt für:** FIRMA / OBJEKT / BEREICH
+
+## Entscheidung
+Was gilt ab wann.
+
+## Warum
+Begründung und Belege mit Fundstelle.
+
+## Alternativen
+Verworfene Optionen und Grund.
+
+## Folgen
+Was sich ändert, wo die daraus folgende Regel steht, Risiken, nächste Schritte.
+
+## Neu bewerten wenn
+Konkrete Auslöser: Zahl, Datum, Ereignis.
+
+## Referenzen
+- QUELLE
+```
+
+- `Status` nur aus tatsächlicher Entscheidung setzen. Ein Vorschlag bleibt `vorgeschlagen`, bis die zuständige Person entschieden hat.
+- Überholte Entscheidungen nicht löschen und nicht umschreiben: Status `ersetzt durch` mit Verweis auf die neue Datei.
+- Leere Abschnitte weglassen; fehlende entscheidende Angaben als offen nennen.
+- Die Datei `assets/team-repo-vorlage/entscheidungen/_vorlage.md` folgt dieser Vorlage. Bei einer Änderung hier auch dort anpassen.

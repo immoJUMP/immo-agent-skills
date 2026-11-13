@@ -1,0 +1,59 @@
+# Zertifikate holt Caddy automatisch bei Let's Encrypt (ohne E-Mail-Adresse).
+
+(sicher) {
+	header {
+		Strict-Transport-Security "max-age=31536000"
+		X-Content-Type-Options nosniff
+		Referrer-Policy no-referrer
+		-Server
+	}
+}
+
+# Startseite mit Links und Gesundheitsstatus (vom Doktor erzeugt), Passwort
+{$DOMAIN} {
+	import sicher
+	basic_auth {
+		{$DASH_BENUTZER} {$DASH_PASS_HASH}
+	}
+	root * /srv/dateien/_start
+	file_server
+}
+
+# Team-Chat (Rocket.Chat hat eine eigene Anmeldung)
+chat.{$DOMAIN} {
+	import sicher
+	reverse_proxy rocketchat:3000 {
+		flush_interval -1
+		transport http {
+			read_timeout 600s
+		}
+	}
+}
+
+# Dashboards und Artefakte der Agenten, nur lesen, Passwort
+dash.{$DOMAIN} {
+	import sicher
+	basic_auth {
+		{$DASH_BENUTZER} {$DASH_PASS_HASH}
+	}
+	reverse_proxy dateien:8080
+}
+
+# MietJUMP: eigene Anmeldung mit Zugangs-Token, davor zusaetzlich Passwort
+miet.{$DOMAIN} {
+	import sicher
+	@ohne_mcp not path /mcp* /.well-known/* /oauth/*
+	basic_auth @ohne_mcp {
+		{$DASH_BENUTZER} {$DASH_PASS_HASH}
+	}
+	log {
+		format filter {
+			request>uri query {
+				delete t
+			}
+		}
+	}
+	reverse_proxy mietjump:8787 {
+		flush_interval -1
+	}
+}

@@ -1,6 +1,6 @@
 ---
 name: second-brain
-description: "Richtet eine nachvollziehbare Wissensbasis fuer Immobilien und Unternehmenswissen ein, arbeitet neue Quellen in bestehende Wissensseiten ein oder prueft deren Aktualitaet und Belege. Nutze diesen Skill fuer Second-Brain-Aufbau, dauerhafte Wissenspflege, widerspruechliche Quellen oder eine Wissensbasis-Pruefung. Reine Dokumentensortierung, einzelne Zusammenfassungen und operative CRM-Aenderungen sind andere Aufgaben."
+description: "Richtet eine nachvollziehbare Wissensbasis fuer Immobilien und Unternehmenswissen ein, arbeitet neue Quellen in bestehende Wissensseiten ein oder prueft deren Aktualitaet und Belege. Nutze diesen Skill fuer Second-Brain-Aufbau, dauerhafte Wissenspflege, widerspruechliche Quellen oder eine Wissensbasis-Pruefung. Auch fuer das Wissens-Repo eines Agenten-Teams auf GitHub: Vorlage anlegen, Rechte je Dateityp, Vorschlaege als Pull Request, Testfragen, Fallbuch, Tagesabschluss. Reine Dokumentensortierung, einzelne Zusammenfassungen und operative CRM-Aenderungen sind andere Aufgaben."
 ---
 
 # Second Brain – Wissen aufbauen und verlässlich weiterpflegen
@@ -16,6 +16,7 @@ Für Anwenderfragen zu Nutzen, Aufbau, Einführung, Systemvergleich und laufende
 | Wissensbasis neu aufbauen oder vorhandene Struktur ergänzen | Vorhandenes verstehen, klein einrichten, eine Quelle verarbeiten und abfragen. | [Einrichten](references/einrichten.md) |
 | Neue Unterlagen, Entscheidungen oder Learnings dauerhaft einarbeiten | Zugehörige Seiten finden, Quellen abgleichen, aktuellen Stand pflegen. | [Einarbeiten](references/einarbeiten.md) |
 | Belege, Aktualität, Doppelungen oder Wissensqualität prüfen | Angegebenen Bereich lesen und konkrete Befunde liefern. Bei reinem Prüfauftrag nichts ändern. | [Prüfen](references/pruefen.md) |
+| Wissens-Repo für ein Agenten-Team auf GitHub einrichten, betreiben oder abnehmen | Vorlage `assets/team-repo-vorlage/` nutzen; Rechte nach Dateityp, Lernkreislauf über Vorschläge und Pull Requests, Testfragen, Fallbuch. | [Team-Repo](references/team-repo.md) |
 
 Wähle anhand des Auftrags. Eine neue Quelle löst keinen kompletten Neuaufbau aus. Eine Wissensfrage erfordert keine automatische Änderung der Ablage. Lade nur benötigte Referenzen; Übungsquellen gehören nur zu ausdrücklich gewünschten Übungen.
 
