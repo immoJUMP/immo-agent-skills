@@ -879,8 +879,14 @@ def wissen_vorbereiten(k: dict) -> None:
         logbuch("Wissens-Repo angelegt", ["Vorlage und Agenten Kurt, Vera uebernommen"])
 
 
-def _platzhalter_ersetzen(k: dict) -> None:
-    ersatz = {
+def _platzhalter_text(text: str, k: dict) -> str:
+    for a, b in _platzhalter_tabelle(k).items():
+        text = text.replace(a, b)
+    return re.sub(r"@FACHVERANTWORTLICH_[A-Z0-9_]+", "@" + k.get("EIGENTUEMER_GITHUB", "eigentuemer"), text)
+
+
+def _platzhalter_tabelle(k: dict) -> dict:
+    return {
         "{{EIGENTUEMER}}": k.get("EIGENTUEMER_GITHUB", "eigentuemer"),
         "{{EIGENTUEMER_NAME}}": k.get("EIGENTUEMER_NAME", "Eigentuemer"),
         "{{EIGENTUEMER_GITHUB}}": k.get("EIGENTUEMER_GITHUB", "eigentuemer"),
@@ -890,6 +896,10 @@ def _platzhalter_ersetzen(k: dict) -> None:
         "{{DATUM}}": f"{jetzt():%Y-%m-%d}",
         "{{REPO_DATUM}}": f"{jetzt():%Y-%m-%d}",
     }
+
+
+def _platzhalter_ersetzen(k: dict) -> None:
+    ersatz = _platzhalter_tabelle(k)
     for p in WISSEN.rglob("*"):
         if p.is_file() and ".git" not in p.parts and p.suffix in (".md", ".yaml", ".yml", ".txt", "") :
             try:
@@ -2272,6 +2282,10 @@ def cmd_vorlage_uebernehmen(a):
         rel = "agenten/" + f.relative_to(quelle).as_posix()
         ziel = WISSEN / rel
         neu = f.read_bytes()
+        try:
+            neu = _platzhalter_text(neu.decode("utf-8"), k).encode("utf-8")
+        except UnicodeDecodeError:
+            pass
         if ziel.exists() and ziel.read_bytes() == neu:
             continue
         if ziel.exists() and erster and not a.erzwingen:
