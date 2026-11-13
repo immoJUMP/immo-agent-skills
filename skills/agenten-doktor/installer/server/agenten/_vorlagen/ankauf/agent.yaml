@@ -1,15 +1,15 @@
 # Vorlage (kein laufender Agent, Ordner beginnt mit _). Kurt kopiert sie beim Einstellen nach
 # agenten/<slug>/, passt Name, Suchgebiet und Fachverantwortliche/n an und legt den Vorschlag an.
-slug: akquise
-name: Mats
-rolle: Akquise
+slug: ankauf
+name: Anke
+rolle: Ankauf
 emoji: "🔎"
 fachverantwortlich:
   name: "{{EIGENTUEMER_NAME}}"
   github: "{{EIGENTUEMER_GITHUB}}"
   telegram_id: "{{EIGENTUEMER_TELEGRAM_ID}}"
 rocketchat:
-  raum: akquise
+  raum: ankauf
   weitere_raeume: [team]
 telegram: false
 werkzeuge: [gmail, veroeffentlichen, vorschlag, fallbuch]
@@ -17,4 +17,4 @@ fach_skills: [deal-screener, bierdeckel-kalkulation, marktanalyse, akquise-agent
 routinen:
   - name: suchauftraege
     zeitplan: "0 8,18 * * *"
-    auftrag: "Fuehre den Skill suchauftraege-auswerten aus. Melde in #akquise nur Objekte, die den Ankaufskriterien entsprechen."
+    auftrag: "Fuehre den Skill suchauftraege-auswerten aus. Melde in #ankauf nur Objekte, die den Ankaufskriterien entsprechen."

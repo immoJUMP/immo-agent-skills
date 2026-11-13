@@ -1,0 +1,2 @@
+lesen: ["team/**", "agenten/ankauf/**"]
+vorschlagen: ["agenten/ankauf/wissen/**", "agenten/ankauf/beispiele/**", "agenten/ankauf/testfragen.yaml"]
