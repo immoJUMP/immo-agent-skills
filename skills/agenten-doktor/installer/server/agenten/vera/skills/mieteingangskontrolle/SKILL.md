@@ -20,8 +20,12 @@ description: "Prüft die Mieteingänge in MietJUMP. Kontoauszüge importieren, a
    - Formatfehler: Datei liegen lassen, nicht selbst umbauen, in #verwaltung melden.
    - Keine neue Datei: weitermachen und im Bericht sagen, von wann der letzte Import ist.
    - Aus einer Mail geholt: Datei und Maildatum im Bericht nennen.
-4. `sollstellungen_buchen` mit `bis` = laufender Monat (JJJJ-MM). Idempotent, bucht nur Fehlendes.
-5. `abgleich_ausfuehren` (Stichtag heute).
+4. `sollstellungen_buchen` **immer mit `ab` und `bis`** (JJJJ-MM). `bis` = Monat des Stichtags.
+   `ab` = Übernahmemonat aus `agenten/vera/wissen/bestand.md` (Zeile `Übernahmemonat: JJJJ-MM`).
+   Steht dort keiner, ist `ab` = `bis`: Dann bucht MietJUMP nur diesen einen Monat, und du fragst im
+   Bericht einmal nach dem Übernahmemonat. Nie ohne `ab`: MietJUMP bucht sonst jeden Monat seit
+   Vertragsbeginn, oft Jahre zurück, und jede Einheit steht als Rückstand da. Idempotent, bucht nur Fehlendes.
+5. `abgleich_ausfuehren` mit dem Stichtag, den der Eigentümer nennt, sonst heute.
 6. `mietstand` und `entscheidungen_auflisten` lesen.
 7. Jede Einheit mit Status offen oder abweichend einordnen:
    - **Echter Rückstand**: fällig, nichts oder zu wenig gezahlt, und kein ungeklärter Eingang passt dazu. Mit `kontoauszug` des Vertrags Betrag, „seit“ (letzter Nullsaldo) und Mahnstand holen.

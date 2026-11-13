@@ -58,15 +58,19 @@ Dann `doktor-lokal.sh token-speichern hetzner`.
 ## 4. VM anlegen
 
 ```bash
-doktor-lokal.sh hetzner-anlegen <server> cx43 nbg1
+doktor-lokal.sh hetzner-anlegen <server> cx43,cx53,cpx32 nbg1
 ```
 
 - Das Skript hinterlegt den SSH-Schlüssel, legt die Firewall an (SSH nur von der
-  aktuellen IP des Macs) und dann den Server. Meldet Hetzner „nicht verfügbar“, versucht es
-  selbst nbg1, fsn1 und hel1 in mehreren Runden.
+  aktuellen IP des Macs) und dann den Server. Es fragt je Typ ab, an welchen Standorten
+  Hetzner ihn gerade anbietet, und versucht nbg1, fsn1 und hel1 in mehreren Runden. Der erste
+  freie Typ der Liste gewinnt. In die Liste kommen nur Typen, deren Preis mit Backups der
+  Nutzer zugesagt hat (Start-Prompt: Kostenrahmen). `vorbereitung-pruefen` zeigt die Lage vorher.
+- Belegt: cx43 war am 14.11.2026 gegen 0 Uhr an allen drei Standorten ausverkauft, frei waren
+  nur teurere Typen (cpx32 mit 4 Kernen und 8 GB ca. 35 EUR, cx53 zeitweise). 8 GB reichen für
+  Rocket.Chat und zwei bis drei Agenten (gemessen: 2,5 GB belegt mit Kurt und Vera).
 - Scheitert es ganz: später erneut versuchen (oft nach Minuten bis Stunden wieder frei)
-  oder nach Rückfrage einen anderen Typ nehmen, Preis vorher nennen. cx33 reicht für Tests,
-  für Rocket.Chat plus mehrere Agenten ist er knapp.
+  oder nach Rückfrage einen anderen Typ nehmen, Preis vorher nennen.
 - Danach Schutz einschalten: `doktor-lokal.sh hetzner-schutz <server> --backups` (Lösch- und
   Neuaufbau-Schutz kostenlos, Hetzner-Backups plus 20 Prozent des Serverpreises, also vorher
   Kosten nennen und Ja holen). Ohne Ja zu den Backups nur `hetzner-schutz <server>`.

@@ -87,7 +87,8 @@ ssh_schluessel() {
 }
 
 cmd_hetzner_anlegen() {
-  local name="${1:?Servername}" typ="${2:-cx43}" ort="${3:-nbg1}"
+  # typ darf eine Liste sein ("cx43,cx53,cpx32"): der erste, den Hetzner gerade anbietet, gewinnt.
+  local name="${1:?Servername}" typen="${2:-cx43}" ort="${3:-nbg1}" typ=""
   local key pub fp ip fw_id srv antwort
   key="$(ssh_schluessel)"; pub="$(cat "$key.pub")"
   # SSH-Schluessel im Projekt hinterlegen (idempotent ueber den Fingerabdruck)
@@ -120,10 +121,16 @@ cmd_hetzner_anlegen() {
   else
     # Beliebte Typen (z.B. cx43) sind oft kurz ausverkauft: mehrere Runden ueber
     # den Wunschort und die Ausweichorte in Deutschland und Finnland.
-    local body versuch l code orte
+    local body versuch l code orte frei t
     orte="$ort $(echo nbg1 fsn1 hel1 | tr ' ' '\n' | grep -vx "$ort" | tr '\n' ' ')"
     for versuch in 1 2 3 4 5 6; do
+      for t in $(echo "$typen" | tr ',' ' '); do
+      # Wo bietet Hetzner den Typ gerade an? (server_types[].locations[].available)
+      frei="$(hz GET "/server_types?name=$t" | jq -r '[.server_types[0].locations[]? | select(.available == true) | .name] | join(" ")' 2>/dev/null || true)"
+      if [ -z "$frei" ]; then info "$t ist laut Hetzner gerade an keinem Standort frei."; continue; fi
       for l in $orte; do
+        case " $frei " in *" $l "*) ;; *) continue ;; esac
+        typ="$t"
         body="$(jq -nc --arg n "$name" --arg t "$typ" --arg l "$l" --argjson kid "$key_id" --argjson fw "$fw_id" \
           --rawfile ud "$SERVER_DIR/cloud-init.yaml" \
           '{name:$n, server_type:$t, location:$l, image:"ubuntu-24.04", ssh_keys:[$kid],
@@ -133,7 +140,7 @@ cmd_hetzner_anlegen() {
         if echo "$antwort" | jq -e '.server.id' >/dev/null 2>&1; then
           srv="$(echo "$antwort" | jq -r '.server.id')"
           info "Server $name ($typ, $l) wird angelegt, id $srv (Runde $versuch)."
-          break 2
+          break 3
         fi
         code="$(echo "$antwort" | jq -r '.error.code // "unbekannt"')"
         case "$code" in
@@ -142,9 +149,10 @@ cmd_hetzner_anlegen() {
           *) hz_pruefen "$antwort" >/dev/null ;;
         esac
       done
+      done
       sleep $((versuch * 10))
     done
-    [ -n "$srv" ] || fehler "$typ ist an keinem Standort verfuegbar. Spaeter erneut versuchen oder anderen Typ waehlen (z.B. cx33, cpx31)."
+    [ -n "$srv" ] || fehler "Keiner der Typen ($typen) ist in nbg1, fsn1 oder hel1 frei. Ausweichtyp mit Preis nennen (vorbereitung-pruefen zeigt die Lage) oder spaeter erneut."
   fi
   # warten bis laufend
   local i status
@@ -237,7 +245,8 @@ cmd_datei_senden() { # Datei (z.B. Kontoauszug CAMT/CSV) in den Arbeitsordner ei
   local ziel="${1:?root@host}" datei="${2:?datei}" agent="${3:-vera}" unterordner="${4:-bank}" key name
   key="$(ssh_schluessel)"
   [ -f "$datei" ] || fehler "$datei nicht gefunden."
-  name="$(basename "$datei" | tr -c 'A-Za-z0-9._-' '_')"
+  # printf statt Pipe aus basename: dessen Zeilenende wuerde tr sonst zu "_" am Namensende machen
+  name="$(printf '%s' "$(basename "$datei")" | tr -c 'A-Za-z0-9._-' '_')"
   [[ "$agent" =~ ^[a-z][a-z0-9-]{1,30}$ && "$unterordner" =~ ^[a-z0-9_-]{1,30}$ ]] || fehler "ungueltiger Agent oder Ordner"
   # Erst in eine neue Temp-Datei (mktemp legt exklusiv an), dann per mv ersetzen: ein vom Agenten
   # angelegter Symlink am Zielnamen wird ersetzt statt verfolgt.
@@ -310,10 +319,181 @@ cmd_hetzner_schutz() { # Loeschschutz (kostenlos) und optional Hetzner-Backups (
   fi
 }
 
+# ---------- Vorbereitungs-Check (vor dem Durchlauf, aendert nichts) ----------
+
+VP_ROT=0; VP_GELB=0
+vp() { # vp <gruen|gelb|rot> <was> <hinweis>
+  case "$1" in
+    gruen) printf '🟢 %-34s %s\n' "$2" "$3" ;;
+    gelb)  printf '🟡 %-34s %s\n' "$2" "$3"; VP_GELB=$((VP_GELB + 1)) ;;
+    rot)   printf '🔴 %-34s %s\n' "$2" "$3"; VP_ROT=$((VP_ROT + 1)) ;;
+  esac
+}
+
+vp_bot() { # Telegram-Bot pruefen, gibt den Botnamen auf stdout
+  kc_lesen "$1" | awk '{print "url = \"https://api.telegram.org/bot" $0 "/getMe\""}' \
+    | curl -sS -m 15 -K - 2>/dev/null | jq -r 'if .ok then .result.username else empty end' 2>/dev/null || true
+}
+
+cmd_vorbereitung_pruefen() {
+  # Liest optional ~/.agenten-doktor/<projekt>/start.env (nicht geheim: DOMAIN, MODELL_ANBIETER,
+  # WISSEN_REPO, POSTFACH, MIETJUMP=ja|nein, SERVER_TYPEN=cx43,cx53,cpx32). Prueft nur, legt nichts an.
+  local start="$HOME/.agenten-doktor/$PROJEKT/start.env" w fehlt="" v t name1 name2 ts
+  local DOMAIN="" MODELL_ANBIETER="" WISSEN_REPO="" POSTFACH="" MIETJUMP="ja" SERVER_TYPEN="cx43"
+  if [ -f "$start" ]; then
+    while IFS='=' read -r k v; do
+      case "$k" in DOMAIN|MODELL_ANBIETER|WISSEN_REPO|POSTFACH|MIETJUMP|SERVER_TYPEN) printf -v "$k" '%s' "${v%$'\r'}" ;; esac
+    done < <(grep -E '^[A-Z_]+=' "$start")
+  fi
+  echo "Vorbereitungs-Check, Projekt $PROJEKT ($(date '+%d.%m.%Y %H:%M'))"
+  echo
+
+  # 1. Werkzeuge auf dem Mac
+  for w in jq curl rsync ssh scp gh python3 security pbpaste dig nc; do
+    command -v "$w" >/dev/null 2>&1 || fehlt="$fehlt $w"
+  done
+  if [ -z "$fehlt" ]; then vp gruen "Werkzeuge" "alle da"
+  else vp rot "Werkzeuge" "fehlt:$fehlt (brew install$fehlt)"; fi
+  if python3 -c 'import sys; sys.exit(0 if sys.version_info >= (3, 11) else 1)' 2>/dev/null; then
+    vp gruen "Python" "$(python3 --version 2>&1)"
+  else vp rot "Python" "mindestens 3.11 noetig (brew install python)"; fi
+
+  # 2. GitHub und MietJUMP-Zugriff
+  if gh auth status >/dev/null 2>&1; then
+    vp gruen "GitHub-Anmeldung (gh)" "$(gh api user --jq .login 2>/dev/null)"
+    if [ "$MIETJUMP" != "nein" ]; then
+      if gh api "repos/${MIETJUMP_REPO:-immodigit/mietjump}" --silent >/dev/null 2>&1; then
+        vp gruen "MietJUMP-Lesezugriff" "${MIETJUMP_REPO:-immodigit/mietjump}"
+      elif gh api user/repository_invitations --jq '.[].repository.full_name' 2>/dev/null | grep -qix "${MIETJUMP_REPO:-immodigit/mietjump}"; then
+        vp rot "MietJUMP-Lesezugriff" "Einladung liegt vor, aber nicht angenommen: github.com/${MIETJUMP_REPO:-immodigit/mietjump}/invitations"
+      else
+        vp rot "MietJUMP-Lesezugriff" "kein Zugriff, bei ImmoDigit Einladung anfragen"
+      fi
+    fi
+    if [ -n "$WISSEN_REPO" ]; then
+      v="$(gh repo view "$WISSEN_REPO" --json visibility --jq .visibility 2>/dev/null || true)"
+      case "$v" in
+        PRIVATE) vp gruen "Wissens-Repo" "$WISSEN_REPO (privat)" ;;
+        "")      vp gelb "Wissens-Repo" "$WISSEN_REPO gibt es noch nicht, legt der Doktor an" ;;
+        *)       vp rot "Wissens-Repo" "$WISSEN_REPO ist $v, muss privat sein" ;;
+      esac
+    fi
+  else
+    vp rot "GitHub-Anmeldung (gh)" "nicht angemeldet: gh auth login --web --git-protocol https"
+  fi
+
+  # 3. Tailscale auf dem Mac (fuer SSH ueber das private Netz)
+  ts=""
+  for t in /Applications/Tailscale.app/Contents/MacOS/Tailscale "$(command -v tailscale 2>/dev/null || true)"; do
+    [ -n "$t" ] && [ -x "$t" ] && { ts="$t"; break; }
+  done
+  if [ -z "$ts" ]; then vp rot "Tailscale auf dem Mac" "App fehlt (App Store: Tailscale), dann anmelden"
+  elif "$ts" status >/dev/null 2>&1; then vp gruen "Tailscale auf dem Mac" "angemeldet"
+  else vp rot "Tailscale auf dem Mac" "App da, aber nicht angemeldet oder nicht gestartet"; fi
+
+  # 4. Zugaenge im Schluesselbund: vorhanden wird live geprueft, fehlend legt der Doktor im Durchlauf an
+  if kc_vorhanden hetzner; then
+    v="$(hz GET '/servers?per_page=1' 2>/dev/null | jq -r 'if .error then "FEHLER " + .error.code else (.meta.pagination.total_entries | tostring) end' 2>/dev/null || echo "FEHLER netz")"
+    case "$v" in
+      FEHLER*) vp rot "Hetzner-Token" "ungueltig oder gesperrt ($v), neu erzeugen" ;;
+      *)
+        vp gruen "Hetzner-Token" "gueltig, $v Server im Projekt"
+        # Verfuegbarkeit steht je Standort am Servertyp (locations[].available), nur EU-Standorte
+        local erster="${SERVER_TYPEN%%,*}" typ_frei="" typ_orte=""
+        for t in $(echo "$SERVER_TYPEN" | tr ',' ' '); do
+          v="$(hz GET "/server_types?name=$t" 2>/dev/null \
+            | jq -r '[.server_types[0].locations[]? | select(.available == true) | .name | select(. == "nbg1" or . == "fsn1" or . == "hel1")] | join(" ")' 2>/dev/null || true)"
+          [ -n "$v" ] && { typ_frei="$t"; typ_orte="$v"; break; }
+        done
+        if [ "$typ_frei" = "$erster" ]; then vp gruen "Servertyp $erster frei" "$typ_orte"
+        elif [ -n "$typ_frei" ]; then vp gelb "Servertyp $erster frei" "nein, Ausweichtyp $typ_frei frei ($typ_orte), Preis pruefen"
+        else vp gelb "Servertyp frei" "keiner von $SERVER_TYPEN frei, Ausweichtyp in den Start-Prompt (z. B. cx53, cpx32)"; fi ;;
+    esac
+  else vp gelb "Hetzner-Token" "fehlt, erzeugt der Doktor in Chrome (Hetzner-Konto muss geprueft sein)"; fi
+
+  if kc_vorhanden github; then
+    v="$(kc_lesen github | awk '{print "header = \"Authorization: Bearer " $0 "\""}' \
+      | curl -sS -m 10 -K - "https://api.github.com/${WISSEN_REPO:+repos/$WISSEN_REPO}${WISSEN_REPO:-user}" 2>/dev/null \
+      | jq -r '.full_name // .login // ("FEHLER " + (.message // "?"))' 2>/dev/null || echo "FEHLER netz")"
+    case "$v" in FEHLER*) vp rot "GitHub-Token (Wissens-Repo)" "$v" ;; *) vp gruen "GitHub-Token (Wissens-Repo)" "$v" ;; esac
+  else vp gelb "GitHub-Token (Wissens-Repo)" "fehlt, erzeugt der Doktor in Chrome"; fi
+
+  name1=""; name2=""
+  if kc_vorhanden telegram; then
+    name1="$(vp_bot telegram || true)"
+    if [ -n "$name1" ]; then vp gruen "Telegram-Bot Kurt" "@$name1"; else vp rot "Telegram-Bot Kurt" "Token ungueltig"; fi
+  else vp gelb "Telegram-Bot Kurt" "fehlt, legt der Doktor in Telegram Web an (Konto unter 19 Bots!)"; fi
+  if kc_vorhanden doktor-telegram; then
+    name2="$(vp_bot doktor-telegram || true)"
+    if [ -z "$name2" ]; then vp rot "Telegram-Bot Doktor" "Token ungueltig"
+    elif [ "$name2" = "$name1" ]; then vp rot "Telegram-Bot Doktor" "derselbe Bot wie Kurt, braucht einen eigenen"
+    else vp gruen "Telegram-Bot Doktor" "@$name2"; fi
+  else vp gelb "Telegram-Bot Doktor" "fehlt, legt der Doktor an"; fi
+
+  case "$MODELL_ANBIETER" in
+    meridian)
+      if kc_vorhanden claude-oauth; then vp gruen "Modell (Meridian)" "Token vorhanden"
+      else vp rot "Modell (Meridian)" "fehlt: claude setup-token im eigenen Terminal, dann token-speichern claude-oauth"; fi ;;
+    openai)
+      if kc_vorhanden openai; then
+        v="$(kc_lesen openai | awk '{print "header = \"Authorization: Bearer " $0 "\""}' | curl -sS -m 10 -o /dev/null -w '%{http_code}' -K - https://api.openai.com/v1/models 2>/dev/null || true)"
+        if [ "$v" = "200" ]; then vp gruen "Modell (OpenAI)" "Schluessel gueltig"; else vp rot "Modell (OpenAI)" "Schluessel abgelehnt (HTTP $v)"; fi
+      else vp rot "Modell (OpenAI)" "fehlt: Schluessel mit Ausgabelimit anlegen, token-speichern openai"; fi ;;
+    openrouter)
+      if kc_vorhanden openrouter; then
+        v="$(kc_lesen openrouter | awk '{print "header = \"Authorization: Bearer " $0 "\""}' | curl -sS -m 10 -o /dev/null -w '%{http_code}' -K - https://openrouter.ai/api/v1/key 2>/dev/null || true)"
+        if [ "$v" = "200" ]; then vp gruen "Modell (OpenRouter)" "Schluessel gueltig"; else vp rot "Modell (OpenRouter)" "Schluessel abgelehnt (HTTP $v)"; fi
+      else vp rot "Modell (OpenRouter)" "fehlt: Schluessel mit Limit anlegen, token-speichern openrouter"; fi ;;
+    codex|"")
+      vp gelb "Modell (ChatGPT/Codex)" "Anmeldung je Agent am Ende des Durchlaufs (zwei Geraetecodes bestaetigen)" ;;
+    *) vp rot "Modell" "unbekannter MODELL_ANBIETER=$MODELL_ANBIETER" ;;
+  esac
+
+  if kc_vorhanden gmail-client-id && kc_vorhanden gmail-client-secret && kc_vorhanden gmail-refresh-token; then
+    t="$( { printf 'data = "grant_type=refresh_token&client_id='; kc_lesen gmail-client-id | tr -d '\n'
+            printf '&client_secret='; kc_lesen gmail-client-secret | tr -d '\n'
+            printf '&refresh_token='; kc_lesen gmail-refresh-token | tr -d '\n'; printf '"\n'; } \
+          | curl -sS -m 10 -K - https://oauth2.googleapis.com/token 2>/dev/null | jq -r '.access_token // ("FEHLER " + (.error // "?"))' 2>/dev/null || echo "FEHLER netz")"
+    case "$t" in
+      FEHLER*) vp rot "Gmail fuer Vera" "Anmeldung abgelaufen ($t), google-anmeldung.py erneut" ;;
+      *) v="$(printf 'header = "Authorization: Bearer %s"\n' "$t" | curl -sS -m 10 -K - https://gmail.googleapis.com/gmail/v1/users/me/profile 2>/dev/null | jq -r '.emailAddress // empty' 2>/dev/null || true)"
+         t=""
+         if [ -n "$v" ]; then vp gruen "Gmail fuer Vera" "$v"
+           [ -n "$POSTFACH" ] && [ "$(echo "$POSTFACH" | tr 'A-Z' 'a-z')" != "$(echo "$v" | tr 'A-Z' 'a-z')" ] && vp rot "Gmail-Postfach" "verbunden ist $v, gewuenscht $POSTFACH"
+         else vp rot "Gmail fuer Vera" "Token da, aber Gmail antwortet nicht"; fi ;;
+    esac
+  else vp gelb "Gmail fuer Vera" "fehlt, richtet der Doktor ein (Google-Anmeldung in Chrome noetig)"; fi
+
+  if kc_vorhanden tailscale; then vp gruen "Tailscale-Schluessel" "vorhanden (gilt 1 Tag, einmal nutzbar)"
+  else vp gelb "Tailscale-Schluessel" "fehlt, erzeugt der Doktor in Chrome"; fi
+
+  # 5. Adresse
+  case "$DOMAIN" in
+    "") vp gelb "Adresse" "noch nicht festgelegt (DOMAIN in start.env oder im Start-Prompt)" ;;
+    *.cl.immodigit.de) vp gruen "Adresse" "$DOMAIN (DNS-Eintraege setzt ImmoDigit, sobald die IP da ist)" ;;
+    *) v="$(dig +short "$DOMAIN" A | tail -1)"; vp gruen "Adresse" "$DOMAIN (zeigt derzeit auf ${v:-nichts}, DNS-Zugang in Chrome noetig)" ;;
+  esac
+
+  echo
+  echo "Nicht per Befehl pruefbar, prueft der Doktor in Chrome: Anmeldungen bei Hetzner, GitHub,"
+  echo "Google (Veras Postfach), Telegram Web, Tailscale; Zahl der Telegram-Bots (hoechstens 18)."
+  echo
+  if [ "$VP_ROT" -eq 0 ]; then
+    echo "Ergebnis: bereit ($VP_GELB Punkte erledigt der Doktor im Durchlauf)."
+  else
+    echo "Ergebnis: $VP_ROT Punkt(e) rot. Erst beheben, dann erneut pruefen."
+  fi
+  mkdir -p "$HOME/.agenten-doktor/$PROJEKT"
+  printf -- '- %s Vorbereitungs-Check: %s rot, %s gelb\n' "$(date '+%Y-%m-%d %H:%M')" "$VP_ROT" "$VP_GELB" \
+    >> "$HOME/.agenten-doktor/$PROJEKT/logbuch.md"
+  [ "$VP_ROT" -eq 0 ]
+}
+
 usage() {
   cat <<EOF
 doktor-lokal (Projekt: $PROJEKT, setzen mit DOKTOR_PROJEKT=...)
 
+  vorbereitung-pruefen          prueft alle Voraussetzungen, aendert nichts (vor dem Start)
   token-speichern <name>        Wert aus der Zwischenablage in den Schluesselbund
                                 (danach wird die Zwischenablage geleert)
   token-pruefen <name...>       zeigt nur vorhanden/fehlt
@@ -340,6 +520,7 @@ befehl="${1:-}"; shift || true
 case "$befehl" in
   token-speichern) pbpaste | kc_schreiben "${1:?name}"; printf '' | pbcopy ;;
   token-speichern-stdin) kc_schreiben "${1:?name}" ;;
+  vorbereitung-pruefen) cmd_vorbereitung_pruefen ;;
   token-pruefen) for n in "$@"; do if kc_vorhanden "$n"; then echo "$n: vorhanden"; else echo "$n: fehlt"; fi; done ;;
   hetzner-anlegen) cmd_hetzner_anlegen "$@" ;;
   hetzner-status) cmd_hetzner_status ;;
