@@ -54,7 +54,7 @@ Lokale Befehle (vollständig: `doktor-lokal.sh` ohne Argumente): `token-speicher
 
 **DNS:** Für eine eigene Domain legt der Nutzer (oder du in seiner DNS-Verwaltung in Chrome)
 zwei A-Einträge an: `<name>` und `*.<name>` auf die Server-IP. Für eine Subdomain unter
-`cl.immodigit.de` schickst du Christian die IP, die Zone gehört ihm. Danach `dns-pruefen`.
+`cl.immodigit.de` schickst du ImmoDigit die IP, die Zone gehört ImmoDigit. Danach `dns-pruefen`.
 
 Server-Befehle (vollständig: `doktor --help`, Vertrag: SCHNITTSTELLEN.md Abschnitt 7):
 `installieren`, `status`, `check [--json] [--modell] [--logbuch]`, `reparieren [--still]`,

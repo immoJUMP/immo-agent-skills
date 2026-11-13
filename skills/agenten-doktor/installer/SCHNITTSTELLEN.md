@@ -139,7 +139,7 @@ Ein Agent ändert das Wissens-Repo **nie direkt**. Er legt einen Vorschlag als O
 ```yaml
 titel: "Vera: Jobcenter-Sammelzahlungen erkennen"
 art: korrektur            # korrektur | wissen | agent-einstellen | regel
-ausloeser: "Christian im Raum #verwaltung, 13.11.2026: ..."   # woher die Korrektur kam
+ausloeser: "Erika Muster im Raum #verwaltung, 13.11.2026: ..."   # woher die Korrektur kam
 begruendung: "..."
 testfragen:               # mindestens eine, Frage und erwartete Kernaussage
   - frage: "Wie buchst du eine Sammelzahlung des Jobcenters fuer zwei Einheiten?"
