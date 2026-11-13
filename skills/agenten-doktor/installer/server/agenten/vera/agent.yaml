@@ -1,0 +1,25 @@
+# Agenten-Definition Vera (Verwaltung). Ändern nur per PR mit Freigabe des Eigentümers.
+# Die Platzhalter {{...}} setzt der Doktor beim Aufbau aus konfig.env ein.
+slug: vera
+name: Vera
+rolle: Verwaltung
+emoji: "🏠"
+fachverantwortlich:
+  name: "{{EIGENTUEMER_NAME}}"
+  github: "{{EIGENTUEMER_GITHUB}}"
+  telegram_id: "{{EIGENTUEMER_TELEGRAM_ID}}"
+rocketchat:
+  raum: verwaltung
+  weitere_raeume: [team]
+telegram: false
+werkzeuge: [mietjump, gmail, veroeffentlichen, vorschlag, fallbuch]
+routinen:
+  - name: mieteingang
+    zeitplan: "0 9 * * 1-5"
+    auftrag: "Führe den Skill mieteingangskontrolle aus und berichte in #verwaltung."
+  - name: belege
+    zeitplan: "0 10 * * 1-5"
+    auftrag: "Führe den Skill belege-sammeln aus. Berichte in #verwaltung nur, wenn neue Belege abgelegt wurden."
+  - name: mieteranfragen
+    zeitplan: "0 8,13,17 * * 1-5"   # dreimal taeglich reicht; stuendlich kostet viel Kontingent ohne Mehrwert
+    auftrag: "Führe den Skill mieteranfragen aus. Melde in #verwaltung nur neue Anfragen, sonst nichts."

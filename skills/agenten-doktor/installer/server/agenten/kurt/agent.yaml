@@ -1,0 +1,19 @@
+# Agenten-Definition Kurt (Geschäftsführung). Ändern nur per PR mit Freigabe des Eigentümers.
+# Die Platzhalter {{...}} setzt der Doktor beim Aufbau aus konfig.env ein.
+slug: kurt
+name: Kurt
+rolle: Geschäftsführung
+emoji: "🧭"
+fachverantwortlich:
+  name: "{{EIGENTUEMER_NAME}}"
+  github: "{{EIGENTUEMER_GITHUB}}"
+  telegram_id: "{{EIGENTUEMER_TELEGRAM_ID}}"
+rocketchat:
+  raum: geschaeftsfuehrung
+  weitere_raeume: [team]
+telegram: true              # einziger Agent am Telegram-Bot, nur der Eigentümer schreibt ihm
+werkzeuge: [veroeffentlichen, vorschlag]
+routinen:
+  - name: tagesueberblick
+    zeitplan: "0 18 * * *"
+    auftrag: "Führe den Skill tagesueberblick aus und schicke das Ergebnis dem Eigentümer per Telegram."

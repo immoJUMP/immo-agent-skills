@@ -1,0 +1,21 @@
+# Agenten-Definition (SCHNITTSTELLEN.md, Abschnitt 5). Freigabe: nur Eigentümer.
+# Platzhalter: agenten/README.md. Der Doktor nimmt keinen Agenten an, in dessen Dateien noch "{{" steht.
+slug: "{{SLUG}}"
+name: "{{NAME}}"
+rolle: "{{ROLLE}}"
+emoji: "{{EMOJI}}"
+fachverantwortlich:
+  name: "{{FACHVERANTWORTLICH_NAME}}"
+  github: "{{FACHVERANTWORTLICH_GITHUB}}"
+  telegram_id: "{{FACHVERANTWORTLICH_TELEGRAM_ID}}"
+rocketchat:
+  raum: "{{RAUM}}"              # eigener Raum, wird angelegt
+  weitere_raeume: [team]
+telegram: false                 # nur ein Agent pro Bot, normalerweise Kurt
+# Bekannte Werkzeuge: mietjump, gmail, veroeffentlichen, vorschlag, fallbuch.
+# Nur aufnehmen, was die Rolle braucht.
+werkzeuge: [veroeffentlichen, vorschlag, fallbuch]
+routinen:
+  - name: tagesabschluss
+    zeitplan: "30 17 * * 1-5"
+    auftrag: "Führe den Tagesabschluss nach AGENTS.md, Regel 9, aus und berichte in #{{RAUM}}."

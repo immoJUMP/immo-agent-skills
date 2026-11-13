@@ -1,0 +1,152 @@
+#!/usr/bin/env python3
+"""veroeffentlichen: Datei per WebDAV in den eigenen Dashboard-Ordner laden, Leselink ausgeben.
+
+Nur Python-Standardbibliothek (3.11+). Vertrag: installer/SCHNITTSTELLEN.md, Abschnitt 4.
+"""
+
+import mimetypes
+import os
+import re
+import socket
+import sys
+import urllib.error
+import urllib.parse
+import urllib.request
+
+WEBDAV_BASIS = "http://dateien:8081"
+ZEITLIMIT = 120
+EXIT_FEHLER, EXIT_AUFRUF, EXIT_UMGEBUNG = 1, 2, 3
+
+HILFE = """\
+veroeffentlichen: Datei für das Dashboard bereitstellen und den Leselink ausgeben.
+
+Aufruf:
+  veroeffentlichen <datei> [zielname]
+
+zielname ist der Pfad unter deinem Ordner, Unterordner sind erlaubt (zum Beispiel
+berichte/2026-11/mieteingang.html). Ohne zielname gilt der Dateiname. ".." und
+führende "/" werden entfernt. Eine vorhandene Datei gleichen Namens wird ersetzt.
+Der Leselink ist mit Benutzername und Passwort geschützt. Veröffentliche nur, was
+der Eigentümer sehen soll, nie Zugangsdaten.
+
+Umgebung: AGENT_SLUG, DASH_BASIS_URL (zum Beispiel https://dash.example.de).
+Exit-Codes: 0 veröffentlicht, 1 Fehler beim Lesen oder Hochladen, 2 falscher Aufruf,
+3 Umgebung unvollständig (Fall für den Doktor).
+"""
+
+
+class Fehler(Exception):
+    def __init__(self, text, code=EXIT_FEHLER):
+        super().__init__(text)
+        self.text = text
+        self.code = code
+
+
+def zielname_bereinigen(roh):
+    """Entfernt leere, "." und ".." Teile, führende "/" und Steuerzeichen."""
+    teile = []
+    for teil in roh.replace("\\", "/").split("/"):
+        teil = re.sub(r"[\x00-\x1f\x7f]", "", teil).strip()
+        if teil in ("", ".", ".."):
+            continue
+        teile.append(teil)
+    return teile
+
+
+def _url(basis, teile, verzeichnis=False):
+    pfad = "/".join(urllib.parse.quote(t, safe="") for t in teile)
+    return f"{basis.rstrip('/')}/{pfad}" + ("/" if verzeichnis else "")
+
+
+def _anfrage(methode, url, daten=None, kopf=None):
+    anfrage = urllib.request.Request(url, data=daten, method=methode, headers=kopf or {})
+    try:
+        with urllib.request.urlopen(anfrage, timeout=ZEITLIMIT) as r:
+            return r.status
+    except urllib.error.HTTPError as e:
+        return e.code
+    except (urllib.error.URLError, socket.timeout, TimeoutError) as e:
+        raise Fehler(f"Dateiserver nicht erreichbar ({getattr(e, 'reason', e)}). Fall für den Doktor.")
+
+
+def _fehlertext(code):
+    if code in (401, 403):
+        return f"Der Dateiserver verweigert das Schreiben (HTTP {code}). Fall für den Doktor."
+    if code == 507:
+        return "Auf dem Dateiserver ist kein Platz mehr (HTTP 507). Fall für den Doktor."
+    return f"Der Dateiserver meldet HTTP {code}."
+
+
+def _groesse(n):
+    if n < 1024:
+        return f"{n} B"
+    if n < 1024 * 1024:
+        return f"{n / 1024:.1f} KB".replace(".", ",")
+    return f"{n / 1024 / 1024:.1f} MB".replace(".", ",")
+
+
+def veroeffentlichen(datei, zielname):
+    slug = os.environ.get("AGENT_SLUG", "")
+    dash = os.environ.get("DASH_BASIS_URL", "")
+    fehlend = [k for k, v in (("AGENT_SLUG", slug), ("DASH_BASIS_URL", dash)) if not v]
+    if fehlend:
+        raise Fehler(f"{', '.join(fehlend)} fehlt in der Umgebung. Fall für den Doktor.", EXIT_UMGEBUNG)
+    if not re.match(r"^[a-z0-9][a-z0-9-]*$", slug):
+        raise Fehler(f"AGENT_SLUG {slug!r} ist ungültig. Fall für den Doktor.", EXIT_UMGEBUNG)
+    if not os.path.isfile(datei):
+        raise Fehler(f"Datei {datei} nicht gefunden.")
+    teile = zielname_bereinigen(zielname if zielname is not None else os.path.basename(datei))
+    if not teile:
+        raise Fehler(f"Zielname {zielname!r} ist nach dem Bereinigen leer.", EXIT_AUFRUF)
+
+    basis = os.environ.get("WEBDAV_BASIS", WEBDAV_BASIS)
+    # Ordner von oben nach unten anlegen. 405 heißt: gibt es schon.
+    for tiefe in range(len(teile)):
+        ordner = [slug] + teile[:tiefe]
+        code = _anfrage("MKCOL", _url(basis, ordner, verzeichnis=True))
+        if code not in (200, 201, 204, 301, 405):
+            raise Fehler(f"Ordner {'/'.join(ordner)} lässt sich nicht anlegen. {_fehlertext(code)}")
+
+    typ = mimetypes.guess_type(teile[-1])[0] or "application/octet-stream"
+    if typ.startswith("text/") or typ in ("application/json", "image/svg+xml", "application/javascript"):
+        typ += "; charset=utf-8"
+    groesse = os.path.getsize(datei)
+    try:
+        with open(datei, "rb") as f:
+            code = _anfrage("PUT", _url(basis, [slug] + teile), daten=f, kopf={
+                "Content-Type": typ, "Content-Length": str(groesse)})
+    except OSError as e:
+        raise Fehler(f"Datei {datei} nicht lesbar ({e.strerror}).")
+    if code not in (200, 201, 204):
+        raise Fehler(f"Hochladen fehlgeschlagen. {_fehlertext(code)}")
+
+    ziel = "/".join(teile)
+    aktion = "ersetzt" if code == 204 else "veröffentlicht"
+    print(f"{ziel} {aktion} ({_groesse(groesse)}).")
+    print(f"Leselink: {_url(dash, [slug] + teile)}")
+    return 0
+
+
+def main(argv=None):
+    argv = sys.argv[1:] if argv is None else argv
+    for strom in (sys.stdout, sys.stderr):
+        if hasattr(strom, "reconfigure"):
+            strom.reconfigure(encoding="utf-8", errors="replace")
+    if any(x in ("-h", "--help", "--hilfe") for x in argv):
+        sys.stdout.write(HILFE)
+        return 0
+    if not 1 <= len(argv) <= 2:
+        print("Falscher Aufruf: veroeffentlichen <datei> [zielname]. Hilfe: veroeffentlichen -h",
+              file=sys.stderr)
+        return EXIT_AUFRUF
+    try:
+        return veroeffentlichen(argv[0], argv[1] if len(argv) > 1 else None)
+    except Fehler as e:
+        print(f"Fehler: {e.text}", file=sys.stderr)
+        return e.code
+    except KeyboardInterrupt:
+        return 130
+
+
+if __name__ == "__main__":
+    sys.exit(main())

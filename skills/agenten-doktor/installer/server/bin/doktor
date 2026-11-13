@@ -1,0 +1,1952 @@
+#!/usr/bin/env python3
+"""doktor: Betrieb des Agenten-Servers (Aufbau, Abgleich, Pruefung, Reparatur).
+
+Vertrag: installer/SCHNITTSTELLEN.md. Alle Eingriffe landen im Logbuch.
+Geheimnisse: nur aus /opt/agenten/geheim/geheim.env, nie in argv, nie in der Ausgabe.
+"""
+from __future__ import annotations
+
+import argparse
+import datetime as dt
+import fnmatch
+import hashlib
+import hmac
+import json
+import os
+import re
+import secrets
+import shutil
+import subprocess
+import sys
+import time
+import urllib.error
+import urllib.request
+from pathlib import Path
+
+try:
+    import yaml  # python3-yaml (cloud-init)
+except ImportError:  # pragma: no cover
+    print("FEHLER: python3-yaml fehlt (apt install python3-yaml).", file=sys.stderr)
+    sys.exit(2)
+
+BASIS = Path(os.environ.get("AGENTEN_BASIS", "/opt/agenten"))
+INST = BASIS / "installer"
+DATEN = BASIS / "daten"
+GEHEIM_DIR = BASIS / "geheim"
+GEHEIM = GEHEIM_DIR / "geheim.env"
+KONFIG = BASIS / "konfig.env"
+LOGBUCH_DIR = BASIS / "logbuch"
+ZUSTAND = DATEN / "zustand.json"
+WISSEN = DATEN / "wissen"
+COMPOSE_AGENTEN = BASIS / "compose.agenten.yaml"
+HERMES_UID = 10000
+PLUGIN_REPO = "https://github.com/immodigit/hermes-plugin-rocketchat.git"
+PLUGIN_REF = "v1.5.1"
+HERMES_CONFIG_VERSION = 50  # gehoert zu HERMES_IMAGE v0.22.2, bei Update mitziehen
+STANDARD_HERMES_IMAGE = "docker.io/nousresearch/hermes-agent:v0.22.2"
+GRUEN, GELB, ROT = "gruen", "gelb", "rot"
+AMPEL = {GRUEN: "🟢", GELB: "🟡", ROT: "🔴"}
+
+
+# ---------------------------------------------------------------- Hilfen
+
+class Fehler(Exception):
+    pass
+
+
+def jetzt() -> dt.datetime:
+    return dt.datetime.now().astimezone()
+
+
+def info(text: str) -> None:
+    print(f"• {text}", flush=True)
+
+
+def lies_env(pfad: Path) -> dict:
+    werte: dict = {}
+    if not pfad.exists():
+        return werte
+    for zeile in pfad.read_text(encoding="utf-8").splitlines():
+        zeile = zeile.strip()
+        if not zeile or zeile.startswith("#") or "=" not in zeile:
+            continue
+        k, v = zeile.split("=", 1)
+        werte[k.strip()] = v.strip()
+    return werte
+
+
+def schreibe_env(pfad: Path, werte: dict, kopf: str = "") -> None:
+    pfad.parent.mkdir(parents=True, exist_ok=True)
+    tmp = pfad.with_suffix(".tmp")
+    alt = os.umask(0o077)
+    try:
+        with open(tmp, "w", encoding="utf-8") as f:
+            if kopf:
+                f.write(f"# {kopf}\n")
+            for k in sorted(werte):
+                f.write(f"{k}={werte[k]}\n")
+        os.chmod(tmp, 0o600)
+        os.replace(tmp, pfad)
+    finally:
+        os.umask(alt)
+
+
+def konfig() -> dict:
+    k = lies_env(KONFIG)
+    k.setdefault("ZEITZONE", "Europe/Berlin")
+    k.setdefault("HERMES_IMAGE", STANDARD_HERMES_IMAGE)
+    k.setdefault("MODELL_ANBIETER", "codex")
+    k.setdefault("DASH_BENUTZER", "team")
+    return k
+
+
+def geheim() -> dict:
+    return lies_env(GEHEIM)
+
+
+def geheim_setzen(schluessel: str, wert: str) -> None:
+    if not re.fullmatch(r"[A-Z][A-Z0-9_]*", schluessel):
+        raise Fehler(f"Ungueltiger Schluesselname: {schluessel}")
+    if any(c in wert for c in "\n\r"):
+        raise Fehler("Wert enthaelt Zeilenumbrueche.")
+    g = geheim()
+    g[schluessel] = wert
+    GEHEIM_DIR.mkdir(parents=True, exist_ok=True)
+    os.chmod(GEHEIM_DIR, 0o700)
+    schreibe_env(GEHEIM, g, "Geheimnisse des Agenten-Servers. Nie kopieren, nie committen.")
+
+
+def zustand() -> dict:
+    if ZUSTAND.exists():
+        return json.loads(ZUSTAND.read_text())
+    return {}
+
+
+def zustand_speichern(z: dict) -> None:
+    ZUSTAND.parent.mkdir(parents=True, exist_ok=True)
+    tmp = ZUSTAND.with_suffix(".tmp")
+    tmp.write_text(json.dumps(z, indent=2, ensure_ascii=False))
+    os.chmod(tmp, 0o600)
+    os.replace(tmp, ZUSTAND)
+
+
+def run(cmd: list, *, check=True, eingabe: str | None = None, still=False, cwd=None, env=None, timeout=None) -> subprocess.CompletedProcess:
+    p = subprocess.run(cmd, input=eingabe, text=True, capture_output=True, cwd=cwd, env=env, timeout=timeout)
+    if check and p.returncode != 0:
+        aus = (p.stderr or p.stdout).strip()[-1500:]
+        raise Fehler(f"Befehl fehlgeschlagen ({' '.join(map(str, cmd[:4]))} ...): {aus}")
+    if not still and p.stdout.strip() and os.environ.get("DOKTOR_LAUT"):
+        print(p.stdout.strip())
+    return p
+
+
+def logbuch(titel: str, zeilen: list | None = None, art: str = "eingriff") -> None:
+    LOGBUCH_DIR.mkdir(parents=True, exist_ok=True)
+    t = jetzt()
+    datei = LOGBUCH_DIR / f"{t:%Y-%m}.md"
+    neu = not datei.exists()
+    with open(datei, "a", encoding="utf-8") as f:
+        if neu:
+            f.write(f"# Betriebslogbuch {t:%Y-%m}\n\nEin Eintrag je Eingriff, neuester unten. Format: Zeit, Art, Was, Ergebnis.\n")
+        f.write(f"\n## {t:%Y-%m-%d %H:%M} {art}: {titel}\n")
+        for z in zeilen or []:
+            f.write(f"- {z}\n")
+
+
+def compose_dateien() -> list:
+    dateien = ["-f", str(INST / "compose.yaml")]
+    if COMPOSE_AGENTEN.exists():
+        dateien += ["-f", str(COMPOSE_AGENTEN)]
+    return dateien
+
+
+def compose(*args, check=True, timeout=None) -> subprocess.CompletedProcess:
+    k = konfig()
+    profile = ["--profile", "meridian"] if k.get("MODELL_ANBIETER") == "meridian" else []
+    if geheim().get("GMAIL_REFRESH_TOKEN"):
+        profile += ["--profile", "postfach"]
+    cmd = ["docker", "compose", "--project-directory", str(BASIS), "-p", "agenten", *compose_dateien(), *profile, *args]
+    return run(cmd, check=check, timeout=timeout)
+
+
+def container_ip(name: str) -> str:
+    p = run(["docker", "inspect", "-f", "{{range .NetworkSettings.Networks}}{{.IPAddress}} {{end}}", name], check=False, still=True)
+    ips = [x for x in p.stdout.split() if x]
+    if not ips:
+        raise Fehler(f"Container {name} laeuft nicht.")
+    return ips[0]
+
+
+def http_json(methode: str, url: str, daten=None, kopf=None, timeout=20):
+    body = json.dumps(daten).encode() if daten is not None else None
+    req = urllib.request.Request(url, data=body, method=methode)
+    req.add_header("Content-Type", "application/json")
+    for k, v in (kopf or {}).items():
+        req.add_header(k, v)
+    try:
+        with urllib.request.urlopen(req, timeout=timeout) as r:
+            roh = r.read().decode() or "{}"
+            return r.status, json.loads(roh)
+    except urllib.error.HTTPError as e:
+        try:
+            return e.code, json.loads(e.read().decode() or "{}")
+        except Exception:
+            return e.code, {}
+
+
+def zufall(n: int = 32) -> str:
+    return secrets.token_urlsafe(n)
+
+
+def glob_regex(muster: str) -> re.Pattern:
+    r = ""
+    i = 0
+    while i < len(muster):
+        c = muster[i]
+        if muster.startswith("**", i):
+            r += ".*"
+            i += 2
+            if i < len(muster) and muster[i] == "/":
+                i += 1
+            continue
+        r += {"*": "[^/]*", "?": "[^/]"}.get(c, re.escape(c))
+        i += 1
+    return re.compile(r"^" + r + r"$")
+
+
+def passt(pfad: str, muster: list) -> bool:
+    return any(glob_regex(m).match(pfad) for m in muster or [])
+
+
+# ---------------------------------------------------------------- Rocket.Chat
+
+class RocketChat:
+    def __init__(self):
+        self.basis = f"http://{container_ip('agenten-rocketchat-1')}:3000"
+        self.kopf: dict = {}
+
+    def warten(self, sekunden=600):
+        ende = time.time() + sekunden
+        while time.time() < ende:
+            try:
+                s, _ = http_json("GET", f"{self.basis}/api/info", timeout=5)
+                if s == 200:
+                    return
+            except Exception:
+                pass
+            time.sleep(5)
+        raise Fehler("Rocket.Chat startet nicht (10 Minuten gewartet).")
+
+    def anmelden(self, benutzer: str, passwort: str) -> dict:
+        s, d = http_json("POST", f"{self.basis}/api/v1/login", {"user": benutzer, "password": passwort})
+        if s != 200 or d.get("status") != "success":
+            raise Fehler(f"Rocket.Chat-Anmeldung als {benutzer} fehlgeschlagen ({s}).")
+        return {"X-User-Id": d["data"]["userId"], "X-Auth-Token": d["data"]["authToken"]}
+
+    def api(self, methode, pfad, daten=None, kopf=None):
+        s, d = http_json(methode, f"{self.basis}/api/v1/{pfad}", daten, kopf or self.kopf)
+        return s, d
+
+    def benutzer(self, name: str):
+        s, d = self.api("GET", f"users.info?username={name}")
+        return d.get("user") if s == 200 and d.get("success") else None
+
+    def benutzer_anlegen(self, name, anzeigename, passwort, rollen, email=None) -> str:
+        u = self.benutzer(name)
+        if u:
+            # ACHTUNG: Ein Passwortwechsel loescht in Rocket.Chat alle Login- und Zugangstoken
+            # dieses Kontos. Deshalb hier nur Name und Rollen angleichen, nie das Passwort.
+            self.api("POST", "users.update", {"userId": u["_id"], "data": {"roles": rollen, "name": anzeigename}})
+            return u["_id"]
+        s, d = self.api("POST", "users.create", {
+            "username": name, "name": anzeigename, "password": passwort, "roles": rollen,
+            "email": email or f"{name}@agenten.invalid", "verified": True,
+            "requirePasswordChange": False, "sendWelcomeEmail": False, "joinDefaultChannels": False,
+        })
+        if s != 200 or not d.get("success"):
+            raise Fehler(f"Rocket.Chat-Benutzer {name} nicht angelegt: {d.get('error', s)}")
+        return d["user"]["_id"]
+
+    def token_gueltig(self, user_id: str, token: str) -> bool:
+        if not token:
+            return False
+        s, d = self.api("GET", "me", kopf={"X-User-Id": user_id, "X-Auth-Token": token})
+        return s == 200 and d.get("_id") == user_id
+
+    def passwort_setzen(self, user_id: str, passwort: str) -> None:
+        self.api("POST", "users.update", {"userId": user_id, "data": {"password": passwort, "requirePasswordChange": False}})
+
+    def zugangstoken(self, name: str, passwort: str) -> tuple:
+        kopf = self.anmelden(name, passwort)
+        uid = kopf["X-User-Id"]
+        self.api("POST", "users.removePersonalAccessToken", {"tokenName": "hermes"}, kopf)
+        s, d = self.api("POST", "users.generatePersonalAccessToken", {"tokenName": "hermes", "bypassTwoFactor": True}, kopf)
+        if s != 200 or not d.get("success"):
+            raise Fehler(f"Zugangstoken fuer {name} nicht erzeugt: {d.get('error', s)}")
+        return uid, d["token"]
+
+    def raum(self, name: str, mitglieder: list, privat=True, thema="") -> str:
+        art = "groups" if privat else "channels"
+        s, d = self.api("GET", f"rooms.info?roomName={name}")
+        if s == 200 and d.get("success"):
+            rid = d["room"]["_id"]
+            for m in mitglieder:
+                self.api("POST", f"{art}.invite", {"roomId": rid, "username": m})
+        else:
+            s, d = self.api("POST", f"{art}.create", {"name": name, "members": mitglieder})
+            if s != 200 or not d.get("success"):
+                raise Fehler(f"Raum {name} nicht angelegt: {d.get('error', s)}")
+            rid = (d.get("group") or d.get("channel"))["_id"]
+        if thema:
+            self.api("POST", f"{art}.setTopic", {"roomId": rid, "topic": thema})
+        return rid
+
+
+# ---------------------------------------------------------------- Agenten-Definitionen
+
+def agenten_definitionen() -> dict:
+    """Liest agenten/<slug>/agent.yaml aus dem Wissens-Repo (Quelle der Wahrheit)."""
+    defs = {}
+    ordner = WISSEN / "agenten"
+    if not ordner.exists():
+        return defs
+    for a in sorted(ordner.iterdir()):
+        if not a.is_dir() or a.name.startswith(("_", ".")):
+            continue
+        datei = a / "agent.yaml"
+        if not datei.exists():
+            continue
+        d = yaml.safe_load(datei.read_text(encoding="utf-8")) or {}
+        slug = str(d.get("slug") or a.name)
+        if slug != a.name or not re.fullmatch(r"[a-z][a-z0-9-]{1,30}", slug):
+            logbuch(f"Agent {a.name} uebersprungen", [f"slug '{slug}' passt nicht zum Ordner oder ist ungueltig"], "warnung")
+            continue
+        r = {}
+        if (a / "rechte.yaml").exists():
+            r = yaml.safe_load((a / "rechte.yaml").read_text(encoding="utf-8")) or {}
+        d["rechte"] = {"lesen": r.get("lesen") or [], "vorschlagen": r.get("vorschlagen") or []}
+        d["ordner"] = a
+        defs[slug] = d
+    return defs
+
+
+def agent_pfade(slug: str) -> dict:
+    b = DATEN / "agenten" / slug
+    return {
+        "basis": b, "hermes": b / "hermes", "ausschnitt": b / "ausschnitt", "vorschlaege": b / "vorschlaege",
+        "fallbuch": b / "fallbuch", "arbeit": b / "arbeit", "skills": b / "skills-repo",
+    }
+
+
+def modell_konfig(k: dict) -> dict:
+    anbieter = k.get("MODELL_ANBIETER", "codex")
+    modell = k.get("MODELL")
+    if anbieter == "meridian":
+        modell = modell or "claude-opus-5-5"
+        klein = k.get("MODELL_KLEIN", "claude-haiku-5-5")
+        prov = "meridian"
+        cfg = {
+            "model": {"provider": prov, "default": modell},
+            "providers": {"meridian": {"api": "http://meridian:3456/v1", "api_key": "dummy", "transport": "anthropic_messages",
+                                        "default_model": modell, "discover_models": False}},
+        }
+    elif anbieter == "openai":
+        modell = modell or "gpt-6.1-sol"
+        klein = k.get("MODELL_KLEIN", "gpt-5.6-sol")
+        prov = "openai-schluessel"
+        cfg = {
+            "model": {"provider": prov, "default": modell},
+            "providers": {prov: {"api": "https://api.openai.com/v1", "api_key": "${OPENAI_API_KEY}", "transport": "codex_responses",
+                                 "default_model": modell, "discover_models": False, "context_length": 400000}},
+        }
+    elif anbieter == "openrouter":
+        modell = modell or "anthropic/claude-sonnet-5-5"
+        klein = k.get("MODELL_KLEIN", modell)
+        prov = "openrouter"
+        cfg = {"model": {"provider": prov, "default": modell}}
+    else:  # codex (ChatGPT-Abo, Geraete-Anmeldung je Agent)
+        modell = modell or "gpt-6.1-sol"
+        klein = k.get("MODELL_KLEIN", "gpt-5.6-luna")
+        prov = "openai-codex"
+        cfg = {"model": {"provider": prov, "default": modell}}
+    aux = {"provider": prov, "model": klein}
+    cfg["auxiliary"] = {
+        "compression": {**aux, "timeout": 300, "reasoning_effort": "low"},
+        "title_generation": {**aux, "reasoning_effort": "low"},
+        "vision": {"provider": prov, "model": modell},
+        "background_review": aux, "curator": aux, "memory_query_rewrite": aux, "approval": aux,
+    }
+    return cfg
+
+
+GESPERRTE_WERKZEUGE = [
+    "code_execution", "image_gen", "tts", "clarify", "computer_use", "connections", "kanban",
+    "context_engine", "moa", "x_search", "video", "video_gen", "yuanbao", "a2a", "cronjob",
+    "homeassistant", "spotify",
+]
+
+
+def hermes_config(slug: str, d: dict, k: dict, rc: dict) -> dict:
+    werkzeuge = set(d.get("werkzeuge") or [])
+    gesperrt = list(GESPERRTE_WERKZEUGE)
+    if "browser" not in werkzeuge:
+        gesperrt.append("browser")
+    cfg = {
+        "_config_version": int(k.get("HERMES_CONFIG_VERSION", HERMES_CONFIG_VERSION)),
+        "timezone": k.get("ZEITZONE", "Europe/Berlin"),
+        "toolsets": ["hermes-cli"],
+        **modell_konfig(k),
+        "model_catalog": {"enabled": False},
+        "compression": {"enabled": True, "threshold": 0.5, "target_ratio": 0.2, "protect_last_n": 20, "protect_first_n": 3},
+        "agent": {"reasoning_effort": "medium", "run_budget_seconds": 1800, "disabled_toolsets": gesperrt},
+        "approvals": {"mode": "off"},
+        "terminal": {"timeout": 600, "cwd": "/opt/data/arbeit",
+                     "env_passthrough": ["AGENT_SLUG", "DASH_BASIS_URL", "POSTFACH_TOKEN", "GMAIL_API_BASIS", "TZ"]},
+        "memory": {"memory_char_limit": 4000, "user_char_limit": 2000},
+        "skills": {"disabled": ["google-workspace", "notion"]},
+        "curator": {"prune_builtins": False},
+        "cron": {"wrap_response": False},
+        "stt": {"language": "de", "local": {"language": "de"}},
+        "display": {
+            "language": "de", "busy_input_mode": "queue", "memory_notifications": "off", "credits_notices": False,
+            "platforms": {"rocketchat": {"tool_progress": "off", "interim_assistant_messages": False,
+                                         "long_running_notifications": True, "busy_ack_detail": False,
+                                         "suppress_warning_notifications": True, "cleanup_progress": True},
+                          "telegram": {"tool_progress": "off", "interim_assistant_messages": False}},
+        },
+        "platforms": {"rocketchat": {"gateway_restart_notification": False}},
+        "plugins": {"enabled": ["rocketchat-platform"], "disabled": [],
+                    "entries": {"rocketchat-platform": {"allow_tool_override": False}}},
+    }
+    if not d.get("telegram"):
+        cfg["platforms"]["telegram"] = {"enabled": False}
+        cfg["plugins"]["disabled"] = ["telegram-platform"]
+    if "mietjump" in werkzeuge:
+        token = geheim().get(f"MIETJUMP_AGENT_TOKEN_{slug.upper().replace('-', '_')}")
+        if token:
+            cfg["mcp_servers"] = {"mietjump": {"url": "http://mietjump:8787/mcp", "headers": {"Authorization": f"Bearer {token}"},
+                                               "timeout": 300}}
+    return cfg
+
+
+def soul(slug: str, d: dict, k: dict) -> str:
+    teile = []
+    gem = WISSEN / "agenten" / "gemeinsam.md"
+    if gem.exists():
+        teile.append(gem.read_text(encoding="utf-8").strip())
+    for datei in ("rolle.md", "regeln.md"):
+        p = d["ordner"] / datei
+        if p.exists():
+            teile.append(p.read_text(encoding="utf-8").strip())
+    werkzeuge = ", ".join(d.get("werkzeuge") or []) or "keine"
+    teile.append(
+        "## Betrieb (vom Doktor erzeugt, nicht bearbeiten)\n"
+        f"- Du bist {d.get('name', slug)} ({d.get('rolle', '')}), Kennung `{slug}`.\n"
+        f"- Eigentuemer: {k.get('EIGENTUEMER_NAME', 'der Eigentuemer')}. Fachverantwortlich fuer dich: "
+        f"{(d.get('fachverantwortlich') or {}).get('name', k.get('EIGENTUEMER_NAME', 'der Eigentuemer'))}.\n"
+        f"- Freigegebene Werkzeuge: {werkzeuge}.\n"
+        "- Dein Wissens-Ausschnitt liegt unter /opt/data/wissen (nur lesen). Zuerst AGENTS.md und llms.txt lesen.\n"
+        "- Aenderungen am Wissen oder an dir selbst nur als Vorschlag unter /opt/data/vorschlaege (Befehl `vorschlag`).\n"
+        "- Deine eigenen Skills unter /opt/data/skills/eigene sind schreibgeschuetzt. Nutze nie skill_manage.\n"
+        f"- Dashboards: `veroeffentlichen <datei>` liefert einen Link unter https://dash.{k.get('DOMAIN', '')}/{slug}/.\n"
+    )
+    return "\n\n".join(teile) + "\n"
+
+
+def ordner_angleichen(ziel: Path, dateien: dict) -> int:
+    """Gleicht `ziel` IN PLACE an {relativer_pfad: quelle} an. Der Ordner selbst wird nie ersetzt,
+    weil er als Bind-Mount in einem laufenden Container steckt (ein ersetzter Ordner bliebe dort alt)."""
+    ziel.mkdir(parents=True, exist_ok=True)
+    n = 0
+    for rel, quelle in dateien.items():
+        z = ziel / rel
+        if z.exists() and z.is_file() and z.read_bytes() == quelle.read_bytes():
+            continue
+        z.parent.mkdir(parents=True, exist_ok=True)
+        shutil.copy2(quelle, z)
+        n += 1
+    for p in sorted(ziel.rglob("*"), key=lambda x: len(x.parts), reverse=True):
+        rel = p.relative_to(ziel).as_posix()
+        if p.is_file() and rel not in dateien:
+            p.unlink()
+            n += 1
+        elif p.is_dir() and not any(p.iterdir()):
+            p.rmdir()
+    return n
+
+
+def ausschnitt_rendern(slug: str, d: dict) -> int:
+    """Kopiert genau die Dateien, die der Agent laut rechte.yaml lesen darf."""
+    ziel = agent_pfade(slug)["ausschnitt"]
+    lesen = list(d["rechte"]["lesen"]) + ["AGENTS.md", "llms.txt", "INDEX.md", "README.md"]
+    auswahl = {}
+    for p in WISSEN.rglob("*"):
+        if p.is_dir() or ".git" in p.parts:
+            continue
+        rel = p.relative_to(WISSEN).as_posix()
+        if rel.startswith("geschaeftsfuehrung/") and not passt(rel, d["rechte"]["lesen"]):
+            continue
+        if passt(rel, lesen):
+            auswahl[rel] = p
+    n = ordner_angleichen(ziel, auswahl)
+    run(["chown", "-R", f"{HERMES_UID}:{HERMES_UID}", str(ziel)])
+    return n
+
+
+def plugin_bereitstellen() -> Path:
+    cache = DATEN / "cache" / f"rocketchat-platform-{PLUGIN_REF}"
+    if not (cache / "plugin.yaml").exists():
+        if cache.exists():
+            shutil.rmtree(cache)
+        cache.parent.mkdir(parents=True, exist_ok=True)
+        run(["git", "clone", "--depth", "1", "--branch", PLUGIN_REF, PLUGIN_REPO, str(cache)])
+        shutil.rmtree(cache / ".git", ignore_errors=True)
+    return cache
+
+
+def postfach_schluessel(slug: str) -> str:
+    key = f"POSTFACH_SCHLUESSEL_{slug.upper().replace('-', '_')}"
+    if not geheim().get(key):
+        geheim_setzen(key, zufall(32))
+    return geheim()[key]
+
+
+def postfach_konfigurieren(defs: dict) -> bool:
+    """Schreibt geheim/postfach.env (Google-Token nur hier) und gibt zurueck, ob Gmail eingerichtet ist."""
+    g = geheim()
+    if not g.get("GMAIL_REFRESH_TOKEN"):
+        return False
+    zugaenge = [f"{s}:{postfach_schluessel(s)}" for s, d in defs.items() if "gmail" in (d.get("werkzeuge") or [])]
+    praefixe = ",".join(["Agenten/"] + [f"{d.get('name', s)}/" for s, d in defs.items() if "gmail" in (d.get("werkzeuge") or [])])
+    schreibe_env(GEHEIM_DIR / "postfach.env", {
+        "GMAIL_CLIENT_ID": g.get("GMAIL_CLIENT_ID", ""), "GMAIL_CLIENT_SECRET": g.get("GMAIL_CLIENT_SECRET", ""),
+        "GMAIL_REFRESH_TOKEN": g["GMAIL_REFRESH_TOKEN"], "POSTFACH_ZUGAENGE": ",".join(zugaenge),
+        "POSTFACH_LABEL_PRAEFIXE": praefixe}, "nur fuer die Postfach-Wache")
+    return True
+
+
+def agent_einrichten(slug: str, d: dict, k: dict, rc_info: dict) -> bool:
+    """Rendert HERMES_HOME des Agenten. Gibt True zurueck, wenn sich etwas geaendert hat."""
+    p = agent_pfade(slug)
+    for key in ("hermes", "vorschlaege", "fallbuch", "arbeit", "skills"):
+        p[key].mkdir(parents=True, exist_ok=True)
+    (p["vorschlaege"] / "_freigaben").mkdir(exist_ok=True)
+    h = p["hermes"]
+    vorher = _fingerabdruck(h, ["config.yaml", "SOUL.md", ".env"]) + _ordner_fingerabdruck(p["skills"])
+
+    (h / "config.yaml").write_text(yaml.safe_dump(hermes_config(slug, d, k, rc_info), allow_unicode=True, sort_keys=False))
+    (h / "SOUL.md").write_text(soul(slug, d, k), encoding="utf-8")
+    g = geheim()
+    env = lies_env(h / ".env")  # lokale Ergaenzungen bleiben erhalten
+    env = {kk: vv for kk, vv in env.items() if not kk.startswith(("ROCKETCHAT_", "TELEGRAM_", "GMAIL_"))}
+    bot = rc_info["bots"][slug]
+    env.update({
+        "ROCKETCHAT_URL": "http://rocketchat:3000",
+        "ROCKETCHAT_ALLOW_INSECURE_HTTP": "true",
+        "ROCKETCHAT_USER_ID": bot["user_id"],
+        "ROCKETCHAT_TOKEN": g.get(f"RC_TOKEN_{slug.upper().replace('-', '_')}", ""),
+        "ROCKETCHAT_ALLOWED_USERS": ",".join([rc_info["eigentuemer_id"]] + [b["user_id"] for b in rc_info["bots"].values()]),
+        "ROCKETCHAT_BOT_PEERS": ",".join(rc_info["bots"].keys()),
+        "ROCKETCHAT_HOME_CHANNEL": rc_info["raeume"].get(bot["raum"], ""),
+        "ROCKETCHAT_FREE_RESPONSE_CHANNELS": rc_info["raeume"].get(bot["raum"], ""),
+        "ROCKETCHAT_REQUIRE_MENTION": "true",
+        "ROCKETCHAT_REPLY_MODE": "thread",
+        "ROCKETCHAT_WS_HEARTBEAT_SECONDS": "30",
+        "ROCKETCHAT_AGENT_WRITE_TOOLS": "true" if slug == "kurt" else "false",
+        "ROCKETCHAT_AGENT_FILE_UPLOADS": "false",
+    })
+    if d.get("telegram") and g.get("TELEGRAM_BOT_TOKEN"):
+        env["TELEGRAM_BOT_TOKEN"] = g["TELEGRAM_BOT_TOKEN"]
+        if k.get("EIGENTUEMER_TELEGRAM_ID"):
+            env["TELEGRAM_ALLOWED_USERS"] = k["EIGENTUEMER_TELEGRAM_ID"]
+            env["TELEGRAM_HOME_CHANNEL"] = k["EIGENTUEMER_TELEGRAM_ID"]
+    env = {kk: vv for kk, vv in env.items() if not kk.startswith(("POSTFACH_", "GMAIL_"))}
+    if "gmail" in (d.get("werkzeuge") or []) and g.get("GMAIL_REFRESH_TOKEN"):
+        # Der Agent bekommt nur seinen Schluessel fuer die Postfach-Wache, nie den Google-Token.
+        env["POSTFACH_TOKEN"] = postfach_schluessel(slug)
+        env["GMAIL_API_BASIS"] = "http://postfach:8090/gmail/v1"
+    if k.get("MODELL_ANBIETER") == "openai" and g.get("OPENAI_API_KEY"):
+        env["OPENAI_API_KEY"] = g["OPENAI_API_KEY"]
+    if k.get("MODELL_ANBIETER") == "openrouter" and g.get("OPENROUTER_API_KEY"):
+        env["OPENROUTER_API_KEY"] = g["OPENROUTER_API_KEY"]
+    schreibe_env(h / ".env", env, f"Agent {slug}, vom Doktor erzeugt. Lokale Zusatzschluessel bleiben erhalten.")
+
+    # eigene Skills aus dem Repo (schreibgeschuetzt in den Container gemountet, in place angleichen)
+    quelle = d["ordner"] / "skills"
+    ordner_angleichen(p["skills"], {f.relative_to(quelle).as_posix(): f for f in quelle.rglob("*") if f.is_file()}
+                      if quelle.exists() else {})
+
+    # Rocket.Chat-Plugin, gepinnt
+    ziel = h / "plugins" / "rocketchat-platform"
+    stempel = ziel / ".installed-ref"
+    if not stempel.exists() or stempel.read_text().strip() != PLUGIN_REF:
+        if ziel.exists():
+            shutil.rmtree(ziel)
+        ziel.parent.mkdir(parents=True, exist_ok=True)
+        shutil.copytree(plugin_bereitstellen(), ziel)
+        stempel.write_text(PLUGIN_REF)
+    gs = h / "gateway_state.json"
+    if not gs.exists():
+        gs.write_text('{"desired_state":"running","gateway_state":"running"}')
+    if not (p["fallbuch"] / "INDEX.md").exists():
+        (p["fallbuch"] / "INDEX.md").write_text("# Fallbuch\n\nEine Zeile je Fall: `- [Datum Kurzname](datei.md) Einschaetzung in einem Satz`.\n")
+    ausschnitt_rendern(slug, d)
+    for key in ("hermes", "vorschlaege", "fallbuch", "arbeit", "skills"):
+        run(["chown", "-R", f"{HERMES_UID}:{HERMES_UID}", str(p[key])])
+    os.chmod(h / ".env", 0o600)
+    nachher = _fingerabdruck(h, ["config.yaml", "SOUL.md", ".env"]) + _ordner_fingerabdruck(p["skills"])
+    return vorher != nachher
+
+
+def _fingerabdruck(ordner: Path, dateien: list) -> str:
+    h = hashlib.sha256()
+    for d in dateien:
+        f = ordner / d
+        h.update(f.read_bytes() if f.exists() else b"-")
+    return h.hexdigest()
+
+
+def _ordner_fingerabdruck(ordner: Path) -> str:
+    h = hashlib.sha256()
+    if ordner.exists():
+        for f in sorted(ordner.rglob("*")):
+            if f.is_file():
+                h.update(f.relative_to(ordner).as_posix().encode())
+                h.update(f.read_bytes())
+    return h.hexdigest()
+
+
+def compose_agenten_schreiben(defs: dict, k: dict) -> None:
+    dienste = {}
+    for slug, d in defs.items():
+        p = agent_pfade(slug)
+        werkzeuge = set(d.get("werkzeuge") or [])
+        vol = [
+            f"{p['hermes']}:/opt/data",
+            f"{p['ausschnitt']}:/opt/data/wissen:ro",
+            f"{p['vorschlaege']}:/opt/data/vorschlaege",
+            f"{p['fallbuch']}:/opt/data/fallbuch",
+            f"{p['arbeit']}:/opt/data/arbeit",
+            f"{p['skills']}:/opt/data/skills/eigene:ro",
+        ]
+        for w in ("veroeffentlichen", "vorschlag", "gmail"):
+            if (w in werkzeuge or w in ("veroeffentlichen", "vorschlag")) and (INST / "werkzeuge" / w).exists():
+                vol.append(f"{INST / 'werkzeuge' / w}:/usr/local/bin/{w}:ro")
+        dienste[f"agent-{slug}"] = {
+            "image": k.get("HERMES_IMAGE", STANDARD_HERMES_IMAGE),
+            "container_name": f"agent-{slug}",
+            "command": ["gateway", "run"],
+            "restart": "unless-stopped",
+            "environment": {
+                "HERMES_UID": str(HERMES_UID), "HERMES_GID": str(HERMES_UID), "AGENT_SLUG": slug,
+                "DASH_BASIS_URL": f"https://dash.{k.get('DOMAIN', '')}", "TZ": k.get("ZEITZONE", "Europe/Berlin"),
+                "HERMES_TIMEZONE": k.get("ZEITZONE", "Europe/Berlin"),
+            },
+            "volumes": vol,
+            "networks": ["agenten"],
+            "deploy": {"resources": {"limits": {"memory": "3g"}}},
+            "logging": {"driver": "json-file", "options": {"max-size": "20m", "max-file": "3"}},
+            "labels": {"agenten.slug": slug},
+        }
+        if k.get("MODELL_ANBIETER") == "meridian":
+            dienste[f"agent-{slug}"]["depends_on"] = ["meridian"]
+    COMPOSE_AGENTEN.write_text(
+        "# Vom Doktor aus dem Wissens-Repo erzeugt. Nicht von Hand bearbeiten.\n"
+        + yaml.safe_dump({"services": dienste}, allow_unicode=True, sort_keys=False))
+
+
+# ---------------------------------------------------------------- Wissens-Repo
+
+def git(*args, check=True, cwd=WISSEN):
+    env = dict(os.environ, GIT_TERMINAL_PROMPT="0")
+    return run(["git", "-c", "user.name=Agenten-Doktor", "-c", "user.email=doktor@agenten.invalid", *args], cwd=cwd, check=check, env=env, still=True)
+
+
+def repo_url(k: dict) -> str | None:
+    repo = k.get("WISSEN_REPO", "").strip()
+    if not repo:
+        return None
+    return f"https://github.com/{repo}.git"
+
+
+def git_zugang_einrichten() -> None:
+    """Credential-Helper liest den Token zur Laufzeit aus geheim.env (nie in .git/config)."""
+    helfer = BASIS / "bin" / "git-zugang"
+    helfer.parent.mkdir(parents=True, exist_ok=True)
+    helfer.write_text(
+        "#!/bin/sh\n# git credential helper: liefert den GitHub-Token aus geheim.env\n"
+        f"[ \"$1\" = get ] || exit 0\nT=$(grep '^GITHUB_TOKEN=' {GEHEIM} | cut -d= -f2-)\n"
+        "echo username=x-access-token\necho \"password=$T\"\n")
+    os.chmod(helfer, 0o700)
+    git("config", "credential.helper", str(helfer))
+
+
+def wissen_vorbereiten(k: dict) -> None:
+    url = repo_url(k)
+    if not (WISSEN / ".git").exists():
+        WISSEN.mkdir(parents=True, exist_ok=True)
+        if url and geheim().get("GITHUB_TOKEN"):
+            git("init", "-q", "-b", "main")
+            git_zugang_einrichten()
+            git("remote", "add", "origin", url)
+            p = git("fetch", "-q", "origin", check=False)
+            if p.returncode == 0 and git("ls-remote", "--heads", "origin", "main", check=False).stdout.strip():
+                git("checkout", "-q", "-B", "main", "origin/main")
+            info("Wissens-Repo verbunden: " + k["WISSEN_REPO"])
+        else:
+            git("init", "-q", "-b", "main")
+            info("Kein GitHub-Repo konfiguriert: Wissens-Repo laeuft lokal (Vorschlaege werden lokale Branches).")
+    elif url and geheim().get("GITHUB_TOKEN") and not git("remote", check=False).stdout.strip():
+        # spaeter angebundenes GitHub-Repo: lokalen Stand hochladen
+        git_zugang_einrichten()
+        git("remote", "add", "origin", url)
+        if git("rev-parse", "HEAD", check=False).returncode == 0:
+            git("push", "-q", "-u", "origin", "main")
+        info("Lokales Wissens-Repo mit GitHub verbunden: " + k["WISSEN_REPO"])
+    if not (WISSEN / "AGENTS.md").exists():
+        vorlage = INST / "wissens-vorlage"
+        if vorlage.exists():
+            shutil.copytree(vorlage, WISSEN, dirs_exist_ok=True)
+        start = INST / "agenten"
+        (WISSEN / "agenten").mkdir(exist_ok=True)
+        for x in start.iterdir():
+            z = WISSEN / "agenten" / x.name
+            if x.is_dir() and not z.exists():
+                shutil.copytree(x, z)
+            elif x.is_file() and not z.exists():
+                shutil.copy2(x, z)
+        _platzhalter_ersetzen(k)
+        git("add", "-A")
+        git("commit", "-q", "-m", "Startstand: Wissensbasis und Agenten Kurt und Vera")
+        if url:
+            git("push", "-q", "-u", "origin", "main")
+        logbuch("Wissens-Repo angelegt", ["Vorlage und Agenten Kurt, Vera uebernommen"])
+
+
+def _platzhalter_ersetzen(k: dict) -> None:
+    ersatz = {
+        "{{EIGENTUEMER}}": k.get("EIGENTUEMER_GITHUB", "eigentuemer"),
+        "{{EIGENTUEMER_NAME}}": k.get("EIGENTUEMER_NAME", "Eigentuemer"),
+        "{{EIGENTUEMER_GITHUB}}": k.get("EIGENTUEMER_GITHUB", "eigentuemer"),
+        "{{EIGENTUEMER_TELEGRAM_ID}}": k.get("EIGENTUEMER_TELEGRAM_ID", "0"),
+        "{{FIRMA}}": k.get("FIRMA", "Meine Immobilien"),
+        "{{DOMAIN}}": k.get("DOMAIN", ""),
+        "{{DATUM}}": f"{jetzt():%Y-%m-%d}",
+        "{{REPO_DATUM}}": f"{jetzt():%Y-%m-%d}",
+    }
+    for p in WISSEN.rglob("*"):
+        if p.is_file() and ".git" not in p.parts and p.suffix in (".md", ".yaml", ".yml", ".txt", "") :
+            try:
+                t = p.read_text(encoding="utf-8")
+            except UnicodeDecodeError:
+                continue
+            neu = t
+            for a, b in ersatz.items():
+                neu = neu.replace(a, b)
+            neu = re.sub(r"@FACHVERANTWORTLICH_[A-Z0-9_]+", "@" + k.get("EIGENTUEMER_GITHUB", "eigentuemer"), neu)
+            if neu != t:
+                p.write_text(neu, encoding="utf-8")
+
+
+def wissen_holen(k: dict) -> bool:
+    if not repo_url(k):
+        return False
+    vorher = git("rev-parse", "HEAD", check=False).stdout.strip()
+    git("fetch", "-q", "origin", check=False)
+    git("checkout", "-q", "main", check=False)
+    git("reset", "-q", "--hard", "origin/main", check=False)
+    return vorher != git("rev-parse", "HEAD", check=False).stdout.strip()
+
+
+# ---------------------------------------------------------------- Rechte und Vorschlaege
+
+EIGENTUEMER_ONLY = [
+    "agenten/*/agent.yaml", "agenten/*/rolle.md", "agenten/*/regeln.md", "agenten/*/rechte.yaml",
+    "agenten/*/skills/**", "agenten/gemeinsam.md",
+]
+NIE_PER_VORSCHLAG = ["geschaeftsfuehrung/**", ".github/**", "CODEOWNERS", "AGENTS.md", "betrieb/**", "agenten/*/fallbuch/**",
+                     "agenten/*/aenderungen.md"]
+FACH = ["agenten/*/wissen/**", "agenten/*/beispiele/**", "agenten/*/testfragen.yaml", "team/**"]
+GEHEIM_MUSTER = re.compile(r"(ghp_[A-Za-z0-9]{20,}|github_pat_[A-Za-z0-9_]{20,}|sk-[A-Za-z0-9_-]{20,}|xox[bp]-[A-Za-z0-9-]{10,}|AKIA[0-9A-Z]{16}|-----BEGIN [A-Z ]*PRIVATE KEY)")
+
+
+def freigabe_noetig(pfade: list) -> str:
+    """'eigentuemer' wenn mindestens ein Pfad nur vom Eigentuemer freigegeben werden darf, sonst 'fach'."""
+    for p in pfade:
+        if passt(p, EIGENTUEMER_ONLY) or not passt(p, FACH):
+            return "eigentuemer"
+    return "fach"
+
+
+def vorschlag_pruefen(slug: str, d: dict, ordner: Path) -> tuple:
+    meta_datei = ordner / "vorschlag.yaml"
+    if not meta_datei.exists():
+        return None, "vorschlag.yaml fehlt"
+    try:
+        meta = yaml.safe_load(meta_datei.read_text(encoding="utf-8")) or {}
+    except yaml.YAMLError as e:
+        return None, f"vorschlag.yaml ist kein gueltiges YAML: {e}"
+    for feld in ("titel", "art", "ausloeser", "begruendung"):
+        if not str(meta.get(feld) or "").strip():
+            return None, f"Pflichtfeld fehlt: {feld}"
+    tf = meta.get("testfragen") or []
+    if not tf or not all(isinstance(t, dict) and t.get("frage") and t.get("erwartet") for t in tf):
+        return None, "mindestens eine Testfrage mit frage und erwartet noetig"
+    dateien_dir = ordner / "dateien"
+    pfade = []
+    if dateien_dir.exists():
+        for f in dateien_dir.rglob("*"):
+            if f.is_file():
+                pfade.append(f.relative_to(dateien_dir).as_posix())
+    loeschen = [str(x) for x in (meta.get("loeschen") or [])]
+    alle = pfade + loeschen
+    if not alle:
+        return None, "keine Dateien im Vorschlag"
+    if meta.get("art") == "agent-einstellen":
+        for r in dateien_dir.glob("agenten/*/rechte.yaml"):
+            rr = yaml.safe_load(r.read_text(encoding="utf-8")) or {}
+            if any(str(x).startswith("geschaeftsfuehrung") for x in (rr.get("lesen") or []) + (rr.get("vorschlagen") or [])):
+                return None, f"neuer Agent {r.parent.name} darf kein Geschaeftsfuehrungswissen bekommen"
+    neue_agenten = {p.split("/")[1] for p in pfade if p.startswith("agenten/") and p.count("/") >= 2
+                    and not (WISSEN / "agenten" / p.split("/")[1]).exists()} if meta.get("art") == "agent-einstellen" else set()
+    for p in alle:
+        if ".." in p.split("/") or p.startswith("/"):
+            return None, f"unzulaessiger Pfad: {p}"
+        # Ein Einstellungsantrag bringt das erste Aenderungsprotokoll des NEUEN Agenten mit
+        if p.count("/") == 2 and p.startswith("agenten/") and p.endswith("/aenderungen.md") and p.split("/")[1] in neue_agenten:
+            continue
+        if passt(p, NIE_PER_VORSCHLAG):
+            return None, f"{p} darf nie per Agenten-Vorschlag geaendert werden"
+        if not passt(p, d["rechte"]["vorschlagen"]):
+            return None, f"{p} liegt ausserhalb deiner Vorschlagsrechte ({', '.join(d['rechte']['vorschlagen'])})"
+    for p in pfade:
+        inhalt = (dateien_dir / p).read_text(encoding="utf-8", errors="replace")
+        if GEHEIM_MUSTER.search(inhalt):
+            return None, f"{p} enthaelt etwas, das wie ein Geheimnis aussieht. Bitte entfernen."
+    if meta.get("art") == "agent-einstellen":
+        neue = {p.split("/")[1] for p in pfade if p.startswith("agenten/") and p.count("/") >= 2}
+        for n in neue:
+            r = dateien_dir / "agenten" / n / "rechte.yaml"
+            if r.exists():
+                rr = yaml.safe_load(r.read_text(encoding="utf-8")) or {}
+                if any(str(x).startswith("geschaeftsfuehrung") for x in (rr.get("lesen") or []) + (rr.get("vorschlagen") or [])):
+                    return None, f"neuer Agent {n} darf kein Geschaeftsfuehrungswissen bekommen"
+            for pflicht in ("agent.yaml", "rolle.md", "regeln.md", "rechte.yaml", "testfragen.yaml"):
+                if not (dateien_dir / "agenten" / n / pflicht).exists() and not (WISSEN / "agenten" / n / pflicht).exists():
+                    return None, f"neuer Agent {n}: {pflicht} fehlt"
+    meta["_pfade"] = pfade
+    meta["_loeschen"] = loeschen
+    return meta, None
+
+
+def pr_text(slug: str, meta: dict, stufe: str) -> str:
+    tf = "\n".join(f"- **Frage:** {t['frage']}\n  **Erwartet:** {t['erwartet']}" for t in meta.get("testfragen") or [])
+    dateien = "\n".join(f"- `{p}`" for p in meta["_pfade"]) + "".join(f"\n- `{p}` (loeschen)" for p in meta["_loeschen"])
+    wer = "Eigentuemer" if stufe == "eigentuemer" else "Fachverantwortliche/r oder Eigentuemer"
+    return (f"Vorschlag von **{slug}** ({meta.get('art')})\n\n**Ausloeser:** {meta.get('ausloeser')}\n\n"
+            f"**Begruendung:** {meta.get('begruendung')}\n\n**Dateien:**\n{dateien}\n\n**Testfragen:**\n{tf}\n\n"
+            f"**Freigabe durch:** {wer} (vom Doktor nach Rechte-Matrix bestimmt)\n\n"
+            "**So gibst du frei:** Kurt in Telegram `freigeben #<nummer>` schreiben. Du bekommst einen Bestaetigungscode, "
+            "den schickst du Kurt zurueck (`freigeben #<nummer> Code 123456`). Der Doktor prueft Berechtigung und Code und "
+            "traegt die Aenderung ins Aenderungsprotokoll ein. Direktes Mergen hier umgeht Protokoll und Pruefung.\n")
+
+
+def github_api(methode, pfad, daten=None):
+    token = geheim().get("GITHUB_TOKEN")
+    if not token:
+        raise Fehler("GITHUB_TOKEN fehlt.")
+    return http_json(methode, f"https://api.github.com{pfad}", daten,
+                     {"Authorization": f"Bearer {token}", "Accept": "application/vnd.github+json", "User-Agent": "agenten-doktor"})
+
+
+def vorschlaege_abholen(defs: dict, k: dict) -> list:
+    ergebnisse = []
+    for slug, d in defs.items():
+        basis = agent_pfade(slug)["vorschlaege"]
+        if not basis.exists():
+            continue
+        for ordner in sorted(basis.iterdir()):
+            if not ordner.is_dir() or ordner.name.startswith("_") or (ordner / "ergebnis.yaml").exists():
+                continue
+            if not (ordner / "vorschlag.yaml").exists():
+                continue
+            meta, grund = vorschlag_pruefen(slug, d, ordner)
+            if grund:
+                _ergebnis(ordner, {"status": "abgelehnt", "grund": grund})
+                logbuch(f"Vorschlag {slug}/{ordner.name} abgelehnt", [grund], "vorschlag")
+                ergebnisse.append(f"{slug}/{ordner.name}: abgelehnt ({grund})")
+                continue
+            stufe = freigabe_noetig(meta["_pfade"] + meta["_loeschen"])
+            branch = f"vorschlag/{slug}/{ordner.name}"
+            git("checkout", "-q", "main")
+            git("checkout", "-q", "-B", branch)
+            for p in meta["_pfade"]:
+                z = WISSEN / p
+                z.parent.mkdir(parents=True, exist_ok=True)
+                shutil.copy2(ordner / "dateien" / p, z)
+            for p in meta["_loeschen"]:
+                (WISSEN / p).unlink(missing_ok=True)
+            git("add", "-A")
+            if not git("status", "--porcelain").stdout.strip():
+                git("checkout", "-q", "main")
+                _ergebnis(ordner, {"status": "abgelehnt", "grund": "keine Aenderung gegenueber dem aktuellen Stand"})
+                logbuch(f"Vorschlag {slug}/{ordner.name} ohne Aenderung", ["Inhalt entspricht schon dem aktuellen Stand"], "vorschlag")
+                ergebnisse.append(f"{slug}/{ordner.name}: ohne Aenderung")
+                continue
+            git("commit", "-q", "-m", f"{meta['titel']}\n\nVorschlag von {slug}, Freigabe: {stufe}")
+            erg = {"status": "pr-erstellt", "freigabe_durch": stufe, "branch": branch}
+            if repo_url(k):
+                git("push", "-q", "-f", "origin", branch)
+                s, pr = github_api("POST", f"/repos/{k['WISSEN_REPO']}/pulls",
+                                   {"title": meta["titel"], "head": branch, "base": "main", "body": pr_text(slug, meta, stufe)})
+                if s not in (200, 201):
+                    erg = {"status": "fehler", "grund": f"PR nicht angelegt ({s}): {pr.get('message', '')}"}
+                else:
+                    erg.update({"pr": pr["number"], "url": pr["html_url"]})
+                    github_api("POST", f"/repos/{k['WISSEN_REPO']}/issues/{pr['number']}/labels",
+                               {"labels": [f"von-{slug}", f"freigabe-{stufe}", str(meta.get('art'))]})
+            else:
+                erg["pr"] = _lokale_pr_nummer(branch)
+            git("checkout", "-q", "main")
+            _ergebnis(ordner, erg)
+            logbuch(f"Vorschlag {slug}/{ordner.name}: {erg['status']}", [f"{k2}: {v2}" for k2, v2 in erg.items()], "vorschlag")
+            ergebnisse.append(f"{slug}/{ordner.name}: {erg['status']} {erg.get('url', erg.get('pr', ''))}")
+    return ergebnisse
+
+
+def _lokale_pr_nummer(branch: str) -> int:
+    z = zustand()
+    prs = z.setdefault("lokale_prs", {})
+    for n, b in prs.items():
+        if b == branch:
+            return int(n)
+    n = max([int(x) for x in prs] + [0]) + 1
+    prs[str(n)] = branch
+    zustand_speichern(z)
+    return n
+
+
+def _ergebnis(ordner: Path, daten: dict) -> None:
+    daten["zeit"] = f"{jetzt():%Y-%m-%d %H:%M}"
+    (ordner / "ergebnis.yaml").write_text(yaml.safe_dump(daten, allow_unicode=True, sort_keys=False))
+    run(["chown", "-R", f"{HERMES_UID}:{HERMES_UID}", str(ordner)], check=False)
+
+
+def berechtigt(person: str, pfade: list, defs: dict, k: dict) -> tuple:
+    """person: 'telegram:<id>' oder 'github:<login>'."""
+    eigent = {f"telegram:{k.get('EIGENTUEMER_TELEGRAM_ID')}", f"github:{k.get('EIGENTUEMER_GITHUB')}"}
+    if person in eigent:
+        return True, "Eigentuemer"
+    if freigabe_noetig(pfade) == "eigentuemer":
+        return False, "Diese Aenderung betrifft Regeln, Rechte oder Werkzeuge. Freigeben darf nur der Eigentuemer."
+    for p in pfade:
+        m = re.match(r"agenten/([^/]+)/", p)
+        if not m:
+            return False, f"{p}: nur der Eigentuemer"
+        fv = (defs.get(m.group(1), {}).get("fachverantwortlich") or {})
+        ids = {f"telegram:{fv.get('telegram_id')}", f"github:{fv.get('github')}"}
+        if person not in ids:
+            return False, f"{person} ist nicht fachverantwortlich fuer {m.group(1)}"
+    return True, "Fachverantwortliche/r"
+
+
+def pr_freigeben(nummer: int, person: str, k: dict, defs: dict) -> str:
+    if repo_url(k):
+        s, pr = github_api("GET", f"/repos/{k['WISSEN_REPO']}/pulls/{nummer}")
+        if s != 200:
+            raise Fehler(f"PR #{nummer} nicht gefunden ({s}).")
+        if pr.get("merged"):
+            return f"PR #{nummer} ist schon uebernommen."
+        s, files = github_api("GET", f"/repos/{k['WISSEN_REPO']}/pulls/{nummer}/files?per_page=100")
+        pfade = [f["filename"] for f in files] if isinstance(files, list) else []
+        ok, grund = berechtigt(person, pfade, defs, k)
+        if not ok:
+            logbuch(f"Freigabe PR #{nummer} verweigert", [person, grund], "freigabe")
+            raise Fehler(grund)
+        s, m = github_api("PUT", f"/repos/{k['WISSEN_REPO']}/pulls/{nummer}/merge",
+                          {"merge_method": "squash", "commit_title": f"{pr['title']} (#{nummer}, freigegeben von {person})"})
+        if s != 200:
+            raise Fehler(f"Merge fehlgeschlagen ({s}): {m.get('message', '')}")
+        wissen_holen(k)
+    else:
+        branch = zustand().get("lokale_prs", {}).get(str(nummer))
+        if not branch:
+            raise Fehler(f"Lokaler Vorschlag #{nummer} unbekannt.")
+        pfade = git("diff", "--name-only", f"main...{branch}").stdout.split()
+        ok, grund = berechtigt(person, pfade, defs, k)
+        if not ok:
+            logbuch(f"Freigabe #{nummer} verweigert", [person, grund], "freigabe")
+            raise Fehler(grund)
+        git("checkout", "-q", "main")
+        git("merge", "-q", "--squash", branch)
+        git("commit", "-q", "-m", f"Vorschlag #{nummer} uebernommen (freigegeben von {person})")
+    aenderungsprotokoll(nummer, person, pfade, k)
+    logbuch(f"PR #{nummer} freigegeben und uebernommen", [f"von {person}"] + [f"`{p}`" for p in pfade], "freigabe")
+    return f"PR #{nummer} uebernommen. Der Doktor rollt die Aenderung beim naechsten Abgleich aus."
+
+
+def aenderungsprotokoll(nummer, person, pfade, k):
+    agenten = sorted({m.group(1) for p in pfade for m in [re.match(r"agenten/([^/]+)/", p)] if m})
+    for a in agenten:
+        datei = WISSEN / "agenten" / a / "aenderungen.md"
+        if not datei.parent.exists():
+            continue
+        with open(datei, "a", encoding="utf-8") as f:
+            f.write(f"\n- {jetzt():%Y-%m-%d %H:%M} #{nummer} freigegeben von {person}: "
+                    + ", ".join(p.split('/', 2)[-1] for p in pfade if p.startswith(f'agenten/{a}/')) + "\n")
+    if agenten:
+        git("add", "-A")
+        git("commit", "-q", "-m", f"Aenderungsprotokoll zu #{nummer}", check=False)
+        if repo_url(k):
+            git("push", "-q", "origin", "main", check=False)
+
+
+def telegram_an_eigentuemer(text: str) -> None:
+    """Direkt ueber die Bot-API (sendMessage stoert das Abholen durch Kurts Gateway nicht)."""
+    token, chat = geheim().get("TELEGRAM_BOT_TOKEN"), konfig().get("EIGENTUEMER_TELEGRAM_ID")
+    if not token or not chat or chat == "0":
+        raise Fehler("Telegram ist nicht eingerichtet (Bot-Token oder Telegram-ID des Eigentuemers fehlt).")
+    s, d = http_json("POST", f"https://api.telegram.org/bot{token}/sendMessage", {"chat_id": int(chat), "text": text})
+    if s != 200 or not d.get("ok"):
+        raise Fehler(f"Telegram-Nachricht nicht zugestellt ({s}).")
+
+
+def pr_titel(nummer: int, k: dict) -> tuple:
+    if repo_url(k):
+        s, pr = github_api("GET", f"/repos/{k['WISSEN_REPO']}/pulls/{nummer}")
+        s2, files = github_api("GET", f"/repos/{k['WISSEN_REPO']}/pulls/{nummer}/files?per_page=100")
+        return (pr.get("title", f"#{nummer}") if s == 200 else f"#{nummer}"), ([f["filename"] for f in files] if isinstance(files, list) else [])
+    branch = zustand().get("lokale_prs", {}).get(str(nummer), "")
+    pfade = git("diff", "--name-only", f"main...{branch}", check=False).stdout.split() if branch else []
+    titel = git("log", "-1", "--format=%s", branch, check=False).stdout.strip() if branch else f"#{nummer}"
+    return titel or f"#{nummer}", pfade
+
+
+def freigaben_abholen(defs: dict, k: dict) -> list:
+    """Kurt reicht Freigaben des Eigentuemers aus Telegram als Datei ein. Weil ein manipulierter Agent
+    eine solche Datei faelschen koennte, verlangt der Doktor einen Bestaetigungscode, den er selbst
+    per Telegram an den Eigentuemer schickt und den kein Agent sieht (zweiter Kanal wie beim Online-Banking)."""
+    aus = []
+    z = zustand()
+    codes = z.setdefault("freigabecodes", {})
+    for slug in defs:
+        ordner = agent_pfade(slug)["vorschlaege"] / "_freigaben"
+        if not ordner.exists():
+            continue
+        for f in sorted(ordner.glob("*.yaml")):
+            if f.name.endswith((".erledigt.yaml", ".wartet.yaml")):
+                continue
+            try:
+                m = yaml.safe_load(f.read_text(encoding="utf-8")) or {}
+                nummer = int(m.get("pr"))
+                if not defs[slug].get("telegram"):
+                    raise Fehler(f"{slug} hat keinen Telegram-Zugang und darf keine Freigaben weiterreichen.")
+                ablehnen = str(m.get("entscheidung", "")).lower().startswith("ablehn")
+                if ablehnen:
+                    if repo_url(k):
+                        github_api("PATCH", f"/repos/{k['WISSEN_REPO']}/pulls/{nummer}", {"state": "closed"})
+                    erg = f"PR #{nummer} abgelehnt und geschlossen."
+                    logbuch(f"PR #{nummer} abgelehnt", [f"Wortlaut: {m.get('wortlaut', '')}"], "freigabe")
+                else:
+                    eintrag = codes.get(str(nummer))
+                    code = re.sub(r"\D", "", str(m.get("code") or ""))
+                    gueltig = eintrag and (time.time() - eintrag["zeit"] < 1800)
+                    if code and gueltig and hmac.compare_digest(code, eintrag["code"]):
+                        codes.pop(str(nummer), None)
+                        zustand_speichern(z)
+                        erg = pr_freigeben(nummer, f"telegram:{k.get('EIGENTUEMER_TELEGRAM_ID')}", k, defs)
+                    else:
+                        neu = f"{secrets.randbelow(10 ** 6):06d}"
+                        codes[str(nummer)] = {"code": neu, "zeit": time.time()}
+                        zustand_speichern(z)
+                        titel, pfade = pr_titel(nummer, k)
+                        liste = ", ".join(p.split("/", 2)[-1] if p.startswith("agenten/") else p for p in pfade[:6])
+                        telegram_an_eigentuemer(
+                            f"Bestaetigung noetig: Freigabe von #{nummer} \"{titel}\" ({len(pfade)} Datei(en): {liste}).\n\n"
+                            f"Wenn das von dir kommt, schreib Kurt: freigeben #{nummer} Code {neu}\n"
+                            "Der Code gilt 30 Minuten. Wenn du nichts freigeben wolltest: ignorieren und dem Doktor Bescheid geben.")
+                        erg = ("Code war falsch oder abgelaufen. " if code else "") + \
+                            f"Bestaetigungscode fuer #{nummer} an den Eigentuemer geschickt. Warte auf 'freigeben #{nummer} Code ...'."
+                        logbuch(f"Bestaetigungscode fuer PR #{nummer} verschickt", [f"angefragt von {slug}", "Code nicht protokolliert"], "freigabe")
+            except Exception as e:  # noqa: BLE001
+                erg = f"Nicht ausgefuehrt: {e}"
+            f.rename(f.with_name(f.stem + ".erledigt.yaml"))
+            f.with_name(f.stem + ".ergebnis.txt").write_text(erg + "\n")
+            run(["chown", "-R", f"{HERMES_UID}:{HERMES_UID}", str(ordner)], check=False)
+            aus.append(erg)
+    return aus
+
+
+def fallbuecher_spiegeln(defs: dict, k: dict) -> int:
+    n = 0
+    for slug in defs:
+        q = agent_pfade(slug)["fallbuch"]
+        if not q.exists():
+            continue
+        z = WISSEN / "agenten" / slug / "fallbuch"
+        z.mkdir(parents=True, exist_ok=True)
+        for f in q.glob("*.md"):
+            ziel = z / f.name
+            inhalt = f.read_bytes()
+            if GEHEIM_MUSTER.search(inhalt.decode("utf-8", "replace")):
+                logbuch(f"Fallbuch {slug}/{f.name} nicht gespiegelt", ["enthaelt ein Geheimnis-Muster"], "warnung")
+                continue
+            if not ziel.exists() or ziel.read_bytes() != inhalt:
+                ziel.write_bytes(inhalt)
+                n += 1
+    if n:
+        git("add", "-A")
+        git("commit", "-q", "-m", f"Fallbuecher gespiegelt ({n} Dateien)")
+        if repo_url(k):
+            git("push", "-q", "origin", "main", check=False)
+    return n
+
+
+def logbuch_spiegeln(k: dict) -> None:
+    z = WISSEN / "betrieb" / "logbuch"
+    z.mkdir(parents=True, exist_ok=True)
+    geaendert = False
+    for f in LOGBUCH_DIR.glob("*.md"):
+        ziel = z / f.name
+        if not ziel.exists() or ziel.read_bytes() != f.read_bytes():
+            shutil.copy2(f, ziel)
+            geaendert = True
+    if geaendert:
+        git("checkout", "-q", "main", check=False)
+        git("add", "betrieb")
+        git("commit", "-q", "-m", "Betriebslogbuch", check=False)
+        if repo_url(k):
+            git("push", "-q", "origin", "main", check=False)
+
+
+# ---------------------------------------------------------------- Befehle
+
+def cmd_geheimnis_setzen(a):
+    wert = sys.stdin.readline().strip()
+    if not wert:
+        raise Fehler("Kein Wert auf stdin.")
+    geheim_setzen(a.schluessel, wert)
+    if a.schluessel == "CLAUDE_CODE_OAUTH_TOKEN":
+        schreibe_env(GEHEIM_DIR / "meridian.env", {"CLAUDE_CODE_OAUTH_TOKEN": wert}, "nur fuer den Meridian-Container")
+    logbuch(f"Geheimnis {a.schluessel} gesetzt", ["Wert per stdin, nicht protokolliert"])
+    info(f"{a.schluessel} gespeichert.")
+
+
+def basis_vorbereiten(k: dict) -> None:
+    for d in ("daten/dateien/_start", "daten/rocketchat/db", "daten/mietjump", "daten/agenten", "daten/sicherung", "logbuch", "geheim"):
+        (BASIS / d).mkdir(parents=True, exist_ok=True)
+    os.chmod(GEHEIM_DIR, 0o700)
+    run(["chown", "-R", "1000:1000", str(DATEN / "mietjump")])  # node im MietJUMP-Image
+    run(["chown", "-R", "101:101", str(DATEN / "dateien")])  # nginx im Dateiablage-Image (WebDAV schreibt)
+    g = geheim()
+    neu = {}
+    for key, n in (("RC_ADMIN_PASS", 24), ("RC_EIGENTUEMER_PASS", 18), ("DASH_PASS", 18), ("RESTIC_PASSWORD", 32)):
+        if not g.get(key):
+            neu[key] = zufall(n)
+    for key, w in neu.items():
+        geheim_setzen(key, w)
+    g = geheim()
+    if not g.get("DASH_PASS_HASH") or neu.get("DASH_PASS"):
+        h = run(["docker", "run", "--rm", "-i", "caddy:2.10", "caddy", "hash-password"], eingabe=g["DASH_PASS"] + "\n").stdout.strip().splitlines()[-1]
+        geheim_setzen("DASH_PASS_HASH", h)
+        g = geheim()
+    # .env fuer docker compose (Interpolation): Konfiguration plus die noetigen Geheimnisse
+    compose_env = {kk: vv for kk, vv in k.items()}
+    compose_env["DASH_PASS_HASH"] = g["DASH_PASS_HASH"].replace("$", "$$")
+    compose_env["RC_ADMIN_PASS"] = g["RC_ADMIN_PASS"]
+    schreibe_env(BASIS / ".env", compose_env, "Fuer docker compose, vom Doktor erzeugt.")
+
+
+def mietjump_einrichten(k: dict, defs: dict) -> None:
+    if not (BASIS / "mietjump-quelle" / "Dockerfile").exists():
+        info("MietJUMP-Quelle fehlt (doktor-lokal mietjump-hochladen). MietJUMP wird uebersprungen.")
+        return
+    g = geheim()
+    braucht = [s for s, d in defs.items() if "mietjump" in (d.get("werkzeuge") or [])]
+    if not g.get("MIETJUMP_EIGENTUEMER_TOKEN"):
+        t = _mietjump_zugang(k.get("EIGENTUEMER_NAME", "Eigentuemer"), "eigentuemer")
+        geheim_setzen("MIETJUMP_EIGENTUEMER_TOKEN", t)
+    for slug in braucht:
+        key = f"MIETJUMP_AGENT_TOKEN_{slug.upper().replace('-', '_')}"
+        if not geheim().get(key):
+            t = _mietjump_zugang(f"{defs[slug].get('name', slug)} (Agent)", "mitarbeiter")
+            geheim_setzen(key, t)
+    if not (DATEN / "mietjump" / ".demo-geladen").exists() and k.get("DEMO_DATEN") == "ja":
+        _mietjump_demo()
+
+
+def _mietjump_zugang(name: str, rolle: str) -> str:
+    p = compose("run", "--rm", "--no-deps", "-T", "mietjump", "zugang", "anlegen", "--name", name, "--rolle", rolle)
+    m = re.search(r"Schlüssel[^\n]*\n\s+(\S{24,})", p.stdout)
+    if not m:
+        raise Fehler("MietJUMP-Zugang angelegt, aber Schluessel nicht gefunden.")
+    return m.group(1)
+
+
+def _mietjump_demo() -> None:
+    """Testdaten MFH 13: Stammdaten, Sollstellungen, Kontoumsaetze (alles erfunden, BLZ 00000000)."""
+    for befehl in (["stammdaten", "/app/beispiel/mfh-13/stammdaten.json"], ["soll", "--ab", "2026-10", "--bis", "2026-11"]):
+        compose("exec", "-T", "mietjump", "mietjump", *befehl, check=False)
+    bank = DATEN / "agenten" / "vera" / "arbeit" / "bank"
+    bank.mkdir(parents=True, exist_ok=True)
+    for name in ("umsaetze-2026-10.camt053.xml", "umsaetze-2026-11.camt053.xml"):
+        p = run(["docker", "exec", "agenten-mietjump-1", "cat", f"/app/beispiel/mfh-13/{name}"], check=False, still=True)
+        if p.returncode == 0:
+            (bank / name).write_text(p.stdout, encoding="utf-8")
+    run(["chown", "-R", f"{HERMES_UID}:{HERMES_UID}", str(bank)], check=False)
+    (DATEN / "mietjump" / ".demo-geladen").write_text(f"{jetzt():%Y-%m-%d %H:%M}\n")
+    logbuch("MietJUMP-Testdaten geladen", ["MFH Musterallee 13, Stammdaten und Soll Okt/Nov, Kontoauszuege fuer Vera unter arbeit/bank"])
+
+
+def rocketchat_einrichten(k: dict, defs: dict) -> dict:
+    g = geheim()
+    rc = RocketChat()
+    rc.warten()
+    rc.kopf = rc.anmelden(k.get("RC_ADMIN_BENUTZER", "doktor"), g["RC_ADMIN_PASS"])
+    z = zustand()
+    rci = z.setdefault("rocketchat", {"bots": {}, "raeume": {}})
+    eig_name = re.sub(r"[^a-z0-9]", "", k.get("EIGENTUEMER_NAME", "chef").lower()) or "chef"
+    rci["eigentuemer_benutzer"] = eig_name
+    rci["eigentuemer_id"] = rc.benutzer_anlegen(eig_name, k.get("EIGENTUEMER_NAME", "Eigentuemer"), g["RC_EIGENTUEMER_PASS"], ["user", "admin"],
+                                                k.get("ACME_EMAIL"))
+    for slug, d in defs.items():
+        key = f"RC_BOTPASS_{slug.upper().replace('-', '_')}"
+        if not g.get(key):
+            geheim_setzen(key, zufall(24))
+            g = geheim()
+        uid = rc.benutzer_anlegen(slug, f"{d.get('name', slug)} ({d.get('rolle', 'Agent')})", g[key], ["user", "bot"])
+        tkey = f"RC_TOKEN_{slug.upper().replace('-', '_')}"
+        if not rc.token_gueltig(uid, g.get(tkey, "")):
+            try:
+                _, token = rc.zugangstoken(slug, g[key])
+            except Fehler:
+                rc.passwort_setzen(uid, g[key])  # nur im Notfall, loescht alte Token
+                _, token = rc.zugangstoken(slug, g[key])
+            geheim_setzen(tkey, token)
+            g = geheim()
+            logbuch(f"Rocket.Chat-Zugangstoken fuer {slug} neu ausgestellt", ["altes Token ungueltig oder fehlend"], "reparatur")
+        raum = ((d.get("rocketchat") or {}).get("raum") or slug)
+        rci["bots"][slug] = {"user_id": uid, "raum": raum}
+    alle_bots = list(defs.keys())
+    rci["raeume"]["team"] = rc.raum("team", [eig_name] + alle_bots, privat=True, thema="Ganzes Team. Agenten antworten hier nur, wenn du sie mit @Name ansprichst.")
+    for slug, d in defs.items():
+        raum = rci["bots"][slug]["raum"]
+        rci["raeume"][raum] = rc.raum(raum, [eig_name, slug], privat=True,
+                                      thema=f"Arbeitsraum von {d.get('name', slug)}. Hier antwortet {d.get('name', slug)} ohne @-Erwaehnung.")
+        for weitere in ((d.get("rocketchat") or {}).get("weitere_raeume") or []):
+            if weitere != "team":
+                rci["raeume"][weitere] = rc.raum(weitere, [eig_name, slug], privat=True)
+    zustand_speichern(z)
+    return rci
+
+
+def startseite_schreiben(k: dict, defs: dict, check_ergebnis: list | None = None) -> None:
+    d = k.get("DOMAIN", "")
+    karten = "".join(
+        f"<div class='karte'><div class='e'>{x.get('emoji', '🤖')}</div><b>{x.get('name', s)}</b><span>{x.get('rolle', '')}</span>"
+        f"<a href='https://dash.{d}/{s}/'>Dashboards</a></div>" for s, x in defs.items())
+    zeilen = "".join(f"<tr><td>{AMPEL[st]}</td><td>{name}</td><td>{txt}</td></tr>" for st, name, txt in (check_ergebnis or []))
+    html = f"""<!doctype html><html lang="de"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1">
+<title>Agenten-Team</title><style>
+:root{{--navy:#0b2545;--petrol:#13616d;--mint:#5fd1b3;--grau:#5b6b7a}}
+body{{margin:0;font-family:Inter,system-ui,sans-serif;background:linear-gradient(160deg,#fff 60%,#e6f8f2);color:var(--navy)}}
+main{{max-width:960px;margin:0 auto;padding:32px 16px}} h1{{font-weight:800;font-size:2rem;margin:0 0 4px}}
+h1:before,h2:before{{content:"";display:block;width:56px;height:6px;background:var(--mint);margin-bottom:12px;border-radius:3px}}
+.links{{display:grid;grid-template-columns:repeat(auto-fit,minmax(200px,1fr));gap:12px;margin:24px 0}}
+.links a,.karte{{background:#fff;border:1px solid #d9e6e3;border-radius:12px;padding:16px;text-decoration:none;color:var(--navy);box-shadow:0 2px 8px #0b254512}}
+.links a b{{display:block;font-size:1.1rem}} .links a span,.karte span{{color:var(--grau);font-size:.9rem;display:block}}
+.team{{display:grid;grid-template-columns:repeat(auto-fit,minmax(180px,1fr));gap:12px}} .karte .e{{font-size:2rem}} .karte a{{color:var(--petrol);font-weight:600;display:block;margin-top:8px}}
+table{{width:100%;border-collapse:collapse;background:#fff;border-radius:12px;overflow:hidden}} td{{padding:8px 12px;border-bottom:1px solid #eef3f2;font-size:.95rem}}
+footer{{color:var(--grau);font-size:.85rem;margin-top:32px}}
+</style></head><body><main>
+<h1>Dein Agenten-Team</h1><p>Server {d}. Stand {jetzt():%d.%m.%Y %H:%M}.</p>
+<div class="links">
+<a href="https://chat.{d}"><b>Team-Chat</b><span>Rocket.Chat, ein Raum je Agent</span></a>
+<a href="https://miet.{d}/anmelden"><b>MietJUMP</b><span>Mietverwaltung, Freigaben</span></a>
+<a href="https://dash.{d}/"><b>Dashboards</b><span>alles, was die Agenten veroeffentlichen</span></a>
+</div>
+<h2>Team</h2><div class="team">{karten}</div>
+<h2>Gesundheit</h2><table>{zeilen or '<tr><td colspan=3>noch kein Check gelaufen</td></tr>'}</table>
+<footer>Betrieben mit dem Agenten-Doktor. Bei Problemen in Claude Code: „Doktor, schau dir den Server an“.</footer>
+</main></body></html>"""
+    ziel = DATEN / "dateien" / "_start"
+    ziel.mkdir(parents=True, exist_ok=True)
+    (ziel / "index.html").write_text(html, encoding="utf-8")
+
+
+def _cron_jobs(slug: str) -> dict:
+    """name -> {id, zeitplan} aus `hermes cron list --all`."""
+    p = run(["docker", "exec", "-u", "hermes", f"agent-{slug}", "hermes", "cron", "list", "--all"], check=False, still=True)
+    jobs, aktuell = {}, None
+    for z in p.stdout.splitlines():
+        m = re.match(r"\s*([0-9a-f]{8,})\s+\[", z)
+        if m:
+            aktuell = {"id": m.group(1)}
+            continue
+        if aktuell is not None:
+            if z.strip().startswith("Name:"):
+                aktuell["name"] = z.split(":", 1)[1].strip()
+                jobs[aktuell["name"]] = aktuell
+            elif z.strip().startswith("Schedule:"):
+                aktuell["zeitplan"] = z.split(":", 1)[1].strip()
+    return jobs
+
+
+def routinen_einrichten(slug: str, d: dict) -> list:
+    """Routinen aus agent.yaml als Hermes-Cron-Jobs. Quelle der Wahrheit ist agent.yaml:
+    fehlende werden angelegt, geaenderte neu angelegt, entfernte geloescht."""
+    soll = {f"{slug}-{r['name']}": r for r in (d.get("routinen") or []) if r.get("name") and r.get("zeitplan") and r.get("auftrag")}
+    ist = _cron_jobs(slug)
+    aus = []
+    ziel = "telegram" if d.get("telegram") else "rocketchat"
+    stempel_datei = agent_pfade(slug)["hermes"] / ".routinen.json"
+    stempel = json.loads(stempel_datei.read_text()) if stempel_datei.exists() else {}
+    for name, job in ist.items():
+        if name.startswith(f"{slug}-") and (name not in soll or stempel.get(name) != _routine_hash(soll[name])):
+            run(["docker", "exec", "-u", "hermes", f"agent-{slug}", "hermes", "cron", "remove", job["id"]], check=False, still=True)
+            if name not in soll:
+                aus.append(f"{name}: entfernt")
+    ist = _cron_jobs(slug)
+    for name, r in soll.items():
+        if name in ist:
+            continue
+        q = run(["docker", "exec", "-u", "hermes", f"agent-{slug}", "hermes", "cron", "create", r["zeitplan"], r["auftrag"],
+                 "--name", name, "--deliver", ziel], check=False, still=True)
+        if q.returncode == 0:
+            stempel[name] = _routine_hash(r)
+            aus.append(f"{name}: angelegt ({r['zeitplan']})")
+        else:
+            aus.append(f"{name}: FEHLER {(q.stderr or q.stdout).strip()[-200:]}")
+    stempel = {n: h for n, h in stempel.items() if n in soll}
+    stempel_datei.write_text(json.dumps(stempel))
+    return aus
+
+
+def _routine_hash(r: dict) -> str:
+    return hashlib.sha256(f"{r.get('zeitplan')}|{r.get('auftrag')}".encode()).hexdigest()[:16]
+
+
+ZEITPLAENE = {
+    # name: (OnCalendar, Befehl, Beschreibung)
+    "abgleich": ("*:0/2", "abgleich", "Wissens-Repo, Vorschlaege, Freigaben, Fallbuecher"),
+    "check": ("hourly", "check", "Gesundheitscheck (Logbuch nur bei Gelb/Rot)"),
+    "reparieren": ("*:05/30", "reparieren --still", "bekannte Fehler selbst beheben"),
+    "sichern": ("*-*-* 03:00", "sichern", "naechtliche Sicherung"),
+    "agenten-check": ("Sun *-*-* 19:00", "agenten-check", "woechentlicher Agenten-Check"),
+}
+
+
+def zeitplaene_einrichten() -> None:
+    for name, (wann, befehl, text) in ZEITPLAENE.items():
+        Path(f"/etc/systemd/system/doktor-{name}.service").write_text(
+            f"[Unit]\nDescription=Agenten-Doktor: {text}\nAfter=docker.service\n\n"
+            f"[Service]\nType=oneshot\nExecStart=/usr/local/bin/doktor {befehl}\nNice=10\n")
+        Path(f"/etc/systemd/system/doktor-{name}.timer").write_text(
+            f"[Unit]\nDescription=Agenten-Doktor: {text}\n\n[Timer]\nOnCalendar={wann}\nPersistent=true\n"
+            f"RandomizedDelaySec=20\n\n[Install]\nWantedBy=timers.target\n")
+    run(["systemctl", "daemon-reload"])
+    for name in ZEITPLAENE:
+        run(["systemctl", "enable", "--now", f"doktor-{name}.timer"], check=False)
+
+
+def alle_ausrollen(k: dict, defs: dict, erzwingen_rc: bool = False) -> list:
+    """Bringt alle Agenten auf den Stand des Wissens-Repos. Idempotent und konvergent:
+    fehlende Rocket.Chat-Konten, Zugaenge, Container und Routinen werden angelegt,
+    geaenderte Profile neu gerendert und neu gestartet, entfernte Agenten abgebaut."""
+    berichte = []
+    rci = zustand().get("rocketchat") or {}
+    fehlend = [s for s in defs if s not in (rci.get("bots") or {})]
+    if erzwingen_rc or fehlend or not rci:
+        rci = rocketchat_einrichten(k, defs)
+        if fehlend:
+            berichte.append("Rocket.Chat-Konto und Raum angelegt fuer: " + ", ".join(fehlend))
+    if any("mietjump" in (d.get("werkzeuge") or []) and not geheim().get(f"MIETJUMP_AGENT_TOKEN_{s.upper().replace('-', '_')}")
+           for s, d in defs.items()):
+        mietjump_einrichten(k, defs)
+    postfach_konfigurieren(defs)
+    laufend = set(run(["docker", "ps", "--format", "{{.Names}}"], still=True).stdout.split())
+    geaendert = [s for s, d in defs.items() if agent_einrichten(s, d, k, rci)]
+    compose_agenten_schreiben(defs, k)
+    compose("up", "-d", "--remove-orphans", timeout=1800)
+    neu = [s for s in defs if f"agent-{s}" not in laufend]
+    for s in geaendert:
+        if f"agent-{s}" in laufend:
+            run(["docker", "restart", f"agent-{s}"], check=False)
+    if neu:
+        time.sleep(15)
+        berichte.append("gestartet: " + ", ".join(f"agent-{s}" for s in neu))
+        if k.get("MODELL_ANBIETER") == "codex":
+            berichte += [f"{s} braucht noch eine Modellanmeldung (doktor-lokal.sh codex-anmelden <server> {s})" for s in neu]
+    if geaendert:
+        berichte.append("neu ausgerollt: " + ", ".join(geaendert))
+    for s, d in defs.items():
+        berichte += routinen_einrichten(s, d)
+    startseite_schreiben(k, defs)
+    return berichte
+
+
+def cmd_installieren(a):
+    k = konfig()
+    if not k.get("DOMAIN"):
+        raise Fehler("DOMAIN fehlt in konfig.env.")
+    schritte = []
+    basis_vorbereiten(k)
+    info("Grundordner und Zufallspasswoerter bereit.")
+    wissen_vorbereiten(k)
+    defs = agenten_definitionen()
+    if not defs:
+        raise Fehler("Keine Agenten im Wissens-Repo gefunden (agenten/<slug>/agent.yaml).")
+    info(f"Agenten im Wissens-Repo: {', '.join(defs)}")
+    if k.get("MODELL_ANBIETER") == "meridian" and not geheim().get("CLAUDE_CODE_OAUTH_TOKEN"):
+        info("WARNUNG: MODELL_ANBIETER=meridian, aber CLAUDE_CODE_OAUTH_TOKEN fehlt.")
+    info("Baue und starte feste Dienste (das dauert beim ersten Mal einige Minuten) ...")
+    compose_agenten_schreiben({}, k) if not COMPOSE_AGENTEN.exists() else None
+    compose("build", timeout=1800)
+    compose("up", "-d", "--remove-orphans", "caddy", "mongo", "rocketchat", "dateien",
+            *(["mietjump"] if (BASIS / "mietjump-quelle" / "Dockerfile").exists() else []),
+            *(["meridian"] if k.get("MODELL_ANBIETER") == "meridian" else []), timeout=1800)
+    schritte.append("feste Dienste gestartet")
+    mietjump_einrichten(k, defs)
+    schritte += alle_ausrollen(k, defs, erzwingen_rc=True)
+    info("Rocket.Chat, Agenten-Container und Routinen eingerichtet: " + ", ".join(f"agent-{s}" for s in defs))
+    if k.get("DEMO_DATEN") == "ja":
+        mietjump_einrichten(k, defs)
+    zeitplaene_einrichten()
+    schritte.append("Zeitplaene: Abgleich alle 2 Min., Check stuendlich, Reparatur halbstuendlich, Sicherung 03:00, Agenten-Check sonntags")
+    startseite_schreiben(k, defs)
+    logbuch("Installation", schritte + [f"Agenten: {', '.join(defs)}", f"Modell: {k.get('MODELL_ANBIETER')} {k.get('MODELL', '')}"], "aufbau")
+    logbuch_spiegeln(k)
+    info("Fertig. Pruefe jetzt mit: doktor check")
+
+
+def cmd_abgleich(a):
+    k = konfig()
+    wissen_holen(k)
+    defs = agenten_definitionen()
+    berichte = []
+    berichte += vorschlaege_abholen(defs, k)
+    berichte += freigaben_abholen(defs, k)
+    defs = agenten_definitionen()
+    n = fallbuecher_spiegeln(defs, k)
+    if n:
+        berichte.append(f"{n} Fallbuch-Dateien gespiegelt")
+    berichte += alle_ausrollen(k, defs, erzwingen_rc=a.alles)
+    if berichte:
+        logbuch("Abgleich", berichte, "abgleich")
+        logbuch_spiegeln(k)
+    for b in berichte:
+        info(b)
+    if not berichte:
+        info("Abgleich: nichts zu tun.")
+
+
+# ---------------------------------------------------------------- Pruefung
+
+def _container_status() -> dict:
+    p = run(["docker", "ps", "-a", "--format", "{{.Names}}\t{{.State}}\t{{.Status}}"], still=True)
+    st = {}
+    for z in p.stdout.splitlines():
+        n, s, t = (z.split("\t") + ["", ""])[:3]
+        st[n] = (s, t)
+    return st
+
+
+def pruefungen(mit_modell: bool) -> list:
+    k = konfig()
+    defs = agenten_definitionen()
+    erg = []
+    st = _container_status()
+    feste = ["agenten-caddy-1", "agenten-mongo-1", "agenten-rocketchat-1", "agenten-dateien-1"]
+    if (BASIS / "mietjump-quelle" / "Dockerfile").exists():
+        feste.append("agenten-mietjump-1")
+    if k.get("MODELL_ANBIETER") == "meridian":
+        feste.append("agenten-meridian-1")
+    if geheim().get("GMAIL_REFRESH_TOKEN"):
+        feste.append("agenten-postfach-1")
+    for c in feste + [f"agent-{s}" for s in defs]:
+        s, t = st.get(c, ("fehlt", ""))
+        if s == "running":
+            erg.append((GELB if "unhealthy" in t else GRUEN, c, t))
+        else:
+            erg.append((ROT, c, f"{s} {t}".strip()))
+    # Agenten: Gateway-Prozess und Plattformverbindung
+    for s in defs:
+        if st.get(f"agent-{s}", ("",))[0] != "running":
+            continue
+        start = run(["docker", "inspect", "-f", "{{.State.StartedAt}}", f"agent-{s}"], check=False, still=True).stdout.strip()
+        p = run(["docker", "logs", "--since", start or "30m", f"agent-{s}"], check=False, still=True)
+        logs = (p.stdout + p.stderr)[-20000:]
+        fehler = [m for m in ("401", "token_invalidated", "invalid_grant", "Conflict: terminated by other getUpdates",
+                              "weekly limit", "failed to authenticate", "Traceback") if m in logs]
+        erg.append((GELB if fehler else GRUEN, f"{s}: Protokoll seit Start", "Auffaellig: " + ", ".join(fehler) if fehler else "keine bekannten Fehlermuster"))
+        hp = agent_pfade(s)["hermes"]
+        if not (hp / "plugins" / "rocketchat-platform" / "plugin.yaml").exists():
+            erg.append((ROT, f"{s}: Rocket.Chat-Plugin", "fehlt im Profil, Agent ist im Chat taub"))
+        envd = lies_env(hp / ".env")
+        if not envd.get("ROCKETCHAT_ALLOWED_USERS"):
+            erg.append((ROT, f"{s}: Allowlist", "ROCKETCHAT_ALLOWED_USERS leer, Agent antwortet niemandem"))
+        if defs[s].get("telegram") and not envd.get("TELEGRAM_BOT_TOKEN"):
+            erg.append((GELB, f"{s}: Telegram", "kein Bot-Token gesetzt"))
+    # Rocket.Chat API
+    try:
+        s, _ = http_json("GET", f"http://{container_ip('agenten-rocketchat-1')}:3000/api/info", timeout=5)
+        erg.append((GRUEN if s == 200 else ROT, "Rocket.Chat API", f"HTTP {s}"))
+    except Exception as e:  # noqa: BLE001
+        erg.append((ROT, "Rocket.Chat API", str(e)[:120]))
+    # MietJUMP
+    if "agenten-mietjump-1" in feste:
+        try:
+            s, _ = http_json("GET", f"http://{container_ip('agenten-mietjump-1')}:8787/gesund", timeout=5)
+            erg.append((GRUEN if s == 200 else ROT, "MietJUMP", f"/gesund HTTP {s}"))
+        except Exception as e:  # noqa: BLE001
+            erg.append((ROT, "MietJUMP", str(e)[:120]))
+    if geheim().get("GMAIL_REFRESH_TOKEN"):
+        try:
+            s_, _ = http_json("GET", f"http://{container_ip('agenten-postfach-1')}:8090/gesund", timeout=5)
+            erg.append((GRUEN if s_ == 200 else ROT, "Postfach-Wache", f"HTTP {s_}"))
+        except Exception as e:  # noqa: BLE001
+            erg.append((ROT, "Postfach-Wache", str(e)[:120]))
+    # WebDAV schreiben und lesen
+    try:
+        ip = container_ip("agenten-dateien-1")
+        req = urllib.request.Request(f"http://{ip}:8081/_check/ping.txt", data=f"{time.time()}".encode(), method="PUT")
+        with urllib.request.urlopen(req, timeout=5):
+            pass
+        with urllib.request.urlopen(f"http://{ip}:8080/_check/ping.txt", timeout=5) as r:
+            erg.append((GRUEN if r.status == 200 else ROT, "Dashboard-Ablage", "schreiben und lesen ok"))
+    except Exception as e:  # noqa: BLE001
+        erg.append((ROT, "Dashboard-Ablage", str(e)[:120]))
+    # Zertifikate (oeffentlich erreichbar?)
+    for h in (k.get("DOMAIN"), f"chat.{k.get('DOMAIN')}"):
+        p = run(["bash", "-c", f"echo | timeout 8 openssl s_client -servername {h} -connect 127.0.0.1:443 2>/dev/null | openssl x509 -noout -enddate"], check=False, still=True)
+        if p.returncode == 0 and "notAfter" in p.stdout:
+            ende = dt.datetime.strptime(p.stdout.strip().split("=", 1)[1], "%b %d %H:%M:%S %Y %Z")
+            tage = (ende - dt.datetime.now(dt.timezone.utc).replace(tzinfo=None)).days
+            erg.append((GRUEN if tage > 14 else GELB if tage > 3 else ROT, f"Zertifikat {h}", f"noch {tage} Tage"))
+        else:
+            erg.append((GELB, f"Zertifikat {h}", "noch keins (DNS pruefen, Caddy holt es beim ersten Aufruf)"))
+    # Platte, Speicher, Updates, Tailscale, Sicherung
+    du = shutil.disk_usage("/")
+    frei = du.free / du.total * 100
+    erg.append((GRUEN if frei > 20 else GELB if frei > 10 else ROT, "Festplatte", f"{frei:.0f} % frei"))
+    mem = Path("/proc/meminfo").read_text()
+    verf = int(re.search(r"MemAvailable:\s+(\d+)", mem).group(1)) // 1024
+    erg.append((GRUEN if verf > 1500 else GELB if verf > 500 else ROT, "Arbeitsspeicher", f"{verf} MB verfuegbar"))
+    if Path("/var/run/reboot-required").exists():
+        erg.append((GELB, "Sicherheitsupdates", "Neustart ausstehend (passiert automatisch 04:30)"))
+    else:
+        erg.append((GRUEN, "Sicherheitsupdates", "automatisch, kein Neustart offen"))
+    p = run(["tailscale", "status", "--json"], check=False, still=True)
+    try:
+        ts = json.loads(p.stdout)
+        ok = ts.get("BackendState") == "Running"
+        erg.append((GRUEN if ok else GELB, "Tailscale", ts.get("Self", {}).get("DNSName", "") if ok else ts.get("BackendState", "aus")))
+    except Exception:  # noqa: BLE001
+        erg.append((GELB, "Tailscale", "nicht verbunden"))
+    letzte = zustand().get("letzte_sicherung")
+    if not letzte:
+        erg.append((GELB, "Sicherung", "noch keine Sicherung"))
+    else:
+        alter = (jetzt() - dt.datetime.fromisoformat(letzte)).total_seconds() / 3600
+        erg.append((GRUEN if alter < 30 else GELB if alter < 72 else ROT, "Sicherung", f"zuletzt vor {alter:.0f} Std."))
+    if mit_modell:
+        for s in defs:
+            if st.get(f"agent-{s}", ("",))[0] == "running":
+                ok, txt = modell_test(s)
+                erg.append((GRUEN if ok else ROT, f"{s}: Modell", txt))
+    return erg
+
+
+def modell_test(slug: str) -> tuple:
+    marke = f"OK-{slug.upper()}-{secrets.token_hex(2)}"
+    p = run(["docker", "exec", "-u", "hermes", f"agent-{slug}", "hermes", "chat", "-Q", "--max-turns", "1", "--source", "tool",
+             "-q", f"Antworte exakt mit {marke} und sonst nichts."], check=False, still=True, timeout=240)
+    aus = (p.stdout + p.stderr).strip()
+    if marke in aus:
+        return True, "echter Modellaufruf ok"
+    kurz = aus.splitlines()[-1][:160] if aus else f"Exit {p.returncode}"
+    return False, f"keine Antwort: {kurz}"
+
+
+def cmd_check(a):
+    erg = pruefungen(a.modell)
+    schlimmst = ROT if any(e[0] == ROT for e in erg) else GELB if any(e[0] == GELB for e in erg) else GRUEN
+    if a.json:
+        print(json.dumps([{"status": s, "pruefung": n, "detail": d} for s, n, d in erg], ensure_ascii=False, indent=1))
+    else:
+        breite = max(len(n) for _, n, _ in erg)
+        for s, n, d in erg:
+            print(f"{AMPEL[s]} {n.ljust(breite)}  {d}")
+        print(f"\nGesamt: {AMPEL[schlimmst]} {schlimmst}")
+    k = konfig()
+    startseite_schreiben(k, agenten_definitionen(), erg)
+    z = zustand()
+    z["letzter_check"] = {"zeit": jetzt().isoformat(), "gesamt": schlimmst, "rot": [n for s, n, _ in erg if s == ROT]}
+    zustand_speichern(z)
+    if schlimmst != GRUEN or a.logbuch:
+        logbuch(f"Check: {schlimmst}", [f"{AMPEL[s]} {n}: {d}" for s, n, d in erg if s != GRUEN] or ["alles gruen"], "check")
+    sys.exit({GRUEN: 0, GELB: 1, ROT: 2}[schlimmst])
+
+
+def cmd_reparieren(a):
+    k = konfig()
+    defs = agenten_definitionen()
+    massnahmen = []
+    erg = pruefungen(False)
+    rot = [n for s, n, _ in erg if s == ROT]
+    st = _container_status()
+    # 1. gestoppte oder fehlende Container
+    kaputt = [n for n in rot if n.startswith(("agenten-", "agent-"))]
+    if kaputt:
+        compose("up", "-d", "--remove-orphans", "caddy", "mongo", "rocketchat", "dateien",
+                *(["mietjump"] if (BASIS / "mietjump-quelle" / "Dockerfile").exists() else []), timeout=900)
+        for b in alle_ausrollen(k, defs):
+            massnahmen.append(b)
+        massnahmen.append("gestartet bzw. neu ausgerollt: " + ", ".join(kaputt))
+    # 2. Plugin oder Allowlist fehlt
+    for slug, d in defs.items():
+        if f"{slug}: Rocket.Chat-Plugin" in rot or f"{slug}: Allowlist" in rot:
+            agent_einrichten(slug, d, k, zustand().get("rocketchat"))
+            # Plugin-Ordner kann gefehlt haben, ohne dass sich der Fingerabdruck aendert: immer neu starten
+            run(["docker", "restart", f"agent-{slug}"], check=False)
+            massnahmen.append(f"{slug}: Plugin/Allowlist wiederhergestellt, neu gestartet")
+    # 3. Rocket.Chat-Token ungueltig -> neu ausstellen
+    for s, n, d in erg:
+        if n.endswith("Protokoll seit Start") and "failed to authenticate" in d:
+            slug = n.split(":")[0]
+            rocketchat_einrichten(k, defs)
+            agent_einrichten(slug, defs[slug], k, zustand().get("rocketchat"))
+            run(["docker", "restart", f"agent-{slug}"], check=False)
+            massnahmen.append(f"{slug}: Rocket.Chat-Zugangstoken neu ausgestellt")
+        if n.endswith("Protokoll seit Start") and "Conflict: terminated by other getUpdates" in d:
+            massnahmen.append(f"{n.split(':')[0]}: Telegram-Bot laeuft doppelt. Pruefen, ob ein anderer Server denselben Bot nutzt (nicht automatisch reparierbar).")
+    # 4. Platte voll
+    if any(n == "Festplatte" and s != GRUEN for s, n, _ in erg):
+        run(["docker", "system", "prune", "-af", "--filter", "until=168h"], check=False)
+        run(["journalctl", "--vacuum-size=200M"], check=False)
+        massnahmen.append("Docker-Altlasten und Journal aufgeraeumt")
+    # 5. Zertifikat fehlt -> Caddy neu laden
+    if any(n.startswith("Zertifikat") and s != GRUEN for s, n, _ in erg):
+        compose("restart", "caddy", check=False)
+        massnahmen.append("Caddy neu gestartet (holt Zertifikate erneut)")
+    erg2 = pruefungen(False)
+    rot2 = [f"{n}: {d}" for s, n, d in erg2 if s == ROT]
+    if getattr(a, "still", False) and not massnahmen and not rot2:
+        return
+    logbuch("Reparatur", (massnahmen or ["keine automatische Massnahme noetig"]) + ([f"weiter rot: {r}" for r in rot2] or ["danach alles ohne Rot"]), "reparatur")
+    logbuch_spiegeln(k)
+    for m in massnahmen:
+        info(m)
+    if rot2:
+        print("\nNoch rot (braucht Diagnose durch den Doktor in Claude Code):")
+        for r in rot2:
+            print(f"🔴 {r}")
+        sys.exit(2)
+    print("Repariert: kein roter Punkt mehr." if massnahmen else "Nichts zu reparieren.")
+
+
+def cmd_status(a):
+    k = konfig()
+    defs = agenten_definitionen()
+    st = _container_status()
+    print(f"Server {k.get('DOMAIN')}  Modell {k.get('MODELL_ANBIETER')} {k.get('MODELL', '')}")
+    for n, (s, t) in sorted(st.items()):
+        if n.startswith(("agenten-", "agent-")):
+            print(f"  {'🟢' if s == 'running' else '🔴'} {n:28} {t}")
+    print(f"Agenten: {', '.join(defs) or 'keine'}")
+    d = k.get("DOMAIN")
+    print(f"Adressen: https://{d}  https://chat.{d}  https://dash.{d}  https://miet.{d}/anmelden")
+
+
+def cmd_zugangsdaten(a):
+    """Zeigt dem Eigentuemer seine Zugaenge EINMAL im Terminal (nicht im Chat weitergeben)."""
+    k, g = konfig(), geheim()
+    z = zustand().get("rocketchat", {})
+    print(f"Startseite + Dashboards: https://{k['DOMAIN']}  Benutzer {k.get('DASH_BENUTZER', 'team')}  Passwort {g.get('DASH_PASS')}")
+    print(f"Team-Chat: https://chat.{k['DOMAIN']}  Benutzer {z.get('eigentuemer_benutzer')}  Passwort {g.get('RC_EIGENTUEMER_PASS')}")
+    print(f"MietJUMP: https://miet.{k['DOMAIN']}/anmelden  Schluessel {g.get('MIETJUMP_EIGENTUEMER_TOKEN')}")
+
+
+def cmd_agenten_check(a):
+    k = konfig()
+    defs = agenten_definitionen()
+    zeilen = [f"# Agenten-Check {jetzt():%d.%m.%Y %H:%M}", "",
+              "| Agent | Prompt (Zeichen) | Skills eigene/gesamt | Gedaechtnis | Werkzeuge | Routinen | Fallbuch | Fehler 24h |",
+              "|---|---|---|---|---|---|---|---|"]
+    hinweise = []
+    for slug, d in defs.items():
+        if a.slug and slug != a.slug:
+            continue
+        p = agent_pfade(slug)
+        soul_len = len((p["hermes"] / "SOUL.md").read_text(encoding="utf-8")) if (p["hermes"] / "SOUL.md").exists() else 0
+        eigene = len(list(p["skills"].rglob("SKILL.md")))
+        gesamt = len(list((p["hermes"] / "skills").rglob("SKILL.md"))) if (p["hermes"] / "skills").exists() else 0
+        mem = p["hermes"] / "memories" / "MEMORY.md"
+        mem_len = len(mem.read_text(encoding="utf-8")) if mem.exists() else 0
+        fb = len([f for f in p["fallbuch"].glob("*.md") if f.name != "INDEX.md"]) if p["fallbuch"].exists() else 0
+        logs = run(["docker", "logs", "--since", "24h", f"agent-{slug}"], check=False, still=True)
+        fehler = (logs.stdout + logs.stderr).count("Traceback") + (logs.stdout + logs.stderr).count(" ERROR ")
+        routinen = len(d.get("routinen") or [])
+        zeilen.append(f"| {slug} | {soul_len} | {eigene}/{gesamt} | {mem_len}/4000 | {', '.join(d.get('werkzeuge') or [])} | {routinen} | {fb} | {fehler} |")
+        if soul_len > 12000:
+            hinweise.append(f"{slug}: SOUL.md hat {soul_len} Zeichen. Regeln straffen, Wissen in wissen/ auslagern.")
+        if mem_len > 3400:
+            hinweise.append(f"{slug}: Gedaechtnis zu {mem_len * 100 // 4000} % voll. Dauerhaftes per Vorschlag ins Wissen uebernehmen, Rest entschlacken.")
+        if gesamt - eigene > 60:
+            hinweise.append(f"{slug}: {gesamt - eigene} mitgelieferte Skills geladen. Ungenutzte in skills.disabled aufnehmen.")
+        if fehler > 5:
+            hinweise.append(f"{slug}: {fehler} Fehler in 24 Std. Protokoll pruefen (doktor reparieren).")
+        if fb and not (p["fallbuch"] / "INDEX.md").read_text(encoding="utf-8").count("]("):
+            hinweise.append(f"{slug}: Fallbuch-Index ohne Eintraege, obwohl {fb} Faelle existieren.")
+    zeilen += ["", "## Hinweise", ""] + ([f"- {h}" for h in hinweise] or ["- keine, alles im Rahmen"])
+    text = "\n".join(zeilen) + "\n"
+    ziel = WISSEN / "betrieb" / "agenten-check"
+    ziel.mkdir(parents=True, exist_ok=True)
+    (ziel / "aktuell.md").write_text(text, encoding="utf-8")
+    git("checkout", "-q", "main", check=False)
+    git("add", "betrieb")
+    git("commit", "-q", "-m", "Agenten-Check", check=False)
+    if repo_url(k):
+        git("push", "-q", "origin", "main", check=False)
+    if "kurt" in defs:
+        ausschnitt_rendern("kurt", defs["kurt"])
+    logbuch("Agenten-Check", hinweise or ["alles im Rahmen"], "wartung")
+    print(text)
+
+
+def cmd_freigeben(a):
+    k = konfig()
+    print(pr_freigeben(a.pr, a.von, k, agenten_definitionen()))
+
+
+def cmd_sichern(a):
+    k, g = konfig(), geheim()
+    repo = DATEN / "sicherung" / "restic"
+    env = dict(os.environ, RESTIC_REPOSITORY=k.get("RESTIC_REPOSITORY", str(repo)), RESTIC_PASSWORD=g["RESTIC_PASSWORD"])
+    for key in ("AWS_ACCESS_KEY_ID", "AWS_SECRET_ACCESS_KEY"):
+        if g.get(key):
+            env[key] = g[key]
+    if run(["restic", "cat", "config"], env=env, check=False, still=True).returncode != 0:
+        run(["restic", "init"], env=env)
+    dump = DATEN / "sicherung" / "dumps"
+    dump.mkdir(parents=True, exist_ok=True)
+    run(["docker", "exec", "agenten-mongo-1", "mongodump", "--quiet", "--archive=/data/db/sicherung.archive", "--gzip"], check=False)
+    if (DATEN / "rocketchat" / "db" / "sicherung.archive").exists():
+        shutil.move(str(DATEN / "rocketchat" / "db" / "sicherung.archive"), dump / "rocketchat.archive.gz")
+    run(["docker", "exec", "agenten-mietjump-1", "mietjump", "sicherung", "/app/daten/sicherung.db"], check=False)
+    if (DATEN / "mietjump" / "sicherung.db").exists():
+        shutil.move(str(DATEN / "mietjump" / "sicherung.db"), dump / "mietjump.db")
+    p = run(["restic", "backup", "--quiet", "--tag", "doktor", "--exclude", str(DATEN / "rocketchat" / "db"),
+             "--exclude", str(repo), str(DATEN), str(BASIS / "konfig.env"), str(GEHEIM_DIR), str(LOGBUCH_DIR)], env=env, check=False)
+    run(["restic", "forget", "--quiet", "--keep-daily", "7", "--keep-weekly", "4", "--keep-monthly", "6", "--prune"], env=env, check=False)
+    ok = p.returncode == 0
+    z = zustand()
+    if ok:
+        z["letzte_sicherung"] = jetzt().isoformat()
+        zustand_speichern(z)
+    logbuch("Sicherung " + ("ok" if ok else "FEHLER"), [f"Ziel {env['RESTIC_REPOSITORY']}", (p.stderr or "")[-300:]] if not ok else [f"Ziel {env['RESTIC_REPOSITORY']}"], "wartung")
+    print("Sicherung ok." if ok else f"Sicherung fehlgeschlagen: {p.stderr[-300:]}")
+    sys.exit(0 if ok else 2)
+
+
+def cmd_aktualisieren(a):
+    k = konfig()
+    alt = k.get("HERMES_IMAGE", STANDARD_HERMES_IMAGE)
+    if not a.hermes:
+        print(f"Aktuell: {alt}. Neue Version testen: doktor aktualisieren --hermes vX.Y.Z [--testen-nur]")
+        return
+    neu = alt.rsplit(":", 1)[0] + ":" + a.hermes
+    info(f"Ziehe {neu} ...")
+    run(["docker", "pull", "-q", neu], timeout=1800)
+    soll = run(["docker", "run", "--rm", "--entrypoint", "/opt/hermes/.venv/bin/python3", neu, "-c",
+                "import sys; sys.path.insert(0,'/opt/hermes'); from hermes_cli.config import DEFAULT_CONFIG; print(DEFAULT_CONFIG['_config_version'])"]).stdout.strip()
+    alt_version = k.get("HERMES_CONFIG_VERSION", str(HERMES_CONFIG_VERSION))
+    info(f"Neue Config-Version {soll} (bisher {alt_version}).")
+    # Probelauf: Kopie des ersten Agenten-Profils mit dem neuen Image, echter Modellaufruf
+    defs = agenten_definitionen()
+    slug = next(iter(defs))
+    probe = DATEN / "probe-update"
+    if probe.exists():
+        shutil.rmtree(probe)
+    shutil.copytree(agent_pfade(slug)["hermes"], probe, ignore=shutil.ignore_patterns("sessions", "logs", "*.db*"))
+    env = lies_env(probe / ".env")
+    env = {kk: vv for kk, vv in env.items() if not kk.startswith(("ROCKETCHAT_", "TELEGRAM_"))}  # Probe darf nicht chatten
+    schreibe_env(probe / ".env", env)
+    cfg = yaml.safe_load((probe / "config.yaml").read_text())
+    cfg["plugins"] = {"enabled": [], "disabled": ["rocketchat-platform", "telegram-platform"]}
+    (probe / "config.yaml").write_text(yaml.safe_dump(cfg, allow_unicode=True, sort_keys=False))
+    run(["chown", "-R", f"{HERMES_UID}:{HERMES_UID}", str(probe)])
+    netz = "agenten_agenten"
+    marke = f"UPDATE-OK-{secrets.token_hex(2)}"
+    p = run(["docker", "run", "--rm", "--network", netz, "-e", f"HERMES_UID={HERMES_UID}", "-e", f"HERMES_GID={HERMES_UID}",
+             "-v", f"{probe}:/opt/data", neu, "chat", "-Q", "--max-turns", "1", "--source", "tool", "-q", f"Antworte exakt mit {marke}."],
+            check=False, timeout=600)
+    ok = marke in (p.stdout + p.stderr)
+    shutil.rmtree(probe, ignore_errors=True)
+    logbuch(f"Update-Probe Hermes {a.hermes}: {'bestanden' if ok else 'NICHT bestanden'}", [f"Image {neu}", f"Config-Version {soll}"], "update")
+    if not ok:
+        print("Probelauf fehlgeschlagen. Es bleibt bei " + alt + ".\n" + (p.stdout + p.stderr)[-800:])
+        sys.exit(2)
+    if a.testen_nur:
+        print("Probelauf bestanden. Umstellen mit: doktor aktualisieren --hermes " + a.hermes)
+        return
+    werte = lies_env(KONFIG)
+    werte["HERMES_IMAGE"] = neu
+    werte["HERMES_CONFIG_VERSION"] = soll
+    schreibe_env(KONFIG, werte)
+    k = konfig()
+    rci = zustand().get("rocketchat")
+    for s, d in defs.items():
+        agent_einrichten(s, d, k, rci)
+    compose_agenten_schreiben(defs, k)
+    compose("up", "-d", timeout=900)
+    time.sleep(20)
+    fehl = [s for s in defs if not modell_test(s)[0]]
+    if fehl:
+        werte["HERMES_IMAGE"] = alt
+        werte["HERMES_CONFIG_VERSION"] = alt_version
+        schreibe_env(KONFIG, werte)
+        compose_agenten_schreiben(defs, konfig())
+        compose("up", "-d", timeout=900)
+        logbuch(f"Update auf {a.hermes} zurueckgerollt", [f"Modelltest fehlgeschlagen fuer: {', '.join(fehl)}"], "update")
+        print("Nach dem Umstellen antworteten nicht alle Agenten. Zurueck auf " + alt)
+        sys.exit(2)
+    logbuch(f"Hermes auf {a.hermes} aktualisiert", [f"alle {len(defs)} Agenten antworten"], "update")
+    print(f"Aktualisiert auf {neu}. Alle Agenten antworten.")
+
+
+def cmd_vorlage_uebernehmen(a):
+    """Nur im Aufbau oder nach Doktor-Update: neue Fassungen der Start-Agenten (Installer) ins Wissens-Repo.
+    Ueberschreibt nur Dateien, die seit dem Startstand niemand im Repo geaendert hat, ausser mit --erzwingen."""
+    k = konfig()
+    quelle = INST / "agenten"
+    geaendert, uebersprungen = [], []
+    erst = git("rev-list", "--max-parents=0", "HEAD", check=False).stdout.split()
+    erster = erst[-1] if erst else None
+    for f in quelle.rglob("*"):
+        if not f.is_file():
+            continue
+        rel = "agenten/" + f.relative_to(quelle).as_posix()
+        ziel = WISSEN / rel
+        neu = f.read_bytes()
+        if ziel.exists() and ziel.read_bytes() == neu:
+            continue
+        if ziel.exists() and erster and not a.erzwingen:
+            # im Repo seit dem Startstand veraendert? Dann nicht ueberschreiben
+            log = git("log", "--format=%H", f"{erster}..HEAD", "--", rel, check=False).stdout.split()
+            fremd = [h for h in log if "Vorlage" not in git("log", "-1", "--format=%s", h, check=False).stdout]
+            if fremd:
+                uebersprungen.append(rel)
+                continue
+        ziel.parent.mkdir(parents=True, exist_ok=True)
+        ziel.write_bytes(neu)
+        geaendert.append(rel)
+    if geaendert:
+        _platzhalter_ersetzen(k)
+        git("add", "-A")
+        git("commit", "-q", "-m", f"Vorlage der Start-Agenten aktualisiert ({len(geaendert)} Dateien, Doktor)")
+        if repo_url(k):
+            git("push", "-q", "origin", "main", check=False)
+    logbuch("Vorlage der Start-Agenten uebernommen", [f"geaendert: {x}" for x in geaendert] + [f"uebersprungen (im Repo angepasst): {x}" for x in uebersprungen], "aufbau")
+    for x in geaendert:
+        info(f"aktualisiert: {x}")
+    for x in uebersprungen:
+        info(f"uebersprungen, im Repo angepasst: {x}")
+
+
+def cmd_logbuch(a):
+    logbuch(a.text, a.zeile or [], a.art)
+    logbuch_spiegeln(konfig())
+    info("Eintrag gespeichert.")
+
+
+def cmd_modell_test(a):
+    defs = agenten_definitionen()
+    ok_alle = True
+    for s in defs:
+        if a.slug and s != a.slug:
+            continue
+        ok, txt = modell_test(s)
+        ok_alle &= ok
+        print(f"{AMPEL[GRUEN if ok else ROT]} {s}: {txt}")
+    sys.exit(0 if ok_alle else 2)
+
+
+def cmd_telegram_koppeln(a):
+    """Telegram-Kopplung: Eigentuemer schreibt dem Bot, bekommt einen Code; der Doktor bestaetigt ihn."""
+    defs = agenten_definitionen()
+    slug = next((s for s, d in defs.items() if d.get("telegram")), None)
+    if not slug:
+        raise Fehler("Kein Agent mit telegram: true.")
+    p = run(["docker", "exec", "-u", "hermes", f"agent-{slug}", "hermes", "pairing", "approve", "telegram", a.code], check=False)
+    print((p.stdout + p.stderr).strip())
+    lst = run(["docker", "exec", "-u", "hermes", f"agent-{slug}", "hermes", "pairing", "list"], check=False, still=True).stdout
+    m = re.search(r"telegram\D+(\d{5,})", lst)
+    if m and not konfig().get("EIGENTUEMER_TELEGRAM_ID"):
+        w = lies_env(KONFIG)
+        w["EIGENTUEMER_TELEGRAM_ID"] = m.group(1)
+        schreibe_env(KONFIG, w)
+        info(f"Telegram-ID des Eigentuemers gespeichert: {m.group(1)}")
+    logbuch("Telegram gekoppelt", [f"Agent {slug}"], "aufbau")
+
+
+def main():
+    ap = argparse.ArgumentParser(prog="doktor", description="Betrieb des Agenten-Servers")
+    sub = ap.add_subparsers(dest="befehl", required=True)
+    sub.add_parser("installieren").set_defaults(f=cmd_installieren)
+    s = sub.add_parser("abgleich")
+    s.add_argument("--alles", action="store_true", help="alle Agenten neu rendern")
+    s.set_defaults(f=cmd_abgleich)
+    sub.add_parser("status").set_defaults(f=cmd_status)
+    s = sub.add_parser("check")
+    s.add_argument("--json", action="store_true")
+    s.add_argument("--modell", action="store_true", help="zusaetzlich echter Modellaufruf je Agent")
+    s.add_argument("--logbuch", action="store_true", help="auch gruene Ergebnisse protokollieren")
+    s.set_defaults(f=cmd_check)
+    s = sub.add_parser("reparieren")
+    s.add_argument("--still", action="store_true", help="nur protokollieren, wenn etwas getan wurde (fuer den Zeitplan)")
+    s.set_defaults(f=cmd_reparieren)
+    s = sub.add_parser("agenten-check")
+    s.add_argument("slug", nargs="?")
+    s.set_defaults(f=cmd_agenten_check)
+    s = sub.add_parser("freigeben")
+    s.add_argument("pr", type=int)
+    s.add_argument("--von", required=True, help="telegram:<id> oder github:<login>")
+    s.set_defaults(f=cmd_freigeben)
+    s = sub.add_parser("aktualisieren")
+    s.add_argument("--hermes")
+    s.add_argument("--testen-nur", action="store_true")
+    s.set_defaults(f=cmd_aktualisieren)
+    sub.add_parser("sichern").set_defaults(f=cmd_sichern)
+    s = sub.add_parser("logbuch")
+    s.add_argument("text")
+    s.add_argument("--zeile", action="append")
+    s.add_argument("--art", default="notiz")
+    s.set_defaults(f=cmd_logbuch)
+    s = sub.add_parser("geheimnis-setzen")
+    s.add_argument("schluessel")
+    s.set_defaults(f=cmd_geheimnis_setzen)
+    s = sub.add_parser("modell-test")
+    s.add_argument("slug", nargs="?")
+    s.set_defaults(f=cmd_modell_test)
+    sub.add_parser("zugangsdaten").set_defaults(f=cmd_zugangsdaten)
+    s = sub.add_parser("vorlage-uebernehmen")
+    s.add_argument("--erzwingen", action="store_true")
+    s.set_defaults(f=cmd_vorlage_uebernehmen)
+    s = sub.add_parser("telegram-koppeln")
+    s.add_argument("code")
+    s.set_defaults(f=cmd_telegram_koppeln)
+    a = ap.parse_args()
+    if os.geteuid() != 0:
+        print("doktor muss als root laufen.", file=sys.stderr)
+        sys.exit(2)
+    try:
+        a.f(a)
+    except Fehler as e:
+        print(f"FEHLER: {e}", file=sys.stderr)
+        logbuch(f"Fehler bei doktor {a.befehl}", [str(e)[:500]], "fehler")
+        sys.exit(2)
+
+
+if __name__ == "__main__":
+    main()

@@ -1,0 +1,19 @@
+# Was dieser Agent lesen und vorschlagen darf (SCHNITTSTELLEN.md, Abschnitt 5 und 6).
+# Freigabe für Änderungen: nur Eigentümer. Ein PR, der diese Datei ändert, trägt [Rechte] im Titel.
+#
+# lesen: diese Dateien rendert der Doktor in den Ausschnitt (/opt/data/wissen, nur lesen).
+#   Die drei Einstiegsdateien gehören immer dazu.
+# vorschlagen: nur diese Pfade nimmt der Doktor als Vorschlag an.
+#   Nie möglich, egal was hier steht: geschaeftsfuehrung/**, .github/**, AGENTS.md, betrieb/**,
+#   agenten/*/fallbuch/**, agenten/*/aenderungen.md.
+#   Bei Bedarf ergänzen, zum Beispiel für die Verwaltung: "team/objekte/**".
+lesen:
+  - "AGENTS.md"
+  - "llms.txt"
+  - "INDEX.md"
+  - "team/**"
+  - "agenten/{{SLUG}}/**"
+vorschlagen:
+  - "agenten/{{SLUG}}/wissen/**"
+  - "agenten/{{SLUG}}/beispiele/**"
+  - "agenten/{{SLUG}}/testfragen.yaml"

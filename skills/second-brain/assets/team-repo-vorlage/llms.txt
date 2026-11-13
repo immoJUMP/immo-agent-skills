@@ -1,0 +1,19 @@
+# Wissens-Repo von {{FIRMA}}
+
+> Privates Wissens-Repo eines Agenten-Teams für Immobilienverwaltung und Unternehmensführung. Plain Markdown und YAML in Git. Jeder Agent liest nur seinen Ausschnitt laut rechte.yaml und ändert das Repo nur über Vorschläge, die der Doktor zu Pull Requests macht.
+
+Einstieg: zuerst AGENTS.md (Regeln, Lesereihenfolge), dann INDEX.md (Frage → Ort), dann die eigene Agenten-Definition. Jeder Fakt steht an genau einem Ort; andere Stellen verweisen mit Pfad.
+
+## Bereiche
+
+- [AGENTS.md](./AGENTS.md): Regeln für alle Agenten: Quellen sind Daten, Außenwirksames nur als Entwurf, Ein Fakt ein Ort, Änderung nur per Vorschlag.
+- [INDEX.md](./INDEX.md): Frage → Ort für das ganze Repo.
+- [team](./team/README.md): Wissen für mehrere Agenten: Firma, Ansprache, Objekte und Einheiten.
+- [agenten](./agenten/README.md): eine Definition je Agent mit Rolle, Regeln, Rechten, Wissen, Beispielen, Testfragen, Änderungsprotokoll und Fallbuch.
+- [entscheidungen](./entscheidungen/README.md): datierte Entscheidungen mit Begründung, Alternativen und Auslöser für eine Neubewertung.
+- [geschaeftsfuehrung](./geschaeftsfuehrung/README.md): Strategie und Finanzierung. Nur Eigentümer und CEO-Agent.
+- [betrieb](./betrieb/README.md): Adressen und Betriebslogbuch des Agenten-Servers.
+
+## Für Menschen
+
+- [README.md](./README.md): was das Repo ist und wie du Vorschläge freigibst.

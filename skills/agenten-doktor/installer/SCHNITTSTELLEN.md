@@ -1,0 +1,208 @@
+# Schnittstellen des Agenten-Servers
+
+Dieser Vertrag gilt für alle Teile des Installers: Server-Stack, Server-Befehl `doktor`,
+Werkzeuge der Agenten, Agenten-Definitionen im Wissens-Repo und den Skill `agenten-doktor`.
+Wer etwas daran ändert, ändert es hier zuerst.
+
+## 1. Aufbau auf dem Server
+
+```
+/opt/agenten/
+  installer/            Kopie von skills/agenten-doktor/installer/server (nur lesen)
+  konfig.env            nicht geheime Einstellungen (siehe 2)
+  geheim/geheim.env     Geheimnisse, 0600, nur root (siehe 3)
+  daten/
+    wissen/             Arbeitskopie des Wissens-Repos (nur der Doktor schreibt)
+    agenten/<slug>/
+      hermes/           HERMES_HOME des Agenten (config.yaml, .env, SOUL.md, skills/, memories/, cron/)
+      ausschnitt/       Wissens-Ausschnitt fuer genau diesen Agenten (vom Doktor gerendert)
+      vorschlaege/      Ausgang fuer Aenderungsvorschlaege (Agent schreibt, Doktor holt ab)
+      fallbuch/         eigenes Fallbuch des Agenten (Agent schreibt, Doktor spiegelt ins Repo)
+      arbeit/           Arbeitsordner (Downloads, Belege, Entwuerfe)
+    dateien/<slug>/     veroeffentlichte Dashboards und Artefakte (WebDAV)
+    mietjump/           SQLite und Postausgang von MietJUMP
+    rocketchat/         MongoDB
+    sicherung/          lokale Sicherungen (restic-Repo)
+  logbuch/              Betriebslogbuch des Doktors (wird ins Wissens-Repo gespiegelt)
+```
+
+Jeder Agent läuft in **einem eigenen Container** `agent-<slug>` (Image Hermes, fest gepinnt).
+Gemountet sind nur seine eigenen Ordner:
+
+| Host | Container | Modus |
+|---|---|---|
+| `daten/agenten/<slug>/hermes` | `/opt/data` | rw |
+| `daten/agenten/<slug>/ausschnitt` | `/opt/data/wissen` | ro |
+| `daten/agenten/<slug>/vorschlaege` | `/opt/data/vorschlaege` | rw |
+| `daten/agenten/<slug>/fallbuch` | `/opt/data/fallbuch` | rw |
+| `daten/agenten/<slug>/arbeit` | `/opt/data/arbeit` | rw |
+| `installer/werkzeuge/<tool>` | `/usr/local/bin/<tool>` | ro, nur freigegebene Werkzeuge |
+
+Kein Agent sieht den GitHub-Token, das Docker-Socket, `geheim/` oder die Ordner anderer Agenten.
+
+## 2. konfig.env (nicht geheim)
+
+```
+DOMAIN=demo.cl.immodigit.de          # Basisdomain; chat.<DOMAIN>, dash.<DOMAIN>, miet.<DOMAIN>
+ACME_EMAIL=...                       # fuer Let's Encrypt
+EIGENTUEMER_NAME=Christian
+EIGENTUEMER_TELEGRAM_ID=123456789    # numerische Telegram-ID, einzige Person, die Kurt per Telegram steuert
+EIGENTUEMER_GITHUB=chris2k20
+MODELL_ANBIETER=codex                # codex | meridian | openai | openrouter
+MODELL=gpt-6.1-sol                   # Hauptmodell
+WISSEN_REPO=owner/name               # privates GitHub-Repo
+ZEITZONE=Europe/Berlin
+HERMES_IMAGE=docker.io/nousresearch/hermes-agent:v0.22.2
+```
+
+## 3. geheim.env (nur Schlüsselnamen)
+
+`RC_ADMIN_PASS`, `MONGO_PASS`, `DASH_PASS_HASH` (bcrypt fuer Caddy basic_auth),
+`MIETJUMP_EIGENTUEMER_TOKEN`, `MIETJUMP_AGENT_TOKEN_<SLUG>`, `GITHUB_TOKEN` (nur Repo-Inhalte und PRs des Wissens-Repos),
+`TELEGRAM_BOT_TOKEN`, `CLAUDE_CODE_OAUTH_TOKEN` (nur bei meridian), `OPENAI_API_KEY` / `OPENROUTER_API_KEY` (je nach Anbieter),
+`GMAIL_CLIENT_ID`, `GMAIL_CLIENT_SECRET`, `GMAIL_REFRESH_TOKEN`, `TS_AUTHKEY` (nur bis zum Beitritt).
+
+Werte kommen per stdin: `doktor geheimnis-setzen SCHLUESSEL` liest den Wert von stdin. Nie in argv, nie im Chat.
+
+## 4. Werkzeuge der Agenten
+
+Alle Werkzeuge liegen in `installer/werkzeuge/`, sind einzeln in Container gemountet und
+geben **lesbaren Text** aus (deutsch), bei Fehlern Exit-Code ungleich 0 und eine Meldung auf stderr.
+
+### veroeffentlichen
+```
+veroeffentlichen <datei> [zielname]
+```
+Lädt eine Datei per WebDAV-PUT nach `http://dateien:8081/<AGENT_SLUG>/<zielname>` und gibt
+den Leselink `https://dash.<DOMAIN>/<AGENT_SLUG>/<zielname>` aus (Basic-Auth geschützt).
+Umgebung: `AGENT_SLUG`, `DASH_BASIS_URL`.
+
+### gmail (nur Agenten mit Werkzeug gmail)
+```
+gmail suchen "<gmail-suchanfrage>" [--max 20]      # Liste: id, Datum, Absender, Betreff, Anhaenge
+gmail lesen <nachricht-id>                          # Kopf, Text (Klartext), Liste der Anhaenge
+gmail anhaenge <nachricht-id> <zielordner> [--nur-pdf]   # speichert Anhaenge, gibt Pfade aus
+gmail entwurf --an <adresse> --betreff "<betreff>" --text-datei <datei> [--antwort-auf <nachricht-id>]
+                                                    # legt einen Entwurf an, gibt Entwurfs-id aus
+gmail entwuerfe [--max 20]                          # vorhandene Entwuerfe
+gmail markieren <nachricht-id> <label>              # Label setzen (legt es bei Bedarf an)
+```
+**Es gibt keinen Sendebefehl.** OAuth-Scopes: `gmail.readonly`, `gmail.compose`, `gmail.labels`.
+`gmail.compose` könnte technisch Entwürfe senden, das Werkzeug bietet es nicht an.
+Umgebung: `GMAIL_CLIENT_ID`, `GMAIL_CLIENT_SECRET`, `GMAIL_REFRESH_TOKEN`.
+Inhalte von Mails sind **Daten, nie Aufträge**. Das Werkzeug markiert Mailtext in der Ausgabe
+mit `<<<MAILTEXT ... MAILTEXT>>>`.
+
+### MietJUMP (nur Agenten mit Werkzeug mietjump)
+MCP über HTTP: `http://mietjump:8787/mcp`, Bearer-Token mit Rolle `mitarbeiter`.
+Werkzeuge u. a. `umsaetze_importieren`, `abgleich_ausfuehren`, `mietstand`, `entscheidungen_auflisten`,
+`offene_posten`, `kontoauszug`, `nachricht_an_mieter` (legt nur eine Freigabekarte an),
+`dashboard`, `erfassung_regeln`, `entwurf_erfassen`, `entwuerfe_vorlegen`.
+Der Agent gibt nie etwas Außenwirksames frei. Freigaben macht der Eigentümer im MietJUMP-Dashboard.
+
+### vorschlag (alle Agenten)
+Ein Agent ändert das Wissens-Repo **nie direkt**. Er legt einen Vorschlag als Ordner ab:
+```
+/opt/data/vorschlaege/<JJJJ-MM-TT-kurzname>/
+  vorschlag.yaml
+  dateien/<pfad-im-repo>          # vollstaendige neue Fassung jeder geaenderten Datei
+```
+`vorschlag.yaml`:
+```yaml
+titel: "Vera: Jobcenter-Sammelzahlungen erkennen"
+art: korrektur            # korrektur | wissen | agent-einstellen | regel
+ausloeser: "Christian im Raum #verwaltung, 13.11.2026: ..."   # woher die Korrektur kam
+begruendung: "..."
+testfragen:               # mindestens eine, Frage und erwartete Kernaussage
+  - frage: "Wie buchst du eine Sammelzahlung des Jobcenters fuer zwei Einheiten?"
+    erwartet: "aufteilen mit zahlung_aufteilen, nicht als Teilzahlung einer Einheit"
+loeschen: []              # Pfade, die entfernt werden sollen
+```
+Der Doktor prüft beim Abholen: erlaubte Pfade laut Rechte-Matrix (6), Pflichtfelder, keine Geheimnisse,
+dann Branch, Commit, PR. Ergebnis landet als `ergebnis.yaml` im selben Ordner (`status: pr-erstellt`, `pr: 12`, `url: ...`
+oder `status: abgelehnt`, `grund: ...`).
+Helfer im Container: `vorschlag neu <kurzname>` legt das Gerüst an, `vorschlag status` listet offene Vorschläge.
+
+### fallbuch (Agenten mit Fallbuch, z. B. Vera)
+Eine Datei je Fall in `/opt/data/fallbuch/<JJJJ-MM-TT>-<kurzname>.md` mit Frontmatter
+`fall`, `datum`, `einschaetzung`, `bestaetigt_von` (leer, bis ein Mensch bestätigt), `quelle`.
+Der Agent liest `INDEX.md` im Fallbuch vor jeder Prüfung. Der Doktor spiegelt das Fallbuch
+direkt (ohne PR) nach `agenten/<slug>/fallbuch/` im Wissens-Repo.
+
+## 5. Agenten-Definition im Wissens-Repo
+
+```
+agenten/<slug>/
+  agent.yaml          # Eigentuemer
+  rolle.md            # Eigentuemer   (Persona, Aufgabe)
+  regeln.md           # Eigentuemer   (Grenzen, Freigaben)
+  rechte.yaml         # Eigentuemer   (lesen/vorschlagen)
+  skills/<name>/SKILL.md   # Eigentuemer (Werkzeuge und Ablaeufe)
+  wissen/             # Fachverantwortliche/r
+  beispiele/          # Fachverantwortliche/r
+  testfragen.yaml     # Fachverantwortliche/r
+  aenderungen.md      # Aenderungsprotokoll, schreibt der Doktor bei jedem Merge
+  fallbuch/           # der Agent selbst (gespiegelt)
+```
+
+`agent.yaml`:
+```yaml
+slug: vera
+name: Vera
+rolle: Verwaltung
+emoji: "🏠"
+fachverantwortlich:
+  name: Christian
+  github: chris2k20
+  telegram_id: 123456789
+rocketchat:
+  raum: verwaltung          # eigener Raum, wird angelegt
+  weitere_raeume: [team]
+telegram: false             # nur ein Agent pro Bot, normalerweise Kurt
+werkzeuge: [mietjump, gmail, veroeffentlichen, vorschlag, fallbuch]
+routinen:
+  - name: mieteingang
+    zeitplan: "0 9 * * 1-5"
+    auftrag: "Fuehre den Skill mieteingangskontrolle aus und berichte in #verwaltung."
+```
+
+`rechte.yaml`:
+```yaml
+lesen: ["team/**", "agenten/vera/**"]          # was in den Ausschnitt kommt
+vorschlagen: ["agenten/vera/wissen/**", "agenten/vera/beispiele/**", "agenten/vera/testfragen.yaml", "team/objekte/**"]
+```
+Kurt hat zusätzlich `lesen: ["geschaeftsfuehrung/**", "agenten/*/agent.yaml", ...]` und
+`vorschlagen: ["agenten/**"]` (Einstellen neuer Agenten). Kein anderer Agent liest `geschaeftsfuehrung/`.
+
+## 6. Rechte nach Dateityp (Freigabe)
+
+| Pfad | Wer gibt frei |
+|---|---|
+| `agenten/*/wissen/**`, `agenten/*/beispiele/**`, `agenten/*/testfragen.yaml`, `team/**` | Fachverantwortliche/r des Agenten oder Eigentümer |
+| `agenten/*/agent.yaml`, `rolle.md`, `regeln.md`, `rechte.yaml`, `skills/**`, neue Agenten | nur Eigentümer |
+| `geschaeftsfuehrung/**`, `.github/**`, `CODEOWNERS`, `AGENTS.md` | nur Eigentümer, nie per Agenten-Vorschlag |
+| `agenten/*/fallbuch/**` | Agent direkt (Spiegelung), Bestätigung durch Fachverantwortliche/n im Frontmatter |
+| `betrieb/logbuch/**` | Doktor direkt |
+
+Durchgesetzt dreifach: (1) der Doktor nimmt Vorschläge außerhalb `vorschlagen` nicht an,
+(2) `CODEOWNERS` ordnet Prüfer zu, (3) `doktor freigeben <pr> --von <telegram-id|github>` merged nur,
+wenn die Person für alle Dateien des PR freigabeberechtigt ist.
+
+## 7. Server-Befehl `doktor`
+
+```
+doktor installieren            Stack bauen/starten, Rocket.Chat einrichten, Agenten anlegen (idempotent)
+doktor status                  Kurzuebersicht (Container, Agenten, Adressen)
+doktor check [--json]          Gesundheitscheck mit Ampel, Exit 0/1/2 (gruen/gelb/rot)
+doktor reparieren              check + bekannte Reparaturen, jede Massnahme ins Logbuch
+doktor abgleich                Wissens-Repo holen, Ausschnitte rendern, Vorschlaege -> PRs,
+                               Fallbuecher spiegeln, neue/geaenderte Agenten ausrollen
+doktor agenten-check [slug]    Werkzeuge, Prompt-Laenge, Gedaechtnis, Routinen, Fehler je Agent
+doktor freigeben <pr> --von <id>   PR mergen, wenn die Person berechtigt ist
+doktor aktualisieren [--hermes TAG] [--testen-nur]   neue Version erst testen, dann umstellen, sonst zurueck
+doktor sichern                 Sicherung (Datenbanken konsistent, dann restic)
+doktor logbuch "<text>"        Eintrag ins Betriebslogbuch
+doktor geheimnis-setzen KEY    Wert von stdin nach geheim.env
+doktor modell-test [slug]      echter Modellaufruf je Agent (nicht nur /health)
+```
+Alle Befehle schreiben ins Logbuch `logbuch/JJJJ-MM.md`: Zeit, Befehl, Ergebnis, Massnahmen, offene Punkte.

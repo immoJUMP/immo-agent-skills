@@ -1,0 +1,4 @@
+# Was in Kurts Wissens-Ausschnitt kommt (lesen) und wofür er Vorschläge ablegen darf (vorschlagen).
+# Freigabe richtet sich nach SCHNITTSTELLEN.md Abschnitt 6, nicht nach dieser Datei.
+lesen: ["team/**", "geschaeftsfuehrung/**", "agenten/**", "betrieb/**"]
+vorschlagen: ["agenten/**", "team/**"]
