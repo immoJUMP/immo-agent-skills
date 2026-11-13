@@ -220,7 +220,7 @@ cmd_mietjump_hochladen() { # MietJUMP-Stand auf den Server, ohne .git und ohne D
     else
       mkdir -p "$(dirname "$quelle")"
       gh repo clone "${MIETJUMP_REPO:-immodigit/mietjump}" "$quelle" -- -q \
-        || fehler "MietJUMP-Repo nicht klonbar. Hast du Lesezugriff auf ${MIETJUMP_REPO:-immodigit/mietjump}? (Christian fragen)"
+        || fehler "MietJUMP-Repo nicht klonbar. Hast du Lesezugriff auf ${MIETJUMP_REPO:-immodigit/mietjump}? (bei ImmoDigit anfragen)"
       [ -n "${MIETJUMP_REF:-}" ] && git -C "$quelle" checkout -q "$MIETJUMP_REF"
     fi
   fi

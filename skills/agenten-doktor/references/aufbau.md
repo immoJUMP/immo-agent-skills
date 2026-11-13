@@ -82,8 +82,8 @@ gibt `fertig` aus. `hetzner-schutz` meldet den Schutz als aktiv und, falls gewä
 Gebraucht werden vier Namen auf `<ip>`: `<DOMAIN>` (Startseite), `chat.<DOMAIN>`,
 `dash.<DOMAIN>`, `miet.<DOMAIN>`.
 
-- Subdomain unter `cl.immodigit.de`: Die Zone gehört Christian. Schick ihm Name und `<ip>`,
-  er legt `<name>.cl.immodigit.de` und `*.<name>.cl.immodigit.de` als A-Einträge an. Wichtig:
+- Subdomain unter `cl.immodigit.de`: Die Zone gehört ImmoDigit. Schick ImmoDigit Name und `<ip>`,
+  dort werden `<name>.cl.immodigit.de` und `*.<name>.cl.immodigit.de` als A-Einträge angelegt. Wichtig:
   `*.cl.immodigit.de` zeigt sonst auf einen anderen Server, dann scheitern die Zertifikate.
 - Eigene Domain: nach Ja beim DNS-Anbieter des Nutzers in Chrome A-Einträge für `<DOMAIN>`
   und `*.<DOMAIN>` (oder einzeln `chat`, `dash`, `miet`) auf `<ip>`, TTL 300. Jeder Anbieter
@@ -267,8 +267,8 @@ gewählt oder die Bestätigung des Nutzers zum Abo im Logbuch. Der Nutzer kennt 
 1. `doktor-lokal.sh hochladen root@<host>` (Installer und Wissens-Vorlage), dann
    `doktor-lokal.sh mietjump-hochladen root@<host>`. Ohne weitere Angabe klont der Befehl
    `immodigit/mietjump` per `gh` nach `~/.agenten-doktor/mietjump` (beim nächsten Mal holt er
-   den neuen Stand). Das Repo ist privat: Lesezugriff als Outside Collaborator vorher bei
-   Christian anfragen. Anderes Repo oder anderer Zweig: `MIETJUMP_REPO=<owner/name>` bzw.
+   den neuen Stand). Das Repo ist privat: Lesezugriff als Outside Collaborator vorher
+   bei ImmoDigit anfragen. Anderes Repo oder anderer Zweig: `MIETJUMP_REPO=<owner/name>` bzw.
    `MIETJUMP_REF=<zweig>` davorstellen, oder eigenen Checkout als zweites und Stand als drittes
    Argument. Der Stand braucht ein `Dockerfile`, sonst bricht der Befehl ab. Ohne MietJUMP-Quelle
    überspringt `doktor installieren` MietJUMP.
