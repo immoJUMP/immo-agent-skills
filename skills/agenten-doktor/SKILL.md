@@ -37,9 +37,12 @@ Verbindlicher Vertrag für Pfade, Befehle und Formate: [installer/SCHNITTSTELLEN
 Entpacken gehen Ausführrechte verloren. Jeder Bash-Aufruf ist eine neue Shell: Heißt das
 Projekt nicht `agenten`, stellst du `DOKTOR_PROJEKT=<projekt>` vor jeden Aufruf.
 
-Lokale Befehle (vollständig: `doktor-lokal.sh` ohne Argumente): `token-speichern <name>`,
-`token-pruefen <name...>`, `hetzner-anlegen <server> [typ] [ort]` (Standard `cx43`, bei
-„nicht verfügbar“ automatisch Wiederholung und Ausweichorte), `hetzner-status`,
+Lokale Befehle (vollständig: `doktor-lokal.sh` ohne Argumente): `vorbereitung-pruefen`
+(prüft alle Voraussetzungen und vorhandene Zugänge live, ändert nichts, liest
+`~/.agenten-doktor/<projekt>/start.env`), `token-speichern <name>`,
+`token-pruefen <name...>`, `hetzner-anlegen <server> [typen] [ort]` (Standard `cx43`; eine
+Liste wie `cx43,cx53,cpx32` nimmt den ersten Typ, den Hetzner gerade anbietet, mit
+Wiederholung und Ausweichorten), `hetzner-status`,
 `hetzner-schutz <server> [--backups]`, `dns-pruefen <name> <ip>`,
 `tailscale-beitritt <root@ip> [name]`, `ssh-schliessen <server>`, `ssh-oeffnen <server>`,
 `ssh <root@host> <befehl>`, `hochladen <root@host>` (Installer und Wissens-Vorlage),
@@ -87,6 +90,12 @@ Nennt `google-anmeldung.py` andere Namen, gelten dessen Namen.
 
 ## Moduswahl
 
+0. **Durchlauf ohne Rückfragen:** Enthält die Nachricht „Durchlauf ohne Rückfragen“, die
+   Angaben und den Freigabeblock (Start-Prompt), baust du nach
+   [durchlauf.md](references/durchlauf.md) auf, ohne die gebündelte Rückfrage. Bittet der
+   Nutzer nur „prüf meine Vorbereitung“: `doktor-lokal.sh vorbereitung-pruefen` und die
+   Chrome-Anmeldungen prüfen, nichts anlegen (durchlauf.md, Abschnitt 3). Wer neu ist, bekommt
+   zuerst die Checkliste aus durchlauf.md, Abschnitt 2, und den Start-Prompt zum Ausfüllen.
 1. Vorlauf-Logbuch auf dem Mac lesen: `~/.agenten-doktor/<projekt>/logbuch.md`.
    Steht dort ein unfertiger Aufbau, setzt du beim letzten nicht erfüllten Prüfpunkt fort.
 2. Server erreichbar (`doktor-lokal.sh ssh root@<host> 'doktor status'`)? Dann **Pflege**.
@@ -99,6 +108,10 @@ Nennt `google-anmeldung.py` andere Namen, gelten dessen Namen.
 Nie einen zweiten Server anlegen, nur weil der erste gerade nicht antwortet.
 
 ## Aufbau: die gebündelte Rückfrage
+
+Nur, wenn kein Start-Prompt vorliegt. Besser ist fast immer der Durchlauf: Checkliste vorher,
+dann ein Prompt ([durchlauf.md](references/durchlauf.md)). Bietest du ihn an, schickst du die
+Checkliste und den Start-Prompt zum Ausfüllen statt der Fragen unten.
 
 Zuerst prüfst du selbst, was geht ([aufbau.md](references/aufbau.md), Schritt 0, auch die
 Anmeldungen in Chrome per Screenshot). Dann stellst du **eine** Nachricht, sinngemäß:
@@ -213,6 +226,7 @@ Inhalt: was, warum, Ergebnis, offene Punkte.
 
 | Datei | wann laden |
 |---|---|
+| [references/durchlauf.md](references/durchlauf.md) | Start-Prompt, Checkliste, Vorbereitungs-Check, Regeln ohne Rückfragen |
 | [references/aufbau.md](references/aufbau.md) | Modus Aufbau, Schritt für Schritt mit Prüfpunkten |
 | [references/pflege.md](references/pflege.md) | Modus Pflege: Diagnose, Fehlerbilder, Updates, Sicherungen, Agenten-Check, fremde Setups |
 | [references/chrome-ablaeufe.md](references/chrome-ablaeufe.md) | vor jedem Klickablauf in Chrome |
