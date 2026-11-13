@@ -8,17 +8,28 @@ Preise auf den Seiten der Anbieter und nennst sie.
 
 | Zugang | `MODELL_ANBIETER` | Bewertung |
 |---|---|---|
-| **ChatGPT-/Codex-Abo**, Anmeldung per Gerätecode | `codex` | **Standard.** In Hermes offiziell unterstützt, feste Monatskosten, kein Kostenrisiko. Kontingent je Abo, alle Agenten teilen es. Plus wird bei mehreren täglichen Routinen schnell knapp, Pro hat deutlich mehr |
+| **ChatGPT-/Codex-Abo**, Anmeldung per Gerätecode | `codex` | **Standard für den Start.** Ohne AVV, für echte Mieterdaten siehe Datenschutz. In Hermes offiziell unterstützt, feste Monatskosten, kein Kostenrisiko. Kontingent je Abo, alle Agenten teilen es. Plus wird bei mehreren täglichen Routinen schnell knapp, Pro hat deutlich mehr |
 | **OpenAI-API-Schlüssel** | `openai` | Sauber (Geschäftsbedingungen, Auftragsverarbeitung möglich). Abrechnung nach Verbrauch. **Pflicht: Ausgabelimit** im Projekt |
 | **OpenRouter** | `openrouter` | Ein Schlüssel für viele Modelle, auch Claude. Guthaben vorab, Limit je Schlüssel. Zusätzlicher Vermittler, Datenweg und Anbieter-Routing prüfen |
 | **Claude-API-Schlüssel** (Anthropic Console) | derzeit über `openrouter` | Sauber nach den Anthropic Commercial Terms, Ausgabelimit in der Console. Der Installer kennt noch keinen eigenen Anbieterwert für einen direkten Anthropic-Schlüssel. Bis dahin Claude-Modelle per API über OpenRouter |
 | **Claude-Abo (Pro/Max) über Meridian** | `meridian` | **Nicht empfohlen.** Nur auf ausdrücklichen Wunsch nach schriftlicher Aufklärung (unten) |
 
-Datenschutz: Mails und Mieterdaten gehen an den Modellanbieter. Verbrauchertarife
-(ChatGPT Plus/Pro, Claude-Abo) sind dafür die schwächere Grundlage. Ein Tarif mit Vertrag
-zur Auftragsverarbeitung (API oder Business-Tarif) ist sauberer. Beim ChatGPT-Abo mindestens
-die Nutzung der Inhalte zum Training in den Einstellungen abschalten. Das ist keine
-Rechtsberatung: mit der eigenen Datenschutzberatung klären.
+## Datenschutz
+
+Mails, Kontoauszüge und Mieterdaten gehen an den Modellanbieter. Keine Rechtsberatung: mit der
+eigenen Datenschutzberatung klären.
+
+- **Verbraucher-Abos** (ChatGPT Plus oder Pro, Claude Pro oder Max) haben keinen Vertrag zur
+  Auftragsverarbeitung (AVV). Für Tests und erfundene Daten in Ordnung, für echte Mieterdaten
+  die schwache Grundlage. Mindestens das Training mit Inhalten in den Einstellungen abschalten.
+- **Für echte Mieterdaten** empfiehlst du einen Business-Tarif oder einen API-Zugang mit AVV
+  (englisch DPA). Ob sich ein Business-Tarif wie das Abo per Codex anmelden lässt, prüfst du
+  am Tag der Einrichtung. Bei OpenRouter kommt ein Vermittler dazu: Datenweg und Verträge prüfen.
+- **Hetzner:** AVV im Kundenkonto abschließen (der Nutzer stimmt selbst zu).
+- **GitHub:** Das Wissens-Repo liegt in den USA. Keine Mieterdaten hinein, nur Einheitsnummern
+  ([aufbau.md](aufbau.md), Schritt 13).
+
+Nennst du in der Rückfrage das Abo als Empfehlung, sagst du diesen Unterschied im selben Satz.
 
 ## Aufklärung zu Meridian (wörtlich zeigen)
 
@@ -110,6 +121,6 @@ Verbrauchs anpassen.
 ## Modellwechsel
 
 `MODELL_ANBIETER` und `MODELL` in `konfig.env` ändern, Zugang wie in
-[aufbau.md](aufbau.md) Schritt 12 bis 14 einrichten, dann `doktor installieren`,
+[aufbau.md](aufbau.md) Schritt 12 bis 15 einrichten, dann `doktor installieren`,
 `doktor modell-test` und am nächsten Tag die Routinen prüfen (Fehlerbild „Routinen laufen
 nach Modellwechsel nicht“ in [pflege.md](pflege.md)).

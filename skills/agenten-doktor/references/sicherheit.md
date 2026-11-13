@@ -23,7 +23,14 @@
 | **SSH nur über Tailscale**, nur Schlüssel, kein Passwort, fail2ban | Passwortraten, Fremdzugriff |
 | **Tailscale-Ausgang des Servers gesperrt:** Der Server trägt einen Tag und darf laut Policy keine anderen Geräte erreichen | ein übernommener Server springt auf den Mac des Nutzers |
 | **Startseite, Dashboards und MietJUMP mit Passwort**, Rocket.Chat ohne Selbstregistrierung | Fremde lesen Berichte |
-| **Gmail ohne Sendebefehl,** Rechte nur lesen, Entwürfe, Labels. Mailtext in der Ausgabe markiert (`<<<MAILTEXT … MAILTEXT>>>`) | Agent verschickt Mails, Mailtext wird als Anweisung gelesen |
+| **Gmail nur über die Postfach-Wache,** die allein den Google-Token hält. Durch geht nur Lesen, Anhänge, Entwürfe und eigene Labels, kein Sendebefehl. Mailtext in der Ausgabe markiert (`<<<MAILTEXT … MAILTEXT>>>`) | Agent verschickt oder löscht Mails, Mailtext wird als Anweisung gelesen |
+| **Kein Folgen symbolischer Links:** Der Server-Befehl `doktor` liest und schreibt in Agenten-Ordnern nur reguläre Dateien und bricht bei Symlinks ab. Vorschläge mit Symlinks lehnt er ab. Grenze siehe Restrisiken | Agent lenkt den als root laufenden Doktor auf fremde Dateien, z. B. `geheim.env` |
+| **Werkzeug-Zugänge in einer root-eigenen Datei** außerhalb des Agenten-Ordners, die Docker beim Start einliest | Agent ändert seinen Zugang oder gibt sich als anderer Agent aus |
+| **WebDAV-Schreiben nur mit eigenem Zugang in den eigenen Ordner,** kein COPY oder MOVE. Die Startseite liegt außerhalb der Ablage | Agent überschreibt Dashboards anderer oder die Startseite |
+| **Nur ein Doktor-Lauf zur selben Zeit** (Sperre) | Zeitpläne und Handaufrufe stören sich, halbe Zustände im Repo |
+| **Ein Vorschlag wird nur einmal verarbeitet** (Register des Doktors, nicht `ergebnis.yaml` im Agenten-Ordner), höchstens 200 Dateien und 5 MB | Agent ändert einen geprüften Vorschlag nachträglich oder flutet den Doktor |
+| **Geheimnis-Suche** in Vorschlägen und Fallbüchern: Token-Muster und jeder Wert aus `geheim.env` | Geheimnisse landen im Repo auf GitHub |
+| **Freigabe per Telegram nur mit Bestätigungscode** (sechsstellig, 30 Minuten, an den Stand des PR gebunden), per GitHub nur mit Approve auf dem aktuellen Stand und nach Rechte-Matrix | gefälschte Freigabe durch einen manipulierten Agenten |
 | **MietJUMP-Rolle `mitarbeiter`:** erfassen, abgleichen, Entwürfe und Freigabekarten, nichts freigeben | Zahlungen, Mahnungen oder Mieternachrichten ohne Mensch |
 | **Telegram mit Allowlist** (nur die numerische ID des Eigentümers), Bot nicht in Gruppen | Fremde steuern Kurt |
 | **Feste Versionen**, Updates erst testen | ungeprüfte Änderungen |
@@ -64,17 +71,36 @@ Prüfliste der Bestandsaufnahme.
    von Labels ab (getestet). Restrisiko: Ein manipulierter Agent kann Entwürfe mit falschem
    Inhalt anlegen. Deshalb prüft ein Mensch jeden Entwurf vor dem Senden.
    Modellzugang und Bot-Token liegen in den Containern, die sie brauchen: Ausgabelimit setzen.
-4. **Modellanbieter sieht Daten:** Mails und Mieterdaten gehen zum Modellanbieter.
-   Verträge zur Auftragsverarbeitung mit Hetzner und dem Modellanbieter abschließen,
-   Verbrauchertarife sind die schwächere Grundlage ([modelle-und-kosten.md](modelle-und-kosten.md)).
-5. **Der Mac des Nutzers:** Im Schlüsselbund liegt der Hetzner-Token mit vollem Zugriff
+4. **Kurt kennt den Telegram-Bot-Token.** Ein manipulierter Kurt könnte dem Eigentümer selbst
+   schreiben, auch etwas, das wie die Code-Nachricht des Doktors aussieht, und zur Eingabe
+   drängen. Den echten Code kennt er nicht. Gegenmittel: eigener Doktor-Bot
+   (`DOKTOR_TELEGRAM_BOT_TOKEN`), den kein Agent kennt. Dann kommen Codes nur aus diesem Chat.
+   `ablehnen #<nr>` braucht keinen Code: Kurt kann einen PR schließen lassen. Verloren geht
+   dabei nichts, der PR lässt sich auf GitHub wieder öffnen.
+5. **Symlink-Schutz mit Lücken:** Der Probelauf von `doktor aktualisieren` kopiert ein
+   Agentenprofil samt Symlinks und liest es dann, und `doktor-lokal.sh datei-senden` prüft nur
+   den Zielordner, nicht die Zieldatei. Bis zur Korrektur vor beidem prüfen:
+   `find /opt/agenten/daten/agenten -type l` muss leer sein.
+6. **Mieterdaten im Wissens-Repo:** Der Doktor erkennt Tokens, aber keine Namen, IBAN oder
+   Telefonnummern. Fallbücher spiegelt er ohne Freigabe nach GitHub. Davor schützen nur die
+   Regel in `regeln.md` und der Blick bei der Freigabe.
+7. **Gefälschte Kontoauszüge per Mail:** Vera holt Auszüge nur vom bekannten Absender des
+   Eigentümers, ein gefälschter Absender kann trotzdem durchrutschen. Ein gefälschter Auszug
+   lässt Mieten bezahlt aussehen. Gegenmittel: Auszüge bevorzugt über den Doktor
+   (`datei-senden`), Vera nennt im Bericht die Herkunft jeder Datei.
+8. **Direktes Mergen auf GitHub** umgeht Änderungsprotokoll und Testfragen. Der Eigentümer kann
+   es, sollte es aber nicht.
+9. **Modellanbieter sieht Daten:** Mails und Mieterdaten gehen zum Modellanbieter.
+   Verträge zur Auftragsverarbeitung mit Hetzner und dem Modellanbieter abschließen.
+   Verbraucher-Abos haben keinen ([modelle-und-kosten.md](modelle-und-kosten.md), Datenschutz).
+10. **Der Mac des Nutzers:** Im Schlüsselbund liegt der Hetzner-Token mit vollem Zugriff
    auf das Projekt. Wer den entsperrten Mac nutzt, kann den Server löschen. Gegenmittel:
    Mac-Passwort, FileVault, Löschschutz bei Hetzner.
-6. **Ein Abo für alle Agenten:** Ist das Kontingent leer oder die Anmeldung weg, fallen
+11. **Ein Abo für alle Agenten:** Ist das Kontingent leer oder die Anmeldung weg, fallen
    alle Agenten gleichzeitig aus.
-7. **Sicherung auf derselben VM:** Ohne Hetzner-Backups oder Storage Box kein Schutz bei
+12. **Sicherung auf derselben VM:** Ohne Hetzner-Backups oder Storage Box kein Schutz bei
    Verlust des Servers oder des Hetzner-Kontos.
-8. **Öffentlich erreichbare Weboberflächen:** Rocket.Chat, Dashboards und MietJUMP sind mit
+13. **Öffentlich erreichbare Weboberflächen:** Rocket.Chat, Dashboards und MietJUMP sind mit
    Passwort und TLS geschützt, aber aus dem Internet erreichbar. Lücken in Rocket.Chat
    schließen nur Updates.
 

@@ -30,30 +30,37 @@ Was ein Agent vorschlägt, gilt nie ohne Freigabe durch dich oder die/den zustä
 
 ### Per Telegram an Kurt
 
-1. Schreib Kurt `freigeben #12` (auch als Sprachnachricht).
-2. Kurt nennt dir Titel, betroffene Dateien und das Ergebnis der Testfragen und fragt einmal nach. Erst deine Bestätigung zählt.
-3. Der Doktor merged, wenn du für alle Dateien berechtigt bist und alle Testfragen bestanden sind. Sonst bekommst du den Grund.
+1. Schreib Kurt `freigeben #12` (bei einer Sprachnachricht fragt Kurt einmal schriftlich nach).
+2. Nach spätestens etwa 2 Minuten schickt dir der Server einen sechsstelligen Code mit Titel und Dateien des PR, über den Doktor-Bot, falls eingerichtet, sonst über Kurts Bot. Prüfe, ob das wirklich der PR ist, den du willst.
+3. Schreib Kurt `freigeben #12 Code 123456`. Der Code gilt 30 Minuten und nur für diesen Stand des PR. Ändert sich der PR, brauchst du einen neuen.
+4. Der Doktor merged beim nächsten Abgleich, wenn du für alle Dateien berechtigt bist, und trägt die Änderung ins Änderungsprotokoll ein. Kurt meldet dir das Ergebnis.
 
-Ablehnen: Schreib Kurt `ablehnen #12` und einen Satz, warum. Der Doktor schließt den PR, der vorschlagende Agent kann neu vorschlagen.
+Ablehnen: Schreib Kurt `ablehnen #12` und einen Satz, warum. Das braucht keinen Code, der Doktor schließt den PR.
 
 ### Auf GitHub
 
 1. PR öffnen, Änderungen und Checkliste lesen.
-2. „Approve“ klicken. Übernommen wird der PR mit `doktor freigeben 12 --von github:<dein-login>`; der Doktor prüft dabei deine Berechtigung für jede Datei.
-3. Nicht über den Merge-Knopf auf GitHub mergen: Dann prüft niemand die Berechtigung, die Testfragen laufen nicht und das Änderungsprotokoll fehlt.
+2. Review mit „Approve“ auf dem aktuellen Stand. Der Doktor merged beim nächsten Abgleich, wenn du nach der Rechte-Matrix für alle Dateien berechtigt bist. Ein Approve auf einem älteren Stand zählt nicht. Das gilt nur für Vorschläge der Agenten (Label `von-<agent>`).
+3. Läuft der Token des Servers auf dein Konto, bist du Autor der PRs und kannst sie auf GitHub nicht selbst genehmigen. Dann gibst du per Telegram frei.
+4. Den Merge-Knopf auf GitHub kannst du nutzen, er umgeht aber Änderungsprotokoll und Testfragen. Lieber nicht.
+
+### Nach der Übernahme
+
+Die Testfragen der betroffenen Agenten laufen automatisch, spätestens nach 15 Minuten. Bericht: `betrieb/testfragen/<agent>.md`. Schlägt eine fehl, steht das im Logbuch. Zurückgenommen wird nichts automatisch.
 
 ### Was du vor der Freigabe prüfst
 
 - Stimmt die Aussage fachlich?
 - Steht der Fakt danach an genau einem Ort? (Checkliste im PR)
-- Passt die Testfrage, und ist sie bestanden?
-- Beginnt der Titel mit `[Rechte]`? Dann erweitert der PR, was ein Agent sehen oder vorschlagen darf. Genau hinsehen.
+- Passt die Testfrage? Sie läuft erst nach der Übernahme.
+- Steht eine `rechte.yaml` in der Dateiliste? Dann erweitert der PR, was ein Agent sehen oder vorschlagen darf. Genau hinsehen.
+- Keine Mieternamen, keine IBAN, keine Kontaktdaten von Mietern?
 
 ## Wer gibt was frei
 
 | Pfad | Wer gibt frei |
 |---|---|
-| `team/**` | Fachverantwortliche/r des vorschlagenden Agenten oder du |
+| `team/**` | laut Rechte-Matrix Fachverantwortliche/r oder du. Der Doktor lässt es derzeit nur dich freigeben |
 | `geschaeftsfuehrung/**`, `.github/**`, `AGENTS.md` | nur du, nie per Agenten-Vorschlag |
 | `betrieb/logbuch/**` | schreibt der Doktor direkt |
 | alles ohne eigene Zeile (`README.md`, `INDEX.md`, `llms.txt`, `entscheidungen/`) | nur du |
@@ -61,8 +68,8 @@ Ablehnen: Schreib Kurt `ablehnen #12` und einen Satz, warum. Der Doktor schließ
 
 ## Was nie hier hinein gehört
 
-Passwörter, Tokens, Zugangsdaten, echte Kontonummern, Mieternamen ohne Notwendigkeit, Gesundheits- oder Sozialdaten, Kopien von Mails oder Kontoauszügen. Operative Daten bleiben in ihrem System: Mieten und Zahlungen in MietJUMP, Mails in Gmail.
+Das Repo liegt bei GitHub (USA). Darum nie hier hinein: Passwörter, Tokens, Zugangsdaten, Mieternamen, IBAN und andere Kontonummern, Telefonnummern und Mailadressen von Mietern, Gesundheits- oder Sozialdaten, Kopien von Mails oder Kontoauszügen. Mieter nur als Einheitsnummer (z. B. `OBJ1-WE03`). Das gilt auch für die Fallbücher, die der Doktor ohne Freigabe hierher spiegelt. Operative Daten bleiben in ihrem System: Mieter, Mieten und Zahlungen in MietJUMP, Mails in Gmail.
 
 ## Wenn du selbst etwas änderst
 
-Du darfst alles. Geh trotzdem über einen PR mit der Vorlage, damit die Testfragen laufen und das Änderungsprotokoll stimmt. Eine Regel, die du nur im Chat sagst, gilt dauerhaft erst, wenn sie hier steht.
+Du darfst alles. Geh trotzdem über einen PR mit der Vorlage und gib ihn per Telegram an Kurt frei (`freigeben #<nr>`, dann der Code). Nur dann laufen die Testfragen und das Änderungsprotokoll stimmt. Eine Regel, die du nur im Chat sagst, gilt dauerhaft erst, wenn sie hier steht.

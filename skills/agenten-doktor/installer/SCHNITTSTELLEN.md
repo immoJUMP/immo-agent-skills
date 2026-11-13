@@ -18,7 +18,10 @@ Wer etwas daran ändert, ändert es hier zuerst.
       ausschnitt/       Wissens-Ausschnitt fuer genau diesen Agenten (vom Doktor gerendert)
       vorschlaege/      Ausgang fuer Aenderungsvorschlaege (Agent schreibt, Doktor holt ab)
       fallbuch/         eigenes Fallbuch des Agenten (Agent schreibt, Doktor spiegelt ins Repo)
-      arbeit/           Arbeitsordner (Downloads, Belege, Entwuerfe)
+      arbeit/           Arbeitsordner (Downloads, Belege, Entwuerfe, Kontoauszüge unter bank/)
+      skills-repo/      eigene Skills aus dem Repo (im Container schreibgeschützt)
+    werkzeug-env/<slug>.env   Werkzeug-Zugänge (WEBDAV_ZUGANG, POSTFACH_TOKEN), root-eigen, Docker liest sie beim Start ein
+    start/              Startseite, bewusst außerhalb der WebDAV-Ablage
     dateien/<slug>/     veroeffentlichte Dashboards und Artefakte (WebDAV)
     mietjump/           SQLite und Postausgang von MietJUMP
     rocketchat/         MongoDB
@@ -36,31 +39,45 @@ Gemountet sind nur seine eigenen Ordner:
 | `daten/agenten/<slug>/vorschlaege` | `/opt/data/vorschlaege` | rw |
 | `daten/agenten/<slug>/fallbuch` | `/opt/data/fallbuch` | rw |
 | `daten/agenten/<slug>/arbeit` | `/opt/data/arbeit` | rw |
-| `installer/werkzeuge/<tool>` | `/usr/local/bin/<tool>` | ro, nur freigegebene Werkzeuge |
+| `daten/agenten/<slug>/skills-repo` | `/opt/data/skills/eigene` | ro |
+| `installer/werkzeuge/<tool>` | `/usr/local/bin/<tool>` | ro: `veroeffentlichen` und `vorschlag` immer, `gmail` nur mit Werkzeug gmail |
 
-Kein Agent sieht den GitHub-Token, das Docker-Socket, `geheim/` oder die Ordner anderer Agenten.
+Kein Agent sieht den GitHub-Token, den Google-Token, das Docker-Socket, `geheim/` oder die Ordner
+anderer Agenten. Kurt kennt den Telegram-Bot-Token, Agenten mit API-Zugang ihren API-Schlüssel.
+Der Server-Befehl `doktor` folgt in Agenten-Ordnern keinem Symlink und ändert nur einen Lauf zur
+selben Zeit (Sperre `/opt/agenten/.doktor.sperre`).
 
 ## 2. konfig.env (nicht geheim)
 
 ```
-DOMAIN=demo.cl.immodigit.de          # Basisdomain; chat.<DOMAIN>, dash.<DOMAIN>, miet.<DOMAIN>
+DOMAIN=muster.cl.immodigit.de          # Basisdomain; chat.<DOMAIN>, dash.<DOMAIN>, miet.<DOMAIN>
 ACME_EMAIL=...                       # fuer Let's Encrypt
-EIGENTUEMER_NAME=Christian
+EIGENTUEMER_NAME=Erika Muster
 EIGENTUEMER_TELEGRAM_ID=123456789    # numerische Telegram-ID, einzige Person, die Kurt per Telegram steuert
-EIGENTUEMER_GITHUB=chris2k20
+EIGENTUEMER_GITHUB=dein-github-name
 MODELL_ANBIETER=codex                # codex | meridian | openai | openrouter
 MODELL=gpt-6.1-sol                   # Hauptmodell
 WISSEN_REPO=owner/name               # privates GitHub-Repo
 ZEITZONE=Europe/Berlin
 HERMES_IMAGE=docker.io/nousresearch/hermes-agent:v0.22.2
+FIRMA=...                            # für Platzhalter im Wissens-Repo
+DEMO_DATEN=ja                        # nur Testserver: MietJUMP-Testdaten und Testauszüge für Vera
 ```
+Optional: `MODELL_KLEIN`, `DASH_BENUTZER` (Standard `team`), `RESTIC_REPOSITORY`. `HERMES_CONFIG_VERSION`
+setzt `doktor aktualisieren`. `EIGENTUEMER_TELEGRAM_ID` weglassen, solange sie unbekannt ist (nie `0`):
+`doktor telegram-koppeln` speichert sie nur, wenn sie fehlt.
 
 ## 3. geheim.env (nur Schlüsselnamen)
 
-`RC_ADMIN_PASS`, `MONGO_PASS`, `DASH_PASS_HASH` (bcrypt fuer Caddy basic_auth),
-`MIETJUMP_EIGENTUEMER_TOKEN`, `MIETJUMP_AGENT_TOKEN_<SLUG>`, `GITHUB_TOKEN` (nur Repo-Inhalte und PRs des Wissens-Repos),
-`TELEGRAM_BOT_TOKEN`, `CLAUDE_CODE_OAUTH_TOKEN` (nur bei meridian), `OPENAI_API_KEY` / `OPENROUTER_API_KEY` (je nach Anbieter),
-`GMAIL_CLIENT_ID`, `GMAIL_CLIENT_SECRET`, `GMAIL_REFRESH_TOKEN`, `TS_AUTHKEY` (nur bis zum Beitritt).
+Vom Server selbst erzeugt: `RC_ADMIN_PASS`, `RC_EIGENTUEMER_PASS`, `RC_BOTPASS_<SLUG>`, `RC_TOKEN_<SLUG>`,
+`DASH_PASS`, `DASH_PASS_HASH`, `RESTIC_PASSWORD`, `WEBDAV_PASS_<SLUG>`, `POSTFACH_SCHLUESSEL_<SLUG>`,
+`MIETJUMP_EIGENTUEMER_TOKEN`, `MIETJUMP_AGENT_TOKEN_<SLUG>`.
+Vom Mac gesendet: `GITHUB_TOKEN` (nur Repo-Inhalte und PRs des Wissens-Repos), `TELEGRAM_BOT_TOKEN`,
+`DOKTOR_TELEGRAM_BOT_TOKEN` (optional, eigener Bot nur für Bestätigungscodes), `CLAUDE_CODE_OAUTH_TOKEN`
+(nur bei meridian), `OPENAI_API_KEY` / `OPENROUTER_API_KEY` (je nach Anbieter), `GMAIL_CLIENT_ID`,
+`GMAIL_CLIENT_SECRET`, `GMAIL_REFRESH_TOKEN`, optional `AWS_ACCESS_KEY_ID`, `AWS_SECRET_ACCESS_KEY` für
+ein externes restic-Ziel. Der Tailscale-Schlüssel kommt nie in `geheim.env`, `tailscale-beitritt`
+löscht ihn nach dem Beitritt.
 
 Werte kommen per stdin: `doktor geheimnis-setzen SCHLUESSEL` liest den Wert von stdin. Nie in argv, nie im Chat.
 
@@ -75,7 +92,7 @@ veroeffentlichen <datei> [zielname]
 ```
 Lädt eine Datei per WebDAV-PUT nach `http://dateien:8081/<AGENT_SLUG>/<zielname>` und gibt
 den Leselink `https://dash.<DOMAIN>/<AGENT_SLUG>/<zielname>` aus (Basic-Auth geschützt).
-Umgebung: `AGENT_SLUG`, `DASH_BASIS_URL`.
+Umgebung: `AGENT_SLUG`, `DASH_BASIS_URL`, `WEBDAV_ZUGANG` (eigener Zugang, gilt nur für den eigenen Ordner).
 
 ### Postfach-Wache (Dienst `postfach`, Port 8090, nur im Netz `agenten`)
 Haelt den Google-Refresh-Token, **kein Agent bekommt ihn**. Jeder Agent mit Werkzeug gmail bekommt
@@ -129,8 +146,10 @@ testfragen:               # mindestens eine, Frage und erwartete Kernaussage
     erwartet: "aufteilen mit zahlung_aufteilen, nicht als Teilzahlung einer Einheit"
 loeschen: []              # Pfade, die entfernt werden sollen
 ```
-Der Doktor prüft beim Abholen: erlaubte Pfade laut Rechte-Matrix (6), Pflichtfelder, keine Geheimnisse,
-dann Branch, Commit, PR. Ergebnis landet als `ergebnis.yaml` im selben Ordner (`status: pr-erstellt`, `pr: 12`, `url: ...`
+Der Doktor prüft beim Abholen: erlaubte Pfade laut Rechte-Matrix (6), Pflichtfelder, keine Symlinks,
+höchstens 200 Dateien und 5 MB, keine Geheimnisse (Token-Muster und jeder Wert aus `geheim.env`;
+Namen und Kontonummern erkennt er nicht), dann Branch, Commit, PR. Jeder Ordner wird genau einmal
+verarbeitet (Register des Doktors). Ergebnis landet als `ergebnis.yaml` im selben Ordner (`status: pr-erstellt`, `pr: 12`, `url: ...`
 oder `status: abgelehnt`, `grund: ...`).
 Helfer im Container: `vorschlag neu <kurzname>` legt das Gerüst an, `vorschlag status` listet offene Vorschläge.
 
@@ -163,8 +182,8 @@ name: Vera
 rolle: Verwaltung
 emoji: "🏠"
 fachverantwortlich:
-  name: Christian
-  github: chris2k20
+  name: Erika Muster
+  github: dein-github-name
   telegram_id: 123456789
 rocketchat:
   raum: verwaltung          # eigener Raum, wird angelegt
@@ -199,12 +218,25 @@ Durchgesetzt dreifach: (1) der Doktor nimmt Vorschläge außerhalb `vorschlagen`
 (2) `CODEOWNERS` ordnet Prüfer zu, (3) `doktor freigeben <pr> --von <telegram-id|github>` merged nur,
 wenn die Person für alle Dateien des PR freigabeberechtigt ist.
 
+Grenze: Fachverantwortliche lässt der Doktor nur Dateien unter `agenten/<ihr agent>/` freigeben
+(`wissen/`, `beispiele/`, `testfragen.yaml`). `team/**` geht derzeit nur über den Eigentümer.
+
 **Freigabe per Telegram (über Kurt) nur mit Bestätigungscode.** Kurt legt
 `/opt/data/vorschlaege/_freigaben/<pr>.yaml` an (`pr`, `entscheidung`, `wortlaut`, `zeit`, `kanal`, `code`).
-Ohne gültigen Code schickt der Doktor dem Eigentümer **selbst** (Bot-API, nicht über Kurt) einen
-sechsstelligen Code, 30 Minuten gültig. Erst `freigeben #<pr> Code <code>` führt zum Merge. So kann ein
-manipulierter Agent keine Freigabe fälschen. Ergebnis steht in `_freigaben/<pr>.ergebnis.txt`.
-`ablehnen #<pr>` braucht keinen Code.
+Ohne gültigen Code schickt der Doktor dem Eigentümer beim nächsten Abgleich selbst per Bot-API einen
+sechsstelligen Code mit Titel und Dateien, über den Doktor-Bot (`DOKTOR_TELEGRAM_BOT_TOKEN`), sonst über
+Kurts Bot. Der Code gilt 30 Minuten und nur für den aktuellen Stand (Commit) des PR. Erst
+`freigeben #<pr> Code <code>` führt zum Merge. Ergebnis steht in `_freigaben/<pr>.ergebnis.txt`.
+`ablehnen #<pr>` braucht keinen Code und schließt den PR.
+
+**Freigabe per GitHub:** Approve-Review auf dem aktuellen Stand durch eine berechtigte Person, nur bei
+PRs mit Label `von-<slug>`. Der Doktor merged beim nächsten Abgleich. Direktes Mergen auf GitHub umgeht
+Änderungsprotokoll und Testfragen.
+
+**Nach jeder Übernahme durch den Doktor** merkt er sich die betroffenen Agenten (Datei in
+`agenten/<slug>/` geändert). `doktor testfragen --offen` (alle 15 Minuten) stellt ihnen alle Fragen aus
+`testfragen.yaml` (`frage`, `erwartet`), ein zweiter Aufruf ohne Agentenregeln urteilt JA oder NEIN.
+Bericht `betrieb/testfragen/<slug>.md`, Ergebnis ins Logbuch. Kein automatischer Rückbau.
 
 ## 7. Server-Befehl `doktor`
 
@@ -212,7 +244,7 @@ manipulierter Agent keine Freigabe fälschen. Ergebnis steht in `_freigaben/<pr>
 doktor installieren            Stack bauen/starten, Rocket.Chat einrichten, Agenten anlegen (idempotent)
 doktor status                  Kurzuebersicht (Container, Agenten, Adressen)
 doktor check [--json]          Gesundheitscheck mit Ampel, Exit 0/1/2 (gruen/gelb/rot)
-doktor reparieren              check + bekannte Reparaturen, jede Massnahme ins Logbuch
+doktor reparieren [--still]    check + bekannte Reparaturen (pflege.md Abschnitt 1), jede Massnahme ins Logbuch
 doktor abgleich                Wissens-Repo holen, Ausschnitte rendern, Vorschlaege -> PRs,
                                Fallbuecher spiegeln, neue/geaenderte Agenten ausrollen
 doktor agenten-check [slug]    Werkzeuge, Prompt-Laenge, Gedaechtnis, Routinen, Fehler je Agent
@@ -224,10 +256,16 @@ doktor geheimnis-setzen KEY    Wert von stdin nach geheim.env
 doktor modell-test [slug]      echter Modellaufruf je Agent (nicht nur /health)
 doktor zugangsdaten            zeigt dem Eigentuemer seine Zugaenge (nur im eigenen Terminal)
 doktor telegram-koppeln CODE   Kopplungscode aus Telegram bestaetigen, Telegram-ID merken
-doktor vorlage-uebernehmen     neue Fassung der Start-Agenten ins Wissens-Repo (nur Aufbau/Update)
+doktor vorlage-uebernehmen [--erzwingen]   neue Fassung der Start-Agenten ins Wissens-Repo (direkt auf main,
+                               nur seit dem Startstand unveränderte Dateien, ausser mit --erzwingen)
+doktor testfragen [slug] [--offen]   Testfragen stellen, Bericht betrieb/testfragen/<slug>.md
+doktor nach-start              nach dem Hochfahren: auf Rocket.Chat und MietJUMP warten, Agenten neu starten
 ```
-Zeitplaene (systemd-Timer `doktor-*`): Abgleich alle 2 Min., Check stuendlich, Reparatur
-halbstuendlich (`--still`), Sicherung 03:00, Agenten-Check sonntags 19:00.
+Zeitpläne (systemd-Timer `doktor-*`): Abgleich alle 2 Min., Reparatur halbstündlich (`--still`), Check
+stündlich, Testfragen alle 15 Min. (nur nach Freigaben), Sicherung 03:00, Agenten-Check sonntags 19:00,
+`nach-start` nach jedem Hochfahren. Wissens-Repo bei der Installation: Fehlt `AGENTS.md`, ergänzt der
+Doktor nur fehlende Dateien aus `installer/wissens-vorlage` und die Start-Agenten, nichts wird überschrieben.
 Abgleich ist konvergent: fehlende Rocket.Chat-Konten, Zugaenge, Container und Routinen werden
 angelegt, geaenderte Profile neu ausgerollt, aus dem Repo entfernte Agenten abgebaut.
-Alle Befehle schreiben ins Logbuch `logbuch/JJJJ-MM.md`: Zeit, Befehl, Ergebnis, Massnahmen, offene Punkte.
+Eingriffe, Fehler und Ergebnisse stehen im Logbuch `logbuch/JJJJ-MM.md` (Check nur bei Gelb oder Rot,
+`status` und `zugangsdaten` gar nicht).

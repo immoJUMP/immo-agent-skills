@@ -152,6 +152,9 @@ pruef "Testhanna in Rocket.Chat angemeldet" warte_bis "grep -q 'authenticated as
 pruef "Testhanna hat eigenen Ausschnitt ohne Geschaeftsfuehrung" bash -c '! docker exec agent-testhanna test -e /opt/data/wissen/geschaeftsfuehrung'
 
 echo "== 7. Reparaturfaelle"
+# Zeitplaene anhalten: der Abgleich alle 2 Minuten heilt sonst schneller, als der Test pruefen kann
+systemctl stop doktor-abgleich.timer doktor-reparieren.timer
+while pgrep -f "doktor (abgleich|reparieren)" >/dev/null; do sleep 2; done
 docker stop agent-vera >/dev/null
 pruef "Check erkennt gestoppte Vera (rot)" bash -c 'doktor check >/dev/null; [ $? -eq 2 ]'
 doktor reparieren >/tmp/rep1.txt 2>&1
@@ -164,6 +167,7 @@ docker stop agenten-mietjump-1 >/dev/null
 doktor reparieren >/tmp/rep3.txt 2>&1
 pruef "Reparatur startet MietJUMP wieder" bash -c "curl -fsS http://\$(docker inspect -f '{{range .NetworkSettings.Networks}}{{.IPAddress}} {{end}}' agenten-mietjump-1 | awk '{print \$1}'):8787/gesund"
 pruef "nach Reparaturen kein Rot" bash -c 'sleep 20; doktor check >/dev/null; [ $? -lt 2 ]'
+systemctl start doktor-abgleich.timer doktor-reparieren.timer
 pruef "Reparaturen stehen im Logbuch" bash -c "grep -c 'reparatur: Reparatur' $B/logbuch/*.md | awk -F: '{s+=\$NF} END {exit !(s>=3)}'"
 
 echo "== 8. Sicherung und Wiederherstellungsprobe"

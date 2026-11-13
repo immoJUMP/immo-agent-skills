@@ -24,7 +24,7 @@ Neue Agenten gibt nur der Eigentümer frei. Ein Agent darf nur vorschlagen, was 
 1. Kurt (oder du) kopiert `_vorlage/` nach `agenten/<slug>/` und ersetzt alle Agenten-Platzhalter. Slug: Kleinbuchstaben, ohne Umlaute und Leerzeichen; daraus wird der Container `agent-<slug>`.
 2. Kurt legt das als Vorschlag mit `art: agent-einstellen` ab. Begründung: welches Problem der Agent löst, was er ungefähr kostet, wer fachverantwortlich ist.
 3. Der Doktor prüft: kein `{{` mehr in den Dateien, Slug frei, `rechte.yaml` ohne gesperrte Pfade, nur bekannte Werkzeuge. Er ergänzt im selben PR den CODEOWNERS-Block des neuen Agenten und dessen Fachverantwortliche/n in der Zeile `/team/`.
-4. Nur du gibst frei. Danach rollt `doktor abgleich` den Agenten aus: Container, Raum, Routinen und `/opt/data/fallbuch/INDEX.md` aus `fallbuch/INDEX.md`.
+4. Nur du gibst frei. Danach rollt `doktor abgleich` den Agenten aus: Container, Rocket.Chat-Konto, Raum, Routinen und ein leeres Fallbuch (`/opt/data/fallbuch/INDEX.md`).
 
 ## Platzhalter
 
@@ -41,7 +41,7 @@ Platzhalter haben die Form `{{NAME}}`. In YAML stehen sie in Anführungszeichen,
 | `{{REPO_DATUM}}` | Tag der Einrichtung, JJJJ-MM-TT | Doktor |
 | `@EIGENTUEMER` | Prüfer in `.github/CODEOWNERS` | wird zu `@` plus `EIGENTUEMER_GITHUB` |
 
-**Firmen-Platzhalter** in `team/firma.md`. Füllt der Eigentümer; `doktor check` meldet offene.
+**Firmen-Platzhalter** in `team/firma.md`. Füllt der Eigentümer (der Doktor erinnert in der Übergabe daran).
 
 | Platzhalter | Bedeutung |
 |---|---|
