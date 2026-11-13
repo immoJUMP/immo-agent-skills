@@ -65,6 +65,8 @@ pruef "Vera sieht keine Geschaeftsfuehrung" bash -c '! docker exec agent-vera te
 pruef "Vera sieht keine fremden Agenten-Ordner" bash -c '! docker exec agent-vera test -e /opt/data/wissen/agenten/kurt'
 pruef "Vera kommt nicht an Geheimnisse oder Docker" bash -c '! docker exec agent-vera test -e /opt/agenten/geheim && ! docker exec agent-vera test -S /var/run/docker.sock'
 pruef "Vera-Container hat keinen GitHub-Token" bash -c '! docker exec agent-vera env | grep -q GITHUB_TOKEN && ! docker exec agent-vera grep -q GITHUB_TOKEN /opt/data/.env'
+pruef "Fachskills aus dem Skill-Paket bei Vera verfuegbar" bash -c "docker exec -u hermes agent-vera hermes skills list 2>/dev/null | grep -q anlage-v-assistent"
+pruef "Kurt sieht die Vorlage fuer einen Akquise-Agenten" docker exec agent-kurt test -e /opt/data/wissen/agenten/_vorlagen/akquise/agent.yaml
 pruef "eigene Skills im Container schreibgeschuetzt" bash -c '! docker exec -u hermes agent-vera touch /opt/data/skills/eigene/x 2>/dev/null'
 
 echo "== 4. Lernkreislauf: Vorschlaege und Rechte"

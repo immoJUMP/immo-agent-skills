@@ -200,6 +200,9 @@ cmd_hochladen() { # Installer-Dateien auf den Server kopieren (ohne Geheimnisse)
   if [ -d "$VORLAGE_DIR" ]; then
     rsync -az --delete -e "ssh -i $key ${SSH_OPTS[*]}" "$VORLAGE_DIR/" "$ziel:/opt/agenten/installer/wissens-vorlage/"
   fi
+  # Fachskills des Skill-Pakets (z.B. anlage-v-assistent, deal-screener), die Agenten per fach_skills nutzen
+  rsync -az --delete --exclude 'agenten-doktor/' --exclude 'second-brain/assets/' --exclude '__pycache__' \
+    -e "ssh -i $key ${SSH_OPTS[*]}" "$HIER/../../../" "$ziel:/opt/agenten/installer/fach-skills/"
   ssh -i "$key" "${SSH_OPTS[@]}" "$ziel" 'install -m 0755 /opt/agenten/installer/bin/doktor /usr/local/bin/doktor \
     && chmod 0755 /opt/agenten/installer/werkzeuge/* 2>/dev/null; true'
   info "Installer nach $ziel:/opt/agenten/installer kopiert, Befehl 'doktor' installiert."

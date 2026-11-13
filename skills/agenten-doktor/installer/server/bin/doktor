@@ -710,10 +710,21 @@ def agent_einrichten(slug: str, d: dict, k: dict, rc_info: dict) -> bool:
         env["OPENROUTER_API_KEY"] = g["OPENROUTER_API_KEY"]
     schreibe_env(h / ".env", env, f"Agent {slug}, vom Doktor erzeugt. Lokale Zusatzschluessel bleiben erhalten.")
 
-    # eigene Skills aus dem Repo (schreibgeschuetzt in den Container gemountet, in place angleichen)
+    # eigene Skills aus dem Repo plus freigegebene Fachskills aus dem Skill-Paket
+    # (agent.yaml: fach_skills), schreibgeschuetzt in den Container gemountet, in place angleichen
     quelle = d["ordner"] / "skills"
-    ordner_angleichen(p["skills"], {f.relative_to(quelle).as_posix(): f for f in quelle.rglob("*") if f.is_file()}
-                      if quelle.exists() else {})
+    skill_dateien = {f.relative_to(quelle).as_posix(): f for f in quelle.rglob("*") if f.is_file()} if quelle.exists() else {}
+    fach = INST / "fach-skills"
+    for name in d.get("fach_skills") or []:
+        name = str(name)
+        q = fach / name
+        if not re.fullmatch(r"[a-z0-9-]{2,60}", name) or not (q / "SKILL.md").exists():
+            logbuch(f"{slug}: Fachskill {name} nicht gefunden", ["im Skill-Paket fehlt der Ordner, Name pruefen"], "warnung")
+            continue
+        for f in q.rglob("*"):
+            if f.is_file() and not f.is_symlink():
+                skill_dateien.setdefault(f"fach/{name}/{f.relative_to(q).as_posix()}", f)
+    ordner_angleichen(p["skills"], skill_dateien)
 
     # Rocket.Chat-Plugin, gepinnt. Vom Agenten angelegte Symlinks im Weg werden entfernt.
     for teil in (h / "plugins", h / "plugins" / "rocketchat-platform"):
@@ -1560,6 +1571,14 @@ def mietjump_einrichten(k: dict, defs: dict) -> None:
     if not (BASIS / "mietjump-quelle" / "Dockerfile").exists():
         info("MietJUMP-Quelle fehlt (doktor-lokal mietjump-hochladen). MietJUMP wird uebersprungen.")
         return
+    mietjump_zugaenge(k, defs)
+    if not (DATEN / "mietjump" / ".demo-geladen").exists() and k.get("DEMO_DATEN") == "ja":
+        _mietjump_demo()
+
+
+def mietjump_zugaenge(k: dict, defs: dict) -> None:
+    """Eigentuemer-Zugang und je Agent mit Werkzeug mietjump ein Zugang mit Rolle mitarbeiter
+    (Mitarbeiter duerfen Stammdaten nur als Entwurf erfassen, nie direkt importieren)."""
     g = geheim()
     braucht = [s for s, d in defs.items() if "mietjump" in (d.get("werkzeuge") or [])]
     if not g.get("MIETJUMP_EIGENTUEMER_TOKEN"):
@@ -1570,8 +1589,6 @@ def mietjump_einrichten(k: dict, defs: dict) -> None:
         if not geheim().get(key):
             t = _mietjump_zugang(f"{defs[slug].get('name', slug)} (Agent)", "mitarbeiter")
             geheim_setzen(key, t)
-    if not (DATEN / "mietjump" / ".demo-geladen").exists() and k.get("DEMO_DATEN") == "ja":
-        _mietjump_demo()
 
 
 def _mietjump_zugang(name: str, rolle: str) -> str:
@@ -1668,6 +1685,7 @@ footer{{color:var(--grau);font-size:.85rem;margin-top:32px}}
 <div class="links">
 <a href="https://chat.{d}"><b>Team-Chat</b><span>Rocket.Chat, ein Raum je Agent</span></a>
 <a href="https://miet.{d}/anmelden"><b>MietJUMP</b><span>Mietverwaltung, Freigaben</span></a>
+<a href="https://dash.{d}/vera/cockpit.html"><b>Bestands-Cockpit</b><span>Mietstand, Rueckstaende, offene Entscheidungen</span></a>
 <a href="https://dash.{d}/"><b>Dashboards</b><span>alles, was die Agenten veroeffentlichen</span></a>
 </div>
 <h2>Team</h2><div class="team">{karten}</div>
@@ -1850,6 +1868,8 @@ def cmd_installieren(a):
     info("Baue und starte feste Dienste (das dauert beim ersten Mal einige Minuten) ...")
     compose_agenten_schreiben({}, k) if not COMPOSE_AGENTEN.exists() else None
     compose("build", timeout=1800)
+    if (BASIS / "mietjump-quelle" / "Dockerfile").exists():
+        mietjump_zugaenge(k, defs)  # vor dem ersten Start: an 0.0.0.0 startet MietJUMP nur mit Eigentuemer-Zugang
     compose("up", "-d", "--remove-orphans", "caddy", "mongo", "rocketchat", "dateien",
             *(["mietjump"] if (BASIS / "mietjump-quelle" / "Dockerfile").exists() else []),
             *(["meridian"] if k.get("MODELL_ANBIETER") == "meridian" else []), timeout=1800)

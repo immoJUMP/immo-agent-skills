@@ -13,7 +13,11 @@ rocketchat:
   weitere_raeume: [team]
 telegram: false
 werkzeuge: [mietjump, gmail, veroeffentlichen, vorschlag, fallbuch, browser]   # browser: eigener Chromium nur in Veras Container
+fach_skills: [anlage-v-assistent, beleg-sortierer, nebenkosten-pruefer]   # aus dem Skill-Paket, schreibgeschuetzt
 routinen:
+  - name: cockpit
+    zeitplan: "0 7,13,18 * * *"
+    auftrag: "Fuehre den Skill bestands-cockpit aus. Veroeffentliche cockpit.html, im Chat nur melden, wenn sich ein Rueckstand neu ergeben hat."
   - name: mieteingang
     zeitplan: "0 9 * * 1-5"
     auftrag: "Führe den Skill mieteingangskontrolle aus und berichte in #verwaltung."
