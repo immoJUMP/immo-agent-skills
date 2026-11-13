@@ -7,6 +7,8 @@ description: "Führt mit dem Eigentümer ein Interview für einen neuen Agenten 
 
 ## 1. Erst prüfen
 
+- Gibt es eine passende Vorlage unter `/opt/data/wissen/agenten/_vorlagen/` (z. B. `akquise` für einen Makler- und Angebots-Agenten)? Dann die Vorlage als Grundlage nehmen, Name, Suchgebiet und Fachverantwortliche/n im Interview anpassen. Das spart dem Eigentümer die meisten Fragen.
+
 - `/opt/data/wissen/agenten/*/agent.yaml` und `rolle.md` lesen. Kann ein bestehender Agent die Aufgabe mit einem zusätzlichen Skill übernehmen, schlag das zuerst vor (weniger Agenten, weniger Pflege).
 - Wünscht jemand anderes im Team einen Agenten: Wunsch aufnehmen und den Eigentümer per Telegram fragen. Ohne ihn kein Interview.
 
@@ -18,7 +20,9 @@ description: "Führt mit dem Eigentümer ein Interview für einen neuen Agenten 
    - `veroeffentlichen` und `vorschlag` (immer),
    - `fallbuch` (wenn er Einzelfälle einschätzt),
    - `gmail` (dasselbe Postfach wie Vera: lesen, Entwürfe, Labels, kein Senden),
-   - `mietjump` (Mietverwaltung, Außenwirksames nur als Karte).
+   - `mietjump` (Mietverwaltung, Außenwirksames nur als Karte),
+   - `browser` (eigener Browser im Container, nur wenn eine Webseite ohne Anmeldung gelesen werden muss).
+   Zusätzlich kann er Fachskills aus dem Skill-Paket bekommen (`fach_skills` in agent.yaml, z. B. `deal-screener`, `bierdeckel-kalkulation`, `anlage-v-assistent`).
    Andere Werkzeuge gibt es nicht. Wünscht der Eigentümer eins, notierst du es als offenen Punkt für den Betreuer des Servers.
 4. Wissens-Ausschnitt: Welche Ordner unter `team/` braucht er? `geschaeftsfuehrung/` ist ausgeschlossen.
 5. Fachverantwortliche/r: Wer prüft Wissen und Beispiele? Name, GitHub-Name, optional Telegram-ID. Standard ist der Eigentümer (Werte aus `agenten/kurt/agent.yaml`).

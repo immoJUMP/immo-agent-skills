@@ -261,3 +261,39 @@ Typische Probleme und Vorschlag:
 | `latest`-Images | Image-Tag `latest` | Bei jedem Neustart eine andere Version. Fest pinnen |
 | Bot ohne Allowlist | Telegram-Bot antwortet jedem | Rot: Allowlist mit numerischer ID |
 | Keine geprüfte Sicherung | keine Probe im Logbuch | Sicherung und Probe einrichten |
+
+## 11. Muster für bestehende Setups (ohne Umbau auf diesen Installer)
+
+Viele Nutzer haben schon einen eigenen Hermes-Server. Diese drei Muster lassen sich dort einzeln
+einführen, nach Freigabe des Eigentümers, jeweils zuerst an genau einem Agenten.
+
+**Lernkreislauf für einen Agenten.** Ziel: Ein Mitarbeiter korrigiert den Agenten, daraus wird ein
+Änderungsvorschlag mit Testfragen, der Fachverantwortliche gibt nur noch frei.
+
+1. Die Definition des Agenten (Rolle, Regeln, Wissen, Beispiele, Testfragen) liegt in einem
+   GitHub-Repo im Format aus `second-brain/references/team-repo.md`, `rechte.yaml` je Agent.
+2. Der Agent bekommt den Skill `lernkreislauf` aus `installer/server/agenten/kurt/skills/`, angepasst:
+   statt einer Vorschlagsdatei legt er per `gh pr create` einen PR mit Auslöser, Begründung und
+   mindestens einer Testfrage an. Sein GitHub-Zugang darf nur Branches und PRs in diesem einen Repo
+   (fein granularer Token), nie mergen.
+3. `CODEOWNERS` und Branch-Schutz („Review von Code Owners nötig“, bei privaten Repos ab GitHub Team)
+   setzen die Rechte je Dateityp durch: Wissen und Beispiele die Fachverantwortlichen, Regeln, Rechte
+   und Werkzeuge nur der Eigentümer.
+4. Nach dem Merge zieht der Server den Stand (Cron oder Webhook) und lässt die Testfragen laufen.
+   Ohne diesen Schritt ist es kein Kreislauf, sondern nur ein Ablageort.
+
+**Wissens-Ausschnitt je Agent ohne Geschäftsführungswissen.** Ein gemeinsames Repo mit Lesezugriff
+für alle Agenten schützt nichts. Entweder getrennte Repos (Team-Wissen, Geschäftsführung) mit
+getrenntem Token je Agent, oder der Server rendert je Agent einen Ausschnitt aus `rechte.yaml`
+(so wie `doktor abgleich`) und hängt nur diesen ein. Ein Container je Agent ist Voraussetzung.
+
+**Prüftor für Code, den Agenten schreiben.** Agenten-Code geht nie direkt in den Betrieb:
+eigener Branch, PR, automatische Tests im CI (Pflicht, grün), danach ein unabhängiger
+Reviewer-Agent mit eigenem Auftrag („finde Fehler, widerlege“) und eigenem Zugang ohne
+Schreibrecht auf main, erst dann die Freigabe durch einen Menschen. Der Agent, der den Code
+geschrieben hat, prüft sich nie selbst.
+
+**immoJUMP anbinden.** Für Agenten auf dem Server ist die `immojump`-CLI (Skill `immojump-cli`)
+der robuste Weg: einmal `immojump auth login --organisation <id>` im Container des Agenten, der
+Token bleibt dort, Rechte über `IMMOJUMP_ALLOW`. Der MCP-Server `mcp.immojump.de` erwartet Token
+und Organisation je Aufruf und passt eher zu Claude-Clients mit Anmeldung im Browser.
