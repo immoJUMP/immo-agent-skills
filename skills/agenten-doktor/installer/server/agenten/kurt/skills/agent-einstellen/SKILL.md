@@ -91,4 +91,4 @@ testfragen:              # drei aus testfragen.yaml, davon eine Angriffsfrage
 loeschen: []
 ```
 
-Dann dem Eigentümer sagen: Vorschlag liegt, die PR-Nummer kommt nach dem nächsten Abgleich (`ergebnis.yaml`), freigeben kann nur er („freigeben #<pr>“). Nach dem Merge legt der Doktor Container, Rocket.Chat-Konto und Raum automatisch an. Zugänge für Werkzeuge richtet der Doktor ein, nie du.
+Dann dem Eigentümer sagen: Vorschlag liegt, die PR-Nummer kommt nach dem nächsten Abgleich (`ergebnis.yaml`), freigeben kann nur er („freigeben #<pr>“, danach der Code, den der Server ihm schickt). Nach dem Merge legt der Doktor Container, Rocket.Chat-Konto und Raum automatisch an, und die Testfragen des neuen Agenten laufen. Zugänge für Werkzeuge richtet der Doktor ein, nie du. Beim ChatGPT-Abo braucht der neue Agent noch eine Modellanmeldung durch den Doktor.

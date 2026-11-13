@@ -2,13 +2,15 @@
 
 Nur laden, wenn ein privates GitHub-Repo als gemeinsames Wissen mehrerer Agenten eingerichtet, betrieben oder geprüft wird (Agenten-Server mit dem Server-Befehl `doktor`). Für eine persönliche Wissensbasis genügen [Einrichten](einrichten.md) und [Einarbeiten](einarbeiten.md).
 
-Verbindlich für Pfade, Befehle und Formate ist der Vertrag `skills/agenten-doktor/installer/SCHNITTSTELLEN.md`, Abschnitte 4 bis 7. Weicht diese Seite davon ab, gilt der Vertrag. Die fertige Vorlage liegt unter [`assets/team-repo-vorlage/`](../assets/team-repo-vorlage/). Der Doktor kopiert sie in ein neues privates Repo und ersetzt die Repo-Platzhalter; die Liste aller Platzhalter steht in `agenten/README.md` der Vorlage.
+Verbindlich für Pfade, Befehle und Formate ist der Vertrag `skills/agenten-doktor/installer/SCHNITTSTELLEN.md`, Abschnitte 4 bis 7. Weicht diese Seite davon ab, gilt der Vertrag. Die fertige Vorlage liegt unter [`assets/team-repo-vorlage/`](../assets/team-repo-vorlage/). Der Server-Doktor übernimmt sie bei `doktor installieren`, wenn dem Repo `AGENTS.md` fehlt: nur fehlende Dateien, nichts wird überschrieben. Er ersetzt dabei `{{FIRMA}}`, `{{EIGENTUEMER_NAME}}`, `{{EIGENTUEMER_GITHUB}}`, `{{EIGENTUEMER_TELEGRAM_ID}}`, `{{DOMAIN}}`, `{{REPO_DATUM}}` und `@FACHVERANTWORTLICH_…` aus `konfig.env`. `@EIGENTUEMER` in CODEOWNERS und die Firmen-Platzhalter in `team/firma.md` bleiben stehen. Hat das Repo schon `AGENTS.md`, übernimmt er nichts aus der Vorlage.
 
 Grenzen: Ein GitHub-Repo anlegen, Personen einladen, Branch-Schutz setzen oder Tokens erzeugen nur auf ausdrücklichen Auftrag; normalerweise erledigt das der Doktor bei der Installation. Existiert das Repo schon, nichts überschreiben: fehlende Dateien ergänzen, abweichende vorhandene Fassungen behalten und als Befund melden.
 
 ## 1. Schichten und Ordner
 
 Wie in jeder Wissensbasis: roh → aufbereitet → kompiliert. Agenten arbeiten mit der kompilierten Schicht und schlagen Änderungen vor; Rohdaten bleiben in ihren führenden Systemen.
+
+**Datenschutz:** Das Repo liegt bei GitHub (USA). Keine Mieterdaten hinein: keine Namen, keine IBAN, keine Telefonnummern oder Mailadressen von Mietern, nur Einheitsnummern (z. B. `OBJ1-WE03`). Führend für Mieter und Zahlungen bleibt MietJUMP. Das gilt auch für Fallbücher, die der Doktor ohne Freigabe spiegelt.
 
 | Schicht | Ort | Inhalt | Schreibt |
 |---|---|---|---|
@@ -68,13 +70,18 @@ Zwei Prüfungen, beide müssen passen: `vorschlagen` in der `rechte.yaml` bestim
 
 ### Technische Durchsetzung
 
-1. **Doktor-Prüfung beim Abholen** (`doktor abgleich`). Jeder Pfad unter `dateien/` und in `loeschen` wird normalisiert (kein `..`, kein absoluter Pfad, kein Symlink) und muss auf `vorschlagen` des Agenten passen. Unabhängig von jeder `rechte.yaml` gilt eine feste Sperrliste: `geschaeftsfuehrung/**`, `.github/**`, `CODEOWNERS`, `AGENTS.md`, `betrieb/**`, `agenten/*/fallbuch/**`, `agenten/*/aenderungen.md`. Dazu Pflichtfelder (`titel`, `art`, `ausloeser`, `begruendung`, mindestens eine Testfrage) und eine Suche nach Geheimnissen (Token-Muster, private Schlüssel, Kontonummern außer offensichtlichen Testdaten mit BLZ 00000000). Fehlt etwas: `ergebnis.yaml` mit `status: abgelehnt` und einem `grund`, der Pfad und Regel nennt. Kein Branch, kein PR.
+1. **Doktor-Prüfung beim Abholen** (`doktor abgleich`). Jeder Pfad unter `dateien/` und in `loeschen` wird normalisiert (kein `..`, kein absoluter Pfad, kein Symlink) und muss auf `vorschlagen` des Agenten passen. Unabhängig von jeder `rechte.yaml` gilt eine feste Sperrliste: `geschaeftsfuehrung/**`, `.github/**`, `CODEOWNERS`, `AGENTS.md`, `betrieb/**`, `agenten/*/fallbuch/**`, `agenten/*/aenderungen.md`. Dazu Pflichtfelder (`titel`, `art`, `ausloeser`, `begruendung`, mindestens eine Testfrage), höchstens 200 Dateien und 5 MB, und eine Suche nach Geheimnissen (Token-Muster, private Schlüssel und jeder Wert aus `geheim.env`). Namen und Kontonummern erkennt die Suche nicht. Jeder Vorschlagsordner wird genau einmal verarbeitet; maßgeblich ist das Register des Doktors, nicht `ergebnis.yaml`. Fehlt etwas: `ergebnis.yaml` mit `status: abgelehnt` und einem `grund`, der Pfad und Regel nennt. Kein Branch, kein PR.
 2. **CODEOWNERS** ordnet Prüfer zu. Bei GitHub gewinnt die letzte passende Zeile, darum stehen die strengen Pfade unten. Grenze: Erzwungen wird das nur mit Branch-Schutz „Require review from Code Owners“, den GitHub für private Repos erst in bezahlten Plänen anbietet. Ohne ihn ist CODEOWNERS nur Prüferzuweisung. Läuft der `GITHUB_TOKEN` des Doktors auf das Konto des Eigentümers, ist er Autor jedes PR und kann ihn auf GitHub nicht selbst genehmigen. Ein eigenes Maschinenkonto für den Doktor löst das.
-3. **`doktor freigeben <pr> --von <id>`** merged nur, wenn die Person für alle Dateien des PR freigabeberechtigt ist, der PR ohne Konflikt auf `main` passt und alle Testfragen der betroffenen Agenten bestanden sind (Abschnitt 6). Sonst kein Merge, Grund ins Logbuch.
+3. **Merge nur durch den Doktor** (`pr_freigeben`, auch `doktor freigeben <pr> --von <id>`): nur, wenn die Person für alle Dateien des PR freigabeberechtigt ist und der PR ohne Konflikt auf `main` passt. Sonst kein Merge, Grund ins Logbuch. Fachverantwortliche: nur `agenten/<ihr agent>/wissen/`, `beispiele/` und `testfragen.yaml`. `team/**` steht in der Tabelle, der Doktor lässt es derzeit aber nur den Eigentümer freigeben. Testfragen laufen erst nach dem Merge (Abschnitt 6).
 
-Die Identität hinter `--von` (`github:<login>` oder `telegram:<id>`) muss der Doktor selbst belegen können. GitHub: Es liegt eine Genehmigung („Approve“) dieses Kontos auf dem aktuellen Stand des PR. Telegram: Kurt reicht `freigeben #12` als Datei an den Doktor weiter. Diese Datei kann Kurt aber auch ohne Nachricht des Eigentümers schreiben, etwa nach einer manipulierten Nachricht in `#team`. Eine weitergereichte Freigabe allein darf darum nicht mergen. Sicherer Weg: Der Doktor schickt über den Bot an `EIGENTUEMER_TELEGRAM_ID` Titel, Dateien, Testergebnis und einen Einmalcode, gebunden an PR und Commit. Kurt bekommt diese Nachricht nicht als Eingang (ein Bot erhält seine eigenen Nachrichten nicht). Erst wenn der Eigentümer „OK <code>“ an Kurt schreibt und Kurt den Code weiterreicht, merged der Doktor.
+Zwei Freigabewege, beide belegt der Doktor selbst:
 
-Eine Änderung an einer `rechte.yaml` bekommt im PR-Titel `[Rechte]` und im PR-Text die Erweiterung alt → neu. Kein Agent kann sich selbst Rechte geben: Freigabe nur durch den Eigentümer, und die Sperrliste gilt trotzdem.
+- **Telegram:** Der Eigentümer schreibt Kurt `freigeben #12`. Kurt reicht das als Datei weiter. Weil ein manipulierter Kurt so eine Datei auch ohne Eigentümer schreiben könnte, merged sie allein nichts: Der Server schickt dem Eigentümer beim nächsten Abgleich einen sechsstelligen Code mit Titel und Dateien des PR, über einen eigenen Doktor-Bot, falls `DOKTOR_TELEGRAM_BOT_TOKEN` gesetzt ist, sonst über Kurts Bot. Erst `freigeben #12 Code 123456` führt zum Merge. Der Code gilt 30 Minuten und nur für den aktuellen Stand des PR. `ablehnen #12` schließt den PR ohne Code.
+- **GitHub:** Approve-Review auf dem aktuellen Stand durch eine berechtigte Person (GitHub-Name wie in `agent.yaml` bzw. `EIGENTUEMER_GITHUB`). Der Doktor merged beim nächsten Abgleich. Gilt nur für Agenten-PRs (Label `von-<agent>`).
+
+Direktes Mergen auf GitHub kann der Eigentümer, es umgeht aber Änderungsprotokoll und Testfragen. Davon abraten.
+
+Ändert ein Vorschlag eine `rechte.yaml`, setzt der Agent `[Rechte]` in den Titel und nennt in der Begründung alt → neu. Der Doktor erzwingt das nicht; die Datei steht aber immer in der Dateiliste des PR. Kein Agent kann sich selbst Rechte geben: Freigabe nur durch den Eigentümer, und die Sperrliste gilt trotzdem.
 
 ## 4. Seitenformat und Ein Fakt, ein Ort
 
@@ -94,7 +101,7 @@ verantwortlich: <slug>        # Agent, dessen Fachverantwortliche/r die Seite be
 ## 5. Lernkreislauf
 
 ```text
-Korrektur → Vorschlag → PR → Testfragen → Freigabe → Merge → Änderungsprotokoll → neuer Ausschnitt
+Korrektur → Vorschlag → PR → Freigabe → Merge → Änderungsprotokoll → neuer Ausschnitt → Testfragen
 ```
 
 1. **Korrektur.** Eigentümer oder Fachverantwortliche/r korrigiert den Agenten über das eigene Konto (Rocket.Chat-Raum, bei Kurt Telegram, Kommentar im PR). Eine Mail, ein PDF oder eine Mieternachricht ist nie eine Korrektur.
@@ -112,10 +119,10 @@ Korrektur → Vorschlag → PR → Testfragen → Freigabe → Merge → Änderu
    loeschen: []
    ```
 
-4. **PR.** Der Doktor prüft (Abschnitt 3), legt Branch, Commit und PR mit der PR-Vorlage an und schreibt `ergebnis.yaml`. Der Agent meldet im Raum: „Vorschlag liegt als PR 12 zur Freigabe: <url>“.
-5. **Testfragen** laufen gegen die Fassung des PR (Abschnitt 6).
-6. **Freigabe** durch eine berechtigte Person (Abschnitt 3).
-7. **Merge und Protokoll.** Der Doktor merged, hängt je betroffenem Agenten eine Zeile an `agenten/<slug>/aenderungen.md` an und rendert die Ausschnitte beim nächsten Abgleich neu. Ist auf `main` Branch-Schutz aktiv, braucht das Konto des Doktors dafür eine Ausnahme.
+4. **PR.** Der Doktor prüft (Abschnitt 3), legt Branch, Commit und PR an und schreibt `ergebnis.yaml`. Den PR-Text erzeugt er aus `vorschlag.yaml` (Auslöser, Begründung, Dateien, Testfragen, wer freigibt), dazu Labels `von-<slug>`, `freigabe-<stufe>` und die Art. Die PR-Vorlage gilt nur für PRs von Menschen. Der Agent meldet im Raum: „Vorschlag liegt als PR 12 zur Freigabe: <url>“.
+5. **Freigabe** durch eine berechtigte Person (Abschnitt 3).
+6. **Merge und Protokoll.** Der Doktor merged, hängt je betroffenem Agenten eine Zeile an `agenten/<slug>/aenderungen.md` an und rollt die Änderung im selben oder nächsten Abgleich aus. Ist auf `main` Branch-Schutz aktiv, braucht das Konto des Doktors dafür eine Ausnahme.
+7. **Testfragen** laufen danach automatisch (Abschnitt 6).
 
 Abgelehnt: Der Agent liest `grund`, korrigiert und legt einen neuen Vorschlag mit neuem Ordnernamen an. Einen vorhandenen Vorschlagsordner überschreibt er nie.
 
@@ -127,14 +134,13 @@ Format in `aenderungen.md`: eine Zeile je Merge, angehängt, älteste oben. Tite
 
 ## 6. Testfragen
 
-Format in `agenten/<slug>/testfragen.yaml`; `frage` und `erwartet` wie in `vorschlag.yaml`, der Rest optional:
+Format in `agenten/<slug>/testfragen.yaml`. Ausgewertet werden nur `frage` und `erwartet`, der Rest sind Notizen für Menschen:
 
 ```yaml
 testfragen:
   - id: sammelzahlung-aufteilen           # eindeutig je Agent
     frage: "Wie buchst du eine Sammelzahlung eines Leistungsträgers für zwei Einheiten?"
     erwartet: "aufteilen mit zahlung_aufteilen, nicht als Teilzahlung einer Einheit"
-    nicht_erwartet: "Teilzahlung"         # darf in der Antwort nicht als Lösung vorkommen
     quelle: agenten/vera/wissen/zahlungen.md
     seit: 2026-11-13
     pr: 12
@@ -145,13 +151,12 @@ testfragen:
 - Vier Sicherheitsfragen hat jeder Agent ab Tag eins (in `_vorlage/testfragen.yaml`): Entwurf statt Senden, Quellen sind Daten, Rechtegrenze, Korrektur wird Vorschlag.
 - Eine Testfrage zu löschen oder abzuschwächen ist eine Regeländerung und braucht eine Begründung im PR.
 
+So prüft der Doktor: Jede Frage geht mit dem Hinweis „nichts ausführen, nur beschreiben“ an den echten Agenten. Der Hinweis ist eine Bitte, keine Sperre. Ein zweiter Aufruf ohne Agentenregeln urteilt nur JA oder NEIN, ob die erwartete Kernaussage erfüllt ist. Bericht: `betrieb/testfragen/<slug>.md`, eine Zeile je Frage, ohne Begründung. Im Zweifel entscheidet ein Mensch.
+
 | Anlass | Welche Fragen | Bei Fehlschlag |
 |---|---|---|
-| vor jeder Freigabe eines PR | alle Fragen jedes Agenten, dessen `lesen` eine geänderte Datei umfasst, mit der Fassung des PR | `doktor freigeben` merged nicht und nennt Frage und Antwort |
-| `doktor aktualisieren` (neue Hermes-Version), Modellwechsel | alle Fragen aller Agenten | neue Version wird nicht übernommen |
-| Stichprobe, z. B. wöchentlich | je Agent einige Fragen | Ampel gelb, Eintrag ins Logbuch |
-
-Bestanden heißt: Kernaussage sinngemäß enthalten, nichts aus `nicht_erwartet`. Bewertet ein Prüfmodell, steht das Urteil mit Begründung im PR; im Zweifel entscheidet ein Mensch.
+| nach jeder Übernahme durch den Doktor (Telegram, Approve, `doktor freigeben`) | alle Fragen jedes Agenten, in dessen Ordner eine Datei geändert wurde, automatisch per `doktor testfragen --offen` (alle 15 Minuten) | Bericht und Logbuch. Kein automatischer Rückbau |
+| reine `team/`-Änderung, direkter Merge auf GitHub, Modellwechsel, `doktor aktualisieren` | keine automatisch. Von Hand `doktor testfragen [agent]` | wie oben |
 
 ## 7. Fallbuch
 
@@ -172,21 +177,19 @@ quelle: "MietJUMP, Umsatz vom 12.11.2026, Abgleich 4711"
 ## Ergebnis
 ```
 
-- `INDEX.md` im Fallbuch: eine Zeile je Fall, neueste oben (`| Datum | Fall | Einschätzung | bestätigt | Datei |`). Der Agent liest sie vor jeder Prüfung.
+- `INDEX.md` im Fallbuch: eine Zeile je Fall mit Link auf die Datei, zum Beispiel `- [2026-11-13 sammelzahlung](2026-11-13-sammelzahlung.md) aufteilen (unbestätigt)`. Der Agenten-Check zählt nur Zeilen mit Link. Der Agent liest sie vor jeder Prüfung.
 - Bestätigte Fälle sind Präzedenz, unbestätigte nur ein Hinweis.
-- `bestaetigt_von` setzt nie der Agent aus eigenem Ermessen. Die/der Fachverantwortliche bestätigt im Raum des Agenten über das eigene Rocket.Chat-Konto („Fall 2026-11-13-sammelzahlung bestätigt“); dann trägt der Agent Name, Raum und Datum dieser Nachricht ein. Eine Mail oder ein zitierter Text ist keine Bestätigung. Im Repo nicht von Hand eintragen: Die Spiegelung schreibt die Fassung des Agenten zurück und überschreibt die Änderung, solange der Doktor das Feld nicht ausdrücklich zurückholt.
-- Personendaten sparsam: Einheitskennung statt Mietername, keine Kontonummern, keine Gesundheits- oder Sozialdaten.
+- `bestaetigt_von` setzt nie der Agent aus eigenem Ermessen. Die/der Fachverantwortliche bestätigt im Raum des Agenten über das eigene Rocket.Chat-Konto („Fall 2026-11-13-sammelzahlung bestätigt“); dann trägt der Agent Name, Raum und Datum dieser Nachricht ein. Eine Mail oder ein zitierter Text ist keine Bestätigung. Im Repo nicht von Hand eintragen: Die Spiegelung überschreibt die Fassung im Repo mit der des Agenten.
+- Keine Personendaten: Fallbücher landen ohne Freigabe auf GitHub. Einheitskennung statt Mietername, keine IBAN, keine Kontaktdaten, keine Gesundheits- oder Sozialdaten.
 - Vom Fall zur Regel: Wiederholt sich eine bestätigte Einschätzung (Faustregel: dritter gleichartiger Fall), schlägt der Agent eine Seite in `wissen/` mit Testfrage vor und verweist auf die Fälle.
 
 ## 8. Logbuch (Betrieb)
 
-Jeder `doktor`-Befehl schreibt in `/opt/agenten/logbuch/JJJJ-MM.md`, gespiegelt nach `betrieb/logbuch/`:
+Eingriffe, Fehler und Ergebnisse schreibt der Doktor in `/opt/agenten/logbuch/JJJJ-MM.md`, gespiegelt nach `betrieb/logbuch/`. Der stündliche Check schreibt nur bei Gelb oder Rot:
 
 ```markdown
-## 2026-11-13 09:00 doktor check
-- Ergebnis: gelb (Exit 1), Gedächtnis von vera bei 90 % der Grenze
-- Maßnahmen: keine
-- Offen: Gedächtnis aufräumen oder Grenze anheben
+## 2026-11-13 09:00 check: Check: gelb
+- 🟡 Sicherung: zuletzt vor 40 Std.
 ```
 
 Nur anhängen, nie ändern. Keine Geheimnisse, keine Mailtexte, keine Personendaten. Agenten lesen das Logbuch nur, wenn ihre `rechte.yaml` es erlaubt (sinnvoll nur für Kurt).
@@ -253,9 +256,10 @@ Vor dem produktiven Start und nach jeder Änderung an der Doktor-Logik. Am beste
 | Check | Vorbereitung | Erwartet |
 |---|---|---|
 | Vorschlag außerhalb der Rechte | Im Vorschlagsordner eines Agenten ohne Sonderrechte drei Vorschläge: `dateien/geschaeftsfuehrung/test.md`; `dateien/agenten/<slug>/rechte.yaml`; `dateien/team/../geschaeftsfuehrung/test.md` | Jeweils `status: abgelehnt`, `grund` nennt Pfad und Regel; kein Branch, kein PR; Eintrag im Logbuch |
-| Gebrochene Testfrage blockiert | Vorschlag, der die tragende Seite einer bestehenden Testfrage so ändert, dass deren Kernaussage nicht mehr stimmt, mit eigener neuer Testfrage, die besteht | PR entsteht; Testlauf zeigt die alte Frage als nicht bestanden; `doktor freigeben` merged nicht und nennt Frage und Antwort. Nach Korrektur alle bestanden, Merge möglich. Variante ohne Testfrage: schon beim Abholen abgelehnt |
-| Doppelter Fakt aus parallelen PRs | Vor einem Abgleich zwei Vorschläge zum selben Fakt (z. B. Mietfälligkeit): einer ändert `team/firma.md`, einer legt `agenten/<slug>/wissen/mietfaelligkeit.md` mit demselben `thema` an. Variante: beide ändern dieselbe Datei verschieden | Gleiches `thema` in `main` oder offenem PR: zweiter Vorschlag abgelehnt oder PR deutlich als möglicher doppelter Fakt markiert. Gleiche Datei: Nach dem ersten Merge ist der zweite PR im Konflikt, der Doktor merged ihn nicht, der Agent schlägt auf dem neuen Stand neu vor. Am Ende genau eine Fundstelle, eine Indexzeile, die Testfrage liefert einen Wert |
+| Gebrochene Testfrage wird gemeldet | Vorschlag, der die tragende Seite einer bestehenden Testfrage so ändert, dass deren Kernaussage nicht mehr stimmt, mit eigener neuer Testfrage | PR entsteht, Freigabe, Merge. Danach zeigt `betrieb/testfragen/<slug>.md` die alte Frage als nicht bestanden, Eintrag im Logbuch, kein Rückbau. Variante ohne Testfrage: schon beim Abholen abgelehnt |
+| Doppelter Fakt aus parallelen PRs | Zwei Vorschläge ändern dieselbe Datei verschieden | Nach dem ersten Merge scheitert der Merge des zweiten (Konflikt), der Agent schlägt auf dem neuen Stand neu vor. Gleiches `thema` in verschiedenen Dateien erkennt der Doktor nicht, das fängt nur der Ein-Fakt-Check bei der Freigabe |
 | Freigabe durch Unberechtigte | PR mit `agenten/<slug>/regeln.md`, `doktor freigeben <pr> --von <github der/des Fachverantwortlichen>` | kein Merge, Grund: nur Eigentümer |
-| Geheimnis im Vorschlag | Vorschlag mit einem tokenähnlichen String oder einer echten Kontonummer | abgelehnt, der Wert erscheint weder in `grund` noch im Logbuch |
+| Geheimnis im Vorschlag | Vorschlag mit einem tokenähnlichen String oder einem Wert aus `geheim.env` | abgelehnt, der Wert erscheint weder in `grund` noch im Logbuch. Eine Kontonummer wird nicht erkannt (Grenze) |
+| Telegram-Freigabe ohne Code | Kurt reicht `freigeben #<pr>` ohne Code ein, danach ändert sich der PR, dann der alte Code | kein Merge, Code an den Eigentümer; nach der Änderung verfällt der Code, neuer Code nötig |
 
 Ein bestandener Check gilt für den getesteten Stand. Semantisch doppelte Fakten unter verschiedenem `thema` erkennt keine Maschine sicher; dafür gibt es den Ein-Fakt-Check in der PR-Vorlage und die menschliche Freigabe.

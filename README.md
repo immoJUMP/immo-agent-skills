@@ -17,6 +17,7 @@ Eine Sammlung strukturierter KI-Prompts (Skills), die den kompletten Immobilien-
 - **Vermietung** -- Mietspiegelanalyse, Mieterhoehungsstrategie, Inserat-Generator
 - **Buchhaltung** -- Belegzuordnung, DATEV-Vorbereitung, Anlage-V-Assistent
 - **Dokumente** -- Dokumentenklassifizierung, Mietlisten-Parser, Expose-Analyse
+- **Agenten-Betrieb** -- Agenten-Doktor: eigenes Agenten-Team (Geschaeftsfuehrung, Verwaltung) auf eigener Hetzner-VM aufbauen, reparieren, aktualisieren
 
 Jeder Skill wurde fuer den **deutschen Markt** entwickelt -- mit deutschen Rechtsbegriffen, Mietspiegellogik, BGB-Referenzen und praxiserprobten Workflows von Investoren mit 50-500+ Einheiten.
 
@@ -180,7 +181,8 @@ immo-agent-skills/
 │   ├── dokument-klassifizierer/SKILL.md # Dokumenttyp erkennen
 │   ├── ordner-architekt/SKILL.md  # Ablage aufbauen & restrukturieren
 │   ├── immojump-cli/SKILL.md      # immoJUMP per CLI als Agenten-Backend (Grossbestand, Datenraum)
-│   ├── second-brain/             # Wissensbasis aufbauen, pflegen & pruefen
+│   ├── second-brain/             # Wissensbasis aufbauen, pflegen & pruefen (auch Wissens-Repo fuer Agenten-Teams)
+│   ├── agenten-doktor/           # Eigenes Agenten-Team auf eigener Hetzner-VM aufbauen und gesund halten
 │   ├── mietlisten-parser/SKILL.md # Mietlisten aus PDF extrahieren
 │   ├── expose-parser/SKILL.md     # Expose-Daten strukturiert extrahieren
 │   ├── akquise-netzwerk/SKILL.md  # Off-Market Akquiseplan

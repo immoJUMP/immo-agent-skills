@@ -475,7 +475,7 @@ def hermes_config(slug: str, d: dict, k: dict, rc: dict) -> dict:
         "terminal": {"timeout": 600, "cwd": "/opt/data/arbeit",
                      "env_passthrough": ["AGENT_SLUG", "DASH_BASIS_URL", "POSTFACH_TOKEN", "GMAIL_API_BASIS", "WEBDAV_ZUGANG", "TZ"]},
         "memory": {"memory_char_limit": 4000, "user_char_limit": 2000},
-        "skills": {"disabled": ["google-workspace", "notion"]},
+        "skills": {"disabled": ["google-workspace", "notion"] + [str(x) for x in (d.get("skills_aus") or [])]},
         "curator": {"prune_builtins": False},
         "cron": {"wrap_response": False},
         "stt": {"language": "de", "local": {"language": "de"}},
@@ -853,6 +853,18 @@ def wissen_vorbereiten(k: dict) -> None:
         if git("rev-parse", "HEAD", check=False).returncode == 0:
             git("push", "-q", "-u", "origin", "main")
         info("Lokales Wissens-Repo mit GitHub verbunden: " + k["WISSEN_REPO"])
+    if (WISSEN / "AGENTS.md").exists() and not list((WISSEN / "agenten").glob("*/agent.yaml")):
+        # vorhandene Wissensbasis ohne Agenten: nur die Start-Agenten ergaenzen
+        (WISSEN / "agenten").mkdir(exist_ok=True)
+        for x in (INST / "agenten").iterdir():
+            z = WISSEN / "agenten" / x.name
+            if not z.exists():
+                shutil.copytree(x, z) if x.is_dir() else shutil.copy2(x, z)
+        _platzhalter_ersetzen(k)
+        git("add", "-A")
+        git("commit", "-q", "-m", "Start-Agenten Kurt und Vera ergaenzt (Doktor)", check=False)
+        hochladen_main(k)
+        logbuch("Start-Agenten in vorhandenes Wissens-Repo uebernommen", [], "aufbau")
     if not (WISSEN / "AGENTS.md").exists():
         vorlage = INST / "wissens-vorlage"
         if vorlage.exists():
@@ -882,7 +894,8 @@ def wissen_vorbereiten(k: dict) -> None:
 def _platzhalter_text(text: str, k: dict) -> str:
     for a, b in _platzhalter_tabelle(k).items():
         text = text.replace(a, b)
-    return re.sub(r"@FACHVERANTWORTLICH_[A-Z0-9_]+", "@" + k.get("EIGENTUEMER_GITHUB", "eigentuemer"), text)
+    text = re.sub(r"@FACHVERANTWORTLICH_[A-Z0-9_]+", "@" + k.get("EIGENTUEMER_GITHUB", "eigentuemer"), text)
+    return re.sub(r"@EIGENTUEMER\b", "@" + k.get("EIGENTUEMER_GITHUB", "eigentuemer"), text)
 
 
 def _platzhalter_tabelle(k: dict) -> dict:
@@ -910,6 +923,7 @@ def _platzhalter_ersetzen(k: dict) -> None:
             for a, b in ersatz.items():
                 neu = neu.replace(a, b)
             neu = re.sub(r"@FACHVERANTWORTLICH_[A-Z0-9_]+", "@" + k.get("EIGENTUEMER_GITHUB", "eigentuemer"), neu)
+            neu = re.sub(r"@EIGENTUEMER\b", "@" + k.get("EIGENTUEMER_GITHUB", "eigentuemer"), neu)
             if neu != t:
                 p.write_text(neu, encoding="utf-8")
 
@@ -966,7 +980,7 @@ EIGENTUEMER_ONLY = [
 ]
 NIE_PER_VORSCHLAG = ["geschaeftsfuehrung/**", ".github/**", "CODEOWNERS", "AGENTS.md", "betrieb/**", "agenten/*/fallbuch/**",
                      "agenten/*/aenderungen.md"]
-FACH = ["agenten/*/wissen/**", "agenten/*/beispiele/**", "agenten/*/testfragen.yaml", "team/**"]
+FACH = ["agenten/*/wissen/**", "agenten/*/beispiele/**", "agenten/*/testfragen.yaml"]  # team/** gibt der Eigentuemer frei
 def enthaelt_geheimnis(text: str) -> bool:
     if GEHEIM_MUSTER.search(text):
         return True
@@ -1107,9 +1121,10 @@ def pr_text(slug: str, meta: dict, stufe: str) -> str:
     return (f"Vorschlag von **{slug}** ({meta.get('art')})\n\n**Ausloeser:** {meta.get('ausloeser')}\n\n"
             f"**Begruendung:** {meta.get('begruendung')}\n\n**Dateien:**\n{dateien}\n\n**Testfragen:**\n{tf}\n\n"
             f"**Freigabe durch:** {wer} (vom Doktor nach Rechte-Matrix bestimmt)\n\n"
-            "**So gibst du frei:** Kurt in Telegram `freigeben #<nummer>` schreiben. Du bekommst einen Bestaetigungscode, "
-            "den schickst du Kurt zurueck (`freigeben #<nummer> Code 123456`). Der Doktor prueft Berechtigung und Code und "
-            "traegt die Aenderung ins Aenderungsprotokoll ein. Direktes Mergen hier umgeht Protokoll und Pruefung.\n")
+            "**So gibst du frei:** (1) Kurt in Telegram `freigeben #<nummer>` schreiben, den Bestaetigungscode zurueckschicken "
+            "(`freigeben #<nummer> Code 123456`), oder (2) hier auf GitHub mit „Approve“ auf dem aktuellen Stand; der Doktor "
+            "merged beim naechsten Abgleich, wenn du nach der Rechte-Matrix freigeben darfst. Direktes Mergen hier umgeht "
+            "Aenderungsprotokoll und Testfragen.\n")
 
 
 def github_api(methode, pfad, daten=None):
@@ -1239,7 +1254,8 @@ def _ergebnis(ordner: Path, daten: dict) -> None:
 
 def berechtigt(person: str, pfade: list, defs: dict, k: dict) -> tuple:
     """person: 'telegram:<id>' oder 'github:<login>'."""
-    eigent = {f"telegram:{k.get('EIGENTUEMER_TELEGRAM_ID')}", f"github:{k.get('EIGENTUEMER_GITHUB')}"}
+    person = person.strip().lower()
+    eigent = {f"telegram:{k.get('EIGENTUEMER_TELEGRAM_ID')}".lower(), f"github:{k.get('EIGENTUEMER_GITHUB')}".lower()}
     if person in eigent:
         return True, "Eigentuemer"
     if freigabe_noetig(pfade) == "eigentuemer":
@@ -1249,7 +1265,7 @@ def berechtigt(person: str, pfade: list, defs: dict, k: dict) -> tuple:
         if not m:
             return False, f"{p}: nur der Eigentuemer"
         fv = (defs.get(m.group(1), {}).get("fachverantwortlich") or {})
-        ids = {f"telegram:{fv.get('telegram_id')}", f"github:{fv.get('github')}"}
+        ids = {f"telegram:{fv.get('telegram_id')}".lower(), f"github:{fv.get('github')}".lower()}
         if person not in ids:
             return False, f"{person} ist nicht fachverantwortlich fuer {m.group(1)}"
     return True, "Fachverantwortliche/r"
@@ -1933,6 +1949,8 @@ def pruefungen(mit_modell: bool) -> list:
             erg.append((ROT, f"{s}: Allowlist", "ROCKETCHAT_ALLOWED_USERS leer, Agent antwortet niemandem"))
         if defs[s].get("telegram") and not envd.get("TELEGRAM_BOT_TOKEN"):
             erg.append((GELB, f"{s}: Telegram", "kein Bot-Token gesetzt"))
+        elif defs[s].get("telegram") and not envd.get("TELEGRAM_ALLOWED_USERS"):
+            erg.append((GELB, f"{s}: Telegram", "Bot gesetzt, aber noch keine Telegram-ID des Eigentuemers (Kopplung: doktor telegram-koppeln)"))
     # Rocket.Chat API
     try:
         s, _ = http_json("GET", f"http://{container_ip('agenten-rocketchat-1')}:3000/api/info", timeout=5)
@@ -2090,8 +2108,12 @@ def cmd_reparieren(a):
         massnahmen.append("Docker-Altlasten und Journal aufgeraeumt")
     # 5. Zertifikat fehlt -> Caddy neu laden
     if any(n.startswith("Zertifikat") and s != GRUEN for s, n, _ in erg):
-        compose("restart", "caddy", check=False)
-        massnahmen.append("Caddy neu gestartet (holt Zertifikate erneut)")
+        z = zustand()
+        if time.time() - z.get("caddy_neustart", 0) > 6 * 3600:  # Let's-Encrypt-Limits schonen
+            compose("restart", "caddy", check=False)
+            z["caddy_neustart"] = time.time()
+            zustand_speichern(z)
+            massnahmen.append("Caddy neu gestartet (holt Zertifikate erneut; naechster Versuch fruehestens in 6 Std.)")
     erg2 = pruefungen(False)
     rot2 = [f"{n}: {d}" for s, n, d in erg2 if s == ROT]
     if getattr(a, "still", False) and not massnahmen and not rot2:
@@ -2161,14 +2183,14 @@ def cmd_agenten_check(a):
         if mem_len > 3400:
             hinweise.append(f"{slug}: Gedaechtnis zu {mem_len * 100 // 4000} % voll. Dauerhaftes per Vorschlag ins Wissen uebernehmen, Rest entschlacken.")
         if gesamt - eigene > 60:
-            hinweise.append(f"{slug}: {gesamt - eigene} mitgelieferte Skills geladen. Ungenutzte in skills.disabled aufnehmen.")
+            hinweise.append(f"{slug}: {gesamt - eigene} mitgelieferte Skills geladen. Ungenutzte per Vorschlag in agent.yaml unter skills_aus eintragen (Freigabe Eigentuemer).")
         if fehler > 5:
             hinweise.append(f"{slug}: {fehler} Fehler in 24 Std. Protokoll pruefen (doktor reparieren).")
         try:
             index_text = sicher_lesen(p["fallbuch"] / "INDEX.md").decode("utf-8", "replace")
         except (Fehler, OSError):
             index_text = ""
-        if fb and not index_text.count("]("):
+        if fb and not any(z.lstrip().startswith("- ") for z in index_text.splitlines()):
             hinweise.append(f"{slug}: Fallbuch-Index ohne Eintraege, obwohl {fb} Faelle existieren.")
     zeilen += ["", "## Hinweise", ""] + ([f"- {h}" for h in hinweise] or ["- keine, alles im Rahmen"])
     text = "\n".join(zeilen) + "\n"
@@ -2253,24 +2275,15 @@ def cmd_aktualisieren(a):
     # Probelauf: Kopie des ersten Agenten-Profils mit dem neuen Image, echter Modellaufruf
     defs = agenten_definitionen()
     slug = next(iter(defs))
-    probe = DATEN / "probe-update"
-    if probe.exists():
-        shutil.rmtree(probe)
-    shutil.copytree(agent_pfade(slug)["hermes"], probe, symlinks=True, ignore=shutil.ignore_patterns("sessions", "logs", "*.db*"))
-    env = lies_env(probe / ".env")
-    env = {kk: vv for kk, vv in env.items() if not kk.startswith(("ROCKETCHAT_", "TELEGRAM_"))}  # Probe darf nicht chatten
-    schreibe_env(probe / ".env", env)
-    cfg = yaml.safe_load((probe / "config.yaml").read_text())
-    cfg["plugins"] = {"enabled": [], "disabled": ["rocketchat-platform", "telegram-platform"]}
-    (probe / "config.yaml").write_text(yaml.safe_dump(cfg, allow_unicode=True, sort_keys=False))
-    besitz_setzen(probe)
+    # Probe: das neue Image mit dem ECHTEN Profil des Agenten (gleiche Anmeldung, gleiche Rechte wie der
+    # laufende Agent). Der Host liest oder kopiert dabei nichts aus dem Agenten-Ordner (Symlink-Schutz),
+    # und `hermes chat` startet keine Chat-Plattformen. Keine Kopie von auth.json (Token rotieren).
     netz = "agenten_agenten"
     marke = f"UPDATE-OK-{secrets.token_hex(2)}"
     p = run(["docker", "run", "--rm", "--network", netz, "-e", f"HERMES_UID={HERMES_UID}", "-e", f"HERMES_GID={HERMES_UID}",
-             "-v", f"{probe}:/opt/data", neu, "chat", "-Q", "--max-turns", "1", "--source", "tool", "-q", f"Antworte exakt mit {marke}."],
-            check=False, timeout=600)
+             "-v", f"{agent_pfade(slug)['hermes']}:/opt/data", neu, "chat", "-Q", "--max-turns", "1", "--source", "tool",
+             "-q", f"Antworte exakt mit {marke}."], check=False, timeout=600)
     ok = marke in (p.stdout + p.stderr)
-    shutil.rmtree(probe, ignore_errors=True)
     logbuch(f"Update-Probe Hermes {a.hermes}: {'bestanden' if ok else 'NICHT bestanden'}", [f"Image {neu}", f"Config-Version {soll}"], "update")
     if not ok:
         print("Probelauf fehlgeschlagen. Es bleibt bei " + alt + ".\n" + (p.stdout + p.stderr)[-800:])
@@ -2335,7 +2348,7 @@ def cmd_vorlage_uebernehmen(a):
     if geaendert:
         _platzhalter_ersetzen(k)
         git("add", "-A")
-        git("commit", "-q", "-m", f"Vorlage der Start-Agenten aktualisiert ({len(geaendert)} Dateien, Doktor)")
+        git("commit", "-q", "-m", f"Vorlage der Start-Agenten aktualisiert ({len(geaendert)} Dateien, Doktor)", check=False)
         hochladen_main(k)
     logbuch("Vorlage der Start-Agenten uebernommen", [f"geaendert: {x}" for x in geaendert] + [f"uebersprungen (im Repo angepasst): {x}" for x in uebersprungen], "aufbau")
     for x in geaendert:

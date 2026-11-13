@@ -236,7 +236,9 @@ cmd_datei_senden() { # Datei (z.B. Kontoauszug CAMT/CSV) in den Arbeitsordner ei
   [ -f "$datei" ] || fehler "$datei nicht gefunden."
   name="$(basename "$datei" | tr -c 'A-Za-z0-9._-' '_')"
   [[ "$agent" =~ ^[a-z][a-z0-9-]{1,30}$ && "$unterordner" =~ ^[a-z0-9_-]{1,30}$ ]] || fehler "ungueltiger Agent oder Ordner"
-  ssh -i "$key" "${SSH_OPTS[@]}" "$ziel" "d=/opt/agenten/daten/agenten/$agent/arbeit/$unterordner; [ ! -L \$d ] || exit 3; mkdir -p \$d && cat > \$d/$name && chown -R 10000:10000 \$d" < "$datei"
+  # Erst in eine neue Temp-Datei (mktemp legt exklusiv an), dann per mv ersetzen: ein vom Agenten
+  # angelegter Symlink am Zielnamen wird ersetzt statt verfolgt.
+  ssh -i "$key" "${SSH_OPTS[@]}" "$ziel" "d=/opt/agenten/daten/agenten/$agent/arbeit/$unterordner; [ ! -L \$d ] || exit 3; mkdir -p \$d && t=\$(mktemp -p \$d .eingang.XXXXXX) && cat > \$t && mv -fT \$t \$d/$name && chown -h 10000:10000 \$d \$d/$name" < "$datei"
   info "$name liegt bei $agent unter arbeit/$unterordner/. Sag dem Agenten Bescheid (oder die Routine holt es ab)."
 }
 

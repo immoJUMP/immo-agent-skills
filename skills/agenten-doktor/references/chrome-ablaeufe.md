@@ -38,8 +38,13 @@ Start: `https://console.hetzner.com`. Nutzer: Anmeldung und 2FA.
 4. Der Token wird **nur einmal** gezeigt. Kopier-Symbol rechts im Feld, dann
    `token-speichern hetzner`, dann Dialog schließen.
 
-Danach, nach Ja: Server `<server>`, Reiter „Backups“, „Backups aktivieren“ (plus 20 Prozent).
-Löschschutz: Server, Bereich „Schutz“ (Protection) oder Menü, „Löschschutz“ einschalten.
+Backups und Löschschutz schaltet `doktor-lokal.sh hetzner-schutz <server> [--backups]` per API
+([aufbau.md](aufbau.md), Schritt 4). Nur wenn das scheitert, nach Ja in Chrome: Server `<server>`,
+Reiter „Backups“, „Backups aktivieren“ (plus 20 Prozent); Bereich „Schutz“ (Protection),
+„Löschschutz“ einschalten.
+
+Auftragsverarbeitung (AVV): im Hetzner-Kundenkonto, Lage per Screenshot suchen. Zustimmen tut der
+Nutzer selbst ([aufbau.md](aufbau.md), Schritt 13).
 
 Fallback: Fehlt „Sicherheit“ im Menü, prüfen, ob das richtige Projekt offen ist. Screenshot.
 
@@ -102,6 +107,12 @@ Kurts Bot anzulegen. Einverstanden?“
 4. Die Antwort enthält den Token in Code-Schrift. Ein Klick auf den Token kopiert ihn
    (Hinweis „kopiert“). Nicht auslesen. Dann `token-speichern telegram`.
 5. Empfohlen: `/setjoingroups`, Bot wählen, `Disable`. So kann niemand Kurt in Gruppen holen.
+6. Optional, empfohlen: denselben Ablauf für einen zweiten Bot nur für Bestätigungscodes
+   (z. B. `<kürzel>_doktor_bot`), dann `token-speichern doktor-telegram`. Der Nutzer öffnet ihn
+   einmal und tippt „Start“, sonst darf der Bot ihm nicht schreiben.
+
+Telegram erlaubt höchstens 20 Bots je Konto. Meldet BotFather, dass es schon 20 sind, muss der
+Nutzer selbst einen alten Bot per BotFather löschen (`/deletebot`). Du löschst keinen.
 
 Fallback: Die Variante `/a/` von Telegram Web sieht anders aus. Screenshot. Kopiert der
 Klick nicht, markiert und kopiert der Nutzer den Token selbst.
@@ -121,7 +132,7 @@ security find-generic-password -s agenten-doktor -a "${DOKTOR_PROJEKT:-agenten}/
 Das ist ein Fremddienst, er sieht das Profil. Nur nach Ja.
 
 **Weg C, nach der Installation (Kopplung):** Der Nutzer schreibt Kurt, Kurt antwortet mit
-einem Kopplungscode, dann `doktor telegram-koppeln <code>` ([aufbau.md](aufbau.md), Schritt 14).
+einem Kopplungscode, dann `doktor telegram-koppeln <code>` ([aufbau.md](aufbau.md), Schritt 15).
 
 Die ID ist kein Geheimnis. Immer die Zahl verwenden, nie den Benutzernamen.
 
