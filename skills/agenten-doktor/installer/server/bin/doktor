@@ -1603,12 +1603,12 @@ def startseite_schreiben(k: dict, defs: dict, check_ergebnis: list | None = None
     zeilen = "".join(f"<tr><td>{AMPEL[st]}</td><td>{name}</td><td>{txt}</td></tr>" for st, name, txt in (check_ergebnis or []))
     html = f"""<!doctype html><html lang="de"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1">
 <title>Agenten-Team</title><style>
-:root{{--navy:#0b2545;--petrol:#13616d;--mint:#5fd1b3;--grau:#5b6b7a}}
-body{{margin:0;font-family:Inter,system-ui,sans-serif;background:linear-gradient(160deg,#fff 60%,#e6f8f2);color:var(--navy)}}
+:root{{--navy:#072645;--petrol:#077b7c;--mint:#7fd3c9;--mint-hell:#eaf7f5;--linie:#d5dce0;--grau:#4a5a6a}}
+body{{margin:0;font-family:Inter,ui-sans-serif,system-ui,-apple-system,"Segoe UI",Roboto,Arial,sans-serif;background:linear-gradient(180deg,var(--mint-hell),#fff 320px);color:var(--navy)}}
 main{{max-width:960px;margin:0 auto;padding:32px 16px}} h1{{font-weight:800;font-size:2rem;margin:0 0 4px}}
 h1:before,h2:before{{content:"";display:block;width:56px;height:6px;background:var(--mint);margin-bottom:12px;border-radius:3px}}
 .links{{display:grid;grid-template-columns:repeat(auto-fit,minmax(200px,1fr));gap:12px;margin:24px 0}}
-.links a,.karte{{background:#fff;border:1px solid #d9e6e3;border-radius:12px;padding:16px;text-decoration:none;color:var(--navy);box-shadow:0 2px 8px #0b254512}}
+.links a,.karte{{background:#fff;border:1px solid var(--linie);border-radius:12px;padding:16px;text-decoration:none;color:var(--navy);box-shadow:0 2px 8px #0b254512}}
 .links a b{{display:block;font-size:1.1rem}} .links a span,.karte span{{color:var(--grau);font-size:.9rem;display:block}}
 .team{{display:grid;grid-template-columns:repeat(auto-fit,minmax(180px,1fr));gap:12px}} .karte .e{{font-size:2rem}} .karte a{{color:var(--petrol);font-weight:600;display:block;margin-top:8px}}
 table{{width:100%;border-collapse:collapse;background:#fff;border-radius:12px;overflow:hidden}} td{{padding:8px 12px;border-bottom:1px solid #eef3f2;font-size:.95rem}}
