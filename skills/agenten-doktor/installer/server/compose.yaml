@@ -32,8 +32,8 @@ services:
       DASH_BENUTZER: ${DASH_BENUTZER:-team}
       DASH_PASS_HASH: ${DASH_PASS_HASH:?DASH_PASS_HASH fehlt}
     volumes:
-      - ./installer/caddy/Caddyfile:/etc/caddy/Caddyfile:ro
-      - ./daten/dateien:/srv/dateien:ro
+      - ./installer/caddy:/etc/caddy:ro
+      - ./daten/start:/srv/start:ro
       - caddy_daten:/data
       - caddy_konfig:/config
     networks: [web]
@@ -90,8 +90,11 @@ services:
     image: nginx:1.27-alpine
     restart: unless-stopped
     <<: *log
+    # Konfiguration als Ordner eingehaengt, nicht als Einzeldatei: der Doktor ersetzt sie atomar,
+    # eine einzeln eingehaengte Datei bliebe im Container auf dem alten Stand.
+    command: ["nginx", "-g", "daemon off;", "-c", "/etc/nginx/agenten/nginx.conf"]
     volumes:
-      - ./installer/dateien/nginx.conf:/etc/nginx/nginx.conf:ro
+      - ./daten/dateien-konfig:/etc/nginx/agenten:ro
       - ./daten/dateien:/srv/dateien
     networks: [web, agenten]
 
