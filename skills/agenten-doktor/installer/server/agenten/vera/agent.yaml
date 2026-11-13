@@ -12,7 +12,7 @@ rocketchat:
   raum: verwaltung
   weitere_raeume: [team]
 telegram: false
-werkzeuge: [mietjump, gmail, veroeffentlichen, vorschlag, fallbuch]
+werkzeuge: [mietjump, gmail, veroeffentlichen, vorschlag, fallbuch, browser]   # browser: eigener Chromium nur in Veras Container
 routinen:
   - name: mieteingang
     zeitplan: "0 9 * * 1-5"
