@@ -1,4 +1,4 @@
-# Wissen Akquise
+# Wissen Ankauf
 
 Hier stehen die Ankaufskriterien des Eigentümers (Region, Umkreis, Objektart, Preisrahmen, Mindestrendite, Ausschlusskriterien). Ohne diese Datei meldet der Agent alles und fragt nach den Kriterien.
 
