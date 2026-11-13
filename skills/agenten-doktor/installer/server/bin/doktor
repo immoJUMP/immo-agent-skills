@@ -1988,9 +1988,14 @@ def cmd_check(a):
     k = konfig()
     startseite_schreiben(k, agenten_definitionen(), erg)
     z = zustand()
-    z["letzter_check"] = {"zeit": jetzt().isoformat(), "gesamt": schlimmst, "rot": [n for s, n, _ in erg if s == ROT]}
+    vorher = z.get("letzter_check") or {}
+    nicht_gruen = sorted(n for s, n, _ in erg if s != GRUEN)
+    z["letzter_check"] = {"zeit": jetzt().isoformat(), "gesamt": schlimmst, "rot": [n for s, n, _ in erg if s == ROT],
+                          "nicht_gruen": nicht_gruen}
     zustand_speichern(z)
-    if schlimmst != GRUEN or a.logbuch:
+    # Ins Logbuch nur bei Aenderung des Befunds (sonst stuendlich dieselbe gelbe Zeile)
+    if a.logbuch or (schlimmst != GRUEN and (vorher.get("gesamt") != schlimmst or vorher.get("nicht_gruen") != nicht_gruen)) \
+            or (schlimmst == GRUEN and vorher.get("gesamt") not in (None, GRUEN)):
         logbuch(f"Check: {schlimmst}", [f"{AMPEL[s]} {n}: {d}" for s, n, d in erg if s != GRUEN] or ["alles gruen"], "check")
     sys.exit({GRUEN: 0, GELB: 1, ROT: 2}[schlimmst])
 
@@ -2367,9 +2372,10 @@ def cmd_testfragen(a):
     if not ziele:
         return
     ergebnisse = []
+    verschoben = []
     for s in ziele:
         if not modell_test(s)[0]:
-            ergebnisse.append(f"{s}: Modell antwortet nicht, Testfragen verschoben")
+            verschoben.append(s)
             continue
         ok_n, n = testfragen_laufen(s)
         ergebnisse.append(f"{s}: {ok_n} von {n} Testfragen bestanden")
@@ -2379,8 +2385,15 @@ def cmd_testfragen(a):
             zustand_speichern(z)
         if ok_n < n:
             ergebnisse.append(f"{s}: Bericht unter betrieb/testfragen/{s}.md. Letzte Freigabe pruefen oder per Vorschlag nachbessern.")
-    logbuch("Testfragen", ergebnisse, "test")
-    logbuch_spiegeln(konfig())
+    if verschoben:
+        z = zustand()
+        if time.time() - z.get("testfragen_verschoben_gemeldet", 0) > 6 * 3600:
+            ergebnisse.append("Modell antwortet nicht, Testfragen verschoben fuer: " + ", ".join(verschoben))
+            z["testfragen_verschoben_gemeldet"] = time.time()
+            zustand_speichern(z)
+    if ergebnisse:
+        logbuch("Testfragen", ergebnisse, "test")
+        logbuch_spiegeln(konfig())
     for e in ergebnisse:
         print(e)
 
