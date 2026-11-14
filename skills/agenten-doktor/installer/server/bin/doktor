@@ -2427,16 +2427,24 @@ def testfragen_laufen(slug: str) -> tuple:
     fragen = testfragen_laden(slug)
     zeilen = [f"# Testfragen {slug} ({jetzt():%d.%m.%Y %H:%M})", "", "| Ergebnis | Frage | Erwartet |", "|---|---|---|"]
     ok_n = 0
-    for t in fragen:
-        p = run(["docker", "exec", "-u", "hermes", f"agent-{slug}", "hermes", "chat", "-Q", "--max-turns", "6", "--source", "tool",
-                 "-q", f"[Testfrage aus dem Lernkreislauf, nichts ausfuehren, nur beschreiben, was du tun wuerdest] {t['frage']}"],
-                check=False, still=True, timeout=600)
-        antwort = (p.stdout or "").strip()[-4000:]
-        urteil = run(["docker", "exec", "-u", "hermes", f"agent-{slug}", "hermes", "chat", "-Q", "--max-turns", "1", "--ignore-rules",
-                      "--source", "tool", "-q",
-                      "Du bist Pruefer. Erfuellt die ANTWORT die ERWARTETE KERNAUSSAGE inhaltlich? Antworte nur mit JA oder NEIN.\n"
-                      f"ERWARTET: {t['erwartet']}\nANTWORT: {antwort}"], check=False, still=True, timeout=300).stdout.strip().upper()
-        bestanden = urteil.startswith("JA") or "\nJA" in urteil
+    # Die Modellaufrufe dauern je Frage bis zu einigen Minuten. Waehrenddessen die globale Sperre abgeben,
+    # sonst warten Abgleich und Freigaben (z. B. ein gerade eingestellter Agent erscheint erst viel spaeter).
+    sperre_abgeben()
+    try:
+        ergebnisse = []
+        for t in fragen:
+            p = run(["docker", "exec", "-u", "hermes", f"agent-{slug}", "hermes", "chat", "-Q", "--max-turns", "6", "--source", "tool",
+                     "-q", f"[Testfrage aus dem Lernkreislauf, nichts ausfuehren, nur beschreiben, was du tun wuerdest] {t['frage']}"],
+                    check=False, still=True, timeout=600)
+            antwort = (p.stdout or "").strip()[-4000:]
+            urteil = run(["docker", "exec", "-u", "hermes", f"agent-{slug}", "hermes", "chat", "-Q", "--max-turns", "1", "--ignore-rules",
+                          "--source", "tool", "-q",
+                          "Du bist Pruefer. Erfuellt die ANTWORT die ERWARTETE KERNAUSSAGE inhaltlich? Antworte nur mit JA oder NEIN.\n"
+                          f"ERWARTET: {t['erwartet']}\nANTWORT: {antwort}"], check=False, still=True, timeout=300).stdout.strip().upper()
+            ergebnisse.append((t, urteil.startswith("JA") or "\nJA" in urteil))
+    finally:
+        sperre_zurueck()
+    for t, bestanden in ergebnisse:
         ok_n += bestanden
         zeilen.append(f"| {'bestanden' if bestanden else 'NICHT bestanden'} | {t['frage'][:120]} | {t['erwartet'][:120]} |")
     zeilen += ["", f"{ok_n} von {len(fragen)} bestanden."]
@@ -2535,8 +2543,35 @@ def sperre_holen(warten_s: int = 900):
             return f
         except BlockingIOError:
             if time.time() > ende:
-                raise Fehler("Ein anderer Doktor-Lauf haelt die Sperre seit 15 Minuten. Bitte spaeter erneut.")
+                raise Fehler(f"Ein anderer Doktor-Lauf haelt die Sperre (gewartet {warten_s} s). Bitte spaeter erneut.")
             time.sleep(2)
+
+
+SPERRE = None  # Datei der globalen Sperre dieses Laufs (main), damit lange Modellaufrufe sie kurz abgeben koennen
+
+
+def sperre_abgeben() -> None:
+    """Fuer lange Phasen ohne Zugriff auf Repo, Zustand und Container-Konfiguration (Modellaufrufe)."""
+    if SPERRE is not None:
+        import fcntl
+        fcntl.flock(SPERRE, fcntl.LOCK_UN)
+
+
+def sperre_zurueck(warten_s: int = 1800) -> None:
+    if SPERRE is None:
+        return
+    import fcntl
+    ende = time.time() + warten_s
+    while True:
+        try:
+            fcntl.flock(SPERRE, fcntl.LOCK_EX | fcntl.LOCK_NB)
+            break
+        except BlockingIOError:
+            if time.time() > ende:
+                raise Fehler(f"Sperre nach {warten_s} s nicht zurueckbekommen.")
+            time.sleep(2)
+    if (WISSEN / ".git").exists():
+        git("checkout", "-q", "-f", "main", check=False)  # ein anderer Lauf kann auf einem Branch geendet haben
 
 
 OHNE_SPERRE = {"status", "zugangsdaten", "geheimnis-setzen"}
@@ -2598,7 +2633,9 @@ def main():
         print("doktor muss als root laufen.", file=sys.stderr)
         sys.exit(2)
     try:
+        global SPERRE
         sperre = None if a.befehl in OHNE_SPERRE else sperre_holen(60 if a.befehl in ("abgleich", "check", "reparieren") else 900)
+        SPERRE = sperre
         if sperre is not None and (WISSEN / ".git").exists():
             git("checkout", "-q", "-f", "main", check=False)  # nie auf einem Vorschlags-Branch weiterarbeiten
         a.f(a)
