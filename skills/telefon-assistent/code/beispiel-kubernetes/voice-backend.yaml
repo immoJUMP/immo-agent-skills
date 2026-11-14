@@ -1,0 +1,104 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  annotations: {}
+  name: leo-voice-backend
+  namespace: hermes-leo
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: leo-voice-backend
+  strategy:
+    type: Recreate
+  template:
+    metadata:
+      annotations:
+        code-revision: 20260927-hermex-owner-origin
+      labels:
+        app: leo-voice-backend
+    spec:
+      affinity:
+        podAffinity:
+          requiredDuringSchedulingIgnoredDuringExecution:
+          - labelSelector:
+              matchLabels:
+                app: hermes
+            topologyKey: kubernetes.io/hostname
+      automountServiceAccountToken: false
+      containers:
+      - command:
+        - /opt/hermes/.venv/bin/python
+        - /app/backend.py
+        env:
+        - name: HERMES_HOME
+          value: /opt/data
+        - name: ALLOW_HERMEX_OWNER_CALLS
+          value: 'true'
+        - name: HOME
+          value: /opt/data
+        - name: BRIDGE_TOKEN
+          valueFrom:
+            secretKeyRef:
+              key: BRIDGE_TOKEN
+              name: leo-telephony
+        - name: NOTION_TOKEN
+          valueFrom:
+            secretKeyRef:
+              key: NOTION_TOKEN
+              name: hermes-secrets
+        - name: NOTION_API_KEY
+          valueFrom:
+            secretKeyRef:
+              key: NOTION_TOKEN
+              name: hermes-secrets
+        - name: OWNER_TELEGRAM_CHAT_ID
+          value: '<deine-telegram-chat-id>'
+        - name: TELEGRAM_BOT_TOKEN
+          valueFrom:
+            secretKeyRef:
+              key: TELEGRAM_BOT_TOKEN
+              name: hermes-secrets
+        - name: PHONE_URL
+          value: http://leo-telephony:8080
+        image: docker.io/nousresearch/hermes-agent:v2026.9.24
+        name: backend
+        ports:
+        - containerPort: 9120
+          name: http
+        readinessProbe:
+          httpGet:
+            path: /health
+            port: 9120
+        resources:
+          limits:
+            cpu: '2'
+            memory: 4Gi
+          requests:
+            cpu: 100m
+            memory: 512Mi
+        securityContext:
+          allowPrivilegeEscalation: false
+          capabilities:
+            drop:
+            - ALL
+        volumeMounts:
+        - mountPath: /app
+          name: code
+          readOnly: true
+        - mountPath: /opt/data
+          name: data
+      securityContext:
+        fsGroup: 10000
+        runAsGroup: 10000
+        runAsNonRoot: true
+        runAsUser: 10000
+      volumes:
+      - configMap:
+          name: leo-telephony-code
+        name: code
+      - name: data
+        persistentVolumeClaim:
+          claimName: hermes-data-sigma
+      nodeSelector:
+        kubernetes.io/hostname: <dein-knoten>
