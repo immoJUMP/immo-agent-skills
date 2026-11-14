@@ -2,6 +2,13 @@
 
 Alle wesentlichen Aenderungen an diesem Projekt.
 
+## [1.15.0](https://github.com/immoJUMP/immo-agent-skills/compare/v1.14.0...v1.15.0) (2026-11-14)
+
+
+### Hinzugefuegt
+
+* **telefon-assistent:** sipgate als zweiter Anbieter neben der FRITZ!Box ([b200b75](https://github.com/immoJUMP/immo-agent-skills/commit/b200b75cfbbd5a910237212fc89a952af4c77f6e))
+
 ## [1.14.0](https://github.com/immoJUMP/immo-agent-skills/compare/v1.13.0...v1.14.0) (2026-11-14)
 
 
