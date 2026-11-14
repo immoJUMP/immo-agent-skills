@@ -6,7 +6,7 @@
    Chat-Sitzung als Kontext mit und ruft den Arbeitsdienst mit Zugangstoken auf.
 2. Der Arbeitsdienst prüft Sitzung, Art des Anrufs, Ruhezeit und Tageslimits und beauftragt die
    Brücke. Rufnummer und Chat-Empfänger stehen fest auf dem Server.
-3. Die Brücke wählt über Asterisk und die FRITZ!Box nur `CALL_ALLOWED_NUMBER`. Nimmt jemand ab,
+3. Die Brücke wählt über Asterisk und die FRITZ!Box oder sipgate nur `CALL_ALLOWED_NUMBER`. Nimmt jemand ab,
    fragt die Stimme zuerst, ob sie gehört wird. Vorher nennt sie nichts Persönliches. Erkennt sie
    eine Mailbox, legt sie auf, ohne erneut zu wählen.
 4. Im Gespräch gibt die Stimme Aufträge über ein einziges Werkzeug (`ask_leo`) an den Arbeitsdienst.
@@ -43,6 +43,23 @@ Unmittelbar vor dem Wählen wird der Termin noch einmal gelesen, Absagen und Ver
 
 Werktäglicher Tagesabschluss: `--routines '18:00'`, abschalten mit `--routines off`.
 
+## Anbieter: FRITZ!Box oder sipgate
+
+`SIP_PROVIDER` wählt die Anmeldung, der Rest bleibt gleich (`voice_protocol.pjsip_config`).
+
+| | fritzbox (Vorgabe, Leo) | sipgate |
+|---|---|---|
+| Server | im Netz der FRITZ!Box oder per WireGuard | öffentliche IP, z. B. Hetzner |
+| Verbindung | TCP zur Box, Port 5060 | UDP zu `sipgate.de` mit Outbound-Proxy |
+| Anmeldung | Benutzer des IP-Telefons in der FRITZ!Box | SIP-ID und SIP-Passwort des VoIP-Geräts |
+| `SIP_MEDIA_ADDRESS` | IP des Servers im Heimnetz | öffentliche IP des Servers |
+| Lokale Netze | Kubernetes-Pod-Netz (`10.42.0.0/16`) | Docker- und private Netze, per `SIP_LOCAL_NETS` änderbar |
+| Firewall | nichts nach außen | SIP-Port und RTP 26000 bis 26020 (UDP) nur für die IP-Bereiche von sipgate |
+
+Bei sipgate muss das VoIP-Gerät eine Rufnummer für ausgehende Anrufe haben. Anrufe ins Mobilfunknetz
+brauchen Guthaben oder einen Tarif, das bucht der Inhaber selbst. Die Konfiguration für `fritzbox` ist
+Zeichen für Zeichen die von Leo, ein Test sichert das ab.
+
 ## Stimme
 
 Bevorzugt: privater ElevenLabs-Gesprächsagent. Einstellungen bei Leo: Deutsch, Modell
@@ -70,7 +87,7 @@ Während eines Anrufs gibt es keinen Rückwechsel. Der nächste Anruf versucht E
 ## Prüfreihenfolge vor dem ersten echten Anruf
 
 1. Tests ohne übersprungene Fälle.
-2. `sip_probe.py`: SIP-Anmeldung an der FRITZ!Box, ohne zu wählen.
+2. `sip_probe.py`: SIP-Anmeldung an der FRITZ!Box oder bei sipgate, ohne zu wählen.
 3. `open_elevenlabs()`: Sprachsitzung bei ElevenLabs, ohne Anruf. Nur `ulaw_8000` in beide Richtungen gilt.
 4. `call_owner.py --check`: Zugang aus dem Chat, ohne Anruf, ohne Nachricht.
 5. Erst dann ein echter Testanruf, ausdrücklich vom Inhaber gewünscht.

@@ -21,6 +21,8 @@ spec:
       automountServiceAccountToken: false
       containers:
       - env:
+        - name: SIP_PROVIDER
+          value: fritzbox
         - name: SIP_CALLER_ID_NUMBER
           value: '<deine-absendernummer>'
         - name: SIP_CALLER_ID_NAME
