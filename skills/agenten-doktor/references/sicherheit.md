@@ -80,6 +80,9 @@ Umsetzung:
   `doktor reparieren --still` (halbstündlich) erst, wenn derselbe rote Befund zwei Läufe hintereinander
   besteht, und dann genau einmal, bis er behoben ist. Die Behebung meldet er nicht, sie steht im Logbuch.
 - Kurt: Regel in `agenten/kurt/regeln.md` und im Skill `tagesueberblick`.
+- Nachweis (14.11.2026, Wegwerf-Server, Hermes v0.22.2): vorher kamen bei Neustart und Stopp je eine
+  Nachricht „Hermes wird heruntergefahren …“ beim Eigentümer an, nachher keine. Eine Störung über vier
+  Reparaturläufe ergab genau eine Nachricht. Wiederholbar mit `tests/agenten-doktor/telegram-ruhe/`.
 
 ## Restrisiken (ehrlich)
 
