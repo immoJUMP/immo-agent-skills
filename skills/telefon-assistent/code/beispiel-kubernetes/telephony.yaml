@@ -1,0 +1,198 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  annotations: {}
+  name: leo-telephony
+  namespace: hermes-leo
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: leo-telephony
+  strategy:
+    type: Recreate
+  template:
+    metadata:
+      annotations:
+        code-revision: 20261004-audio-burst-1
+      labels:
+        app: leo-telephony
+    spec:
+      automountServiceAccountToken: false
+      containers:
+      - env:
+        - name: SIP_CALLER_ID_NUMBER
+          value: '<deine-absendernummer>'
+        - name: SIP_CALLER_ID_NAME
+          value: LEO AGENT
+        - name: VOICE_PROVIDER
+          value: elevenlabs
+        - name: LIVE_VOICE
+          value: meridian
+        - name: SIP_MEDIA_ADDRESS
+          value: <server-ip-im-fritzbox-netz>
+        envFrom:
+        - secretRef:
+            name: leo-telephony
+        - secretRef:
+            name: leo-elevenlabs
+            optional: true
+        image: <dein-registry>/telefon-assistent:<version>
+        name: bridge
+        ports:
+        - containerPort: 8080
+          name: http
+        - containerPort: 15062
+          hostIP: <server-ip-im-fritzbox-netz>
+          hostPort: 15062
+          name: sip
+          protocol: TCP
+        - containerPort: 26000
+          hostIP: <server-ip-im-fritzbox-netz>
+          hostPort: 26000
+          name: rtp26000
+          protocol: UDP
+        - containerPort: 26001
+          hostIP: <server-ip-im-fritzbox-netz>
+          hostPort: 26001
+          name: rtp26001
+          protocol: UDP
+        - containerPort: 26002
+          hostIP: <server-ip-im-fritzbox-netz>
+          hostPort: 26002
+          name: rtp26002
+          protocol: UDP
+        - containerPort: 26003
+          hostIP: <server-ip-im-fritzbox-netz>
+          hostPort: 26003
+          name: rtp26003
+          protocol: UDP
+        - containerPort: 26004
+          hostIP: <server-ip-im-fritzbox-netz>
+          hostPort: 26004
+          name: rtp26004
+          protocol: UDP
+        - containerPort: 26005
+          hostIP: <server-ip-im-fritzbox-netz>
+          hostPort: 26005
+          name: rtp26005
+          protocol: UDP
+        - containerPort: 26006
+          hostIP: <server-ip-im-fritzbox-netz>
+          hostPort: 26006
+          name: rtp26006
+          protocol: UDP
+        - containerPort: 26007
+          hostIP: <server-ip-im-fritzbox-netz>
+          hostPort: 26007
+          name: rtp26007
+          protocol: UDP
+        - containerPort: 26008
+          hostIP: <server-ip-im-fritzbox-netz>
+          hostPort: 26008
+          name: rtp26008
+          protocol: UDP
+        - containerPort: 26009
+          hostIP: <server-ip-im-fritzbox-netz>
+          hostPort: 26009
+          name: rtp26009
+          protocol: UDP
+        - containerPort: 26010
+          hostIP: <server-ip-im-fritzbox-netz>
+          hostPort: 26010
+          name: rtp26010
+          protocol: UDP
+        - containerPort: 26011
+          hostIP: <server-ip-im-fritzbox-netz>
+          hostPort: 26011
+          name: rtp26011
+          protocol: UDP
+        - containerPort: 26012
+          hostIP: <server-ip-im-fritzbox-netz>
+          hostPort: 26012
+          name: rtp26012
+          protocol: UDP
+        - containerPort: 26013
+          hostIP: <server-ip-im-fritzbox-netz>
+          hostPort: 26013
+          name: rtp26013
+          protocol: UDP
+        - containerPort: 26014
+          hostIP: <server-ip-im-fritzbox-netz>
+          hostPort: 26014
+          name: rtp26014
+          protocol: UDP
+        - containerPort: 26015
+          hostIP: <server-ip-im-fritzbox-netz>
+          hostPort: 26015
+          name: rtp26015
+          protocol: UDP
+        - containerPort: 26016
+          hostIP: <server-ip-im-fritzbox-netz>
+          hostPort: 26016
+          name: rtp26016
+          protocol: UDP
+        - containerPort: 26017
+          hostIP: <server-ip-im-fritzbox-netz>
+          hostPort: 26017
+          name: rtp26017
+          protocol: UDP
+        - containerPort: 26018
+          hostIP: <server-ip-im-fritzbox-netz>
+          hostPort: 26018
+          name: rtp26018
+          protocol: UDP
+        - containerPort: 26019
+          hostIP: <server-ip-im-fritzbox-netz>
+          hostPort: 26019
+          name: rtp26019
+          protocol: UDP
+        - containerPort: 26020
+          hostIP: <server-ip-im-fritzbox-netz>
+          hostPort: 26020
+          name: rtp26020
+          protocol: UDP
+        readinessProbe:
+          httpGet:
+            path: /health
+            port: 8080
+        resources:
+          limits:
+            cpu: '1'
+            memory: 512Mi
+          requests:
+            cpu: 100m
+            memory: 128Mi
+        securityContext:
+          allowPrivilegeEscalation: false
+          capabilities:
+            drop:
+            - ALL
+        startupProbe:
+          failureThreshold: 30
+          httpGet:
+            path: /health
+            port: 8080
+          periodSeconds: 3
+        volumeMounts:
+        - mountPath: /app
+          name: code
+          readOnly: true
+        - mountPath: /state
+          name: state
+      imagePullSecrets:
+      - name: leo-telephony-registry
+      nodeSelector:
+        kubernetes.io/hostname: <dein-knoten>
+      securityContext:
+        fsGroup: 10000
+        runAsGroup: 10000
+        runAsNonRoot: true
+        runAsUser: 10000
+      volumes:
+      - configMap:
+          name: leo-telephony-code
+        name: code
+      - name: state
+        persistentVolumeClaim:
+          claimName: leo-telephony-state-sigma
