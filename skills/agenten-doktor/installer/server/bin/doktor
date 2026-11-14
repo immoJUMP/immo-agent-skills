@@ -484,7 +484,10 @@ def hermes_config(slug: str, d: dict, k: dict, rc: dict) -> dict:
             "platforms": {"rocketchat": {"tool_progress": "off", "interim_assistant_messages": False,
                                          "long_running_notifications": True, "busy_ack_detail": False,
                                          "suppress_warning_notifications": True, "cleanup_progress": True},
-                          "telegram": {"tool_progress": "off", "interim_assistant_messages": False}},
+                          # Telegram ist der Kanal des Eigentuemers: keine Betriebs- und Warnhinweise
+                          # (sicherheit.md, Abschnitt Meldungen an den Eigentuemer).
+                          "telegram": {"tool_progress": "off", "interim_assistant_messages": False,
+                                       "busy_ack_detail": False, "suppress_warning_notifications": True}},
         },
         "platforms": {"rocketchat": {"gateway_restart_notification": False}},
         "plugins": {"enabled": ["rocketchat-platform"], "disabled": [],
@@ -493,6 +496,9 @@ def hermes_config(slug: str, d: dict, k: dict, rc: dict) -> dict:
     if not d.get("telegram"):
         cfg["platforms"]["telegram"] = {"enabled": False}
         cfg["plugins"]["disabled"] = ["telegram-platform"]
+    else:
+        # Kein "Gateway online/neu gestartet" und kein Stopp-Hinweis im Chat des Eigentuemers.
+        cfg["platforms"]["telegram"] = {"gateway_restart_notification": False}
     if "mietjump" in werkzeuge:
         token = geheim().get(f"MIETJUMP_AGENT_TOKEN_{slug.upper().replace('-', '_')}")
         if token:
