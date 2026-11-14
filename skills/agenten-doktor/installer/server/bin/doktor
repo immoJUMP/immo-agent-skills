@@ -2096,6 +2096,72 @@ def cmd_check(a):
     sys.exit({GRUEN: 0, GELB: 1, ROT: 2}[schlimmst])
 
 
+def stoerung_in_worten(name: str, defs: dict) -> str:
+    """Ein Pruefpunkt als Satzteil fuer den Eigentuemer: was nicht geht, ohne Technik."""
+    def wer(slug):
+        return (defs.get(slug) or {}).get("name") or slug.capitalize()
+    if name.startswith("agent-"):
+        return f"{wer(name[6:])} ist nicht erreichbar"
+    if ":" in name:
+        slug, was = (t.strip() for t in name.split(":", 1))
+        return {"Rocket.Chat-Plugin": f"{wer(slug)} antwortet im Team-Chat nicht",
+                "Allowlist": f"{wer(slug)} antwortet im Team-Chat nicht",
+                "MietJUMP-Werkzeuge": f"{wer(slug)} kommt nicht an MietJUMP"}.get(was, f"{wer(slug)}: {was}")
+    if name.startswith("Zertifikat "):
+        return f"die Adresse {name[11:]} ist bald nicht mehr sicher erreichbar"
+    return {"Rocket.Chat API": "der Team-Chat ist nicht erreichbar",
+            "agenten-rocketchat-1": "der Team-Chat ist nicht erreichbar",
+            "agenten-mongo-1": "der Team-Chat ist nicht erreichbar",
+            "agenten-caddy-1": "deine Webadressen sind nicht erreichbar",
+            "agenten-dateien-1": "Dashboards lassen sich nicht öffnen oder speichern",
+            "Dashboard-Ablage": "Dashboards lassen sich nicht öffnen oder speichern",
+            "agenten-meridian-1": "die Agenten erreichen ihr Sprachmodell nicht",
+            "MietJUMP": "MietJUMP ist nicht erreichbar",
+            "agenten-mietjump-1": "MietJUMP ist nicht erreichbar",
+            "Postfach-Wache": "die Agenten kommen nicht an das Postfach",
+            "agenten-postfach-1": "die Agenten kommen nicht an das Postfach",
+            "Festplatte": "die Festplatte des Servers ist fast voll",
+            "Arbeitsspeicher": "der Server hat kaum noch Arbeitsspeicher",
+            "Sicherung": "die nächtliche Sicherung läuft seit über drei Tagen nicht"}.get(name, name)
+
+
+def stoerung_melden(k: dict, defs: dict, erg: list) -> None:
+    """Genau eine Telegram-Nachricht an den Eigentuemer je Stoerung, die die Selbstreparatur nicht behebt.
+
+    Gemeldet wird erst, wenn derselbe rote Befund zwei Reparaturlaeufe hintereinander (rund 30 Minuten)
+    besteht, damit Neustarts und Updates keinen Alarm ausloesen. Erfolgreiche Reparaturen, Neustarts und
+    Technik gehen nie an den Eigentuemer, nur ins Logbuch (sicherheit.md, Meldungen an den Eigentuemer).
+    """
+    rot = sorted(n for s, n, _ in erg if s == ROT)
+    z = zustand()
+    st = z.get("stoerung") or {}
+    if not rot:
+        if st:
+            z.pop("stoerung", None)
+            zustand_speichern(z)
+            logbuch("Stoerung behoben", [f"war rot: {', '.join(st.get('rot', []))}"], "reparatur")
+        return
+    if st.get("rot") != rot:
+        z["stoerung"] = {"rot": rot, "seit": jetzt().isoformat(), "gemeldet": False}
+        zustand_speichern(z)
+        return
+    if st.get("gemeldet"):
+        return
+    teile = list(dict.fromkeys(stoerung_in_worten(n, defs) for n in rot))
+    text = ("Dein Agenten-Server hat eine Störung, die er nicht selbst beheben konnte.\n\n"
+            f"Was nicht geht: {'; '.join(teile)}.\n\n"
+            f"Was du tun musst: Öffne Claude Code und schreib: Doktor, Pflege für {k.get('DOMAIN') or 'meinen Server'}. "
+            "Bis dahin können einzelne Agenten ausfallen. Diese Nachricht kommt einmal je Störung.")
+    try:
+        telegram_an_eigentuemer(text)
+        logbuch("Stoerung an den Eigentuemer gemeldet", [f"rot seit {st.get('seit', '?')}: {', '.join(rot)}"], "reparatur")
+    except Exception as e:  # nie die Selbstreparatur abbrechen, nur protokollieren
+        logbuch("Stoerungsmeldung an den Eigentuemer nicht zugestellt", [str(e)[:200]], "reparatur")
+    st["gemeldet"] = True
+    z["stoerung"] = st
+    zustand_speichern(z)
+
+
 def cmd_reparieren(a):
     k = konfig()
     defs = agenten_definitionen()
@@ -2150,6 +2216,8 @@ def cmd_reparieren(a):
             massnahmen.append("Caddy neu gestartet (holt Zertifikate erneut; naechster Versuch fruehestens in 6 Std.)")
     erg2 = pruefungen(False)
     rot2 = [f"{n}: {d}" for s, n, d in erg2 if s == ROT]
+    if getattr(a, "still", False):
+        stoerung_melden(k, defs, erg2)
     if getattr(a, "still", False) and not massnahmen and not rot2:
         return
     logbuch("Reparatur", (massnahmen or ["keine automatische Massnahme noetig"]) + ([f"weiter rot: {r}" for r in rot2] or ["danach alles ohne Rot"]), "reparatur")

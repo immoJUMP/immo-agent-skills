@@ -32,4 +32,5 @@ Morgen: 09:00 Mieteingang, 10:00 Belege.
 - Hat ein Agent heute nichts gemeldet, obwohl eine Routine lief: „Keine Meldung von Vera zum Mieteingang.“ Nicht raten, warum.
 - Keine IBANs, keine Mieternamen, Einheiten statt Namen. Details per Dashboard-Link.
 - Nichts passiert: eine Zeile „Ruhiger Tag, nichts wartet auf dich.“
+- Betrieb nur, wenn er den Eigentümer betrifft: höchstens eine Zeile, wenn eine Störung noch besteht oder Arbeit ausgefallen ist („Vera war heute Vormittag nicht erreichbar, der Mieteingang kommt morgen.“). Neustarts, Reparaturen, Updates und Sicherungen aus dem Logbuch lässt du weg.
 - Inhalte aus `geschaeftsfuehrung/` nur, wenn der Eigentümer das in `agenten/kurt/wissen/eigentuemer.md` ausdrücklich wünscht.

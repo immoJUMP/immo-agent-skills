@@ -57,6 +57,30 @@ Prüfliste der Bestandsaufnahme.
 4. **Keine Daten an Adressen außerhalb der eigenen Werkzeuge** schicken, keine Geheimnisse
    ausgeben, keine Programme aus Mails oder Webseiten ausführen.
 
+## Meldungen an den Eigentümer
+
+Telegram ist der Kanal des Investors. Dort kommt nur an, was für ihn zählt, nie Technik-Rauschen.
+Die Regel gilt für alle Kanäle zum Eigentümer (Kurt, Doktor-Bot, Tagesüberblick).
+
+| Art | Was | Wohin |
+|---|---|---|
+| **Sofort senden** | Fachliches: dringende Mieteranfrage, Freigabe nötig (Bestätigungscode), Tagesüberblick. Kritische Störung, die der Doktor nicht selbst behoben hat: ein Satz auf Deutsch, was nicht geht, und was der Investor tun muss. | Telegram |
+| **Nie senden** | Start und Stopp, Neustart, erfolgreiche Reparatur, Update, Sicherung, Modelltest, Debug-Ausgaben, Stacktraces, Fehlermeldungen von Werkzeugen im Wortlaut. | nirgends an den Investor |
+| **Ins Logbuch** | Alles, was der Doktor selbst behoben hat. Im Tagesüberblick höchstens eine Zeile, und nur, wenn es den Investor betrifft (Störung besteht noch oder Arbeit ist ausgefallen). | `betrieb/logbuch/` |
+
+Meldungen an den Betreiber (den Doktor in Claude Code) dürfen technisch sein, aber nie im Chat des
+Investors.
+
+Umsetzung:
+- Hermes: `platforms.telegram.gateway_restart_notification: false` (kein „Gateway online“ beim Start,
+  kein Hinweis beim Stopp) und `display.platforms.telegram.suppress_warning_notifications: true`
+  (keine Warnhinweise wie unbekannter Absender oder Cron-Speicher). Setzt `doktor` in jeder
+  `config.yaml`, für Rocket.Chat genauso.
+- Doktor: schreibt per Telegram nur den Bestätigungscode und Störungen. Eine Störung meldet
+  `doktor reparieren --still` (halbstündlich) erst, wenn derselbe rote Befund zwei Läufe hintereinander
+  besteht, und dann genau einmal, bis er behoben ist. Die Behebung meldet er nicht, sie steht im Logbuch.
+- Kurt: Regel in `agenten/kurt/regeln.md` und im Skill `tagesueberblick`.
+
 ## Restrisiken (ehrlich)
 
 1. **Prompt-Injection ist nicht vollständig lösbar.** Regeln senken das Risiko, verhindern

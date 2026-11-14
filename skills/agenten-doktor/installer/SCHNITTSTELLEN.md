@@ -73,7 +73,7 @@ Vom Server selbst erzeugt: `RC_ADMIN_PASS`, `RC_EIGENTUEMER_PASS`, `RC_BOTPASS_<
 `DASH_PASS`, `DASH_PASS_HASH`, `RESTIC_PASSWORD`, `WEBDAV_PASS_<SLUG>`, `POSTFACH_SCHLUESSEL_<SLUG>`,
 `MIETJUMP_EIGENTUEMER_TOKEN`, `MIETJUMP_AGENT_TOKEN_<SLUG>`.
 Vom Mac gesendet: `GITHUB_TOKEN` (nur Repo-Inhalte und PRs des Wissens-Repos), `TELEGRAM_BOT_TOKEN`,
-`DOKTOR_TELEGRAM_BOT_TOKEN` (optional, eigener Bot nur für Bestätigungscodes), `CLAUDE_CODE_OAUTH_TOKEN`
+`DOKTOR_TELEGRAM_BOT_TOKEN` (optional, eigener Bot nur für Bestätigungscodes und Störungsmeldungen), `CLAUDE_CODE_OAUTH_TOKEN`
 (nur bei meridian), `OPENAI_API_KEY` / `OPENROUTER_API_KEY` (je nach Anbieter), `GMAIL_CLIENT_ID`,
 `GMAIL_CLIENT_SECRET`, `GMAIL_REFRESH_TOKEN`, optional `AWS_ACCESS_KEY_ID`, `AWS_SECRET_ACCESS_KEY` für
 ein externes restic-Ziel. Der Tailscale-Schlüssel kommt nie in `geheim.env`, `tailscale-beitritt`
@@ -244,7 +244,7 @@ Bericht `betrieb/testfragen/<slug>.md`, Ergebnis ins Logbuch. Kein automatischer
 doktor installieren            Stack bauen/starten, Rocket.Chat einrichten, Agenten anlegen (idempotent)
 doktor status                  Kurzuebersicht (Container, Agenten, Adressen)
 doktor check [--json]          Gesundheitscheck mit Ampel, Exit 0/1/2 (gruen/gelb/rot)
-doktor reparieren [--still]    check + bekannte Reparaturen (pflege.md Abschnitt 1), jede Massnahme ins Logbuch
+doktor reparieren [--still]    check + bekannte Reparaturen (pflege.md Abschnitt 1), jede Massnahme ins Logbuch; mit --still meldet er eine Störung, die zwei Läufe hintereinander rot bleibt, einmal per Telegram (sicherheit.md, Meldungen an den Eigentümer)
 doktor abgleich                Wissens-Repo holen, Ausschnitte rendern, Vorschlaege -> PRs,
                                Fallbuecher spiegeln, neue/geaenderte Agenten ausrollen
 doktor agenten-check [slug]    Werkzeuge, Prompt-Laenge, Gedaechtnis, Routinen, Fehler je Agent
