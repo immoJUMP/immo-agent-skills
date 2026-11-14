@@ -1,6 +1,6 @@
 # Telefon-Assistent (Vorbild: Leo)
 
-Dein Agent ruft **nur dich** auf deinem Handy an, über deine FRITZ!Box, mit dem Kontext aus deinem
+Dein Agent ruft **nur dich** auf deinem Handy an, über deine FRITZ!Box oder ein sipgate-Konto, mit dem Kontext aus deinem
 Chat. Im Gespräch nimmt er Aufträge an, arbeitet sie danach ab und schickt das Ergebnis schriftlich
 in deinen Chat. Er kann Anrufe planen, etwa 15 Minuten vor einem Termin aus deinem Kalender.
 
@@ -12,7 +12,7 @@ nur persönliche Werte: Rufnummer, Chat-ID, Netzadressen, Registry. Namen in den
 
 | Datei | Aufgabe |
 |---|---|
-| `bridge.py` | Telefon-Brücke: startet Asterisk, meldet es per PJSIP an der FRITZ!Box an, wählt nur die freigegebene Nummer, nimmt das Gespräch per AudioSocket entgegen, HTTP-Schnittstelle auf Port 8080 |
+| `bridge.py` | Telefon-Brücke: startet Asterisk, meldet es per PJSIP an der FRITZ!Box oder bei sipgate an, wählt nur die freigegebene Nummer, nimmt das Gespräch per AudioSocket entgegen, HTTP-Schnittstelle auf Port 8080 |
 | `voice_provider.py` | Stimme über einen privaten ElevenLabs-Gesprächsagenten, bei Ausfall Wechsel auf das Echtzeit-Sprachmodell von OpenAI |
 | `voice_protocol.py` | Wählplan, Prüfung der Zielnummer, Audio-Rahmen |
 | `phone_logic.py` | Modi, Ruhezeiten, Mailbox-Erkennung, Steuerbefehle („Stopp“, „Danke, das war's“), Planung vor Terminen |
@@ -27,18 +27,24 @@ nur persönliche Werte: Rufnummer, Chat-ID, Netzadressen, Registry. Namen in den
 
 ## Voraussetzungen
 
-- FRITZ!Box mit einem eingerichteten IP-Telefon (Telefonie, Telefoniegeräte, neues Gerät,
-  LAN/WLAN-IP-Telefon) mit eigenem Benutzernamen und Passwort.
-- Der Server mit der Brücke liegt im Netz der FRITZ!Box oder ist per VPN (WireGuard der FRITZ!Box)
-  verbunden. Bei Leo läuft die Brücke direkt im Heimnetz.
+- Einer von zwei Anbietern (`SIP_PROVIDER`):
+  - **fritzbox** (Vorgabe, so läuft Leo): FRITZ!Box mit einem IP-Telefon (Telefonie, Telefoniegeräte,
+    neues Gerät, LAN/WLAN-IP-Telefon) mit eigenem Benutzernamen und Passwort. Der Server liegt im Netz
+    der FRITZ!Box oder ist per VPN (WireGuard der FRITZ!Box) verbunden. Verbindung über TCP.
+  - **sipgate**: ein neues VoIP-Gerät im sipgate-Konto mit SIP-ID und SIP-Passwort und einer
+    zugeordneten Rufnummer für ausgehende Anrufe, für Anrufe ins Mobilfunknetz Guthaben oder Tarif.
+    Der Server hat eine öffentliche IP. SIP-Port 15062 und RTP 26000 bis 26020 (UDP) nur für die
+    IP-Bereiche von sipgate öffnen, in der Server-Firewall und beim Hoster. Verbindung über UDP.
 - Asterisk mit PJSIP und AudioSocket, Python 3.12 (nicht 3.13, `audioop` fehlt dort),
   `aiohttp`, `websockets`. Ein fertiges Container-Image liegt nicht bei, dein Agent baut es.
 - ElevenLabs-Konto mit Conversational AI, OpenAI-Schlüssel für den Ersatzweg, Telegram-Bot.
 
 ## Umgebungsvariablen
 
-Brücke: `SIP_HOST`, `SIP_USERNAME`, `SIP_PASSWORD`, `SIP_MEDIA_ADDRESS` (Pflicht, IP des Servers im
-FRITZ!Box-Netz), `SIP_CALLER_ID_NUMBER`, `SIP_CALLER_ID_NAME`, `CALL_ALLOWED_NUMBER` (deine
+Brücke: `SIP_PROVIDER` (`fritzbox` oder `sipgate`, Vorgabe `fritzbox`), `SIP_HOST` (FRITZ!Box-Adresse,
+bei sipgate leer lassen), `SIP_USERNAME` (bei sipgate die SIP-ID), `SIP_PASSWORD`, `SIP_MEDIA_ADDRESS`
+(Pflicht: bei FRITZ!Box die IP des Servers im Heimnetz, bei sipgate die öffentliche IP),
+`SIP_LOCAL_NETS` (optional, kommagetrennte lokale Netze, sonst Vorgabe des Anbieters), `SIP_CALLER_ID_NUMBER`, `SIP_CALLER_ID_NAME`, `CALL_ALLOWED_NUMBER` (deine
 Handynummer, die einzige wählbare), `BRIDGE_TOKEN`, `VOICE_PROVIDER=elevenlabs`,
 `ELEVENLABS_API_KEY`, `ELEVENLABS_AGENT_ID`, `OPENAI_API_KEY`, `LIVE_VOICE`, `LEO_BACKEND_URL`.
 
@@ -52,7 +58,7 @@ python3.12 -m venv .venv && .venv/bin/pip install aiohttp websockets
 .venv/bin/python -m unittest discover -s . -p 'test_*.py'
 ```
 
-96 Tests, keine echten Anrufe und keine echten Telegram-Nachrichten. Freigabe nur mit null
+102 Tests, keine echten Anrufe und keine echten Telegram-Nachrichten. Freigabe nur mit null
 übersprungenen Tests.
 
 ## Anpassen

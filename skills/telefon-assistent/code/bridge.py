@@ -17,7 +17,7 @@ from websockets.asyncio.client import connect
 from phone_logic import MODES, ZONE, Transcript, call_policy, presence, voice_control, speech_chunks, redact
 from hold_music import HoldMusic
 from voice_provider import VoiceSession, open_elevenlabs
-from voice_protocol import CallGate, Delegations, frame, validate_destination, next_audio_tick, owner_dialplan
+from voice_protocol import CallGate, Delegations, frame, validate_destination, next_audio_tick, owner_dialplan, pjsip_config, lokale_netze
 
 TOKEN = os.environ['BRIDGE_TOKEN']
 ALLOWED = os.environ['CALL_ALLOWED_NUMBER']
@@ -69,65 +69,11 @@ def persist():
 
 
 def configure_asterisk():
-    host = os.environ['SIP_HOST']
-    user = os.environ['SIP_USERNAME']
-    password = os.environ['SIP_PASSWORD']
-    media = os.environ['SIP_MEDIA_ADDRESS']  # IP des Servers im Netz der FRITZ!Box
-    for value in (host, user, password, media):
-        if '\n' in value or '\r' in value or ';' in value:
-            raise ValueError('Invalid SIP configuration')
-    config = f'''[transport-tcp]
-type=transport
-protocol=tcp
-bind=0.0.0.0:15062
-local_net=10.42.0.0/16
-local_net=127.0.0.0/8
-external_media_address={media}
-external_signaling_address={media}
-external_signaling_port=15062
-
-[fritz-auth]
-type=auth
-auth_type=userpass
-username={user}
-password={password}
-
-[fritz-registration]
-type=registration
-transport=transport-tcp
-outbound_auth=fritz-auth
-server_uri=sip:{host};transport=tcp
-client_uri=sip:{user}@{host}
-contact_user={user}
-retry_interval=60
-expiration=300
-
-[fritz-aor]
-type=aor
-contact=sip:{host}:5060;transport=tcp
-qualify_frequency=60
-
-[fritz]
-type=endpoint
-transport=transport-tcp
-context=reject-incoming
-disallow=all
-allow=alaw,ulaw
-outbound_auth=fritz-auth
-aors=fritz-aor
-from_user={user}
-from_domain={host}
-send_pai=yes
-direct_media=no
-rtp_symmetric=yes
-force_rport=yes
-rewrite_contact=yes
-
-[fritz-identify]
-type=identify
-endpoint=fritz
-match={host}
-'''
+    # SIP_PROVIDER: fritzbox (Vorgabe, wie Leo im Heimnetz) oder sipgate (Server mit öffentlicher IP).
+    # SIP_MEDIA_ADDRESS: bei FRITZ!Box die IP des Servers im Heimnetz, bei sipgate die öffentliche IP.
+    config = pjsip_config(os.environ.get('SIP_PROVIDER', 'fritzbox'), os.environ.get('SIP_HOST', ''),
+                          os.environ['SIP_USERNAME'], os.environ['SIP_PASSWORD'],
+                          os.environ['SIP_MEDIA_ADDRESS'], lokale_netze(os.environ.get('SIP_LOCAL_NETS', '')))
     configs = {
         'pjsip.conf': config,
         'rtp.conf': '[general]\nrtpstart=26000\nrtpend=26020\nstrictrtp=yes\n',
