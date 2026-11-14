@@ -2,6 +2,50 @@
 
 Alle wesentlichen Aenderungen an diesem Projekt.
 
+## [1.14.0](https://github.com/immoJUMP/immo-agent-skills/compare/v1.13.0...v1.14.0) (2026-11-14)
+
+
+### Hinzugefuegt
+
+* **agenten-doktor:** Agenten-Server mit Hermes, Rocket.Chat, MietJUMP und Lernkreislauf ([aea8539](https://github.com/immoJUMP/immo-agent-skills/commit/aea8539900f1fc81ecae2d916df5cc7fd1889a27))
+* **agenten-doktor:** Bestands-Cockpit, Fachskills je Agent, Akquise-Vorlage, Muster fuer bestehende Setups ([7929aaa](https://github.com/immoJUMP/immo-agent-skills/commit/7929aaabb636e8105d9a88bcb8cff8ff9452f898))
+* **agenten-doktor:** Durchlauf mit einem Start-Prompt, Vorbereitungs-Check, Ausweichtypen ([4600a35](https://github.com/immoJUMP/immo-agent-skills/commit/4600a35fac371af48fab72ee3d5bc16089ce1741))
+* **agenten-doktor:** eigener Browser fuer Vera, Vorlagen-Abgleich ohne Scheinaenderungen ([6f07888](https://github.com/immoJUMP/immo-agent-skills/commit/6f07888b6373e7e55f44fdbcc9dc456c907a10e9))
+* **agenten-doktor:** Einstellung prueft Werkzeuge und Platzhalter, ergaenzt CODEOWNERS ([383f7f1](https://github.com/immoJUMP/immo-agent-skills/commit/383f7f14b3b498f9016f5b674ab9eba5f35b4edf))
+* **agenten-doktor:** Meldungen an den Eigentuemer, nur Fachliches und nicht behebbare Stoerungen ([6e96e4b](https://github.com/immoJUMP/immo-agent-skills/commit/6e96e4bfdd65779ae03aec5967370acad9a50eb9))
+* **agenten-doktor:** Vorlage Ankaufs-Anke statt Mats (Akquise) ([e6389ea](https://github.com/immoJUMP/immo-agent-skills/commit/e6389ea7af2feff8df61e7ff38d508f96d7a0212))
+* **nebenkosten-pruefer:** Belegschicht vor der Rechtspruefung ([e641215](https://github.com/immoJUMP/immo-agent-skills/commit/e6412154a5e36031e71feb5a7dc7bd091c467360))
+* **telefon-assistent:** Agent ruft den Inhaber über die FRITZ!Box an, mit Chat-Kontext und Terminvorbereitung ([2e07ba2](https://github.com/immoJUMP/immo-agent-skills/commit/2e07ba2c8ebdda73167468738e9a2d80a258e11a))
+
+
+### Behoben
+
+* **agenten-doktor:** Befunde aus adversarialem Review und Neustart-Test ([41df573](https://github.com/immoJUMP/immo-agent-skills/commit/41df573aa87d82ac5a942ec69e534b7da23ebd19))
+* **agenten-doktor:** Befunde aus dem Review vom 14.11. (Teilnehmerweg, Code, Sicherheit) ([f636ace](https://github.com/immoJUMP/immo-agent-skills/commit/f636aceaa1d965922e9b0659b8a745f1061163fe))
+* **agenten-doktor:** keine Start-, Stopp- und Warnhinweise von Hermes im Telegram-Chat des Eigentuemers ([8e55a1f](https://github.com/immoJUMP/immo-agent-skills/commit/8e55a1fccc8b353ae0514bfe3fb2216784b7e281))
+* **agenten-doktor:** Logbuch nur bei geaendertem Befund, Testfragen-Meldungen gedrosselt ([eee1952](https://github.com/immoJUMP/immo-agent-skills/commit/eee1952dbe9ab1c3025949cd77361fadb588a03b))
+* **agenten-doktor:** Testfragen geben die Sperre waehrend der Modellaufrufe ab ([1310271](https://github.com/immoJUMP/immo-agent-skills/commit/131027163367c9f46f830c9f71f9e266709eb9f7))
+* **agenten-doktor:** Zustand vor dem Speichern frisch lesen (Vorschlagsnummer ging verloren) ([ee2f2f6](https://github.com/immoJUMP/immo-agent-skills/commit/ee2f2f635600790937088c19f2274bd2bd9a6df8))
+* **heizungsrecht:** Skills und Nachschlagewerke auf das GModG umstellen ([754f703](https://github.com/immoJUMP/immo-agent-skills/commit/754f703a64423f49da94f698d1ca6ae73dd7ced2))
+* **verhandlung,mietliste:** Faustformel begrenzen, echte Quellen, Sperrfrist gemeindegenau ([a08438f](https://github.com/immoJUMP/immo-agent-skills/commit/a08438f67623157b2ce75a60e1357e2c4d65631f))
+
+
+### Dokumentation
+
+* **agenten-doktor:** Anbieter statt Personenname im oeffentlichen Skill ([7fd8b85](https://github.com/immoJUMP/immo-agent-skills/commit/7fd8b8598cfc16bfb6e7de280ce90dc4634d8cad))
+* **agenten-doktor:** Doku an gehaerteten Code angeglichen, letzte Review-Punkte behoben ([51d6bfa](https://github.com/immoJUMP/immo-agent-skills/commit/51d6bfaa3eecb48de1607ea8674ec6854bf19dc2))
+
+
+### Styling
+
+* **agenten-doktor:** Startseite mit Farbwerten aus den Design-Tokens ([2655928](https://github.com/immoJUMP/immo-agent-skills/commit/2655928ec0adc3ebcc5f2ca8aadfebf61adb2f66))
+
+
+### Tests
+
+* **agenten-doktor:** Nachweis Telegram-Ruhe auf Wegwerf-Server, Ergebnis in sicherheit.md ([ddb2136](https://github.com/immoJUMP/immo-agent-skills/commit/ddb2136f423cbf9e588e28775e3d703012621b69))
+* **agenten-doktor:** Unit-Tests fuer Rechte-Matrix, Vorschlagspruefung und Symlink-Abwehr ([ecb4512](https://github.com/immoJUMP/immo-agent-skills/commit/ecb4512809566d08a98f546586bdb09a15d10e1d))
+
 ## [1.13.0](https://github.com/immoJUMP/immo-agent-skills/compare/v1.12.0...v1.13.0) (2026-10-22)
 
 
