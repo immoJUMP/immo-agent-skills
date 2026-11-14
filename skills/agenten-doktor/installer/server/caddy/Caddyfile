@@ -39,13 +39,11 @@ dash.{$DOMAIN} {
 	reverse_proxy dateien:8080
 }
 
-# MietJUMP: eigene Anmeldung mit Zugangs-Token, davor zusaetzlich Passwort
+# MietJUMP: eigene Anmeldung mit persoenlichem Zugangs-Token (mj_..., 46 Zeichen), ohne Basic-Auth davor.
+# Doppelte Anmeldung verwirrt Chrome: Es traegt das gespeicherte Basic-Auth-Passwort in das Tokenfeld
+# ein und haelt MietJUMPs 401 bei falschem Token fuer eine neue Basic-Auth-Abfrage (belegt 14.11.2026).
 miet.{$DOMAIN} {
 	import sicher
-	@ohne_mcp not path /mcp* /.well-known/* /oauth/*
-	basic_auth @ohne_mcp {
-		{$DASH_BENUTZER} {$DASH_PASS_HASH}
-	}
 	log {
 		format filter {
 			request>uri query {

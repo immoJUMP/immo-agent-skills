@@ -45,7 +45,7 @@ pruef "doktor check ohne Rot" bash -c 'doktor check >/tmp/c.txt; [ $? -lt 2 ]'
 pruef "Startseite ohne Passwort gesperrt (401)" bash -c "[ \$(curl -s -o /dev/null -w '%{http_code}' https://$DOMAIN/) = 401 ]"
 pruef "Startseite mit Passwort erreichbar" bash -c "curl -fsS -u team:$(geheim DASH_PASS) https://$DOMAIN/ | grep -q 'Dein Agenten-Team'"
 pruef "Team-Chat erreichbar (HTTPS)" bash -c "curl -fsS https://chat.$DOMAIN/api/info | grep -q version"
-pruef "MietJUMP hinter Passwort (401)" bash -c "[ \$(curl -s -o /dev/null -w '%{http_code}' https://miet.$DOMAIN/anmelden) = 401 ]"
+pruef "MietJUMP-Dashboard nur mit Zugang (Weiterleitung zur Anmeldung)" bash -c "curl -s -o /dev/null -w '%{http_code} %{redirect_url}' https://miet.$DOMAIN/ | grep -q '^302 .*/anmelden'"
 
 echo "== 2. Dashboard veroeffentlichen (Werkzeug im Vera-Container)"
 docker exec -u hermes agent-vera sh -c 'mkdir -p /opt/data/arbeit/e2e && printf "<h1>E2E Mieteingang</h1>" > /opt/data/arbeit/e2e/test.html'

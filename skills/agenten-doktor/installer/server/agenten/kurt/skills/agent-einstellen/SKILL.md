@@ -7,7 +7,7 @@ description: "Führt mit dem Eigentümer ein Interview für einen neuen Agenten 
 
 ## 1. Erst prüfen
 
-- Gibt es eine passende Vorlage unter `/opt/data/wissen/agenten/_vorlagen/` (z. B. `ankauf` für eine Ankaufs-Agentin: Angebote aus Suchaufträgen, Kalkulation, Finanzierungsrahmen)? Dann die Vorlage als Grundlage nehmen, Name, Suchgebiet und Fachverantwortliche/n im Interview anpassen. Das spart dem Eigentümer die meisten Fragen.
+- Gibt es eine passende Vorlage unter `/opt/data/wissen/agenten/_vorlagen/` (z. B. `ankauf` für eine Ankaufs-Agentin: Angebote aus Suchaufträgen, Kalkulation, Finanzierungsrahmen)? Dann die Vorlage als Grundlage nehmen, Name, Suchgebiet und Fachverantwortliche/n im Interview anpassen. Das spart dem Eigentümer die meisten Fragen. Bei `ankauf` gehören drei Ankaufskriterien dazu (Region mit Umkreis, Objektart mit Preisrahmen, Mindestrendite oder Höchstfaktor). Nennt der Eigentümer sie schon im Auftrag, nicht nachfragen. Sie kommen als `agenten/<slug>/wissen/ankaufskriterien.md` in den Vorschlag, sonst bricht der Skill `suchauftraege-auswerten` ab.
 
 - `/opt/data/wissen/agenten/*/agent.yaml` und `rolle.md` lesen. Kann ein bestehender Agent die Aufgabe mit einem zusätzlichen Skill übernehmen, schlag das zuerst vor (weniger Agenten, weniger Pflege).
 - Wünscht jemand anderes im Team einen Agenten: Wunsch aufnehmen und den Eigentümer per Telegram fragen. Ohne ihn kein Interview.
