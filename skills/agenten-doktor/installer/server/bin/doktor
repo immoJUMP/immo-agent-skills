@@ -1167,6 +1167,10 @@ def vorschlaege_abholen(defs: dict, k: dict) -> list:
                 git("checkout", "-q", "-f", "main", check=False)
                 erg = {"status": "fehler", "grund": f"{type(e).__name__}: {str(e)[:300]}"}
                 logbuch(f"Vorschlag {schluessel}: Fehler", [erg["grund"]], "fehler")
+            # Frisch lesen: _vorschlag_verarbeiten hat inzwischen selbst gespeichert (lokale_prs).
+            # Mit dem alten z ginge die neue Vorschlagsnummer verloren (E2E 14.11.2026).
+            z = zustand()
+            erledigt = z.setdefault("verarbeitete_vorschlaege", {})
             erledigt[schluessel] = {"status": erg.get("status"), "pr": erg.get("pr"), "zeit": jetzt().isoformat()}
             zustand_speichern(z)
             try:
@@ -1443,6 +1447,10 @@ def freigaben_abholen(defs: dict, k: dict) -> list:
                         codes.pop(str(nummer), None)
                         zustand_speichern(z)
                         erg = pr_freigeben(nummer, f"telegram:{k.get('EIGENTUEMER_TELEGRAM_ID')}", k, defs, erwarteter_sha=sha)
+                        # pr_freigeben speichert selbst (testfragen_offen): frisch lesen, sonst ueberschreibt
+                        # die naechste Nachricht dieses Durchlaufs das mit dem alten Stand
+                        z = zustand()
+                        codes = z.setdefault("freigabecodes", {})
                     else:
                         neu = f"{secrets.randbelow(10 ** 6):06d}"
                         codes[str(nummer)] = {"code": neu, "zeit": time.time(), "sha": sha}
