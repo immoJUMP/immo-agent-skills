@@ -2433,15 +2433,19 @@ def testfragen_laufen(slug: str) -> tuple:
     try:
         ergebnisse = []
         for t in fragen:
-            p = run(["docker", "exec", "-u", "hermes", f"agent-{slug}", "hermes", "chat", "-Q", "--max-turns", "6", "--source", "tool",
-                     "-q", f"[Testfrage aus dem Lernkreislauf, nichts ausfuehren, nur beschreiben, was du tun wuerdest] {t['frage']}"],
-                    check=False, still=True, timeout=600)
-            antwort = (p.stdout or "").strip()[-4000:]
-            urteil = run(["docker", "exec", "-u", "hermes", f"agent-{slug}", "hermes", "chat", "-Q", "--max-turns", "1", "--ignore-rules",
-                          "--source", "tool", "-q",
-                          "Du bist Pruefer. Erfuellt die ANTWORT die ERWARTETE KERNAUSSAGE inhaltlich? Antworte nur mit JA oder NEIN.\n"
-                          f"ERWARTET: {t['erwartet']}\nANTWORT: {antwort}"], check=False, still=True, timeout=300).stdout.strip().upper()
-            ergebnisse.append((t, urteil.startswith("JA") or "\nJA" in urteil))
+            try:
+                p = run(["docker", "exec", "-u", "hermes", f"agent-{slug}", "hermes", "chat", "-Q", "--max-turns", "6", "--source", "tool",
+                         "-q", f"[Testfrage aus dem Lernkreislauf, nichts ausfuehren, nur beschreiben, was du tun wuerdest] {t['frage']}"],
+                        check=False, still=True, timeout=600)
+                antwort = (p.stdout or "").strip()[-4000:]
+                urteil = run(["docker", "exec", "-u", "hermes", f"agent-{slug}", "hermes", "chat", "-Q", "--max-turns", "1", "--ignore-rules",
+                              "--source", "tool", "-q",
+                              "Du bist Pruefer. Erfuellt die ANTWORT die ERWARTETE KERNAUSSAGE inhaltlich? Antworte nur mit JA oder NEIN.\n"
+                              f"ERWARTET: {t['erwartet']}\nANTWORT: {antwort}"], check=False, still=True, timeout=300).stdout.strip().upper()
+                ergebnisse.append((t, urteil.startswith("JA") or "\nJA" in urteil))
+            except subprocess.TimeoutExpired:
+                # eine haengende Frage verwirft nicht den ganzen Lauf, sie zaehlt als nicht bestanden
+                ergebnisse.append((t, False))
     finally:
         sperre_zurueck()
     for t, bestanden in ergebnisse:
@@ -2470,16 +2474,35 @@ def cmd_testfragen(a):
         return
     ergebnisse = []
     verschoben = []
+    def _offen(slug: str, rein: bool) -> None:
+        z = zustand()
+        liste = [x for x in z.get("testfragen_offen", []) if x != slug]
+        z["testfragen_offen"] = liste + ([slug] if rein else [])
+        zustand_speichern(z)
+
     for s in ziele:
-        if not modell_test(s)[0]:
-            verschoben.append(s)
-            continue
-        ok_n, n = testfragen_laufen(s)
-        ergebnisse.append(f"{s}: {ok_n} von {n} Testfragen bestanden")
+        # Unter der Sperre aus "offen" nehmen, bevor sie fuer die Modellaufrufe frei wird: Kommt in der
+        # Zwischenzeit eine neue Freigabe fuer denselben Agenten, traegt pr_freigeben ihn wieder ein, und
+        # der naechste Lauf testet den neuen Stand. Scheitert dieser Lauf, kommt er wieder auf die Liste.
         if a.offen:
-            z = zustand()
-            z["testfragen_offen"] = [x for x in z.get("testfragen_offen", []) if x != s]
-            zustand_speichern(z)
+            _offen(s, False)
+        sperre_abgeben()
+        try:
+            modell_ok = modell_test(s)[0]
+        finally:
+            sperre_zurueck()
+        if not modell_ok:
+            verschoben.append(s)
+            if a.offen:
+                _offen(s, True)
+            continue
+        try:
+            ok_n, n = testfragen_laufen(s)
+        except Exception:
+            if a.offen:
+                _offen(s, True)
+            raise
+        ergebnisse.append(f"{s}: {ok_n} von {n} Testfragen bestanden")
         if ok_n < n:
             ergebnisse.append(f"{s}: Bericht unter betrieb/testfragen/{s}.md. Letzte Freigabe pruefen oder per Vorschlag nachbessern.")
     if verschoben:

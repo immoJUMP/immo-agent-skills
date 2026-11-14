@@ -22,7 +22,7 @@
 | **Hetzner-Firewall:** offen nur 80/443 und 41641/udp (Tailscale), SSH nach der Einrichtung zu | Angriffe aus dem Internet |
 | **SSH nur über Tailscale**, nur Schlüssel, kein Passwort, fail2ban | Passwortraten, Fremdzugriff |
 | **Tailscale-Ausgang des Servers gesperrt:** Der Server trägt einen Tag und darf laut Policy keine anderen Geräte erreichen | ein übernommener Server springt auf den Mac des Nutzers |
-| **Startseite, Dashboards und MietJUMP mit Passwort**, Rocket.Chat ohne Selbstregistrierung | Fremde lesen Berichte |
+| **Startseite und Dashboards mit Passwort, MietJUMP mit persönlichem Schlüssel** (46 Zeichen, kein Basic-Auth davor, weil Chrome beide Anmeldungen verwechselt), Rocket.Chat ohne Selbstregistrierung | Fremde lesen Berichte |
 | **Gmail nur über die Postfach-Wache,** die allein den Google-Token hält. Durch geht nur Lesen, Anhänge, Entwürfe und eigene Labels, kein Sendebefehl. Mailtext in der Ausgabe markiert (`<<<MAILTEXT … MAILTEXT>>>`) | Agent verschickt oder löscht Mails, Mailtext wird als Anweisung gelesen |
 | **Kein Folgen symbolischer Links:** Der Server-Befehl `doktor` liest und schreibt in Agenten-Ordnern nur reguläre Dateien und bricht bei Symlinks ab. Vorschläge mit Symlinks lehnt er ab. Grenze siehe Restrisiken | Agent lenkt den als root laufenden Doktor auf fremde Dateien, z. B. `geheim.env` |
 | **Werkzeug-Zugänge in einer root-eigenen Datei** außerhalb des Agenten-Ordners, die Docker beim Start einliest | Agent ändert seinen Zugang oder gibt sich als anderer Agent aus |
