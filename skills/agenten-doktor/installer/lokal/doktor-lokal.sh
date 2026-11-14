@@ -248,9 +248,10 @@ cmd_datei_senden() { # Datei (z.B. Kontoauszug CAMT/CSV) in den Arbeitsordner ei
   # printf statt Pipe aus basename: dessen Zeilenende wuerde tr sonst zu "_" am Namensende machen
   name="$(printf '%s' "$(basename "$datei")" | tr -c 'A-Za-z0-9._-' '_')"
   [[ "$agent" =~ ^[a-z][a-z0-9-]{1,30}$ && "$unterordner" =~ ^[a-z0-9_-]{1,30}$ ]] || fehler "ungueltiger Agent oder Ordner"
-  # Erst in eine neue Temp-Datei (mktemp legt exklusiv an), dann per mv ersetzen: ein vom Agenten
-  # angelegter Symlink am Zielnamen wird ersetzt statt verfolgt.
-  ssh -i "$key" "${SSH_OPTS[@]}" "$ziel" "d=/opt/agenten/daten/agenten/$agent/arbeit/$unterordner; [ ! -L \$d ] || exit 3; mkdir -p \$d && t=\$(mktemp -p \$d .eingang.XXXXXX) && cat > \$t && mv -fT \$t \$d/$name && chown -h 10000:10000 \$d \$d/$name" < "$datei"
+  # Geschrieben wird mit den Rechten des Agenten (UID 10000), nicht als root: Dann kann ein vom Agenten
+  # gelegter Symlink (auch zwischen Pruefung und Schreiben) nirgends hinfuehren, wo der Agent nicht
+  # ohnehin schreiben darf. Erst Temp-Datei (mktemp, exklusiv), dann mv -fT auf den Zielnamen.
+  ssh -i "$key" "${SSH_OPTS[@]}" "$ziel" "setpriv --reuid=10000 --regid=10000 --clear-groups sh -c 'd=/opt/agenten/daten/agenten/$agent/arbeit/$unterordner; mkdir -p \"\$d\" && t=\$(mktemp -p \"\$d\" .eingang.XXXXXX) && cat > \"\$t\" && mv -fT \"\$t\" \"\$d/$name\"'" < "$datei"
   info "$name liegt bei $agent unter arbeit/$unterordner/. Sag dem Agenten Bescheid (oder die Routine holt es ab)."
 }
 
@@ -412,8 +413,10 @@ cmd_vorbereitung_pruefen() {
   else vp gelb "Hetzner-Token" "fehlt, erzeugt der Doktor in Chrome (Hetzner-Konto muss geprueft sein)"; fi
 
   if kc_vorhanden github; then
+    local gh_url="https://api.github.com/user"
+    [ -n "$WISSEN_REPO" ] && gh_url="https://api.github.com/repos/$WISSEN_REPO"
     v="$(kc_lesen github | awk '{print "header = \"Authorization: Bearer " $0 "\""}' \
-      | curl -sS -m 10 -K - "https://api.github.com/${WISSEN_REPO:+repos/$WISSEN_REPO}${WISSEN_REPO:-user}" 2>/dev/null \
+      | curl -sS -m 10 -K - "$gh_url" 2>/dev/null \
       | jq -r '.full_name // .login // ("FEHLER " + (.message // "?"))' 2>/dev/null || echo "FEHLER netz")"
     case "$v" in FEHLER*) vp rot "GitHub-Token (Wissens-Repo)" "$v" ;; *) vp gruen "GitHub-Token (Wissens-Repo)" "$v" ;; esac
   else vp gelb "GitHub-Token (Wissens-Repo)" "fehlt, erzeugt der Doktor in Chrome"; fi
@@ -469,14 +472,20 @@ cmd_vorbereitung_pruefen() {
 
   # 5. Adresse
   case "$DOMAIN" in
-    "") vp gelb "Adresse" "noch nicht festgelegt (DOMAIN in start.env oder im Start-Prompt)" ;;
+    "") vp rot "Adresse" "nicht festgelegt: Subdomain unter cl.immodigit.de oder eigene Domain im Start-Prompt nennen" ;;
     *.cl.immodigit.de) vp gruen "Adresse" "$DOMAIN (DNS-Eintraege setzt ImmoDigit, sobald die IP da ist)" ;;
-    *) v="$(dig +short "$DOMAIN" A | tail -1)"; vp gruen "Adresse" "$DOMAIN (zeigt derzeit auf ${v:-nichts}, DNS-Zugang in Chrome noetig)" ;;
+    *) v="$(dig +short "$DOMAIN" A 2>/dev/null | tail -1 || true)"
+       if [ -n "$v" ]; then
+         vp gelb "Adresse" "$DOMAIN zeigt schon auf $v. Wird auf den neuen Server umgestellt: nur eine freie Subdomain nehmen (z. B. agenten.meinefirma.de)"
+       else
+         vp gruen "Adresse" "$DOMAIN (noch kein Eintrag; Anmeldung beim DNS-Anbieter in Chrome noetig)"
+       fi ;;
   esac
 
   echo
-  echo "Nicht per Befehl pruefbar, prueft der Doktor in Chrome: Anmeldungen bei Hetzner, GitHub,"
-  echo "Google (Veras Postfach), Telegram Web, Tailscale; Zahl der Telegram-Bots (hoechstens 18)."
+  echo "Nicht per Befehl pruefbar: Anmeldungen in Chrome bei Hetzner, GitHub, Google (Veras Postfach),"
+  echo "Telegram Web und Tailscale prueft der Doktor per Tab-Abfrage. Die Zahl der Telegram-Bots"
+  echo "(hoechstens 18) pruefst du selbst: /mybots an @BotFather (Checkliste Nr. 6)."
   echo
   if [ "$VP_ROT" -eq 0 ]; then
     echo "Ergebnis: bereit ($VP_GELB Punkte erledigt der Doktor im Durchlauf)."
